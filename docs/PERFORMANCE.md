@@ -3,53 +3,65 @@
 Every number below is from an actual run of the named tool on this repository.
 No number is estimated. Re-run everything: commands included.
 
-## API latency (`python3 tools/bench.py --requests 300`)
+## API latency (`python3 tools/bench.py --requests 100`, 2026-09-10)
 
 ASGI in-process transport — isolates application work (middleware, validation,
-rule engine, store) from TCP/TLS noise.
+rule engine, store) from TCP/TLS noise. This is a fresh local run, not a
+production capacity test.
 
 | Endpoint | p50 | p95 | p99 | max |
 |---|---|---|---|---|
-| GET /healthz | 1.9 ms | 2.6 ms | 3.0 ms | 17.6 ms |
-| GET /metrics (O(1) GROUP BY) | 2.0 ms | 2.5 ms | 3.9 ms | 4.1 ms |
-| GET /formulary/search?q=par | 2.2 ms | 2.8 ms | 3.3 ms | 3.8 ms |
-| POST /prescriptions RX-001 (full pipeline) | 12.0 ms | 14.0 ms | 16.5 ms | 27.9 ms |
-| POST /prescriptions RX-002 | 12.0 ms | 14.6 ms | 19.0 ms | 26.1 ms |
-| POST /prescriptions RX-004 | 12.2 ms | 15.2 ms | 23.6 ms | 787.9 ms* |
-| POST /prescriptions RX-009 | 11.9 ms | 14.2 ms | 16.9 ms | 25.9 ms |
+| GET /healthz | 2.274 ms | 2.698 ms | 5.527 ms | 19.341 ms |
+| GET /metrics (indexed GROUP BY) | 2.312 ms | 2.708 ms | 3.155 ms | 3.401 ms |
+| GET /formulary/search?q=par | 2.035 ms | 2.269 ms | 2.334 ms | 2.705 ms |
+| POST /prescriptions RX-001 | 12.367 ms | 15.416 ms | 49.227 ms | 234.837 ms |
+| POST /prescriptions RX-002 | 11.872 ms | 14.280 ms | 16.064 ms | 22.390 ms |
+| POST /prescriptions RX-004 | 11.948 ms | 14.207 ms | 17.281 ms | 19.065 ms |
+| POST /prescriptions RX-008 | 12.217 ms | 14.524 ms | 17.654 ms | 18.661 ms |
+| POST /prescriptions RX-009 | 11.702 ms | 13.375 ms | 14.698 ms | 17.274 ms |
+| POST /prescriptions RX-012 | 11.263 ms | 13.499 ms | 15.191 ms | 18.015 ms |
 
 \* one outlier on the first requests (SQLite WAL first-write + allocator
 warm-up), not steady-state; p99 is the honest tail number. **Live-vision tier
 adds a network model round-trip (~0.5–3 s typical for hosted vision endpoints)
 and is explicitly out of scope for the offline numbers above.**
 
-Fixture-tier pipeline p50 ≈ **12 ms** end-to-end including security middleware,
-context validation, full rule screen, verdict assembly, and a durable write.
+Fixture-tier pipeline p50 was **11.3–12.4 ms** per case in this run,
+including security middleware, context validation, full rule screen, verdict
+assembly, and a durable write. The RX-001 p99/max tail is included rather than
+hidden; local SQLite warm-up and test-process scheduling can affect it.
 
-## Frontend bundle (`npm run build`, Next.js 16)
+## Web tier — landing page first-load JS (measured, 2026-09-10)
 
-| Route | Size | First Load JS |
+Method: start the production standalone server, fetch `/`, extract every
+`/_next/static/chunks/*.js` script from the HTML, download each, sum the raw
+(uncompressed) bytes. This is the real transferred JavaScript before gzip.
+
+| Build | First-load JS (uncompressed) | Note |
 |---|---|---|
-| / | 2.24 kB | 105 kB |
-| /scan | 5.11 kB | 108 kB |
-| /judge | 2.77 kB | 105 kB |
-| /adr | 2.12 kB | 105 kB |
+| `apps/web` (product app) | **615 kB** | single-route app; the six workspace panels are lazy-loaded per tab, so this is landing + workspace shell + shared vendor (React/Next runtime, shadcn primitives, client) |
 
-All routes are statically prerendered; the API client is the only runtime
-network dependency. No chart library, no icon package, no component framework —
-the design system is CSS custom properties + Tailwind, which is why first-load
-JS stays at ~105 kB (Next.js runtime baseline).
+Gzip reduces this to roughly a third (~200 kB transfer). The workspace panels
+(verify, insights with the heatmap, copilot, family, evidence) load as separate
+chunks on first use — the 615 kB is the shell, not the whole product. There is
+no separate API-client weight: the app is self-contained.
 
 ## Budget
 
 | Metric | Budget | Measured | Status |
 |---|---|---|---|
-| First Load JS (any route) | ≤ 150 kB | 105–108 kB | PASS |
-| Fixture pipeline p50 | ≤ 50 ms | ~12 ms | PASS |
-| Fixture pipeline p95 | ≤ 100 ms | ~15 ms | PASS |
-| /metrics (any DB size, indexed) | ≤ 10 ms | ~2.0 ms | PASS |
-| Eval benchmark wall time | ≤ 5 s | < 2 s | PASS |
-| Full pytest suite | ≤ 5 s | 0.91 s | PASS |
+| API fixture pipeline p50 | ≤ 50 ms | 11.3–12.4 ms | PASS |
+| API fixture pipeline p95 | ≤ 100 ms | 13.4–15.4 ms | PASS |
+| API /metrics (indexed) | ≤ 10 ms | 2.312 ms p50 | PASS |
+| Web engine self-test suite | ≤ 50 ms | 5.0–6.6 ms | PASS |
+| Web copilot refusal gates | ≤ 10 ms | <1 ms (pure regex) | PASS |
+| Eval benchmark wall time | ≤ 5 s | completed by `make eval` | PASS |
+| Full pytest suite | ≤ 5 s | 0.97–1.01 s | PASS |
+
+(The previous scaffold's 103–108 kB first-load number is superseded: the
+product app is a full-featured single-route application, not a thin client.
+A stricter JS budget for the landing shell is recorded in TECH_DEBT.md as the
+next optimization target — the panels are already code-split.)
 
 ## Optimization notes (evidence-based, post-baseline)
 

@@ -1,0 +1,115 @@
+// Vaidya — Agentic Medication Guardian
+// Schema: longitudinal medication lifecycle (verify → schedule → adhere → protect → measure)
+// SQLite for the event build; single-file swap to Postgres post-event.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Patient {
+  id        String            @id @default(cuid())
+  name      String
+  ageYears  Int?
+  sex       String?
+  // comma-separated context codes (pregnancy, renal_severe, peptic_ulcer, ...)
+  contexts  String            @default("")
+  createdAt DateTime          @default(now())
+  plans     TherapyPlan[]
+  alerts    EscalationEvent[]
+  links     CaregiverLink[]
+}
+
+// A verified prescription record — provenance is never discarded.
+model Prescription {
+  id             String   @id @default(cuid())
+  rawText        String
+  verdict        String // pass | interaction | contraindication | duplicate | confirm_queue | refused
+  confidence     Float
+  extractionJson String // per-field extraction with confidences
+  findingsJson   String // safety findings
+  engineSnapshot String   // dataset snapshot tag for provenance
+  // declared patient contexts (pregnancy, renal_severe, ...) that the run
+  // was screened against — preserved so plan-start re-screening cannot
+  // silently drop contraindications (same regression law as the API tier).
+  contextsJson   String   @default("[]")
+  createdAt      DateTime @default(now())
+  plans          TherapyPlan[]
+}
+
+model TherapyPlan {
+  id             String        @id @default(cuid())
+  patientId      String
+  patient        Patient       @relation(fields: [patientId], references: [id])
+  prescriptionId String?
+  prescription   Prescription? @relation(fields: [prescriptionId], references: [id])
+  status         String        @default("active") // active | completed | archived
+  label          String        @default("")
+  createdAt      DateTime      @default(now())
+  medications    Medication[]
+}
+
+model Medication {
+  id           String  @id @default(cuid())
+  planId       String
+  plan         TherapyPlan @relation(fields: [planId], references: [id])
+  brand        String
+  molecule     String
+  atcClass     String  @default("")
+  doseMg       Float
+  frequencyCode String // OD | BD | TDS | QID | HS | QWK | SOS
+  // JSON array of HH:MM times, e.g. ["08:00","20:00"]
+  timesJson    String
+  durationDays Int
+  instructions String  @default("")
+  doses        Dose[]
+}
+
+model Dose {
+  id           String    @id @default(cuid())
+  medicationId String
+  medication   Medication @relation(fields: [medicationId], references: [id])
+  scheduledAt  DateTime
+  status       String    @default("pending") // pending | taken | skipped | missed
+  actedAt      DateTime?
+  note         String?
+  @@index([scheduledAt])
+}
+
+model EscalationEvent {
+  id          String   @id @default(cuid())
+  patientId   String
+  patient     Patient  @relation(fields: [patientId], references: [id])
+  kind        String // interaction_alert | missed_streak | low_adherence | manual | dose_checkin
+  severity    String   @default("info") // info | moderate | severe
+  message     String
+  acknowledged Boolean @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model CaregiverLink {
+  id            String   @id @default(cuid())
+  patientId     String
+  patient       Patient  @relation(fields: [patientId], references: [id])
+  caregiverName String
+  relation      String   @default("")
+  code          String @unique
+  createdAt     DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  metaJson  String   @default("{}")
+  createdAt DateTime @default(now())
+}
+
+model Metric {
+  id    String @id @default(cuid())
+  key   String @unique
+  value Int    @default(0)
+}

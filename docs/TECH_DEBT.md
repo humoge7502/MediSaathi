@@ -14,8 +14,9 @@ marked.
 | TD-6 | `eval/eval.py` imports via `sys.path` hacks instead of an installed eval package | kept eval standalone for the event build | brittle import ordering; works today, CI-verified | S | P3 |
 | TD-7 | `verdict_counts()` and metrics are process-local; multi-worker uvicorn gives per-worker counters | single-process demo deployment | `/metrics` under-counts behind `--workers N` | S | P3 (fold into Postgres/Redis swap) |
 | TD-8 | Fixture parser regexes accept only the shipped line grammar | fixtures simulate OCR | live tier does not use this parser (schema JSON), so risk is contained to fixtures | S | P3 |
-| TD-9 | No request-body size cap on JSON endpoints (uploads are capped at 12 MB) | FastAPI defaults | oversized JSON burns a request slot; rate limiter bounds abuse | S | P3 |
+| TD-9 | No request-body size cap on JSON endpoints (multipart uploads are now bounded at 12 MiB while streaming) | FastAPI defaults | oversized JSON burns a request slot; rate limiter bounds abuse | S | P3 |
 | TD-10 | `nlm_schema_fail_total`-style counters reset on restart | in-memory observability | long-horizon dashboards need a metrics store | S | P3 |
+| TD-11 | Web landing shell first-load JS is ~615 kB uncompressed (panels are already code-split per tab) | single-route product app ships the full shared vendor + shell | slower first paint on weak demo hardware; gzip ≈ 200 kB | M | P2 — next optimization target (audit shared chunk contents, trim unused shadcn primitives, move heavy libs fully behind dynamic chunks) |
 
 ## Resolved during this audit (kept for the record)
 
@@ -25,7 +26,10 @@ marked.
 | RES-2 | `/metrics` reported a hardcoded `llm_schema_fail_total: 0` | real counter in `vision.py`, incremented on every schema/network failure | `test_metrics_schema_fail_counter_is_real` |
 | RES-3 | `/metrics` verdict aggregation O(n) over stored JSON | indexed `verdict_kind` column + `GROUP BY`; in-place migration | `store` tests + bench (`/metrics` ~2 ms) |
 | RES-4 | no rate limiting, no security headers, no request IDs on the API | `middleware_security.py` (sliding-window limiter, headers, sane-id propagation) | red-team suite |
-| RES-5 | upload trusted declared MIME alone | MIME allow-list + magic-byte sniffing | `test_upload_rejects_non_image_magic_bytes` |
+| RES-5 | upload trusted declared MIME alone and buffered the full multipart body | MIME allow-list + bounded read + signature/MIME agreement + recognized HEIF brands | upload boundary regressions in `test_redteam.py` |
 | RES-6 | `SearchList` fetched in render phase (setState-during-render anti-pattern) | moved to `useEffect` with cancellation | tsc + build |
 | RES-7 | ADR form's numeric input had no accessible label | `aria-label` added | manual |
 | RES-8 | no route-level error boundary or 404 page | `error.tsx` / `not-found.tsx` added | build |
+| RES-9 | web degraded tier queued everything at a flat 70% confidence (no-LLM tier could not demonstrate the safety plane) | the plane uses its own formulary-grounded brand confidence when the deterministic splitter ran | live HTTP smoke: warfarin+aspirin → interaction, triple whammy → combination, child+doxy → contraindication, garbage → confirm queue |
+| RES-10 | dose "taken" could be re-logged (double tap/replay overwrote the record) and the catch-up guardrail claimed a skip it never persisted | first-action-wins accounting (`already_acted`) + guarded skip persisted to the DB | live HTTP smoke + audit trail |
+| RES-11 | plan-start re-ran the safety plane with an empty context, dropping contraindication screening | declared contexts persisted on the Prescription (`contextsJson`) and re-applied at plan start | live HTTP smoke with `age_under_12` |

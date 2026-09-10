@@ -26,15 +26,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
+      - uses: oven-sh/setup-bun@v2
       - name: Install
         working-directory: apps/web
-        run: npm install --no-audit --no-fund
+        run: bun install --frozen-lockfile
+      - name: Prisma client
+        working-directory: apps/web
+        run: bunx prisma generate
       - name: Typecheck
         working-directory: apps/web
-        run: npx tsc --noEmit
-      - name: Build
+        run: bun run typecheck
+      - name: Deterministic selftest (engine 18-case suite + copilot gates)
         working-directory: apps/web
-        run: npm run build
+        run: bun run selftest
+      - name: Production build
+        working-directory: apps/web
+        run: bun run build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"

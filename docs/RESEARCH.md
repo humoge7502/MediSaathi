@@ -63,7 +63,7 @@ real pipeline (no mocks); metrics computed against labels.
 | frequency recall | 0.94 | 0.94 |
 | **verdict agreement** | **1.00** | **0.17** |
 | refusal precision | 1.00 | n/a (refusals suppressed by design) |
-| latency p50 (fixture tier) | < 1 ms | 0 ms |
+| latency p50 (fixture tier) | 11.3–12.4 ms endpoint run | 0 ms in eval harness |
 
 The brand-recall parity is the point: **reading is not the hard part — deciding
 is.** With the gate and formulary removed, verdict agreement collapses to 0.17

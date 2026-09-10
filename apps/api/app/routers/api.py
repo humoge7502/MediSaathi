@@ -54,19 +54,50 @@ class AdrDraft(BaseModel):
 # (Regression hardening: the endpoint used to trust the declared MIME alone, so
 # a JSON or HTML body with image/jpeg content-type would reach the vision path.)
 ALLOWED_MIME = {"image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"}
+MAX_IMAGE_BYTES = 12 * 1024 * 1024
+_READ_CHUNK_BYTES = 1024 * 1024
+_HEIF_BRANDS = {b"heic", b"heix", b"hevc", b"hevx", b"mif1", b"msf1"}
 
 
 def _sniff_image_mime(b: bytes) -> str | None:
-    """Magic-byte sniff of the formats phone cameras and scans actually produce."""
+    """Magic-byte sniff for supported formats; reject generic ISO-BMFF files."""
     if b[:3] == b"\xff\xd8\xff":
         return "image/jpeg"
     if b[:8] == b"\x89PNG\r\n\x1a\n":
         return "image/png"
-    if b[:4] == b"RIFF" and b[8:12] == b"WEBP":
+    if len(b) >= 12 and b[:4] == b"RIFF" and b[8:12] == b"WEBP":
         return "image/webp"
-    if len(b) > 12 and b[4:8] == b"ftyp":  # HEIC/HEIF ISO-BMFF family
-        return "image/heic"
+    if len(b) >= 16 and b[4:8] == b"ftyp":  # HEIF/HEIC ISO-BMFF family
+        major = b[8:12]
+        compatible = {b[i:i + 4] for i in range(16, len(b) - 3, 4)}
+        if major in _HEIF_BRANDS or compatible & _HEIF_BRANDS:
+            return "image/heic"
     return None
+
+
+def _mime_matches(declared: str, detected: str | None) -> bool:
+    """Require the client declaration and signature to describe the same type."""
+    if detected is None:
+        return False
+    if declared == detected:
+        return True
+    return declared == "image/heif" and detected == "image/heic"
+
+
+async def _read_image_limited(image: UploadFile) -> bytes:
+    """Read at most the limit plus one sentinel without trusting Content-Length."""
+    chunks: list[bytes] = []
+    total = 0
+    while total <= MAX_IMAGE_BYTES:
+        remaining = MAX_IMAGE_BYTES + 1 - total
+        chunk = await image.read(min(_READ_CHUNK_BYTES, remaining))
+        if not chunk:
+            break
+        total += len(chunk)
+        if total > MAX_IMAGE_BYTES:
+            raise HTTPException(status_code=413, detail="image exceeds 12 MB")
+        chunks.append(chunk)
+    return b"".join(chunks)
 
 
 def _parse_context(context: str) -> dict[str, bool]:
@@ -128,18 +159,17 @@ async def upload_prescription(image: UploadFile = File(...), context: str = "") 
             status_code=415,
             detail=f"unsupported content type {image.content_type!r}; "
                    "expected an image (jpeg/png/webp/heic)")
+    image_bytes = await _read_image_limited(image)
+    if not image_bytes:
+        raise HTTPException(status_code=422, detail="empty image")
+    detected_mime = _sniff_image_mime(image_bytes)
+    if not _mime_matches(image.content_type or "", detected_mime):
+        raise HTTPException(
+            status_code=422,
+            detail="upload signature does not match its declared image type")
     rx = create("live")
     ctx = _parse_context(context)
     rx.context = ctx
-    image_bytes = await image.read()
-    if not image_bytes:
-        raise HTTPException(status_code=422, detail="empty image")
-    if len(image_bytes) > 12 * 1024 * 1024:
-        raise HTTPException(status_code=413, detail="image exceeds 12 MB")
-    if _sniff_image_mime(image_bytes) is None:
-        raise HTTPException(
-            status_code=422,
-            detail="upload is not a recognizable image (jpeg/png/webp/heic)")
     try:
         result = extract_live(image_bytes)
     except RefusalCandidate as e:

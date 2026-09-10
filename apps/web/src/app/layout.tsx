@@ -1,40 +1,45 @@
 import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
-  title: "MediSaathi - Every prescription, understood",
+  title: "Vaidya — Agentic Medication Guardian",
   description:
-    "Verification-first prescription intelligence: photo to verified, spoken medication plan in Tamil, Hindi, or English.",
+    "Closed-loop medication safety: verify prescriptions with a deterministic safety engine, schedule therapy, measure adherence, and answer with citations — refusing, never guessing, when confidence drops.",
+  keywords: ["medication safety", "adherence", "drug interactions", "health AI", "VMEDITHON", "VIT Chennai"],
+  icons: {
+    icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b6b5d'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='%23faf9f6' font-family='Georgia'%3E%E0%A4%B5%3C/text%3E%3C/svg%3E",
+  },
+  openGraph: {
+    title: "Vaidya — Agentic Medication Guardian",
+    description: "The model reads. The rules decide. Every medicine checked, every dose remembered.",
+    type: "website",
+  },
 };
 
-const THEME_INIT = `
-(function(){
-  try {
-    if (localStorage.getItem("medisaathi-contrast") === "1") {
-      document.documentElement.classList.add("contrast");
-    }
-  } catch (e) {}
-})();
-`;
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
-      </head>
-      <body>
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-white focus:px-3 focus:py-2"
-        >
-          Skip to content
-        </a>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+      >
         {children}
-        <footer className="mx-auto max-w-3xl px-6 pb-10 pt-16 text-center text-xs" style={{ color: "var(--muted)" }}>
-          MediSaathi is an information tool, not a doctor. Discuss every medicine with your
-          pharmacist or doctor. Data snapshots are cited on every verdict.
-        </footer>
+        <Toaster />
       </body>
     </html>
   );

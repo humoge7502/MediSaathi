@@ -33,7 +33,7 @@ blocks were sequenced so a zero-failure demo existed at every point in time.
   projector failure drill. **SHIPPED**
 
 ## C. Verification gates
-- `make test` - 64 tests, including parser regression tests (the original
+- `make test` - 93 tests at the latest audit, including parser regression tests (the original
   scaffold's regexes were silent no-ops; tests now pin the parsing contract),
   gate-law properties, no-false-positive interaction shuffles, NLG slot
   traceability, upload gating, judge cache, store roundtrip.

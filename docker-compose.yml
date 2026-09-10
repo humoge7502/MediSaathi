@@ -17,14 +17,17 @@ services:
 
   web:
     build:
-      context: .
-      dockerfile: apps/web/Dockerfile
+      context: apps/web
+      dockerfile: Dockerfile
     environment:
-      - NEXT_PUBLIC_API_BASE=${NEXT_PUBLIC_API_BASE:-http://localhost:8000}
+      # The web app is self-contained (route handlers + SQLite). The API
+      # service above remains the deep-verification companion.
+      - DATABASE_URL=file:/app/db/custom.db
+    volumes:
+      - medisaathi-web-db:/app/db
     ports:
       - "3000:3000"
-    depends_on:
-      - api
 
 volumes:
   medisaathi-data:
+  medisaathi-web-db:

@@ -111,7 +111,27 @@ def test_upload_rejects_non_image_magic_bytes(monkeypatch):
     r = client.post("/api/v1/prescriptions/upload",
                     files={"image": ("rx.jpg", payload, "image/jpeg")})
     assert r.status_code == 422
-    assert "not a recognizable image" in r.json()["detail"]
+    assert "signature" in r.json()["detail"]
+
+
+def test_upload_rejects_signature_mime_mismatch(monkeypatch):
+    import app.vision as v
+    monkeypatch.setattr(v, "LIVE_KEY", "test-key")
+    png = b"\x89PNG\r\n\x1a\n" + b"\x00" * 64
+    r = client.post("/api/v1/prescriptions/upload",
+                    files={"image": ("rx.jpg", png, "image/jpeg")})
+    assert r.status_code == 422
+    assert "signature" in r.json()["detail"]
+
+
+def test_upload_rejects_generic_iso_bmff_as_heic(monkeypatch):
+    import app.vision as v
+    monkeypatch.setattr(v, "LIVE_KEY", "test-key")
+    generic_mp4 = (b"\x00\x00\x00\x18ftypisom" + b"\x00" * 64)
+    r = client.post("/api/v1/prescriptions/upload",
+                    files={"image": ("rx.heic", generic_mp4, "image/heic")})
+    assert r.status_code == 422
+    assert "signature" in r.json()["detail"]
 
 
 def test_upload_rejects_wrong_declared_mime(monkeypatch):
@@ -120,6 +140,23 @@ def test_upload_rejects_wrong_declared_mime(monkeypatch):
     r = client.post("/api/v1/prescriptions/upload",
                     files={"image": ("payload.txt", b"\xff\xd8\xff\xe0 fake", "text/plain")})
     assert r.status_code == 415
+
+
+def test_upload_rejects_oversized_upload_before_live_call(monkeypatch):
+    import app.vision as v
+    monkeypatch.setattr(v, "LIVE_KEY", "test-key")
+    called = {"value": False}
+
+    def fail(*a, **kw):
+        called["value"] = True
+        raise AssertionError("oversized upload reached the live vision call")
+
+    monkeypatch.setattr(v, "_live_call", fail)
+    jpeg = b"\xff\xd8\xff\xe0" + b"\x00" * (12 * 1024 * 1024)
+    r = client.post("/api/v1/prescriptions/upload",
+                    files={"image": ("rx.jpg", jpeg, "image/jpeg")})
+    assert r.status_code == 413
+    assert called["value"] is False
 
 
 def test_upload_accepts_real_jpeg_magic(monkeypatch):

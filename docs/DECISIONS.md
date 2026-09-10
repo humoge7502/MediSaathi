@@ -18,3 +18,7 @@
 | B8 | Judge cache baked FROM the pipeline, stamped + re-bakeable | Zero-network tier that hides nothing; `make bake-judge` |
 | B8 | Context codes frozen in contracts (CONTEXT_CODES) | Declared context is validated, unknown keys dropped |
 | B8 | Fix parser regexes + regression tests first | The scaffold's silent no-op regexes were found by reading, proven by tests |
+| B9 | **Integrate `vaidya-project.zip` frontend into `apps/web` as the product app** | The zip contained the newest, complete product UI (closed loop: verify→schedule→adhere→protect→explain→measure). The old scaffold was a thin client; keeping two overlapping UIs would split the demo. The FastAPI tier stays as the deep-verification companion (vision, multilingual NLG, pricing, judge cache) — see ADR 008 in docs/ARCHITECTURE.md |
+| B9 | Web degraded tier uses the engine's formulary-grounded confidence, not a flat 0.7 | Without the LLM, the deterministic splitter's lines queued at 70% and the plane never demonstrated. Exact formulary matches now auto-confirm (1.0) so the offline demo shows real verdicts; garbage still queues |
+| B9 | Prescription rows persist declared contexts (`contextsJson`); plan-start re-screens with them | Same regression law as the API tier's confirm fix: re-running the plane with an empty context silently drops contraindications |
+| B9 | Dose accounting is first-action-wins | Double "taken" (double tap, replay) must never log a second intake; the catch-up guardrail persists a protected skip instead of merely claiming it |

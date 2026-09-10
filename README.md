@@ -1,238 +1,275 @@
-# MediSaathi
+# MediSaathi · वैद्य — Agentic Medication Guardian
 
-**Every prescription, understood.** A verification-first prescription intelligence
-layer: snap a prescription photo, get back a medicine plan that is extracted with
-per-field confidence, screened for interactions on public drug data, spoken aloud
-in Tamil, Hindi, or English, priced against Jan Aushadhi generics - and **refused,
-not guessed, when confidence drops**.
+**Every medicine, checked. Every dose, remembered.**
 
-> VMEDITHON 3.0 (VIT Chennai) - Bio x Engineering track, software division.
+MediSaathi is a closed-loop medication-safety platform built for **VMEDITHON
+V3.0** (VIT Chennai, Bio × Engineering track). It closes the loop that
+reminder apps and pharmacy apps leave open:
+
+> **verify → schedule → adhere → protect → explain → measure**
+
+A deterministic safety engine — not the AI — decides what is safe. The AI only
+reads. **When the system isn't sure, it refuses. On purpose.** That refusal is
+the product working, not failing.
 
 ## Why
 
-Long-term therapy adherence in India sits at **16.6-24.1%**, **62% of antibiotics
-are supplied without a prescription**, and only **6-10% of adverse drug reactions
-are ever reported** (sources: 2023 Indian adherence meta-analysis; pooled pharmacy
-surveys; PvPI uptake analyses; WHO *Medication Without Harm*, $42B global cost).
-Commerce apps sell medicines and reminder apps send nudges. **Nothing verifies.**
+- Long-term therapy adherence in India sits at **16.6–24.1%**; a 2023
+  meta-analysis of 2,840 patients with NCDs measured an average adherence of
+  **~51%** (source recorded in `research/adherence.json`).
+- Medication errors cost the world **~$42B/year** (WHO, *Medication Without
+  Harm*; `research/who.json`).
+- **62% of antibiotics in India are supplied without a prescription**; only
+  **6–10% of adverse drug reactions** are ever reported.
+- Reminder apps ping. Pharmacy apps sell. **Nothing verifies.**
 
-## The one-line architecture law
+## The architecture law
 
 ```
-photo ──> PERCEPTION PLANE (vision LLM, JSON schema, per-field confidence)
-                │
-                ▼  [CONFIDENCE GATE 0.75 / 0.90]
-          SAFETY PLANE (deterministic rules: normalize -> interactions ->
-          contraindications -> duplicate-ATC -> dose caps)  ... zero LLM, zero network
-                │
-                ▼
-          plan in en/ta/hi (template-grounded voice over VERIFIED slots only)
+                 ┌────────────────────────────────────────────┐
+Rx text / photo →│ PERCEPTION · model proposes lines + per-  │
+                 │ line confidence (temperature 0, strict     │
+                 │ JSON; deterministic splitter as fallback)  │
+                 └──────────────────┬─────────────────────────┘
+                                    ▼
+                 ┌────────────────────────────────────────────┐
+                 │ GATE LAW · refuse < 0.75 · human-confirm   │
+                 │ 0.75–0.90 · auto-confirm ≥ 0.90            │
+                 └──────────────────┬─────────────────────────┘
+                                    ▼
+                 ┌────────────────────────────────────────────┐
+                 │ SAFETY PLANE · deterministic · zero network│
+                 │ normalize → pairwise interactions →        │
+                 │ combination graph (triple whammy, QT,      │
+                 │ serotonin, bleeding stacks) → contra-      │
+                 │ indications → duplicates → aggregate dose  │
+                 │ caps → verdict (first match wins)          │
+                 └──────────────────┬─────────────────────────┘
+                                    ▼
+              PLAN → dose schedule → adherence analytics (MPR,
+              streaks, 14-day heatmap) → family escalation feed
+              → grounded copilot (3 gates + citations)
+              → evidence tab (live self-test + eval)
 ```
 
-The model reads. The rules decide. Below threshold it refuses - and the refusal
-is a designed success state with a live counter, because in medication a
-confident wrong answer is worse than an honest one.
+**The model reads. The rules decide.** If every LLM on earth vanished, the
+safety plane, scheduling, adherence analytics and family circle keep working.
+That is the difference between an AI wrapper and an engineered system.
 
-## What works right now (offline, no keys)
+## What the product does (the closed loop)
 
-- **Deterministic safety engine** (`apps/api/app/safety/`): 84-brand Indian
-  formulary map, 47 DDInter-derived interaction pairs, 27 contraindication rules,
-  duplicate-ATC detection, same-brand double-dose detection, WHO AWaRe tagging,
-  and **dose-cap arithmetic** (per line AND aggregate across brands, e.g. two
-  paracetamol brands each under the cap whose sum exceeds it).
-- **Pipeline**: 12 sealed fixture cases covering clean prints, handwriting,
-  Tamil script, a corrupted scan, and a non-prescription photo.
-- **Verdict law** (`apps/api/app/verdict.py`): refuse < 0.75 confidence; human
-  confirm queue between 0.75-0.90; six verdict kinds, all property-tested.
-- **Spoken plan** (`apps/api/app/nlg/`): template-grounded NLG in English/Tamil/
-  Hindi with **per-sentence audio segments**, every brand and dose traceable to a
-  verified slot (tested). The web client speaks it via the Web Speech API.
-- **API** (`apps/api/`): FastAPI, typed end-to-end from `medisaathi-contracts`
-  (Pydantic v2), envelope responses, multipart upload, formulary autocomplete,
-  `/judge` sealed-case route with a **baked zero-network cache**, `/metrics`
-  refusal counters.
-- **Security layer** (`apps/api/app/middleware_security.py`): request IDs with
-  injection-proof validation, security headers, sliding-window rate limiting
-  (env-tunable), upload MIME allow-list **plus magic-byte sniffing** - covered
-  by a dedicated red-team test suite (26 tests).
-- **Persistence**: SQLite (WAL) store with an **indexed verdict column**
-  (O(1) metrics aggregation, in-place migration for older DBs), thread-safe,
-  restart-safe; single-file swap to Postgres post-event.
-- **Live vision** (`apps/api/app/vision.py`): implemented and key-gated -
-  schema-constrained, temperature-0 call to any OpenAI-compatible vision endpoint
-  (Gemini, OpenAI, Ollama, vLLM...), one retry on schema failure, honest refusal
-  when the model reports no prescription content. Schema failures are counted in
-  `/metrics`, never hidden.
-- **Eval CLI** (`eval/eval.py`): brand recall, **frequency recall**, verdict
-  agreement, refusal precision, latency p50/max on the fixture benchmark;
-  `--json` results per build tag; **`--ablation A1`** runs the raw-read
-  counterfactual (no gate, no formulary, no refusal) against the A4 full
-  pipeline.
+1. **Verify** — paste a prescription. An LLM reads it (per-line confidence),
+   but a **deterministic safety engine decides**: interactions, combination
+   rules (triple whammy, QT stacks, serotonin stacks), contraindications
+   against declared context, duplicate-molecule detection, aggregate dose
+   caps. Below the confidence gate it **refuses — by design**.
+2. **Schedule** — a verified plan becomes a dose timeline with a missed-dose
+   guardrail that refuses to let anyone double up.
+3. **Adhere** — check-ins build adherence %, MPR, streaks and a 14-day
+   heatmap — the metrics the adherence literature uses.
+4. **Protect** — a family circle receives timestamped escalations for late
+   doses, skipped doses, and plans that started with safety findings.
+5. **Explain** — a grounded copilot answers from a curated, source-attributed
+   knowledge base (MedlinePlus/NIH, NHS, WHO) with three deterministic gates:
+   emergency triage → scope refusal → grounded generation with citations.
+   Low retrieval ⇒ refusal, not improvisation.
+6. **Measure** — the in-app Evidence tab runs an 18-case engine self-test
+   (no LLM, no network) and a 10-case copilot evaluation with an automated
+   rubric judge. What is measured is shown; nothing is claimed.
+
+## Repository — two tiers, one law
+
+| Tier | Path | Role | Stack |
+|---|---|---|---|
+| **Product app** | `apps/web` | The demo product above — self-contained, offline-capable | Next.js 16 fullstack, TypeScript safety plane, Prisma + SQLite, bun |
+| **Verification service** | `apps/api` | Deep verification: vision-LLM perception, spoken plans in en/ta/hi, Jan Aushadhi pricing, sealed-fixture judge cache | FastAPI, Pydantic contracts, SQLite WAL |
+
+The safety plane exists in both languages (Python + TypeScript ports), each
+with its own independent test suite — the law is the same, the evidence is
+double.
+
+## What is measured (not claimed)
+
+| Benchmark | Result | Nature |
+|---|---|---|
+| Web engine self-test suite | **18/18 verdicts correct (100%)**, suite ~5–7 ms | Deterministic, reproducible, runs live in the Evidence tab |
+| Web copilot refusal gates | emergency + scope refusals fire in ~0 ms, before any generation | Deterministic (pure regex + retrieval floor) |
+| Web live degraded-tier verify | warfarin+aspirin → interaction; triple whammy → combination rule; child+doxy → contraindication; garbage → confirm queue — all **without any model** | Measured via HTTP smoke (see docs/TESTING.md) |
+| API suite | **93 tests passing** (safety properties, golden paths, perception, red-team) | `make test` |
+| API fixture benchmark | brand recall 1.00 · frequency recall 0.94 · verdict agreement 1.00 · refusal precision 1.00 (n=12) | `make eval` |
+| API latency | p50 11.3–12.4 ms, p95 13.4–15.4 ms (in-process ASGI, 100-request bench) | `python3 tools/bench.py` |
+| A1/A4 ablation | verdict agreement **1.00 → 0.17** without the gate/formulary | `make ablation` — the safety plane, not the reading, is the product |
+| Copilot eval (10 labeled cases) | 100% type accuracy, groundedness 1.00, safety 1.00 (single run, automated rubric judge) | Engineering telemetry, **not** clinical validation |
+
+Honesty rules embedded in the product: dataset provenance (DDInter / Stockley /
+FDA / CredibleMeds / BMJ / WHO / NHS / MedlinePlus) is displayed wherever data
+is used; refusal is a designed success state; the eval panel states it is not
+clinical validation; every screen says "information layer — not a doctor".
 
 ## Quickstart
 
 ```bash
-make setup        # contracts + api (editable installs)
-make test         # 90 tests: safety-plane properties + API + perception + red-team
-make eval         # benchmark table (A4)
-make demo-check   # FULL offline demo gate (sealed cases + tests + eval)
-make run          # uvicorn on :8000, then open /docs
+# Web tier (the product) — requires bun
+cd apps/web
+bun install
+bun run db:push        # create SQLite schema (demo DB optional: Reset demo data seeds Asha's plan)
+bun run dev            # http://localhost:3000
+
+# API tier (verification service) — requires python3
+make setup
+make run               # http://localhost:8000/docs
 ```
 
-Frontend:
+The landing page is the pitch; **Launch app** opens the workspace. First run:
+click **Reset demo data** to create Asha's demo plan with 14 days of dose
+history (deterministic seed, ~79% adherence).
+
+Demo the pipeline in 60 seconds:
 
 ```bash
-make web          # installs, then next dev on :3000
-# or: cd apps/web && npm install && npm run build && npm start
-```
+# Product app (works fully offline — deterministic tier):
+curl -X POST localhost:3000/api/verify -H 'Content-Type: application/json' \
+  -d '{"text":"Warf 5 mg OD 30 days\nEcosprin 75 mg OD 30 days","contexts":[]}'
+# → verdict: "interaction" — severe DDInter bleeding finding
 
-Docker:
+curl -X POST localhost:3000/api/verify -H 'Content-Type: application/json' \
+  -d '{"text":"Losar 50 mg OD 30 days\nLasix 40 mg OD 30 days\nBrufen 400 mg TDS 5 days","contexts":[]}'
+# → triple whammy combination (ARB + diuretic + NSAID → AKI risk)
 
-```bash
-make docker       # api on :8000, web on :3000, SQLite volume persisted
-```
+curl localhost:3000/api/evidence
+# → 18-case engine self-test, 100% pass, dataset provenance
 
-Try the pipeline:
-
-```bash
+# API tier:
 curl -X POST "localhost:8000/api/v1/prescriptions?sample_id=RX-002"
-# -> meta.verdict = "interaction"  (warfarin + aspirin, severe, DDInter)
-
-curl -X POST "localhost:8000/api/v1/prescriptions?sample_id=RX-006"
-# -> meta.verdict = "refused"      (corrupted scan; refusal-as-feature)
-
-curl "localhost:8000/api/v1/formulary/search?q=paracetamol"
-# -> autocomplete over the 84-brand formulary
+# → meta.verdict = "interaction" (warfarin + aspirin, severe, DDInter)
 ```
 
-## Benchmark (fixture set v0)
+## The demo's resilience tiers
 
-| Metric | Value | Note |
-|---|---|---|
-| n | 12 | sealed fixture cases; labels in `data/cases_manifest.json` + `data/eval_labels.csv` |
-| brand recall | 1.00 | formulary-seeded fixtures |
-| frequency recall | 0.94 | TAC-code parsing vs labeled frequencies |
-| verdict agreement | 1.00 | vs expected verdicts |
-| refusal precision | 1.00 | refused cases are exactly the unusable images |
-| latency p50 | < 1 ms | deterministic fixture tier |
+1. **Full tier** — LLM perception + grounded copilot + rubric judge (needs the model service).
+2. **Degraded tier** — model unavailable: `/api/verify` falls back to a
+   deterministic line-splitter and the safety plane runs at full strength
+   using its own formulary-grounded confidence (verified: the warfarin,
+   triple-whammy, contraindication and refusal verdicts all appear without
+   any AI); the copilot honestly reports the language service is down and
+   refuses to improvise.
+3. **Offline tier** — engine self-test, scheduling, analytics, catch-up
+   guardrails and family feed never touch the network.
 
-Run `python eval/eval.py --ablation A1` to see the counterfactual: with the gate
-and formulary removed, verdict agreement collapses to **0.17** - the safety plane,
-not the reading, is the product. `--json` emits machine-readable results;
-commit them beside the build tag (`MEDISAATHI_BUILD_TAG`).
-
-## Performance (measured)
-
-`python3 tools/bench.py` — full pipeline p50 ≈ **12 ms** / p95 ≈ **15 ms**
-in-process (middleware + rule engine + durable write); `/metrics` ≈ 2 ms via
-indexed `GROUP BY`; web first-load JS ≈ **105 kB**, statically prerendered.
-Budgets and methodology: [docs/PERFORMANCE.md](docs/PERFORMANCE.md).
+The demo cannot be killed by WiFi, quota or a model outage — it *degrades
+honestly, visibly, and safely*.
 
 ## Security posture
 
-- Rate limiting (60 writes/min per client, sliding window; env-overridable),
-  security headers, request-ID correlation with injection-proof validation.
-- Upload hardening: declared MIME allow-list + magic-byte sniffing; a JSON
-  payload wearing `image/jpeg` is rejected before any model call.
-- Prompt-injection containment: perception output is inert text; injected
-  instructions cannot reach verdict fields, fabricate verdicts, or bypass the
-  gate (tested in `tests/test_redteam.py`).
-- Privacy by design: no PII collected, context is declared-never-inferred and
-  vocabulary-validated, sensitive content is never logged.
-- Honest boundaries: no auth in the event build (read-only demo scope, rate
-  limited); web CSP keeps `unsafe-inline` (documented debt, nonce regime is the
-  follow-up). Full model: [docs/SECURITY.md](docs/SECURITY.md) and
-  [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+- **Deterministic safety gates** — dose-change, stop/start and emergency
+  classes refuse before any generation; the double-dose guardrail is a
+  first-action-wins law with audit; catch-up guidance is conservative and
+  never advises doubling.
+- **Prompt-injection containment** — perception output is inert text; the LLM
+  only proposes lines, rules decide; invented brands land in the confirm
+  queue (tested in both tiers).
+- **Input validation** — length caps and JSON validation on every route;
+  findings are rendered as text, never executed.
+- **Server-side AI only** — the model SDK is imported exclusively in server
+  code; no keys reach the browser.
+- **Audit trail** — every verify, plan start, dose action, copilot query and
+  eval run writes structured `AuditLog` metadata.
+- **API tier** — request-ID correlation with injection-proof validation,
+  security headers, sliding-window rate limiting, upload MIME allow-list
+  **plus** magic-byte sniffing (red-team suite: 29 tests).
+- **Privacy by design** — no PII; single demo identity; data stays local
+  (SQLite); no third-party transmission beyond the optional model prompt.
+
+Full model: [docs/SECURITY.md](docs/SECURITY.md) and
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
+## Tests
+
+```bash
+make test          # API suite: 93 tests (safety, golden paths, perception, red-team)
+make eval          # API benchmark table
+make ablation      # A1-vs-A4 counterfactual
+make demo-check    # full offline API demo gate
+make web-check     # web gate: typecheck + 18-case selftest + copilot gates + build
+cd apps/web && bun run selftest   # the deterministic suite, in seconds
+```
+
+CI (`.github/workflows/ci.yml`) runs both tiers on every push/PR.
 
 ## Engineering decisions (the interview section)
 
-**Why two planes?** An LLM that both reads and decides cannot be audited.
-Splitting them gives a property-tested, zero-network decision core and makes
-the model swappable without touching safety.
-
-**Why contracts-first?** `packages/contracts` (Pydantic v2) is the single source
-of truth; the TS client mirrors it. The frontend cannot silently drift from the
-backend because every response is one `Envelope`.
-
-**Why a modular monolith?** Demo scale does not justify microservices. The store
-API (`create/get/put/count/verdict_counts`) is the documented Postgres swap
-point; the limiter interface is the Redis swap point; the vision tier already
-speaks any OpenAI-compatible endpoint (or local vLLM/Ollama for on-prem).
-
-**What makes this technically difficult?**
-1. Refusal discipline under a confidence gate - the A1/A4 ablation exists
-   because the naive version (raw read) measurably collapses.
-2. Slot-traceable multilingual NLG - spoken doses are template-grounded over
-   verified fields, tested per segment; nothing is freely generated.
-3. Aggregate dose-cap arithmetic across brands - two sub-cap paracetamol lines
-   can sum over the cap; caught by the engine, property-tested.
-4. A demo that cannot fail on stage - three tiers (baked cache, sealed
-   fixtures, key-gated live) with rehearsed failure drills.
-
-**What I would scale next?** Postgres behind the store API, Redis-backed
-limiter + counters, a labeled 300-case corpus with per-field labels, a
-fine-tuned small vision model to cut live-tier cost, and a pharmacist review
-console over the (already persisted) confirm queue.
-
-## The demo's three tiers
-
-1. **Cached tier** - `make bake-judge` runs the real pipeline once and persists
-   full envelopes to `apps/api/app/data/judge_cache.json`; `/api/v1/judge/
-   cases/{id}/cached` then answers with zero network. Re-baked from truth,
-   never hand-edited.
-2. **Fixture tier** - the sealed 12-case corpus answers offline, deterministically.
-3. **Live tier** - set `MEDISAATHI_VISION_KEY` (+ optional `MEDISAATHI_VISION_
-   BASE_URL`/`MODEL`) and `POST /api/v1/prescriptions/upload` with a multipart
-   image. Without the key it returns an honest 503, never a fake.
+- **Why two planes?** An LLM that both reads and decides cannot be audited.
+  Splitting them gives a property-tested, zero-network decision core and makes
+  the model swappable without touching safety.
+- **Why a deterministic safety plane in TypeScript *and* Python?** The product
+  app is one-language, judge-demoable from one URL; the API tier carries the
+  deep-verification features (vision, multilingual NLG, pricing). Two
+  independent implementations of the same law, each with its own test suite —
+  and the A1/A4 ablation proves the plane (not the reading) is what carries
+  safety.
+- **Why SQLite/Prisma?** The event build runs anywhere and survives demo-laptop
+  restarts; the schema is Postgres-portable, and the store APIs are the
+  documented swap points.
+- **Why a zero-dependency BM25 retrieval?** Retrieval must be auditable and
+  offline-safe in a safety-adjacent product; 30 curated chunks don't need
+  embeddings. A vector index is a post-event upgrade, not a dependency.
+- **Why refusal is a first-class result?** In medication, a confident wrong
+  answer is worse than an honest one. Refusals are counted, displayed and
+  designed — never hidden.
+- **Why contracts/envelope discipline?** Typed end-to-end; the frontend cannot
+  silently drift from the backend.
+- **What I would scale next?** Postgres, Redis limiter, OTP + ABDM-style
+  consent, a labeled 300-case corpus with versioned DDInter/RxNorm snapshots,
+  and a pharmacist review console over the (already persisted) confirm queue.
 
 ## Documentation map
 
 | Doc | What's inside |
 |---|---|
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | system/data-flow diagrams, two-plane law, ADR table, FMEA |
-| [docs/RESEARCH.md](docs/RESEARCH.md) | problem, hypothesis, method, measured results, limitations (labeled claims) |
-| [docs/TESTING.md](docs/TESTING.md) | test pyramid, red-team coverage table, regression law |
+| [docs/BLUEPRINT.md](docs/BLUEPRINT.md) | evidence → concepts → architecture → execution record for the closed-loop build |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | both tiers, the two-plane law, data flows, ADR table, FMEA |
+| [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) | 4-minute judge walkthrough + contingency drills |
+| [docs/RESEARCH.md](docs/RESEARCH.md) | problem, hypothesis, method, measured results, limitations |
+| [docs/TESTING.md](docs/TESTING.md) | test pyramid, red-team table, web regressions fixed with evidence |
 | [docs/PERFORMANCE.md](docs/PERFORMANCE.md) | measured latency + bundle numbers, budgets |
 | [docs/SECURITY.md](docs/SECURITY.md) | threat model, controls, honest gaps |
 | [docs/TECH_DEBT.md](docs/TECH_DEBT.md) | open debt ledger + resolved-with-tests record |
 | [docs/HACKATHON_STRATEGY.md](docs/HACKATHON_STRATEGY.md) | judged scorecard, demo path, judge-attack Q&A |
-| [docs/DECISIONS.md](docs/DECISIONS.md) | append-only decision log |
-| [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) | 90-second script + 5 failure drills |
-
-## Honest limits (read before judging us)
-
-- **Demo scope**: extraction runs on a sealed fixture corpus (deterministic,
-  offline, zero-key). The live vision path is implemented and key-gated; it was
-  not the demo default so the walkthrough cannot fail on quota or WiFi.
-- **Handwriting**: severe scrawl degrades to the confirmation queue or refusal,
-  by design and by measurement.
-- **Data**: seed CSVs are synthetic-curated with sources recorded
-  (`data/sources.json`); production replaces them with versioned snapshots.
-- **No auth** in the event build (read-only demo scope); OTP + ABDM-style consent
-  is the first post-event line item.
-- **Not a doctor**: information layer only; every screen and spoken plan says so.
+| [docs/audit/REPOSITORY_AUDIT.md](docs/audit/REPOSITORY_AUDIT.md) | full repository audit (pre-integration state + addendum) |
+| [docs/product/PRODUCT_STRATEGY.md](docs/product/PRODUCT_STRATEGY.md) | personas, JTBD, differentiation, roadmap |
+| [docs/research/COMPETITIVE_ANALYSIS.md](docs/research/COMPETITIVE_ANALYSIS.md) | feature matrix vs Medisafe/Tata 1mg/etc. |
+| [research/](research/) | literature review, adherence/who/competitor sources |
 
 ## Repository layout
 
 ```
-apps/api            FastAPI service (pipeline, verdicts, plan, price, ADR, judge, upload)
-apps/web            Next.js 16 frontend (scan flow, confirm queue, TTS plan, judge timeline)
-packages/contracts  Pydantic v2 contracts - the single source of truth
-data/               seed CSVs, fixture corpus, cases manifest, eval labels, sources
-eval/               benchmark CLI (A1/A4 ablation, recall/agreement/precision/latency)
+apps/api            FastAPI verification service (pipeline, verdicts, plan, price, ADR, judge, upload)
+apps/web            Next.js 16 fullstack product app (verify·today·insights·copilot·family·evidence)
+  └ src/lib/safety  deterministic TS safety plane (dataset, engine, adherence, selftest)
+  └ src/lib/ai      gated AI layer (extraction, retrieval, copilot, evals)
+  └ prisma/         longitudinal schema (9 models, provenance-preserving)
+packages/contracts  Pydantic v2 contracts — the API tier's single source of truth
+data/               API seed CSVs, fixture corpus, cases manifest, eval labels, sources
+eval/               API benchmark CLI (A1/A4 ablation, recall/agreement/precision/latency)
 tools/              demo-check gate, judge-cache baker, latency bench
-docs/               architecture, research, testing, performance, security, strategy
+docs/               architecture, blueprint, testing, security, strategy, audit, research
+research/           literature review + recorded external sources
 ```
 
-## Team
+## Honest limits (read before judging us)
 
-| Role | Owns |
-|---|---|
-| Pipeline lead | vision plane, LLM schemas, API |
-| Safety engineer | rule engine, dosing rules, NLG templates |
-| Product frontend | design system, judge route, a11y |
-| Data + research | benchmark, labeling, eval harness, docs |
+- **Scope** — perception reads pasted/typed text; the API tier's photo path is
+  live and key-gated (the demo default is the deterministic corpus so the
+  walkthrough cannot fail on quota or WiFi).
+- **Data** — curated demo corpus with recorded per-rule sources; production
+  swaps in versioned DDInter/RxNorm/DailyMed snapshots. No statistics are
+  fabricated in-product.
+- **Auth** — event build is single-patient demo scope; caregiver links are
+  code-based views, not authenticated accounts.
+- **Not a doctor** — information layer only; not a medical device; not
+  clinical validation. In an emergency, contact local emergency services.
 
 ## License
 
-Code: MIT. Data: CC-BY 4.0 (citation required). See `data/sources.json`.
+Code: MIT. Curated datasets: CC-BY 4.0 with recorded sources
+(`apps/web/src/lib/safety/dataset.ts` header, `data/sources.json`).

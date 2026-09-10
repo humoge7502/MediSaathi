@@ -10,7 +10,7 @@ cd apps/web && npm install   # frontend
 ## The gates (all must pass before merge)
 
 ```bash
-make test           # 64 tests
+make test           # API/safety/red-team suite (count changes with coverage)
 make eval           # benchmark table
 make demo-check     # sealed cases + tests + eval
 make ablation       # A1/A4 counterfactual runs

@@ -11,7 +11,7 @@ category, not to inflate.
 | Innovation | 8 | refusal-as-a-feature with a live counter; confirm queue as a product surface, not an error; two-plane law |
 | Technical depth | 9 | contracts-first monorepo; deterministic plane property-tested; A1/A4 ablation; indexed store; security middleware |
 | Impact | 8 | adherence 16–24%, 62% OTC antibiotics, 6–10% ADR reporting — all cited; price layer is real savings |
-| Feasibility | 9 | everything in the demo runs offline; 90/90 tests; one-command gates (`make demo-check`) |
+| Feasibility | 9 | everything in the demo runs offline; 93 API tests plus web type/build gates; one-command gates (`make demo-check`) |
 | UX | 8 | calm clinical design system, per-field confidence UI, spoken plan with highlight, contrast mode for projectors |
 | Bio × Engineering | 7 | medical document intelligence + interaction pharmacology; sensor-agnostic safety plane named as the hardware hook |
 | Open Innovation | 8 | the verification-first pattern generalizes to any document-to-decision pipeline |

@@ -1,37 +1,73 @@
 # MediSaathi — Architecture
 
-Verification-first prescription intelligence. One architecture law governs
-every module: **the model reads; the rules decide.**
+Medication safety, closed-loop. One architecture law governs every module in
+both tiers: **the model reads; the rules decide.**
 
-## System overview
+The repository runs **two tiers**, deliberately:
+
+| Tier | Where | Role | Runtime |
+|---|---|---|---|
+| **Product app** | `apps/web` | The demo/hackathon product: verify → schedule → adhere → protect → explain → measure. Self-contained (route handlers + SQLite/Prisma + deterministic TypeScript safety plane). | Next.js 16 fullstack, bun |
+| **Verification service** | `apps/api` | The original deep-verification tier: vision-LLM perception, multilingual spoken plans, Jan Aushadhi pricing, sealed-fixture judge cache, red-team-tested security middleware. | FastAPI (Python) |
+
+Both tiers implement the same law with independently tested engines (Python
+and TypeScript ports of the safety plane). The product app is the primary
+judge-facing build; the API service is its deep-verification companion.
+
+## System overview — product app (`apps/web`)
 
 ```mermaid
 flowchart TB
-    subgraph WEB["apps/web - Next.js 16 (React 19, TS, Tailwind 4)"]
-        SCAN["/scan - capture, per-field confidence UI, confirm queue, spoken plan, price"]
-        JUDGE["/judge - sealed 90-second walkthrough (cached tier default)"]
-        ADR["/adr - PvPI adverse-event draft"]
+    subgraph WEB["apps/web — Next.js 16, single route"]
+        UI["Landing story ⇄ Workspace<br/>(Verify · Today · Insights · Copilot · Family · Evidence)"]
+        API["Route handlers: verify · plans · doses/action · analytics · copilot<br/>evals · evidence · family · metrics · seed · formulary/search"]
     end
+    subgraph CORE["Deterministic core (pure TS, zero network, zero model)"]
+        ENG["safety/engine.ts — normalize → interactions → combination graph<br/>→ contraindications → duplicates → dose caps → verdict"]
+        ADH["safety/adherence.ts — schedules, MPR, streaks, catch-up law"]
+        DS["safety/dataset.ts — 94 brands · 79 interactions · 34 contraindications · caps"]
+        ST["safety/selftest.ts — 18 expert-labeled cases"]
+    end
+    subgraph AI["AI layer (gated)"]
+        EXT["ai/extraction.ts — LLM proposes lines + confidence<br/>or deterministic splitter (degraded tier)"]
+        COP["ai/copilot.ts — 3 gates: emergency → scope refusal → grounded gen + citations"]
+        RET["ai/retrieval.ts — zero-dependency BM25 over 30 source-attributed chunks"]
+        EV["ai/evals.ts — 10 labeled cases + automated rubric judge"]
+    end
+    DB[("SQLite · Prisma<br/>Patient · Prescription · TherapyPlan · Medication<br/>Dose · EscalationEvent · CaregiverLink · AuditLog · Metric")]
+    UI --> API
+    API --> ENG & ADH & DB
+    ENG --> DS & ST
+    API --> EXT --> ENG
+    API --> COP --> RET
+    COP --> DB
+```
 
-    subgraph API["apps/api - FastAPI (monolith, modular)"]
-        MW["middleware_security: request id, security headers, sliding-window rate limit"]
+**The model reads. The rules decide.** If every LLM vanished, the safety plane,
+scheduling, adherence analytics and family feed keep working — the demo
+degrades honestly (deterministic line-splitter, honest refusals), never
+falsely.
+
+## System overview — verification service (`apps/api`)
+
+```mermaid
+flowchart TB
+    subgraph API["apps/api — FastAPI modular monolith"]
+        MW["middleware_security: request id, headers, sliding-window rate limit"]
         RT["routers/api: pipeline, confirm, plan, price, ADR, formulary"]
-        JR["routers/judge: sealed cases + baked cache"]
-        V["vision.py: perception plane (fixture tier / live vision-LLM, schema-constrained)"]
+        JR["routers/judge: sealed cases + baked zero-network cache"]
+        V["vision.py: perception plane (fixture / live vision-LLM, schema-constrained)"]
         G["verdict.py: gate law (refuse < 0.75, confirm < 0.90)"]
         SE["safety/engine.py: deterministic rules (zero LLM, zero network)"]
         NLG["nlg: template-grounded spoken plan, slot-traceable"]
         ST["store.py: SQLite WAL, indexed verdict_kind"]
     end
-
-    subgraph SEED["data/ - versioned seed snapshots"]
+    subgraph SEED["data/"]
         CSV["brands / interactions / contraindications CSVs"]
         FIX["12 sealed fixture cases"]
     end
-
-    WEB -->|"typed Envelope HTTP"| MW --> RT
-    MW --> JR
-    RT --> V -->|"per-field confidence ONLY"| G
+    MW --> RT & JR
+    RT --> V --> G
     RT --> SE --> G
     G --> NLG
     RT --> ST
@@ -39,93 +75,95 @@ flowchart TB
     V --> FIX
 ```
 
-## The two-plane law
+## The two-plane law (both tiers)
 
 | Plane | Contains | May call | Must never do |
 |---|---|---|---|
-| **Perception** (`vision.py`) | vision LLM (live tier), fixture parser | one OpenAI-compatible endpoint, schema-constrained, temp 0, 1 retry | decide anything safety-related; invent a verdict |
-| **Safety** (`safety/`, `verdict.py`) | normalization, interaction graph, contraindications, duplicate-ATC, dose caps, gate law | nothing — pure functions over in-memory CSV snapshots | call a model; touch the network |
+| **Perception** | vision LLM (live tier) / LLM line extraction / deterministic splitter | one model endpoint, schema-constrained, temperature 0, one retry | decide anything safety-related; invent a verdict |
+| **Safety** | normalization, interaction graph, combination rules, contraindications, duplicates, dose caps, gate law | nothing — pure functions over in-memory snapshots | call a model; touch the network |
 
-The confidence number is the **only** thing that crosses between planes.
+The confidence number is the **only** thing that crosses between planes. Below
+the gate it refuses — refusal is a designed success state with a live counter.
 
-## Verdict state machine (`verdict.py`)
-
-First match wins:
-
-1. unusable image (`RefusalCandidate`) → `refused`
-2. all fields < 0.75 → `refused`
-3. any field < 0.75 → `confirm_queue`
-4. no formulary match → `confirm_queue`
-5. unresolved queued fields → `confirm_queue`
-6. contraindication → `contraindication`
-7. severe interaction → `interaction`
-8. duplicate ATC / same-brand → `duplicate_atc`
-9. moderate interaction → `interaction`
-10. otherwise → `pass`
-
-Property: the spoken plan and price are served **only** when the queue is empty
-(`409` otherwise). Unverified fields can never reach rendered or spoken output —
-enforced in the router and tested.
-
-## Data flow (one run)
+## Product app data flow (one verify run)
 
 ```
-POST /api/v1/prescriptions?sample_id=RX-002&context=pregnancy
-  → validate context against contracts vocabulary (unknown keys dropped)
-  → create PrescriptionState (context persisted on the row)
-  → extract fields (fixture tier: deterministic; live tier: vision-LLM JSON)
-  → safety engine: normalize → interactions → contraindications → duplicates
-    → aggregate dose caps → dose plausibility
-  → verdict assembly (gate law above)
-  → persist (SQLite, WAL) → Envelope{data, meta.verdict, meta.latency_ms}
+POST /api/verify {text, contexts}
+  → length caps (3..4000 chars), contexts array capped
+  → perception: LLM lines+confidence  OR  deterministic splitter (fallback)
+  → safety plane (deterministic):
+      confidence gate → normalize → pairwise interactions → combination
+      graph (triple whammy / QT stack / serotonin / bleeding) →
+      contraindications vs declared contexts → duplicate molecules →
+      aggregate daily caps → verdict (first match wins)
+  → persist Prescription with full provenance (contextsJson preserved)
+  → metrics + audit
 ```
+
+`POST /api/plans` re-runs the plane with the **stored** contexts (never an
+empty context — that regression is fixed and covered), schedules dose slots,
+and raises a family escalation when the plan started with findings.
+`POST /api/doses/action` is a **first-action-wins** law: a dose already
+logged taken/skipped is never re-mutated (the double-dose guardrail), and the
+catch-up guardrail persists a protected skip instead of claiming it.
+
+## Copilot three-gate architecture
+
+1. **Emergency triage** — deterministic pattern set → urgent-care redirect, no model call.
+2. **Scope refusal** — personal dose-change/stop-start requests refused before generation (a rule, not a hope).
+3. **Grounded generation** — the model answers ONLY from retrieved chunks with numbered citations; low retrieval ⇒ refusal, not improvisation; a post-check strips dosage prescriptions the model may have added; model unavailability ⇒ honest "language service down" refusal.
+
+Gates 1 and 2 are extracted as `copilotGate()` — the same code path the
+self-test suite exercises (see docs/TESTING.md).
 
 ## Persistence
 
-Single-file SQLite with WAL; `verdict_kind` is materialized and **indexed**, so
-`/metrics` aggregates in O(1) (`GROUP BY`) regardless of row count. Pre-v3
-databases are migrated in place on first open (column added + backfilled from
-stored JSON). The store API (`create/get/put/count/verdict_counts`) is the
-documented swap point for Postgres — nothing else in the codebase knows SQL.
+- **Product app**: SQLite via Prisma. Longitudinal model: Patient, Prescription
+  (provenance-preserving, including the declared contexts), TherapyPlan,
+  Medication, Dose (indexed on scheduledAt), EscalationEvent, CaregiverLink,
+  AuditLog, Metric. Single-file swap to Postgres post-event (no SQLite-only
+  types).
+- **API service**: single-file SQLite WAL; `verdict_kind` materialized and
+  indexed; the store API (`create/get/put/count/verdict_counts`) is the
+  documented Postgres swap point.
 
 ## Security architecture
 
-- **Middleware pass** (`middleware_security.py`): every response carries an
-  `x-request-id` (server-generated; client-supplied ids accepted only against
-  `^[A-Za-z0-9_-]{8,64}$` — CRLF/unicode/oversize ids are replaced), security
-  headers (`nosniff`, `DENY`, CSP for API, no-referrer), and a per-client
-  sliding-window rate limit (writes 60/min, reads 300/min, env-overridable).
-- **Upload hardening**: declared MIME allow-list **and** magic-byte sniffing
-  (jpeg/png/webp/heic); a JSON payload wearing `image/jpeg` is rejected 422
-  before any model call.
-- **Prompt-injection containment**: perception output is inert text; injected
-  instructions can only fail formulary matching (→ confirm queue) or be
-  normalized to a REAL brand. They cannot reach verdict fields, fabricate
-  verdicts, or bypass the gate. Tested in `test_redteam.py`.
-- **Web (Next.js)**: CSP, frame-deny, permissions-policy (camera self only —
-  the app's one legitimate device capability), typed API client.
+- **Product app**: CSP (`script-src 'self' 'unsafe-inline'`, documented debt —
+  nonce regime is the follow-up), frame-deny, nosniff, referrer + permissions
+  policy, `object-src 'none'`; every route validates JSON and caps input
+  lengths; findings are rendered as inert text, never executed; the model SDK
+  is imported only in server code (no keys reach the browser); audit log on
+  every verify / plan / dose / copilot / eval action; first-action-wins dose
+  accounting prevents double-logging; no PII collected (single demo identity).
+- **API service**: request-ID correlation with injection-proof validation,
+  security headers, per-client sliding-window rate limiting, upload MIME
+  allow-list **plus** magic-byte sniffing, prompt-injection containment
+  (perception output is inert text) — all covered by the red-team suite
+  (`tests/test_redteam.py`).
 - **No auth in the event build** (read-only demo scope, documented). OTP +
-  consent artifacts are the first post-event item — see docs/DECISIONS.md.
+  ABDM-style consent artifacts are the first post-event item.
 
 ## Engineering decisions (ADR index — full rationale in docs/DECISIONS.md)
 
 | ADR | Decision | Alternatives rejected | Trade-off accepted |
 |---|---|---|---|
-| 001 | Contracts-first (Pydantic v2 package, mirrored TS client) | OpenAPI codegen (heavier toolchain for a 5-file client) | manual mirror risk, mitigated by envelope discipline |
-| 002 | Modular monolith, 2 planes | microservices (unjustified at demo scale) | single process; store API isolates the future split |
-| 003 | SQLite WAL + indexed verdict column | Postgres at event time (ops cost), in-memory dict (restart loss) | one-writer ceiling — fine for demo; swap point documented |
-| 004 | Fixtures carry the demo; live vision key-gated | live-only demo (quota/WiFi risk) | extraction runs on sealed corpus in the walkthrough |
-| 005 | Template-grounded NLG, slot-traceable | free LLM generation of spoken doses | narrower phrasing; every word auditable, tested |
-| 006 | In-memory sliding-window limiter | Redis (no shared store at demo scale) | per-process only; interface is the Redis swap point |
-| 007 | Refusal = HTTP 200 with refused verdict | 4xx (refusal is not an error) | clients must read meta.verdict (documented) |
+| 001 | Contracts-first (Pydantic v2 package, mirrored TS client) | OpenAPI codegen | manual mirror risk, mitigated by envelope discipline |
+| 002 | Modular monolith, 2 planes | microservices at demo scale | single process; store API isolates the future split |
+| 003 | SQLite WAL + indexed verdict column | Postgres at event time, in-memory dict | one-writer ceiling; swap point documented |
+| 004 | Fixtures carry the API demo; live vision key-gated | live-only demo | extraction runs on sealed corpus in the walkthrough |
+| 005 | Template-grounded NLG, slot-traceable | free LLM generation of spoken doses | narrower phrasing; every word auditable |
+| 006 | In-memory sliding-window limiter | Redis | per-process only; interface is the swap point |
+| 007 | Refusal = HTTP 200 with refused verdict | 4xx | clients must read the verdict field |
+| 008 | **Product app = self-contained Next.js fullstack** (integrated from `vaidya-project.zip`) | keeping the two-service split as the only product; running two overlapping web UIs | two safety-plane implementations (TS + Python) must not drift — mitigated by independent test suites and the shared dataset discipline; the API tier stays the deep-verification companion |
 
 ## Failure modes (FMEA extract)
 
 | Failure | Detection | Behavior | Mitigation |
 |---|---|---|---|
-| WiFi dead at demo | judge route | cached tier serves 200s | `make bake-judge` pre-bakes; drill rehearsed |
-| Vision quota exhausted | live tier 503 | honest error, never fake data | fixtures carry the demo |
-| Live model returns garbage | Pydantic schema validation | 1 retry → counted failure → 502 | `llm_schema_fail_total` increments (measured, not hardcoded) |
-| DB restart mid-demo | SQLite WAL | state survives | store is one file, durable |
-| Rate-limit abuse | middleware | 429 with retry-after envelope | env-tunable per deployment |
-| Corrupt stored row | JSON parse guard | row skipped | metrics never crash |
+| LLM/network down at demo | try/catch in extraction/copilot | deterministic splitter + honest refusals; safety plane unchanged | three-tier degradation (full → degraded → offline), rehearsed in docs/DEMO_SCRIPT.md |
+| WiFi dead at judge | — | product app fully offline-capable; API judge cache pre-baked | `make bake-judge`; fixtures carry the API demo |
+| Double-tap / replayed dose action | status guard | `already_acted` refusal, no re-mutation | first-action-wins law + audit |
+| DB corrupt / locked | Prisma errors | honest failure message; `Reset demo data` reseeds | `db:push` + `/api/seed` (deterministic) |
+| Malicious Rx text | length caps, JSON validation | findings rendered as text only; invented brands → confirm queue | prompt-injection containment tests |
+| Two engines drift | CI runs both suites | red build | API tests + web selftest in CI |
