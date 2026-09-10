@@ -27,3 +27,7 @@ next-env.d.ts
 *.swp
 .idea/
 .vscode/
+
+# Archive / notebooks junk
+.ipynb_checkpoints/
+*.zip
