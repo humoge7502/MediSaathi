@@ -17,6 +17,7 @@ marked.
 | TD-9 | No request-body size cap on JSON endpoints (multipart uploads are now bounded at 12 MiB while streaming) | FastAPI defaults | oversized JSON burns a request slot; rate limiter bounds abuse | S | P3 |
 | TD-10 | `nlm_schema_fail_total`-style counters reset on restart | in-memory observability | long-horizon dashboards need a metrics store | S | P3 |
 | TD-11 | Web landing shell first-load JS is ~615 kB uncompressed (panels are already code-split per tab) | single-route product app ships the full shared vendor + shell | slower first paint on weak demo hardware; gzip ≈ 200 kB | M | P2 — next optimization target (audit shared chunk contents, trim unused shadcn primitives, move heavy libs fully behind dynamic chunks) |
+| TD-11 | Web/API rate limiter and schema-fail counters are per-process (in-memory) | demo-scale single-process deployment; shared-store swap point documented (`RateLimiter.allow`, Redis) | limits and counters fragment behind multi-worker deployments | S | P3 (fold into Postgres/Redis swap, same as TD-7) |
 
 ## Resolved during this audit (kept for the record)
 

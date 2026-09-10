@@ -43,6 +43,25 @@ cd apps/web && bun run selftest   # deterministic engine suite + copilot gates (
 | `test_prompt_injection_in_fixture_lines_never_captures_verdict` | injected instructions in extracted text must be inert — decisions stay rule-derived |
 | `test_plan_blocked_for_refused_and_queued` | unverified fields leaking into the spoken plan |
 
+## Web-tier integration suite (`bun run test`, deterministic)
+
+The web tier now has a route-handler integration suite that mirrors the API
+tier's sealed-fixture law: the perception layer (`@/lib/ai/extraction`) is
+module-mocked with fixed confidences, so the deterministic plane, the Next.js
+route handlers, the Prisma/SQLite persistence and the guardrails are exercised
+end-to-end without any model key — in a developer shell or in CI.
+
+| Suite | What it proves |
+|---|---|
+| verify | warfarin+aspirin → severe interaction (persisted); garbage → refused; short input → 400; doxycycline + `age_under_12` → contraindication |
+| plan lifecycle | pass verdict → plan with scheduled doses; GET returns today's doses; second plan archives the first; refused prescriptions can never become plans |
+| dose guardrail | first `taken` wins; replaying the action is inert (`already_acted`); unknown actions rejected |
+| family | join code matches the CSPRNG alphabet; malformed `eventId` rejected before lookup |
+| metrics | counters actually moved after the pipeline ran |
+
+Run: `cd apps/web && bun run test` (a throwaway SQLite is created and pushed
+automatically; the developer database is never touched).
+
 ## Web-tier regressions fixed during integration (each verified live)
 
 | Finding | Fix | Verified |

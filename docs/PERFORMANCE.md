@@ -39,7 +39,13 @@ Method: start the production standalone server, fetch `/`, extract every
 
 | Build | First-load JS (uncompressed) | Note |
 |---|---|---|
-| `apps/web` (product app) | **615 kB** | single-route app; the six workspace panels are lazy-loaded per tab, so this is landing + workspace shell + shared vendor (React/Next runtime, shadcn primitives, client) |
+| `apps/web` (product app), pre-prune | 615 kB | measured before the dependency prune |
+| `apps/web` (product app), post-prune | **639 kB** | same method; framework patch drift (regenerated lockfile pulls newer Next/React patches). The prune removed only never-imported packages, so client JS is unchanged within noise; the win is install size (827 → 170 packages) and audit surface, not bundle bytes |
+
+Re-measurement note (honesty): the dependency prune did NOT shrink the client
+bundle, because everything removed was dead — never imported by any module.
+The post-prune number is slightly higher purely from framework patch drift.
+Both numbers are recorded so the delta is attributable.
 
 Gzip reduces this to roughly a third (~200 kB transfer). The workspace panels
 (verify, insights with the heatmap, copilot, family, evidence) load as separate

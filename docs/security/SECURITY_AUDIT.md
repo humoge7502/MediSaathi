@@ -75,3 +75,22 @@ cd apps/web && npx tsc --noEmit && npm run build
 ```
 
 No destructive third-party security testing was performed.
+
+## Second-pass audit addendum (2026-09-10, external red-team review)
+
+A fresh adversarial pass over the hardened build found and fixed the following.
+Each finding is pinned by a regression test in `apps/api/tests/test_redteam.py`.
+
+| ID | Finding | Severity | Exploit | Fix | Test |
+|---|---|---|---|---|---|
+| SEC-011 | Fixture-loader path traversal (CWE-22): `sample_id` joined into a path with no containment check | High (info disclosure) | `sample_id=../../../../../apps/web/tsconfig` read arbitrary `.json` files outside the fixture dir | character allow-list + realpath containment in `_safe_fixture_path`; 404 no longer echoes the attacker-controlled id | `test_fixture_traversal_is_blocked`, `test_fixture_traversal_over_http_is_404_not_disclosure` |
+| SEC-012 | Rate-limit bypass: unconditionally trusted `X-Forwarded-For` | Medium | rotate XFF header per request -> fresh bucket each time; the write limit was decorative for an adversarial client | XFF honored only when `MEDISAATHI_TRUST_PROXY=1`; client key defaults to socket address | `test_xff_rotation_cannot_mint_fresh_buckets`, `test_xff_trusted_only_when_proxy_declared` |
+| SEC-013 | Limiter DoS: 10k-key guard cleared ALL buckets | Low | spray spoofed keys -> every client's budget resets simultaneously (limiter denial) | approx-LRU eviction (oldest keys dropped, active budgets preserved) | `test_limiter_eviction_never_flushes_active_buckets` |
+| SEC-014 | Web tier had no rate limiting or request-ID correlation (parity gap with API tier) | Medium (abuse/forensics) | unbounded `/api/verify` calls; no correlation id in responses | Next.js edge middleware mirroring the API contract on `/api/*` | `apps/web/src/middleware.ts` + integration suite |
+| SEC-015 | Caregiver join code from `Math.random()` | Low (predictable credential) | V8 PRNG is not designed to be unpredictable; codes grant feed read access | `crypto.getRandomValues` (CSPRNG); `eventId` shape validation | `tests/api.test.ts` family circle |
+| SEC-016 | Shared SQLite connection across threads | Low | read/write interleaving on one connection object under concurrency | per-thread connections + `busy_timeout=5000` | concurrency smoke + full suite |
+
+Dependency-surface hardening in the same pass: the web app's scaffold
+dependency tree (827 packages, including an MDX editor, DnD kit, auth/i18n
+frameworks and ~40 unused Radix primitives) was pruned to the 170 packages the
+code actually imports; `pip-audit` (Python) and gitleaks (secrets) run in CI.

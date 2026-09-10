@@ -29,6 +29,11 @@ This is an event-scope, read-only demo. Honest threat model:
 | Parameterized SQL everywhere; no string-built queries | `app/store.py` | code review + full suite |
 | Web security headers (CSP, frame-deny, permissions-policy: camera=self only) | `apps/web/next.config.ts` | build + manual |
 | Schema-failure observability — live-vision contract failures are counted, not hidden | `app/vision.py`, `/metrics` | `test_metrics_schema_fail_counter_is_real` |
+| Fixture-ID path-traversal containment (CWE-22): character allow-list + realpath containment; blocked ids 404 without echoing input | `app/vision.py` `_safe_fixture_path` | `test_fixture_traversal_is_blocked`, `test_fixture_traversal_over_http_is_404_not_disclosure` |
+| Proxy-aware rate limiting: client-supplied `X-Forwarded-For` trusted only behind `MEDISAATHI_TRUST_PROXY=1` (rotation cannot mint fresh buckets) | `app/middleware_security.py` | `test_xff_rotation_cannot_mint_fresh_buckets`, `test_xff_trusted_only_when_proxy_declared` |
+| Limiter memory policy: approx-LRU eviction of oldest keys; a junk-key flood cannot flush other clients' budgets | `app/middleware_security.py` | `test_limiter_eviction_never_flushes_active_buckets` |
+| Web `/api/*` middleware: request-ID correlation + per-client sliding-window limits + bounded-memory eviction (same contract as the API tier) | `apps/web/src/middleware.ts` | integration suite + smoke |
+| Caregiver join codes from a CSPRNG; `eventId` shape-validated before any lookup | `apps/web/src/app/api/family/route.ts` | `tests/api.test.ts` (family circle) |
 
 ## Known gaps (honest)
 

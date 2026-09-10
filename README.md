@@ -1,5 +1,10 @@
 # MediSaathi · वैद्य — Agentic Medication Guardian
 
+<p align="center">
+  <img src=".github/assets/social-preview.png" alt="MediSaathi — The model reads. The rules decide. Deterministic safety plane with a three-band confidence gate: refuse below 0.75, human confirmation between 0.75 and 0.90, auto-confirm at 0.90+."
+       width="820">
+</p>
+
 **Every medicine, checked. Every dose, remembered.**
 
 MediSaathi is a closed-loop medication-safety platform built for **VMEDITHON
@@ -95,9 +100,10 @@ double.
 | Web engine self-test suite | **18/18 verdicts correct (100%)**, suite ~5–7 ms | Deterministic, reproducible, runs live in the Evidence tab |
 | Web copilot refusal gates | emergency + scope refusals fire in ~0 ms, before any generation | Deterministic (pure regex + retrieval floor) |
 | Web live degraded-tier verify | warfarin+aspirin → interaction; triple whammy → combination rule; child+doxy → contraindication; garbage → confirm queue — all **without any model** | Measured via HTTP smoke (see docs/TESTING.md) |
-| API suite | **93 tests passing** (safety properties, golden paths, perception, red-team) | `make test` |
+| API suite | **104 tests passing** (safety properties, golden paths, perception, red-team) | `make test` |
 | API fixture benchmark | brand recall 1.00 · frequency recall 0.94 · verdict agreement 1.00 · refusal precision 1.00 (n=12) | `make eval` |
 | API latency | p50 11.3–12.4 ms, p95 13.4–15.4 ms (in-process ASGI, 100-request bench) | `python3 tools/bench.py` |
+| Web route integration tests | **14 passing** — verify → plan → dose guardrail → family, over an isolated SQLite, perception layer sealed (no model keys needed) | `cd apps/web && bun run test` |
 | A1/A4 ablation | verdict agreement **1.00 → 0.17** without the gate/formulary | `make ablation` — the safety plane, not the reading, is the product |
 | Copilot eval (10 labeled cases) | 100% type accuracy, groundedness 1.00, safety 1.00 (single run, automated rubric judge) | Engineering telemetry, **not** clinical validation |
 
@@ -175,8 +181,14 @@ honestly, visibly, and safely*.
 - **Audit trail** — every verify, plan start, dose action, copilot query and
   eval run writes structured `AuditLog` metadata.
 - **API tier** — request-ID correlation with injection-proof validation,
-  security headers, sliding-window rate limiting, upload MIME allow-list
-  **plus** magic-byte sniffing (red-team suite: 29 tests).
+  security headers, sliding-window rate limiting (proxy-aware: a client-supplied
+  `X-Forwarded-For` is trusted only behind an explicit `MEDISAATHI_TRUST_PROXY=1`),
+  upload MIME allow-list **plus** magic-byte sniffing, and fixture IDs hardened
+  against path traversal (red-team suite: 40 tests).
+- **Web tier** — the same contract in Next.js middleware: request-ID
+  correlation + per-client sliding-window limits + bounded-memory eviction on
+  `/api/*`; CSP, frame-deny and permissions-policy headers on every route;
+  caregiver join codes from a CSPRNG (`crypto.getRandomValues`), never `Math.random()`.
 - **Privacy by design** — no PII; single demo identity; data stays local
   (SQLite); no third-party transmission beyond the optional model prompt.
 
@@ -186,15 +198,18 @@ Full model: [docs/SECURITY.md](docs/SECURITY.md) and
 ## Tests
 
 ```bash
-make test          # API suite: 93 tests (safety, golden paths, perception, red-team)
+make test          # API suite: 104 tests (safety, golden paths, perception, red-team)
 make eval          # API benchmark table
 make ablation      # A1-vs-A4 counterfactual
 make demo-check    # full offline API demo gate
-make web-check     # web gate: typecheck + 18-case selftest + copilot gates + build
+make web-check     # web gate: lint + typecheck + selftest + integration tests + build
 cd apps/web && bun run selftest   # the deterministic suite, in seconds
+cd apps/web && bun run test       # route-handler integration tests (isolated SQLite)
 ```
 
-CI (`.github/workflows/ci.yml`) runs both tiers on every push/PR.
+CI (`.github/workflows/ci.yml`) runs both tiers on every push/PR — plus secret
+scanning (gitleaks), Python lint (ruff), dependency audit (pip-audit), and a
+PR-only dependency review. Jobs run least-privilege (`contents: read`).
 
 ## Engineering decisions (the interview section)
 
@@ -218,6 +233,15 @@ CI (`.github/workflows/ci.yml`) runs both tiers on every push/PR.
   designed — never hidden.
 - **Why contracts/envelope discipline?** Typed end-to-end; the frontend cannot
   silently drift from the backend.
+- **Why is the web dependency tree tiny?** The scaffold shipped ~40 Radix/UI
+  packages and an editor/carousel/DnD stack; a grep-driven prune kept only what
+  is imported (Prisma, Next, the toast/button primitives, the model SDK) —
+  827 → 170 packages. Unused dependencies are attack surface and install-time
+  friction dressed up as features.
+- **Why CSS animations instead of framer-motion?** The motion budget is a few
+  fade/stagger entrances and hover transitions; CSS handles that with zero
+  runtime cost, and `prefers-reduced-motion` is honored in the same file that
+  defines the animation. A JS animation library would earn nothing here.
 - **What I would scale next?** Postgres, Redis limiter, OTP + ABDM-style
   consent, a labeled 300-case corpus with versioned DDInter/RxNorm snapshots,
   and a pharmacist review console over the (already persisted) confirm queue.

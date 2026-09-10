@@ -3,6 +3,62 @@
 All notable changes. Format based on Keep a Changelog; versions here map to
 the event build blocks.
 
+## [0.3.1] - 2026-09-10 - red-team hardening, web test suite, dependency discipline
+
+### Security (all confirmed findings from a second-pass red-team, each pinned by tests)
+- **Path traversal in the fixture loader (CWE-22, HIGH)** — `sample_id` was
+  joined into a path with no containment check, so
+  `sample_id=../../../../../apps/web/tsconfig` read arbitrary `.json` files
+  outside the fixture directory. Fixed with a character allow-list plus a
+  realpath containment check; blocked ids now return a clean 404 that does
+  not echo the attacker-controlled input back. (`test_redteam.py::test_fixture_traversal_*`)
+- **Rate-limit bypass via X-Forwarded-For (MEDIUM)** — the API limiter trusted
+  a client-supplied XFF unconditionally; rotating the header minted a fresh
+  bucket per request. XFF is now honored only behind
+  `MEDISAATHI_TRUST_PROXY=1`. (`test_xff_rotation_cannot_mint_fresh_buckets`)
+- **Limiter DoS via key flooding (LOW)** — the 10k-key guard cleared ALL
+  buckets, so spraying junk keys reset every client's budget. Eviction is now
+  approx-LRU (oldest keys evicted, active budgets preserved).
+  (`test_limiter_eviction_never_flushes_active_buckets`)
+- **Web tier got the API tier's middleware contract**: request-ID correlation +
+  per-client sliding-window rate limits on `/api/*` (bounded-memory, LRU
+  eviction, same 429 envelope).
+- **Caregiver join codes** now come from a CSPRNG (`crypto.getRandomValues`),
+  not `Math.random()`; `eventId` inputs are shape-validated before any lookup;
+  `caregiverName` length-capped.
+- **Store**: per-thread SQLite connections (the shared cross-thread connection
+  allowed read/write interleaving on one connection object) + `busy_timeout`.
+
+### Added
+- **Web integration test suite** (`bun run test`, 14 tests): route handlers
+  exercised end-to-end over an isolated SQLite with the perception layer
+  sealed — verify verdicts, plan lifecycle, double-dose guardrail replay,
+  family-code shape, metrics. No model keys needed.
+- **Web quality gates**: eslint in CI; `make web-check` now runs
+  lint + typecheck + selftest + integration tests + build.
+- **CI hardening**: least-privilege `permissions`, concurrency cancellation,
+  secret scanning (gitleaks), Python lint (ruff), dependency audit (pip-audit),
+  PR dependency review.
+- **Brand assets**: typographic social-preview/OG image (no stock photos).
+- **Accessibility**: skip-to-content link, `aria-live` verdict region,
+  `:focus-visible` ring, staggered landing entrance honoring
+  `prefers-reduced-motion`.
+
+### Changed
+- **Dependency discipline**: web package pruned 827 → 170 installed packages;
+  45 unused shadcn/ui components and ~35 unused runtime deps removed
+  (dnd-kit, mdxeditor, react-query, next-auth, next-intl, framer-motion,
+  sharp, zustand, uuid, date-fns, ...). Package renamed
+  `nextjs_tailwind_shadcn_ts` → `medisaathi-web`.
+- Stale-response race fixed in Today/Family panels (cancelled-fetch pattern);
+  dose actions no longer flash the loading skeleton.
+- Python tier: 76 ruff findings resolved (import hygiene, exception chaining
+  with `from e`, dead code); `ruff check` added as a CI gate.
+
+### Verified
+- API: 104/104 pytest · eval benchmark · ablation · demo-check · bench.
+- Web: typecheck · eslint · 18/18 selftest · 14/14 integration · build.
+
 ## [0.3.0] - 2026-09-10 - the closed-loop product app
 
 ### Added
