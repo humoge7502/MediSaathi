@@ -22,6 +22,13 @@ uncommitted E2E line) into one tree:
   trigger now covers the actual default branch (`master`).
 
 ### Fixed
+- **Fresh-install typecheck/build breakage (CI-caught)** — `tailwind.config.ts`
+  still imported `tailwindcss-animate`, which the 0.3.1 dependency prune had
+  removed; a stale local `node_modules` masked it locally while CI's frozen
+  install failed. The file was dead scaffold code (Tailwind v4 config is
+  CSS-first via `@theme inline` in globals.css; nothing referenced it, and the
+  one animate-utility consumer, the toaster, is served by the already-imported
+  `tw-animate-css`). Deleted; verified by a full clean-install gate.
 - **Web middleware rate limiter shared one window across read AND write
   requests** — the Python tier keeps separate `_WRITES`/`_READS` limiters, but
   the TS port keyed one bucket per client, so ~60 combined API calls a minute
@@ -32,6 +39,8 @@ uncommitted E2E line) into one tree:
 - **Makefile recipe indentation** — recipes used spaces, so every target
   failed with "missing separator"; restored tabs and verified `make -n` plus a
   full `make web-check` run.
+- docker-compose: added the missing web healthcheck (the API service already
+  had one); closes the reliability-audit gap noted in the engineering report.
 - Copilot outage kind (`service_unavailable`) now has its own UI badge instead
   of masquerading as a low-confidence refusal (RES-12).
 - Eval case E07 replaced with a below-floor BM25 probe so the low-confidence
@@ -40,8 +49,11 @@ uncommitted E2E line) into one tree:
 ### Verified (this tree, this environment)
 - API: **107/107 pytest**, eval (recall 1.00 / agreement 1.00 / refusal
   precision 1.00), ablation, demo-check, ruff clean.
-- Web: eslint + tsc clean, 18/18 self-test, 3/3 copilot gates, 14/14
-  integration tests, production build, **12/12 Playwright journeys**.
+- Web (verified twice: stale install **and** a from-scratch
+  `bun install --frozen-lockfile`): eslint + tsc clean, 18/18 self-test, 3/3
+  copilot gates, 14/14 integration tests, production build, **12/12
+  Playwright journeys**. Install surface after the prune + E2E tooling:
+  170 product packages, ~420 with dev tooling.
 
 ## [0.3.1] - 2026-09-10 - red-team hardening, web test suite, dependency discipline
 
