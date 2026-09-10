@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import os
-from typing import Optional
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
 from medisaathi_contracts import (
@@ -13,8 +12,6 @@ from medisaathi_contracts import (
     PriceReport,
     PriceRow,
     PriceSummary,
-    PrescriptionState,
-    SafetyReport,
     SpokenPlan,
     VerdictKind,
 )
@@ -42,7 +39,7 @@ class ConfirmRequest(BaseModel):
 
 
 class AdrDraft(BaseModel):
-    prescription_id: Optional[str] = None
+    prescription_id: str | None = None
     medicine: str
     reaction: str
     severity: str = "moderate"
@@ -125,8 +122,10 @@ def start_prescription(sample_id: str, context: str = "") -> Envelope:
         rx.verdict = refusal_from_exception(engine, str(e))
         put(rx)
         return Envelope(data=rx.model_dump(), meta={"verdict": "refused"})
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail=f"unknown sample {sample_id}")
+    except FileNotFoundError as err:
+        # Deliberately do NOT echo sample_id back: it is attacker-controlled
+        # input, and reflecting it in responses is a (minor) disclosure smell.
+        raise HTTPException(status_code=404, detail="unknown sample") from err
 
     report, items, _all_verified = engine.run(result.fields, ctx)
     confirms = [ConfirmItem(**i) for i in items]
@@ -177,7 +176,7 @@ async def upload_prescription(image: UploadFile = File(...), context: str = "") 
         put(rx)
         return Envelope(data=rx.model_dump(), meta={"verdict": "refused"})
     except RuntimeError as e:
-        raise HTTPException(status_code=502, detail=str(e))
+        raise HTTPException(status_code=502, detail=str(e)) from e
 
     report, items, _ = engine.run(result.fields, ctx)
     rx.extraction = result

@@ -43,6 +43,24 @@ class RefusalCandidate(Exception):
     """Raised when the image cannot possibly contain a prescription."""
 
 
+# Fixture ids are opaque tokens ("RX-001"), never paths. This was a confirmed
+# traversal finding: sample_id=../../../../../apps/web/tsconfig escaped the
+# fixture dir and read arbitrary .json files. Two independent gates:
+#   1. character allow-list (no separators, no "..", bounded length)
+#   2. realpath containment (even if a future caller forgets gate 1)
+_FIXTURE_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")
+
+
+def _safe_fixture_path(sample_id: str) -> str:
+    """Resolve a fixture id to a path that is provably inside FIXTURE_DIR."""
+    if not _FIXTURE_ID_RE.fullmatch(sample_id or ""):
+        raise FileNotFoundError(f"unknown fixture {sample_id!r}")
+    path = os.path.abspath(os.path.join(FIXTURE_DIR, f"{sample_id}.json"))
+    if os.path.commonpath([path, FIXTURE_DIR]) != FIXTURE_DIR:
+        raise FileNotFoundError(f"unknown fixture {sample_id!r}")
+    return path
+
+
 # Observability: count schema-contract failures of the live vision call.
 # Safe metadata only - no image bytes, no extracted health content (privacy law).
 _schema_failures = 0
@@ -58,7 +76,7 @@ def _record_schema_failure() -> None:
 
 
 def load_fixture(sample_id: str) -> dict:
-    path = os.path.join(FIXTURE_DIR, f"{sample_id}.json")
+    path = _safe_fixture_path(sample_id)
     if not os.path.exists(path):
         raise FileNotFoundError(f"unknown fixture {sample_id}")
     with open(path, encoding="utf-8") as f:
@@ -229,7 +247,7 @@ def _live_call(image_bytes: bytes, *, model: str, base_url: str, api_key: str) -
     }
     headers = {"Authorization": f"Bearer {api_key}"}
     last_error: Exception | None = None
-    for attempt in range(2):  # one retry on schema failure, per plan
+    for _attempt in range(2):  # one retry on schema failure, per plan
         try:
             with httpx.Client(timeout=LIVE_TIMEOUT_S) as client:
                 resp = client.post(f"{base_url}/chat/completions",
