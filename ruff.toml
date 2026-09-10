@@ -1,0 +1,27 @@
+# Ruff configuration for the MediSaathi Python tier.
+# Philosophy: catch real defects (unused imports, shadowing, suspicious
+# constructs) and keep import order mechanical — do not fight the codebase's
+# deliberate idioms (FastAPI Depends-in-defaults, targeted broad excepts in
+# resilience paths).
+line-length = 100
+target-version = "py310"
+
+[lint]
+select = [
+    "E4", "E7", "E9",   # pycodestyle errors (real defects, not style nits)
+    "F",                # pyflakes: unused imports/vars, undefined names
+    "I",                # import sorting (mechanical, zero-drift)
+    "UP",               # pyupgrade: modern syntax
+    "B",                # flake8-bugbear: likely bugs
+    "RUF",              # ruff-specific: dead noqa, etc.
+]
+ignore = [
+    "B008",  # function-call-in-default-argument: how FastAPI dependency injection works
+    "BLE001",# blind except: intentional at resilience boundaries (fallback paths)
+]
+
+[lint.per-file-ignores]
+# Test modules deliberately import app after sys.path setup.
+"apps/api/tests/*" = ["E402", "RUF100"]
+"tools/*" = ["E402", "RUF100"]
+"eval/*" = ["E402", "RUF100"]

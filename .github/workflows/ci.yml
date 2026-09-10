@@ -1,8 +1,33 @@
 name: ci
-on: [push, pull_request]
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Least privilege: jobs only ever need to read the code.
+permissions:
+  contents: read
+
+# A new push to the same ref supersedes an in-flight run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
+  secrets:
+    name: secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   api:
+    name: api (python)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -11,9 +36,18 @@ jobs:
           python-version: "3.12"
       - name: Install
         run: |
+          python -m pip install --upgrade pip
           pip install -e packages/contracts
           pip install -e "apps/api[dev]"
-      - name: Test (safety plane + API golden paths + perception)
+      - name: Lint (ruff)
+        run: |
+          pip install "ruff>=0.6"
+          ruff check apps/api packages/contracts eval tools
+      - name: Dependency audit (pip-audit)
+        run: |
+          pip install pip-audit
+          pip-audit --skip-editable --progress-spinner off
+      - name: Test (safety plane + golden paths + perception + red-team)
         run: pytest apps/api -q
       - name: Eval (fixture benchmark, A4)
         run: python eval/eval.py
@@ -23,6 +57,7 @@ jobs:
         run: make demo-check
 
   web:
+    name: web (next.js)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,14 +68,29 @@ jobs:
       - name: Prisma client
         working-directory: apps/web
         run: bunx prisma generate
+      - name: Lint (eslint)
+        working-directory: apps/web
+        run: bun run lint
       - name: Typecheck
         working-directory: apps/web
         run: bun run typecheck
       - name: Deterministic selftest (engine 18-case suite + copilot gates)
         working-directory: apps/web
         run: bun run selftest
+      - name: Integration tests (route handlers over isolated SQLite)
+        working-directory: apps/web
+        run: bun run test
       - name: Production build
         working-directory: apps/web
         run: bun run build
         env:
           NEXT_TELEMETRY_DISABLED: "1"
+
+  # Dependency review summarizes new vulnerable dependencies on PRs only.
+  dependency-review:
+    name: dependency review (PRs)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
