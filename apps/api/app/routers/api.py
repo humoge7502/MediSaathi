@@ -50,6 +50,32 @@ class AdrDraft(BaseModel):
     outcome: str = "recovering"
 
 
+# Upload hardening: declared content-type AND magic bytes must both say "image".
+# (Regression hardening: the endpoint used to trust the declared MIME alone, so
+# a JSON or HTML body with image/jpeg content-type would reach the vision path.)
+ALLOWED_MIME = {"image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"}
+
+
+def _sniff_image_mime(b: bytes) -> str | None:
+    """Magic-byte sniff of the formats phone cameras and scans actually produce."""
+    if b[:3] == b"\xff\xd8\xff":
+        return "image/jpeg"
+    if b[:8] == b"\x89PNG\r\n\x1a\n":
+        return "image/png"
+    if b[:4] == b"RIFF" and b[8:12] == b"WEBP":
+        return "image/webp"
+    if len(b) > 12 and b[4:8] == b"ftyp":  # HEIC/HEIF ISO-BMFF family
+        return "image/heic"
+    return None
+
+
+def _parse_context(context: str) -> dict[str, bool]:
+    """Declared context -> vocabulary-validated dict. Unknown keys are dropped,
+    never guessed about (safety plane law)."""
+    return SafetyEngine.validate_context(
+        {k.strip(): True for k in context.split(",") if k.strip()})
+
+
 # ------------------------------------------------------------------ pipeline
 @router.post("/prescriptions")
 def start_prescription(sample_id: str, context: str = "") -> Envelope:
@@ -60,7 +86,8 @@ def start_prescription(sample_id: str, context: str = "") -> Envelope:
     and validated against the contracts vocabulary.
     """
     rx = create(sample_id)
-    ctx = {k.strip(): True for k in context.split(",") if k.strip()}
+    ctx = _parse_context(context)
+    rx.context = ctx  # persisted: confirm resolutions must re-screen with it
     try:
         result: ExtractionResult = extract(sample_id)
     except RefusalCandidate as e:
@@ -96,13 +123,23 @@ async def upload_prescription(image: UploadFile = File(...), context: str = "") 
         raise HTTPException(status_code=503, detail=(
             "live extraction disabled: MEDISAATHI_VISION_KEY not set; "
             "use the sealed-sample demo path"))
+    if image.content_type not in ALLOWED_MIME:
+        raise HTTPException(
+            status_code=415,
+            detail=f"unsupported content type {image.content_type!r}; "
+                   "expected an image (jpeg/png/webp/heic)")
     rx = create("live")
-    ctx = {k.strip(): True for k in context.split(",") if k.strip()}
+    ctx = _parse_context(context)
+    rx.context = ctx
     image_bytes = await image.read()
     if not image_bytes:
         raise HTTPException(status_code=422, detail="empty image")
     if len(image_bytes) > 12 * 1024 * 1024:
         raise HTTPException(status_code=413, detail="image exceeds 12 MB")
+    if _sniff_image_mime(image_bytes) is None:
+        raise HTTPException(
+            status_code=422,
+            detail="upload is not a recognizable image (jpeg/png/webp/heic)")
     try:
         result = extract_live(image_bytes)
     except RefusalCandidate as e:
@@ -153,8 +190,10 @@ def confirm_field(prescription_id: str, body: ConfirmRequest) -> Envelope:
     fld.source = FieldSource.user_confirmation
     rx.confirm_queue = [c for c in rx.confirm_queue if c.field_index != body.field_index]
 
-    ctx = {}
-    report, items, _ = engine.run(rx.extraction.fields, ctx)
+    # Re-screen against the patient context the run STARTED with (regression:
+    # this used to re-run with an empty context, silently dropping
+    # contraindication screening after any human confirmation).
+    report, items, _ = engine.run(rx.extraction.fields, rx.context or {})
     rx.safety = report
     rx.confirm_queue = [ConfirmItem(**i) for i in items]
     rx.verdict = assemble(engine, rx.extraction, report, rx.confirm_queue)

@@ -11,6 +11,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from medisaathi_contracts import Envelope
 
+from .middleware_security import SecurityHeadersMiddleware
 from .routers.api import router as v1_router
 from .routers.judge import judge as judge_router
 
@@ -25,6 +26,8 @@ app.add_middleware(
     allow_origins=os.environ.get("MEDISAATHI_CORS", "http://localhost:3000").split(","),
     allow_methods=["*"], allow_headers=["*"],
 )
+# Security pass: request id + headers + per-client rate limit (innermost = runs first).
+app.add_middleware(SecurityHeadersMiddleware)
 app.include_router(v1_router)
 app.include_router(judge_router)
 
@@ -62,13 +65,14 @@ def readyz() -> Envelope:
 
 @app.get("/metrics")
 def metrics() -> dict:
-    """The five demo-critical counters (refusal discipline is measured)."""
+    """Demo-critical counters (refusal discipline is measured, not claimed)."""
     from .store import count, verdict_counts
+    from .vision import schema_fail_count
     counts = verdict_counts()
     return {
         "pipeline_started_total": count(),
         "verdicts": counts,
         "refused_total": counts.get("refused", 0),
         "confirm_queue_total": counts.get("confirm_queue", 0),
-        "llm_schema_fail_total": 0,
+        "llm_schema_fail_total": schema_fail_count(),
     }

@@ -212,6 +212,10 @@ class PriceReport(BaseModel):
 class PrescriptionState(BaseModel):
     prescription_id: str
     sample_id: str
+    # Declared patient context (validated vocabulary keys -> bool). Persisted so
+    # confirm-queue resolutions re-screen against the SAME context the run
+    # started with - regression: context used to be dropped after any confirm.
+    context: dict[str, bool] = {}
     extraction: Optional[ExtractionResult] = None
     safety: Optional[SafetyReport] = None
     verdict: Optional[Verdict] = None

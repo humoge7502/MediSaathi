@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   api,
   speak,
@@ -218,8 +218,9 @@ export default function ScanPage() {
 
       {stage === "result" && verdict && state && (
         <section className="mt-6">
-          <div className="rounded-2xl p-6 text-white" style={{ background: style(verdict.kind).bg }}>
-            <p className="text-3xl">{style(verdict.kind).icon}</p>
+          <div className="rounded-2xl p-6 text-white" style={{ background: style(verdict.kind).bg }}
+            role="status" aria-live="polite">
+            <p className="text-3xl" aria-hidden="true">{style(verdict.kind).icon}</p>
             <h2 className="mt-2 text-xl font-bold">{verdict.headline}</h2>
             <p className="mt-2 text-sm opacity-90">{verdict.detail}</p>
           </div>
@@ -256,6 +257,7 @@ export default function ScanPage() {
                               className="min-w-0 flex-1 rounded border px-2 py-1 text-sm"
                               style={{ borderColor: "var(--border)" }}
                               placeholder="Type the correct brand…"
+                              aria-label={`Corrected brand name for ${f.brand_text || f.raw_text}`}
                               value={confirmText[i] ?? ""}
                               onFocus={() => setSearchOpen(i)}
                               onChange={(e) => setConfirmText((t) => ({ ...t, [i]: e.target.value }))}
@@ -433,11 +435,21 @@ export default function ScanPage() {
 
 function SearchList({ q, onPick }: { q: string; onPick: (brand: string) => void }) {
   const [results, setResults] = useState<{ brand: string; molecule: string }[]>([]);
-  const [loaded, setLoaded] = useState<string | null>(null);
-  if (q !== loaded) {
-    setLoaded(q);
-    api.search(q).then((r) => setResults(r.data?.results ?? [])).catch(() => setResults([]));
-  }
+
+  // Fetch on query change (effect, not render phase - the previous
+  // render-phase setState pattern could loop under concurrent React).
+  useEffect(() => {
+    let alive = true;
+    if (q.trim().length < 2) {
+      setResults([]);
+      return;
+    }
+    api.search(q)
+      .then((r) => { if (alive) setResults(r.data?.results ?? []); })
+      .catch(() => { if (alive) setResults([]); });
+    return () => { alive = false; };
+  }, [q]);
+
   if (results.length === 0) return null;
   return (
     <ul className="mt-2 max-h-40 overflow-auto rounded border bg-white" style={{ borderColor: "var(--border)" }}>

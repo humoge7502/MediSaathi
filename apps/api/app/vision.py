@@ -43,6 +43,20 @@ class RefusalCandidate(Exception):
     """Raised when the image cannot possibly contain a prescription."""
 
 
+# Observability: count schema-contract failures of the live vision call.
+# Safe metadata only - no image bytes, no extracted health content (privacy law).
+_schema_failures = 0
+
+
+def schema_fail_count() -> int:
+    return _schema_failures
+
+
+def _record_schema_failure() -> None:
+    global _schema_failures
+    _schema_failures += 1
+
+
 def load_fixture(sample_id: str) -> dict:
     path = os.path.join(FIXTURE_DIR, f"{sample_id}.json")
     if not os.path.exists(path):
@@ -225,6 +239,7 @@ def _live_call(image_bytes: bytes, *, model: str, base_url: str, api_key: str) -
             content = body["choices"][0]["message"]["content"]
             return LiveExtraction.model_validate_json(content)
         except (httpx.HTTPError, KeyError, ValueError) as e:  # schema fail / net fail
+            _record_schema_failure()
             last_error = e
             continue
     raise RuntimeError(f"live vision failed after retry: {last_error}")

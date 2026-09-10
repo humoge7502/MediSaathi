@@ -50,9 +50,9 @@ function AdrForm() {
 
       <div className="mt-6 grid gap-3">
         <input className={field} style={border} placeholder="Medicine name"
-          value={medicine} onChange={(e) => setMedicine(e.target.value)} />
+          aria-label="Medicine name" value={medicine} onChange={(e) => setMedicine(e.target.value)} />
         <input className={field} style={border} placeholder="What happened? (reaction)"
-          value={reaction} onChange={(e) => setReaction(e.target.value)} />
+          aria-label="Reaction description" value={reaction} onChange={(e) => setReaction(e.target.value)} />
         <div className="grid grid-cols-3 gap-3">
           <select className={field} style={border} value={severity} onChange={(e) => setSeverity(e.target.value)}>
             <option value="mild">Mild</option>
@@ -60,6 +60,7 @@ function AdrForm() {
             <option value="severe">Severe</option>
           </select>
           <input className={field} style={border} type="number" min={0}
+            aria-label="Onset: days after starting the medicine"
             value={onsetDays} onChange={(e) => setOnsetDays(Number(e.target.value))} />
           <select className={field} style={border} value={outcome} onChange={(e) => setOutcome(e.target.value)}>
             <option value="recovering">Recovering</option>

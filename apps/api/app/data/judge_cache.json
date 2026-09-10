@@ -3,8 +3,9 @@
     "state": {
       "ok": true,
       "data": {
-        "prescription_id": "e7597872-979e-4093-ad87-ecfca2e09867",
+        "prescription_id": "4224e6b2-1322-499d-a224-b16e514db269",
         "sample_id": "RX-001",
+        "context": {},
         "extraction": {
           "sample_id": "RX-001",
           "fields": [
@@ -277,15 +278,16 @@
         "snapshot": "2026-09"
       }
     },
-    "baked_at": "2026-09-10T05:37:00Z",
+    "baked_at": "2026-09-10T07:36:11Z",
     "build_tag": "dev"
   },
   "RX-002": {
     "state": {
       "ok": true,
       "data": {
-        "prescription_id": "4f026389-3de1-41ae-a2f5-b5e96f1cc9e2",
+        "prescription_id": "0214cfb8-dc4d-404c-90f1-afbbaf700e50",
         "sample_id": "RX-002",
+        "context": {},
         "extraction": {
           "sample_id": "RX-002",
           "fields": [
@@ -584,15 +586,18 @@
         "snapshot": "2026-09"
       }
     },
-    "baked_at": "2026-09-10T05:37:00Z",
+    "baked_at": "2026-09-10T07:36:11Z",
     "build_tag": "dev"
   },
   "RX-009": {
     "state": {
       "ok": true,
       "data": {
-        "prescription_id": "05acb08d-cbef-4f11-806e-b950ecdea411",
+        "prescription_id": "11d1375f-c516-4d15-90b0-f3d22a35719c",
         "sample_id": "RX-009",
+        "context": {
+          "age_under_12": true
+        },
         "extraction": {
           "sample_id": "RX-009",
           "fields": [
@@ -814,15 +819,16 @@
         "snapshot": "2026-09"
       }
     },
-    "baked_at": "2026-09-10T05:37:00Z",
+    "baked_at": "2026-09-10T07:36:11Z",
     "build_tag": "dev"
   },
   "RX-006": {
     "state": {
       "ok": true,
       "data": {
-        "prescription_id": "c45f1201-9d98-4be3-9f71-5f066283fd27",
+        "prescription_id": "d1c3ecd0-bee3-4b07-bc21-f110ae8c6635",
         "sample_id": "RX-006",
+        "context": {},
         "extraction": null,
         "safety": null,
         "verdict": {
@@ -874,7 +880,7 @@
     "price": {
       "detail": "pipeline not finished"
     },
-    "baked_at": "2026-09-10T05:37:00Z",
+    "baked_at": "2026-09-10T07:36:11Z",
     "build_tag": "dev"
   }
 }
