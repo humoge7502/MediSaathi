@@ -11,9 +11,8 @@ import os
 import random
 
 import pytest
+from app.safety.engine import SafetyEngine
 from medisaathi_contracts import ExtractionField, FieldSource, Severity, VerdictKind
-
-from app.safety.engine import CONFIRM_BELOW, REFUSE_BELOW, SafetyEngine
 
 DATA_DIR = os.environ.get(
     "MEDISAATHI_DATA_DIR",
@@ -116,7 +115,6 @@ def test_aware_tagging_present_for_antibiotics(engine):
 # ---------------------------------------------------------------- verdicts
 
 def _assemble(engine, sample_id, ctx=None):
-    from app.routers.api import engine as _e  # same singleton
     from app.verdict import assemble
     from app.vision import extract
     result = extract(sample_id)
@@ -162,7 +160,7 @@ def test_spoken_plan_uses_verified_slots_only(engine):
     from app.nlg import build_spoken_plan
     from app.vision import extract
     result = extract("RX-001")
-    report, items, _ = engine.run(result.fields)
+    report, _items, _ = engine.run(result.fields)
     plan = build_spoken_plan("en", report.medications, report)
     assert all(slot.verified for slot in plan.slots)
     for slot in plan.slots:

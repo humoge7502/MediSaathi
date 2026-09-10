@@ -60,8 +60,6 @@ def dose_warning(field: ExtractionField, molecule: str | None = None) -> str | N
     `molecule` (normalized, e.g. "paracetamol") sharpens cap matching; without
     it the rule falls back to brand-name heuristics."""
     mol_txt = ((molecule or "") + " " + (field.brand_text or "")).lower()
-    strength_txt = (field.strength or field.dose or "").lower()
-
     # 1) TAC code sanity: any position > 2 occurrences at once is odd.
     m = re.fullmatch(r"(\d+)\s*-\s*(\d+)\s*-\s*(\d+)", (field.frequency or "").strip())
     if m and any(int(g) > 2 for g in m.groups()):

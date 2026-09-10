@@ -7,9 +7,8 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from fastapi.testclient import TestClient  # noqa: E402
-
 from app.main import app  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
 
 client = TestClient(app)
 
@@ -28,12 +27,12 @@ def test_upload_without_key_is_503(monkeypatch):
 
 def test_upload_empty_image_rejected():
     # Even with a key configured, empty bytes must 422 before any network call
-    import app.vision as v
     import app.routers.api as api_mod
+    import app.vision as v
     prev = v.LIVE_KEY
     try:
         v.LIVE_KEY = "test-key"
-        api_mod.extract_live  # touch import target
+        assert callable(api_mod.extract_live)  # import target exists
         r = client.post("/api/v1/prescriptions/upload",
                         files={"image": ("rx.jpg", b"", "image/jpeg")})
         assert r.status_code == 422

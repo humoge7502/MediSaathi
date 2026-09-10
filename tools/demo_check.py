@@ -11,9 +11,8 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(ROOT, "apps", "api"))
 sys.path.insert(0, os.path.join(ROOT, "packages", "contracts"))
 
-from fastapi.testclient import TestClient  # noqa: E402
-
 from app.main import app  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
 
 
 def main() -> int:

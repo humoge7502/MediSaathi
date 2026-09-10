@@ -7,7 +7,6 @@ silently drift from the backend contract: every response is an `Envelope`.
 from __future__ import annotations
 
 from enum import Enum
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -84,7 +83,7 @@ class LiveExtraction(BaseModel):
     """Schema-constrained answer envelope for the live vision path."""
 
     prescription_detected: bool
-    refusal_reason: Optional[str] = None
+    refusal_reason: str | None = None
     lines: list[LiveLine] = []
 
 
@@ -97,7 +96,7 @@ class NormalizedMedication(BaseModel):
     form: str = ""
     atc: str = ""
     aware_class: str = ""
-    jas_price_inr: Optional[float] = None
+    jas_price_inr: float | None = None
     fields: list[ExtractionField] = []
 
 
@@ -153,7 +152,7 @@ class Verdict(BaseModel):
     headline: str
     detail: str = ""
     max_interaction_severity: Severity = Severity.none
-    refusal_reason: Optional[str] = None
+    refusal_reason: str | None = None
     provenance: list[ProvenanceEntry] = []
 
 
@@ -179,7 +178,7 @@ class SpokenPlan(BaseModel):
     slots: list[PlanSlot]
     segments: list[AudioSegment] = []
     script: str
-    audio_url: Optional[str] = None
+    audio_url: str | None = None
     disclaimer: str = (
         "MediSaathi is an information tool, not a doctor. "
         "Discuss every medicine with your pharmacist or doctor."
@@ -189,11 +188,11 @@ class SpokenPlan(BaseModel):
 class PriceRow(BaseModel):
     brand: str
     molecule: str
-    unit_price_inr: Optional[float] = None
+    unit_price_inr: float | None = None
     generic_available: bool = False
-    generic_price_inr: Optional[float] = None
-    generic_brand: Optional[str] = None
-    savings_inr: Optional[float] = None
+    generic_price_inr: float | None = None
+    generic_brand: str | None = None
+    savings_inr: float | None = None
     source: str = "Jan Aushadhi"
 
 
@@ -216,11 +215,11 @@ class PrescriptionState(BaseModel):
     # confirm-queue resolutions re-screen against the SAME context the run
     # started with - regression: context used to be dropped after any confirm.
     context: dict[str, bool] = {}
-    extraction: Optional[ExtractionResult] = None
-    safety: Optional[SafetyReport] = None
-    verdict: Optional[Verdict] = None
+    extraction: ExtractionResult | None = None
+    safety: SafetyReport | None = None
+    verdict: Verdict | None = None
     confirm_queue: list[ConfirmItem] = []
-    spoken_plan: Optional[SpokenPlan] = None
+    spoken_plan: SpokenPlan | None = None
     price_rows: list[PriceRow] = []
     meta: dict = {}
 
@@ -229,6 +228,6 @@ class Envelope(BaseModel):
     """Every API response is wrapped in this envelope."""
 
     ok: bool = True
-    data: Optional[dict] = None
-    error: Optional[str] = None
+    data: dict | None = None
+    error: str | None = None
     meta: dict = {"api_version": "v1", "engines_version": "fixture-v0"}

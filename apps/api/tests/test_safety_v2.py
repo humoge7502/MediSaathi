@@ -8,10 +8,9 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import pytest  # noqa: E402
-from medisaathi_contracts import ExtractionField, FieldSource  # noqa: E402
-
 from app.safety.dosing import daily_dose_mg, dose_warning  # noqa: E402
 from app.safety.engine import SafetyEngine  # noqa: E402
+from medisaathi_contracts import ExtractionField, FieldSource  # noqa: E402
 
 DATA_DIR = os.environ.get(
     "MEDISAATHI_DATA_DIR",
@@ -76,10 +75,10 @@ def test_context_validation_drops_unknown_keys(engine):
 
 
 def test_contraindication_fires_only_with_declared_context(engine):
-    from medisaathi_contracts import VerdictKind
     from app.routers.api import engine as api_engine
     from app.verdict import assemble
     from app.vision import extract
+    from medisaathi_contracts import VerdictKind
     result = extract("RX-009")
     # without context: no contraindication
     report, items, _ = api_engine.run(result.fields, {})
@@ -104,7 +103,7 @@ def test_warnings_attached_but_verdict_untouched(engine):
         frequency="1-1-1", duration="30 days", strength="2500 mg",
         confidence=0.97, source=FieldSource.seed_fixture)
     result.fields.append(weird)
-    report, items, verified = api_engine.run(result.fields, {})
+    report, items, _verified = api_engine.run(result.fields, {})
     assert report.warnings, "over-cap regimen must produce a warning"
     v = assemble(api_engine, result, report, items)
     from medisaathi_contracts import VerdictKind

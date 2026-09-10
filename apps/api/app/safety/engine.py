@@ -15,6 +15,7 @@ import os
 from dataclasses import dataclass, field
 
 from medisaathi_contracts import (
+    CONTEXT_CODES,
     ContraindicationFinding,
     DuplicateFinding,
     ExtractionField,
@@ -24,7 +25,6 @@ from medisaathi_contracts import (
     SafetyReport,
     Severity,
 )
-from medisaathi_contracts import CONTEXT_CODES
 
 from .dosing import DAILY_CAPS_MG, daily_dose_mg, dose_warning
 
@@ -58,7 +58,7 @@ class SafetyEngine:
 
     # -------------------------------------------------------------- loading
     @classmethod
-    def load(cls, data_dir: str | None = None) -> "SafetyEngine":
+    def load(cls, data_dir: str | None = None) -> SafetyEngine:
         data_dir = data_dir or DATA_DIR
         eng = cls()
         with open(os.path.join(data_dir, "brands.csv"), encoding="utf-8") as f:

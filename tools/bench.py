@@ -23,9 +23,8 @@ sys.path.insert(0, os.path.join(ROOT, "packages", "contracts"))
 os.environ.setdefault("MEDISAATHI_RATE_WRITE", "100000")
 os.environ.setdefault("MEDISAATHI_RATE_READ", "100000")
 
-from fastapi.testclient import TestClient  # noqa: E402
-
 from app.main import app  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
 
 CASES = ["RX-001", "RX-002", "RX-004", "RX-008", "RX-009", "RX-012"]
 
@@ -33,7 +32,7 @@ CASES = ["RX-001", "RX-002", "RX-004", "RX-008", "RX-009", "RX-012"]
 def percentile(sorted_vals: list[float], p: float) -> float:
     if not sorted_vals:
         return 0.0
-    k = max(0, min(len(sorted_vals) - 1, int(round(p / 100 * (len(sorted_vals) - 1)))))
+    k = max(0, min(len(sorted_vals) - 1, round(p / 100 * (len(sorted_vals) - 1))))
     return sorted_vals[k]
 
 
@@ -68,7 +67,7 @@ def main() -> int:
         bench("GET /formulary/search?q=par", lambda: c.get("/api/v1/formulary/search?q=par")),
     ]
 
-    for i, sid in enumerate(CASES):
+    for sid in CASES:
         ctx = "&context=age_under_12" if sid == "RX-009" else ""
         results.append(bench(
             f"POST /prescriptions {sid} (full pipeline)",

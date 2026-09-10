@@ -12,8 +12,6 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import pytest  # noqa: E402
-from medisaathi_contracts import ExtractionField, FieldSource  # noqa: E402
-
 from app.vision import (  # noqa: E402
     RefusalCandidate,
     _parse_line,
@@ -21,6 +19,7 @@ from app.vision import (  # noqa: E402
     extract_live,
     parse_frequency_per_day,
 )
+from medisaathi_contracts import FieldSource  # noqa: E402
 
 
 def test_parser_reads_tac_frequency():
@@ -85,8 +84,8 @@ def test_live_path_requires_key():
 
 def test_live_path_retry_then_failure(monkeypatch):
     """The HTTP layer retries once on failure, then surfaces a RuntimeError."""
-    import httpx
     import app.vision as v
+    import httpx
     monkeypatch.setattr(v, "LIVE_KEY", "test-key")
 
     calls = {"n": 0}
