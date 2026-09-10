@@ -1,0 +1,880 @@
+{
+  "RX-001": {
+    "state": {
+      "ok": true,
+      "data": {
+        "prescription_id": "e7597872-979e-4093-ad87-ecfca2e09867",
+        "sample_id": "RX-001",
+        "extraction": {
+          "sample_id": "RX-001",
+          "fields": [
+            {
+              "raw_text": "1. Tab Dolo 650 - 1-0-1 x 5 days - after food",
+              "brand_text": "Tab Dolo 650",
+              "strength": "650 mg",
+              "dose": "",
+              "frequency": "1-0-1",
+              "duration": "5 days",
+              "confidence": 0.97,
+              "source": "seed_fixture"
+            },
+            {
+              "raw_text": "2. Tab Pan 40 - 1-0-0 x 10 days - before food",
+              "brand_text": "Tab Pan 40",
+              "strength": "40 mg",
+              "dose": "",
+              "frequency": "1-0-0",
+              "duration": "10 days",
+              "confidence": 0.95,
+              "source": "seed_fixture"
+            }
+          ],
+          "engine": "fixture-v0",
+          "latency_ms": 0
+        },
+        "safety": {
+          "medications": [
+            {
+              "brand": "Dolo 650",
+              "molecule": "paracetamol",
+              "form": "tablet",
+              "atc": "N02BE01",
+              "aware_class": "Access",
+              "jas_price_inr": 1.2,
+              "fields": [
+                {
+                  "raw_text": "1. Tab Dolo 650 - 1-0-1 x 5 days - after food",
+                  "brand_text": "Tab Dolo 650",
+                  "strength": "650 mg",
+                  "dose": "",
+                  "frequency": "1-0-1",
+                  "duration": "5 days",
+                  "confidence": 0.97,
+                  "source": "seed_fixture"
+                }
+              ]
+            },
+            {
+              "brand": "Pan 40",
+              "molecule": "pantoprazole",
+              "form": "tablet",
+              "atc": "A02BC02",
+              "aware_class": "Access",
+              "jas_price_inr": 2.7,
+              "fields": [
+                {
+                  "raw_text": "2. Tab Pan 40 - 1-0-0 x 10 days - before food",
+                  "brand_text": "Tab Pan 40",
+                  "strength": "40 mg",
+                  "dose": "",
+                  "frequency": "1-0-0",
+                  "duration": "10 days",
+                  "confidence": 0.95,
+                  "source": "seed_fixture"
+                }
+              ]
+            }
+          ],
+          "interactions": [],
+          "contraindications": [],
+          "duplicates": [],
+          "checks": {
+            "normalize": true,
+            "interaction_graph": true,
+            "contraindication_rules": true,
+            "duplicate_atc": true,
+            "aware_tagging": true,
+            "dose_plausibility": true
+          },
+          "warnings": []
+        },
+        "verdict": {
+          "kind": "pass",
+          "headline": "All checks passed",
+          "detail": "Every medicine was matched, normalized, and screened. No interactions, contraindications, or duplicates found.",
+          "max_interaction_severity": "none",
+          "refusal_reason": null,
+          "provenance": [
+            {
+              "kind": "data_snapshot",
+              "name": "brand-molecule formulary",
+              "source": "Jan Aushadhi + published formularies",
+              "snapshot": "2026-09"
+            },
+            {
+              "kind": "data_snapshot",
+              "name": "interaction graph",
+              "source": "DDInter (versioned snapshot)",
+              "snapshot": "2026-09"
+            },
+            {
+              "kind": "data_snapshot",
+              "name": "AWaRe classification",
+              "source": "WHO AWaRe 2023",
+              "snapshot": "2026-09"
+            },
+            {
+              "kind": "safety_check",
+              "name": "verdict engine",
+              "source": "deterministic rules; no LLM in the loop",
+              "snapshot": "2026-09"
+            },
+            {
+              "kind": "extraction",
+              "name": "field extraction",
+              "source": "fixture-v0; per-field confidence recorded",
+              "snapshot": "live"
+            }
+          ]
+        },
+        "confirm_queue": [],
+        "spoken_plan": null,
+        "price_rows": [],
+        "meta": {}
+      },
+      "error": null,
+      "meta": {
+        "verdict": "pass",
+        "latency_ms": 0,
+        "checks": {
+          "normalize": true,
+          "interaction_graph": true,
+          "contraindication_rules": true,
+          "duplicate_atc": true,
+          "aware_tagging": true,
+          "dose_plausibility": true
+        }
+      }
+    },
+    "plan": {
+      "ok": true,
+      "data": {
+        "language": "ta",
+        "slots": [
+          {
+            "slot": "count",
+            "value": "2",
+            "verified": true
+          },
+          {
+            "slot": "med1.brand",
+            "value": "Dolo 650",
+            "verified": true
+          },
+          {
+            "slot": "med1.molecule",
+            "value": "paracetamol",
+            "verified": true
+          },
+          {
+            "slot": "med1.frequency",
+            "value": "1-0-1",
+            "verified": true
+          },
+          {
+            "slot": "med1.duration",
+            "value": "5 days",
+            "verified": true
+          },
+          {
+            "slot": "med2.brand",
+            "value": "Pan 40",
+            "verified": true
+          },
+          {
+            "slot": "med2.molecule",
+            "value": "pantoprazole",
+            "verified": true
+          },
+          {
+            "slot": "med2.frequency",
+            "value": "1-0-0",
+            "verified": true
+          },
+          {
+            "slot": "med2.duration",
+            "value": "10 days",
+            "verified": true
+          }
+        ],
+        "segments": [
+          {
+            "kind": "open",
+            "text": "உங்கள் மருந்து திட்டத்தில் 2 மருந்துs உள்ளது.",
+            "slot_refs": [
+              "count"
+            ]
+          },
+          {
+            "kind": "medication",
+            "text": "மருந்து 1: Dolo 650, paracetamol கொண்டது. 1-0-1 5 days எடுங்கள்.",
+            "slot_refs": [
+              "med1.brand",
+              "med1.molecule",
+              "med1.frequency",
+              "med1.duration"
+            ]
+          },
+          {
+            "kind": "medication",
+            "text": "மருந்து 2: Pan 40, pantoprazole கொண்டது. 1-0-0 10 days எடுங்கள்.",
+            "slot_refs": [
+              "med2.brand",
+              "med2.molecule",
+              "med2.frequency",
+              "med2.duration"
+            ]
+          },
+          {
+            "kind": "close",
+            "text": "இது தகவல் மட்டுமே, மருத்துவ ஆலோசனை அல்ல.",
+            "slot_refs": []
+          }
+        ],
+        "script": "உங்கள் மருந்து திட்டத்தில் 2 மருந்துs உள்ளது. மருந்து 1: Dolo 650, paracetamol கொண்டது. 1-0-1 5 days எடுங்கள். மருந்து 2: Pan 40, pantoprazole கொண்டது. 1-0-0 10 days எடுங்கள். இது தகவல் மட்டுமே, மருத்துவ ஆலோசனை அல்ல.",
+        "audio_url": null,
+        "disclaimer": "MediSaathi is an information tool, not a doctor. Discuss every medicine with your pharmacist or doctor."
+      },
+      "error": null,
+      "meta": {
+        "slots_verified": true
+      }
+    },
+    "price": {
+      "ok": true,
+      "data": {
+        "rows": [
+          {
+            "brand": "Dolo 650",
+            "molecule": "paracetamol",
+            "unit_price_inr": 1.2,
+            "generic_available": true,
+            "generic_price_inr": 1.2,
+            "generic_brand": "Dolo 650",
+            "savings_inr": 0.0,
+            "source": "Jan Aushadhi; snapshot 2026-09"
+          },
+          {
+            "brand": "Pan 40",
+            "molecule": "pantoprazole",
+            "unit_price_inr": 2.7,
+            "generic_available": true,
+            "generic_price_inr": 2.7,
+            "generic_brand": "Pan 40",
+            "savings_inr": 0.0,
+            "source": "Jan Aushadhi; snapshot 2026-09"
+          }
+        ],
+        "summary": {
+          "unit_total_inr": 3.9,
+          "generic_total_inr": 3.9,
+          "savings_total_inr": 0.0,
+          "snapshot": "2026-09"
+        }
+      },
+      "error": null,
+      "meta": {
+        "snapshot": "2026-09"
+      }
+    },
+    "baked_at": "2026-09-10T05:37:00Z",
+    "build_tag": "dev"
+  },
+  "RX-002": {
+    "state": {
+      "ok": true,
+      "data": {
+        "prescription_id": "4f026389-3de1-41ae-a2f5-b5e96f1cc9e2",
+        "sample_id": "RX-002",
+        "extraction": {
+          "sample_id": "RX-002",
+          "fields": [
+            {
+              "raw_text": "1. Tab Warf 5 - 0-1-0 x 30 days",
+              "brand_text": "Tab Warf 5",
+              "strength": "5 mg",
+              "dose": "",
+              "frequency": "0-1-0",
+              "duration": "30 days",
+              "confidence": 0.96,
+              "source": "seed_fixture"
+            },
+            {
+              "raw_text": "2. Tab Ecosprin 75 - 1-0-0 x 30 days",
+              "brand_text": "Tab Ecosprin 75",
+              "strength": "75 mg",
+              "dose": "",
+              "frequency": "1-0-0",
+              "duration": "30 days",
+              "confidence": 0.94,
+              "source": "seed_fixture"
+            }
+          ],
+          "engine": "fixture-v0",
+          "latency_ms": 0
+        },
+        "safety": {
+          "medications": [
+            {
+              "brand": "Warf 5",
+              "molecule": "warfarin",
+              "form": "tablet",
+              "atc": "B01AA03",
+              "aware_class": "Access",
+              "jas_price_inr": 2.1,
+              "fields": [
+                {
+                  "raw_text": "1. Tab Warf 5 - 0-1-0 x 30 days",
+                  "brand_text": "Tab Warf 5",
+                  "strength": "5 mg",
+                  "dose": "",
+                  "frequency": "0-1-0",
+                  "duration": "30 days",
+                  "confidence": 0.96,
+                  "source": "seed_fixture"
+                }
+              ]
+            },
+            {
+              "brand": "Ecosprin 75",
+              "molecule": "aspirin",
+              "form": "tablet",
+              "atc": "B01AC06",
+              "aware_class": "Access",
+              "jas_price_inr": 0.6,
+              "fields": [
+                {
+                  "raw_text": "2. Tab Ecosprin 75 - 1-0-0 x 30 days",
+                  "brand_text": "Tab Ecosprin 75",
+                  "strength": "75 mg",
+                  "dose": "",
+                  "frequency": "1-0-0",
+                  "duration": "30 days",
+                  "confidence": 0.94,
+                  "source": "seed_fixture"
+                }
+              ]
+            }
+          ],
+          "interactions": [
+            {
+              "molecule_a": "warfarin",
+              "molecule_b": "aspirin",
+              "severity": "severe",
+              "mechanism": "Additive anticoagulant and antiplatelet effect; major bleeding risk",
+              "source": "DDInter"
+            }
+          ],
+          "contraindications": [],
+          "duplicates": [],
+          "checks": {
+            "normalize": true,
+            "interaction_graph": true,
+            "contraindication_rules": true,
+            "duplicate_atc": true,
+            "aware_tagging": true,
+            "dose_plausibility": true
+          },
+          "warnings": []
+        },
+        "verdict": {
+          "kind": "interaction",
+          "headline": "Severe interaction: warfarin + aspirin",
+          "detail": "Additive anticoagulant and antiplatelet effect; major bleeding risk",
+          "max_interaction_severity": "severe",
+          "refusal_reason": null,
+          "provenance": [
+            {
+              "kind": "data_snapshot",
+              "name": "brand-molecule formulary",
+              "source": "Jan Aushadhi + published formularies",
+              "snapshot": "2026-09"
+            },
+            {
+              "kind": "data_snapshot",
+              "name": "interaction graph",
+              "source": "DDInter (versioned snapshot)",
+              "snapshot": "2026-09"
+            },
+            {
+              "kind": "data_snapshot",
+              "name": "AWaRe classification",
+              "source": "WHO AWaRe 2023",
+              "snapshot": "2026-09"
+            },
+            {
+              "kind": "safety_check",
+              "name": "verdict engine",
+              "source": "deterministic rules; no LLM in the loop",
+              "snapshot": "2026-09"
+            },
+            {
+              "kind": "extraction",
+              "name": "field extraction",
+              "source": "fixture-v0; per-field confidence recorded",
+              "snapshot": "live"
+            }
+          ]
+        },
+        "confirm_queue": [],
+        "spoken_plan": null,
+        "price_rows": [],
+        "meta": {}
+      },
+      "error": null,
+      "meta": {
+        "verdict": "interaction",
+        "latency_ms": 0,
+        "checks": {
+          "normalize": true,
+          "interaction_graph": true,
+          "contraindication_rules": true,
+          "duplicate_atc": true,
+          "aware_tagging": true,
+          "dose_plausibility": true
+        }
+      }
+    },
+    "plan": {
+      "ok": true,
+      "data": {
+        "language": "ta",
+        "slots": [
+          {
+            "slot": "count",
+            "value": "2",
+            "verified": true
+          },
+          {
+            "slot": "med1.brand",
+            "value": "Warf 5",
+            "verified": true
+          },
+          {
+            "slot": "med1.molecule",
+            "value": "warfarin",
+            "verified": true
+          },
+          {
+            "slot": "med1.frequency",
+            "value": "0-1-0",
+            "verified": true
+          },
+          {
+            "slot": "med1.duration",
+            "value": "30 days",
+            "verified": true
+          },
+          {
+            "slot": "med2.brand",
+            "value": "Ecosprin 75",
+            "verified": true
+          },
+          {
+            "slot": "med2.molecule",
+            "value": "aspirin",
+            "verified": true
+          },
+          {
+            "slot": "med2.frequency",
+            "value": "1-0-0",
+            "verified": true
+          },
+          {
+            "slot": "med2.duration",
+            "value": "30 days",
+            "verified": true
+          },
+          {
+            "slot": "warn1.a",
+            "value": "warfarin",
+            "verified": true
+          },
+          {
+            "slot": "warn1.b",
+            "value": "aspirin",
+            "verified": true
+          }
+        ],
+        "segments": [
+          {
+            "kind": "open",
+            "text": "உங்கள் மருந்து திட்டத்தில் 2 மருந்துs உள்ளது.",
+            "slot_refs": [
+              "count"
+            ]
+          },
+          {
+            "kind": "medication",
+            "text": "மருந்து 1: Warf 5, warfarin கொண்டது. 0-1-0 30 days எடுங்கள்.",
+            "slot_refs": [
+              "med1.brand",
+              "med1.molecule",
+              "med1.frequency",
+              "med1.duration"
+            ]
+          },
+          {
+            "kind": "medication",
+            "text": "மருந்து 2: Ecosprin 75, aspirin கொண்டது. 1-0-0 30 days எடுங்கள்.",
+            "slot_refs": [
+              "med2.brand",
+              "med2.molecule",
+              "med2.frequency",
+              "med2.duration"
+            ]
+          },
+          {
+            "kind": "warning",
+            "text": "முக்கியம்: warfarin மற்றும் aspirin இடையே கடுமையான தொடர்பு உள்ளது. மருந்தாளரை அணுகவும்.",
+            "slot_refs": [
+              "warn1.a",
+              "warn1.b"
+            ]
+          },
+          {
+            "kind": "close",
+            "text": "இது தகவல் மட்டுமே, மருத்துவ ஆலோசனை அல்ல.",
+            "slot_refs": []
+          }
+        ],
+        "script": "உங்கள் மருந்து திட்டத்தில் 2 மருந்துs உள்ளது. மருந்து 1: Warf 5, warfarin கொண்டது. 0-1-0 30 days எடுங்கள். மருந்து 2: Ecosprin 75, aspirin கொண்டது. 1-0-0 30 days எடுங்கள். முக்கியம்: warfarin மற்றும் aspirin இடையே கடுமையான தொடர்பு உள்ளது. மருந்தாளரை அணுகவும். இது தகவல் மட்டுமே, மருத்துவ ஆலோசனை அல்ல.",
+        "audio_url": null,
+        "disclaimer": "MediSaathi is an information tool, not a doctor. Discuss every medicine with your pharmacist or doctor."
+      },
+      "error": null,
+      "meta": {
+        "slots_verified": true
+      }
+    },
+    "price": {
+      "ok": true,
+      "data": {
+        "rows": [
+          {
+            "brand": "Warf 5",
+            "molecule": "warfarin",
+            "unit_price_inr": 2.1,
+            "generic_available": true,
+            "generic_price_inr": 2.1,
+            "generic_brand": "Warf 5",
+            "savings_inr": 0.0,
+            "source": "Jan Aushadhi; snapshot 2026-09"
+          },
+          {
+            "brand": "Ecosprin 75",
+            "molecule": "aspirin",
+            "unit_price_inr": 0.6,
+            "generic_available": true,
+            "generic_price_inr": 0.6,
+            "generic_brand": "Aspirin 75",
+            "savings_inr": 0.0,
+            "source": "Jan Aushadhi; snapshot 2026-09"
+          }
+        ],
+        "summary": {
+          "unit_total_inr": 2.7,
+          "generic_total_inr": 2.7,
+          "savings_total_inr": 0.0,
+          "snapshot": "2026-09"
+        }
+      },
+      "error": null,
+      "meta": {
+        "snapshot": "2026-09"
+      }
+    },
+    "baked_at": "2026-09-10T05:37:00Z",
+    "build_tag": "dev"
+  },
+  "RX-009": {
+    "state": {
+      "ok": true,
+      "data": {
+        "prescription_id": "05acb08d-cbef-4f11-806e-b950ecdea411",
+        "sample_id": "RX-009",
+        "extraction": {
+          "sample_id": "RX-009",
+          "fields": [
+            {
+              "raw_text": "1. Cap Doxy-1 100 - 1-0-1 x 5 days (patient age 8)",
+              "brand_text": "Cap Doxy-1 100",
+              "strength": "1 mg",
+              "dose": "",
+              "frequency": "1-0-1",
+              "duration": "5 days",
+              "confidence": 0.93,
+              "source": "seed_fixture"
+            }
+          ],
+          "engine": "fixture-v0",
+          "latency_ms": 0
+        },
+        "safety": {
+          "medications": [
+            {
+              "brand": "Doxy-1",
+              "molecule": "doxycycline",
+              "form": "capsule",
+              "atc": "J01AA02",
+              "aware_class": "Access",
+              "jas_price_inr": 1.9,
+              "fields": [
+                {
+                  "raw_text": "1. Cap Doxy-1 100 - 1-0-1 x 5 days (patient age 8)",
+                  "brand_text": "Cap Doxy-1 100",
+                  "strength": "1 mg",
+                  "dose": "",
+                  "frequency": "1-0-1",
+                  "duration": "5 days",
+                  "confidence": 0.93,
+                  "source": "seed_fixture"
+                }
+              ]
+            }
+          ],
+          "interactions": [],
+          "contraindications": [
+            {
+              "molecule": "doxycycline",
+              "condition_code": "age_under_12",
+              "severity": "severe",
+              "note": "Dental staining and enamel hypoplasia in children"
+            }
+          ],
+          "duplicates": [],
+          "checks": {
+            "normalize": true,
+            "interaction_graph": true,
+            "contraindication_rules": true,
+            "duplicate_atc": true,
+            "aware_tagging": true,
+            "dose_plausibility": true
+          },
+          "warnings": []
+        },
+        "verdict": {
+          "kind": "contraindication",
+          "headline": "Contraindication flagged: doxycycline",
+          "detail": "age_under_12: Dental staining and enamel hypoplasia in children",
+          "max_interaction_severity": "severe",
+          "refusal_reason": null,
+          "provenance": [
+            {
+              "kind": "data_snapshot",
+              "name": "brand-molecule formulary",
+              "source": "Jan Aushadhi + published formularies",
+              "snapshot": "2026-09"
+            },
+            {
+              "kind": "data_snapshot",
+              "name": "interaction graph",
+              "source": "DDInter (versioned snapshot)",
+              "snapshot": "2026-09"
+            },
+            {
+              "kind": "data_snapshot",
+              "name": "AWaRe classification",
+              "source": "WHO AWaRe 2023",
+              "snapshot": "2026-09"
+            },
+            {
+              "kind": "safety_check",
+              "name": "verdict engine",
+              "source": "deterministic rules; no LLM in the loop",
+              "snapshot": "2026-09"
+            },
+            {
+              "kind": "extraction",
+              "name": "field extraction",
+              "source": "fixture-v0; per-field confidence recorded",
+              "snapshot": "live"
+            }
+          ]
+        },
+        "confirm_queue": [],
+        "spoken_plan": null,
+        "price_rows": [],
+        "meta": {}
+      },
+      "error": null,
+      "meta": {
+        "verdict": "contraindication",
+        "latency_ms": 0,
+        "checks": {
+          "normalize": true,
+          "interaction_graph": true,
+          "contraindication_rules": true,
+          "duplicate_atc": true,
+          "aware_tagging": true,
+          "dose_plausibility": true
+        }
+      }
+    },
+    "plan": {
+      "ok": true,
+      "data": {
+        "language": "ta",
+        "slots": [
+          {
+            "slot": "count",
+            "value": "1",
+            "verified": true
+          },
+          {
+            "slot": "med1.brand",
+            "value": "Doxy-1",
+            "verified": true
+          },
+          {
+            "slot": "med1.molecule",
+            "value": "doxycycline",
+            "verified": true
+          },
+          {
+            "slot": "med1.frequency",
+            "value": "1-0-1",
+            "verified": true
+          },
+          {
+            "slot": "med1.duration",
+            "value": "5 days",
+            "verified": true
+          },
+          {
+            "slot": "contra1.molecule",
+            "value": "doxycycline",
+            "verified": true
+          }
+        ],
+        "segments": [
+          {
+            "kind": "open",
+            "text": "உங்கள் மருந்து திட்டத்தில் 1 மருந்து உள்ளது.",
+            "slot_refs": [
+              "count"
+            ]
+          },
+          {
+            "kind": "medication",
+            "text": "மருந்து 1: Doxy-1, doxycycline கொண்டது. 1-0-1 5 days எடுங்கள்.",
+            "slot_refs": [
+              "med1.brand",
+              "med1.molecule",
+              "med1.frequency",
+              "med1.duration"
+            ]
+          },
+          {
+            "kind": "contraindication",
+            "text": "முக்கியம்: இந்த நிலையில் doxycycline பரிந்துரைக்கப்படவில்லை.",
+            "slot_refs": [
+              "contra1.molecule"
+            ]
+          },
+          {
+            "kind": "close",
+            "text": "இது தகவல் மட்டுமே, மருத்துவ ஆலோசனை அல்ல.",
+            "slot_refs": []
+          }
+        ],
+        "script": "உங்கள் மருந்து திட்டத்தில் 1 மருந்து உள்ளது. மருந்து 1: Doxy-1, doxycycline கொண்டது. 1-0-1 5 days எடுங்கள். முக்கியம்: இந்த நிலையில் doxycycline பரிந்துரைக்கப்படவில்லை. இது தகவல் மட்டுமே, மருத்துவ ஆலோசனை அல்ல.",
+        "audio_url": null,
+        "disclaimer": "MediSaathi is an information tool, not a doctor. Discuss every medicine with your pharmacist or doctor."
+      },
+      "error": null,
+      "meta": {
+        "slots_verified": true
+      }
+    },
+    "price": {
+      "ok": true,
+      "data": {
+        "rows": [
+          {
+            "brand": "Doxy-1",
+            "molecule": "doxycycline",
+            "unit_price_inr": 1.9,
+            "generic_available": true,
+            "generic_price_inr": 1.9,
+            "generic_brand": "Doxy-1",
+            "savings_inr": 0.0,
+            "source": "Jan Aushadhi; snapshot 2026-09"
+          }
+        ],
+        "summary": {
+          "unit_total_inr": 1.9,
+          "generic_total_inr": 1.9,
+          "savings_total_inr": 0.0,
+          "snapshot": "2026-09"
+        }
+      },
+      "error": null,
+      "meta": {
+        "snapshot": "2026-09"
+      }
+    },
+    "baked_at": "2026-09-10T05:37:00Z",
+    "build_tag": "dev"
+  },
+  "RX-006": {
+    "state": {
+      "ok": true,
+      "data": {
+        "prescription_id": "c45f1201-9d98-4be3-9f71-5f066283fd27",
+        "sample_id": "RX-006",
+        "extraction": null,
+        "safety": null,
+        "verdict": {
+          "kind": "refused",
+          "headline": "Refused: image could not be verified",
+          "detail": "no prescription content detected in the image (blank scan or non-prescription document) MediSaathi refuses rather than guesses.",
+          "max_interaction_severity": "none",
+          "refusal_reason": "no_prescription_content",
+          "provenance": [
+            {
+              "kind": "data_snapshot",
+              "name": "brand-molecule formulary",
+              "source": "Jan Aushadhi + published formularies",
+              "snapshot": "2026-09"
+            },
+            {
+              "kind": "data_snapshot",
+              "name": "interaction graph",
+              "source": "DDInter (versioned snapshot)",
+              "snapshot": "2026-09"
+            },
+            {
+              "kind": "data_snapshot",
+              "name": "AWaRe classification",
+              "source": "WHO AWaRe 2023",
+              "snapshot": "2026-09"
+            },
+            {
+              "kind": "safety_check",
+              "name": "verdict engine",
+              "source": "deterministic rules; no LLM in the loop",
+              "snapshot": "2026-09"
+            }
+          ]
+        },
+        "confirm_queue": [],
+        "spoken_plan": null,
+        "price_rows": [],
+        "meta": {}
+      },
+      "error": null,
+      "meta": {
+        "verdict": "refused"
+      }
+    },
+    "plan": {
+      "detail": "plan blocked until verdict is verified"
+    },
+    "price": {
+      "detail": "pipeline not finished"
+    },
+    "baked_at": "2026-09-10T05:37:00Z",
+    "build_tag": "dev"
+  }
+}

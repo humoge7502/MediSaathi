@@ -1,0 +1,56 @@
+:root {
+  /* clinical calm tokens (mirror of the master design system) */
+  --bg: #f5f8fc;
+  --surface: #e4ecf5;
+  --primary: #1a4a7a;
+  --accent: #2d7ab3;
+  --safe: #2e7d5b;
+  --warn: #b7791f;
+  --danger: #b3423a;
+  --text: #142840;
+  --muted: #5a7a96;
+  --border: #c0d0e2;
+}
+
+/* Demo-projector contrast mode (failure drill 3): flips to near-black on
+   near-white with saturated signals. Persisted in localStorage. */
+html.contrast {
+  --bg: #ffffff;
+  --surface: #f0f0f0;
+  --primary: #002244;
+  --accent: #004488;
+  --safe: #006633;
+  --warn: #a35a00;
+  --danger: #a30000;
+  --text: #000000;
+  --muted: #333333;
+  --border: #888888;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-pulse {
+    animation: none;
+  }
+}

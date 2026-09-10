@@ -1,0 +1,28 @@
+molecule,condition_code,severity,note
+warfarin,pregnancy,absolute,Teratogenic; use heparin-class alternatives
+warfarin,active_bleeding,absolute,Contraindicated during active hemorrhage
+methotrexate,pregnancy,absolute,Teratogenic and abortifacient
+doxycycline,age_under_12,absolute,Dental staining and enamel hypoplasia in children
+ciprofloxacin,age_under_18,relative,Arthropathy risk in growing children; specialist decision
+levofloxacin,age_under_18,relative,Arthropathy risk in pediatrics
+ciprofloxacin,myasthenia_gravis,absolute,Fluoroquinolones exacerbate myasthenia
+aspirin,age_under_16,absolute,Reye syndrome risk in febrile children
+aspirin,peptic_ulcer,relative,GI bleeding risk; use enteric coat or alternatives
+ibuprofen,peptic_ulcer,relative,NSAID GI toxicity
+diclofenac,peptic_ulcer,relative,NSAID GI toxicity
+ibuprofen,asthma_aspirin_sensitive,absolute,NSAID-exacerbated respiratory disease
+metformin,renal_severe,absolute,Lactic acidosis risk when eGFR below 30
+metformin,iodinated_contrast_48h,relative,Hold around contrast administration
+spironolactone,hyperkalemia,absolute,Further potassium elevation; arrhythmia risk
+simvastatin,pregnancy,absolute,Contraindicated in pregnancy
+atorvastatin,pregnancy,relative,Discontinue unless lipid disorder essential
+tramadol,age_under_12,absolute,Respiratory depression risk in children
+codeine,age_under_12,absolute,Ultra-rapid metabolizer toxicity; banned in pediatrics
+zolpidem,pregnancy,relative,Neonatal sedation risk
+diclofenac,hf_refduced,relative,NSAIDs worsen heart failure volume status
+paracetamol,hepatic_severe,relative,Hepatotoxicity risk; dose cap 2g/day
+cetirizine,renal_severe,relative,Dose reduction required
+metformin,hepatic_severe,relative,Lactic acidosis risk with hepatic impairment
+insulin glargine,hypoglycemia_unaware,relative,Specialist titration; CGM advised
+warfarin,peptic_ulcer,absolute,Bleeding risk in ulcerated GI mucosa
+ciprofloxacin,epilepsy,relative,Seizure-threshold lowering in CNS disorders

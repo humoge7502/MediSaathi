@@ -1,0 +1,48 @@
+molecule_a,molecule_b,severity,mechanism,source
+warfarin,aspirin,severe,Additive anticoagulant and antiplatelet effect; major bleeding risk,DDInter
+warfarin,ibuprofen,severe,NSAID antiplatelet effect plus GI mucosal injury; bleeding risk,DDInter
+warfarin,diclofenac,severe,NSAID-anticoagulant interaction; GI bleeding risk,DDInter
+warfarin,naproxen,severe,NSAID-anticoagulant interaction; bleeding risk,DDInter
+warfarin,amoxicillin,moderate,Antibiotic gut-flora disruption reduces vitamin K synthesis; INR rise,DDInter
+warfarin,doxycycline,moderate,Antibiotic potentiation of warfarin effect; INR rise,DDInter
+warfarin,metronidazole,severe,CYP2C9 inhibition raises warfarin exposure,DDInter
+warfarin,cotrimoxazole,severe,CYP2C9 inhibition plus protein binding displacement,DDInter
+warfarin,paracetamol,moderate,Sustained high-dose paracetamol can raise INR,DDInter
+clopidogrel,omeprazole,moderate,CYP2C19 inhibition reduces clopidogrel activation,DDInter
+clopidogrel,aspirin,moderate,Additive antiplatelet effect; bleeding risk (often intentional in ACS),DDInter
+aspirin,ibuprofen,moderate,NSAID competes for platelet COX-1; reduces aspirin cardioprotection,DDInter
+aspirin,diclofenac,moderate,Additive GI toxicity and platelet effect,DDInter
+ibuprofen,lisinopril,moderate,NSAID blunts ACE-inhibitor effect; renal risk,DDInter
+ibuprofen,enalapril,moderate,NSAID-ACEi interaction; reduced antihypertensive effect,DDInter
+diclofenac,losartan,moderate,NSAID reduces angiotensin-blocker efficacy; renal risk,DDInter
+diclofenac,telmisartan,moderate,NSAID-ARB interaction; renal and BP effects,DDInter
+enalapril,spironolactone,severe,Additive hyperkalemia risk (ACEi + K-sparing diuretic),DDInter
+ramipril,spironolactone,severe,Additive hyperkalemia risk,DDInter
+losartan,spironolactone,moderate,RAAS blocker + K-sparing diuretic; monitor potassium,DDInter
+telmisartan,spironolactone,moderate,Additive hyperkalemia risk,DDInter
+lisinopril,potassium chloride,severe,Additive hyperkalemia,DDInter
+spironolactone,potassium chloride,severe,Potent additive hyperkalemia; contraindicated combination,DDInter
+furosemide,digoxin,moderate,Diuretic hypokalemia predisposes to digoxin toxicity,DDInter
+metformin,furosemide,moderate,Diuretic may affect renal function and lactate clearance,DDInter
+ciprofloxacin,theophylline,severe,CYP1A2 inhibition raises theophylline to toxic levels,DDInter
+ciprofloxacin,tizanidine,severe,CYP1A2 inhibition; contraindicated with tizanidine,DDInter
+ciprofloxacin,caffeine,moderate,"Reduced caffeine clearance; jitteriness, insomnia",DDInter
+ciprofloxacin,calcium carbonate,moderate,Chelation reduces fluoroquinolone absorption; separate dosing,DDInter
+levofloxacin,calcium carbonate,moderate,Chelation reduces absorption; separate dosing,DDInter
+azithromycin,hydroxychloroquine,moderate,Additive QT prolongation,DDInter
+ofloxacin,ondansetron,moderate,Additive QT prolongation,DDInter
+ondansetron,citalopram,moderate,Additive QT prolongation,DDInter
+metronidazole,alcohol,moderate,"Disulfiram-like reaction: flushing, vomiting, tachycardia",DDInter
+metformin,alcohol,moderate,Increased lactic acidosis risk,DDInter
+alprazolam,tramadol,severe,Additive CNS and respiratory depression,DDInter
+clonazepam,tramadol,severe,Additive CNS depression; sedation and respiratory risk,DDInter
+sertraline,tramadol,moderate,Serotonin syndrome risk and bleeding tendency,DDInter
+fluoxetine,tramadol,moderate,Serotonin syndrome risk,DDInter
+simvastatin,clarithromycin,severe,CYP3A4 inhibition raises statin levels; rhabdomyolysis risk,DDInter
+atorvastatin,clarithromycin,moderate,CYP3A4 inhibition raises statin exposure,DDInter
+methotrexate,aspirin,severe,Salicylates reduce methotrexate clearance; toxicity,DDInter
+methotrexate,ibuprofen,severe,NSAID reduces renal methotrexate clearance,DDInter
+levothyroxine,calcium carbonate,moderate,Chelation impairs levothyroxine absorption; separate by 4h,DDInter
+levothyroxine,omeprazole,moderate,Reduced gastric acidity impairs levothyroxine absorption,DDInter
+levofloxacin,omeprazole,moderate,Possible QT-pharmacodynamic interaction; monitor in high-risk patients,DDInter
+warfarin,levofloxacin,moderate,Fluoroquinolone potentiation of warfarin effect; INR rise,DDInter

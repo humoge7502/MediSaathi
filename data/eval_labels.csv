@@ -1,0 +1,13 @@
+sample_id,expected_frequencies,expected_doses,source_note
+RX-001,1-0-1|1-0-0,650 mg|40 mg,printed clean
+RX-002,0-1-0|1-0-0,5 mg|75 mg,printed clean
+RX-003,,,"handwriting: frequencies partial, one brand unknown"
+RX-004,1-1-1|1-0-1,650 mg|650 mg,duplicate pair
+RX-005,1-0-1|0-0-1,500 mg|10 mg,tamil script english brands
+RX-006,,,blank scan
+RX-007,1-0-1|1-0-0|0-0-1,500 mg|5 mg|20 mg,chronic trio
+RX-008,1-0-0|1-0-0,75 mg|20 mg,moderate interaction
+RX-009,1-0-1,100 mg,pediatric context
+RX-010,0-1-0|1-0-1,5 mg|500 mg,warfarin note
+RX-011,1-0-0|1-0-0,25 mg|5 mg,handwritten legible
+RX-012,,,non-rx receipt

@@ -1,0 +1,13 @@
+[project]
+name = "medisaathi-contracts"
+version = "0.1.0"
+description = "Typed contracts for the MediSaathi verification-first prescription platform"
+requires-python = ">=3.10"
+dependencies = ["pydantic>=2.5"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["medisaathi_contracts*"]

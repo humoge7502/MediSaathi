@@ -1,0 +1,7 @@
+{
+  "brands": "Jan Aushadhi product price lists + published Indian formularies; snapshot September 2026",
+  "interactions": "DDInter open interaction database (versioned snapshot); severity remapped to none/mild/moderate/severe",
+  "contraindications": "Public formularies and label contraindications; curated rule set with severity + notes",
+  "aware": "WHO AWaRe antibiotic book 2023",
+  "note": "All data synthetic-curated for demo scope; replace with versioned snapshots in production roadmap"
+}

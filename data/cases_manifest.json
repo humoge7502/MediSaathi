@@ -1,0 +1,117 @@
+[
+  {
+    "sample_id": "RX-001",
+    "description": "Clean printed prescription - 2 medicines, all confidences high",
+    "expected_brands": [
+      "Dolo 650",
+      "Pan 40"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-002",
+    "description": "Interaction case - warfarin + aspirin prescribed together",
+    "expected_brands": [
+      "Warf 5",
+      "Ecosprin 75"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-003",
+    "description": "Partially legible handwriting - one unknown brand, one low-confidence match: confirm queue",
+    "expected_brands": [
+      "Omez 20"
+    ],
+    "expected_verdict": "confirm_queue",
+    "context": []
+  },
+  {
+    "sample_id": "RX-004",
+    "description": "Duplicate ATC case - two paracetamol brands together",
+    "expected_brands": [
+      "Dolo 650",
+      "Crocin Advance"
+    ],
+    "expected_verdict": "duplicate_atc",
+    "context": []
+  },
+  {
+    "sample_id": "RX-005",
+    "description": "Tamil-script prescription - printed Tamil with English drug names",
+    "expected_brands": [
+      "Azithral 500",
+      "Cetzine 10"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-006",
+    "description": "Corrupted image - blank scan, must refuse",
+    "expected_brands": [],
+    "expected_verdict": "refused",
+    "context": []
+  },
+  {
+    "sample_id": "RX-007",
+    "description": "Chronic trio - metformin + amlodipine + atorvastatin, clean",
+    "expected_brands": [
+      "Glycomet 500",
+      "Amlong 5",
+      "Storvas 20"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-008",
+    "description": "Moderate interaction - clopidogrel + omeprazole",
+    "expected_brands": [
+      "Clopilet 75",
+      "Omez 20"
+    ],
+    "expected_verdict": "interaction_moderate",
+    "context": []
+  },
+  {
+    "sample_id": "RX-009",
+    "description": "Contraindication case - doxycycline for an 8-year-old (context: age_under_12)",
+    "expected_brands": [
+      "Doxy-1"
+    ],
+    "expected_verdict": "contraindication",
+    "context": [
+      "age_under_12"
+    ]
+  },
+  {
+    "sample_id": "RX-010",
+    "description": "Moderate interaction - warfarin + amoxicillin with INR note",
+    "expected_brands": [
+      "Warf 5",
+      "Mox 500"
+    ],
+    "expected_verdict": "interaction_moderate",
+    "context": []
+  },
+  {
+    "sample_id": "RX-011",
+    "description": "Handwritten legible - spironolactone + enalapril (severe hyperkalemia pair)",
+    "expected_brands": [
+      "Aldactone 25",
+      "Envas 5"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-012",
+    "description": "Non-prescription photo - receipt, must refuse with explanation",
+    "expected_brands": [],
+    "expected_verdict": "refused",
+    "context": []
+  }
+]

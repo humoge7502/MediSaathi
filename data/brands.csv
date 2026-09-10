@@ -1,0 +1,85 @@
+brand,molecule,form,atc,aware_class,jas_price_inr,source
+Dolo 650,paracetamol,tablet,N02BE01,Access,1.20,Jan Aushadhi
+Crocin Advance,paracetamol,tablet,N02BE01,Access,1.20,Jan Aushadhi
+Calpol,paracetamol,syrup,N02BE01,Access,2.10,Jan Aushadhi
+Combiflam,paracetamol+ibuprofen,tablet,N02BE01+M01AE01,Access,3.40,Jan Aushadhi
+Brufen 400,ibuprofen,tablet,M01AE01,Access,1.60,Jan Aushadhi
+Voveran 50,diclofenac,tablet,M01AB01,Access,2.30,Jan Aushadhi
+Zerodol P,aceclofenac+paracetamol,tablet,M01AB16+N02BE01,Access,3.80,Jan Aushadhi
+Naprosyn,naproxen,tablet,M01AE02,Access,4.10,Jan Aushadhi
+Aspirin 75,aspirin,tablet,B01AC06,Access,0.60,Jan Aushadhi
+Ecosprin 75,aspirin,tablet,B01AC06,Access,0.60,Jan Aushadhi
+Augmentin 625,amoxicillin+clavulanic acid,tablet,J01CR02,Access,12.40,Jan Aushadhi
+Mox 500,amoxicillin,capsule,J01CA04,Access,3.20,Jan Aushadhi
+Azithral 500,azithromycin,tablet,J01FA10,Watch,8.90,Jan Aushadhi
+Ciplox 500,ciprofloxacin,tablet,J01MA02,Watch,3.10,Jan Aushadhi
+Levoflox 500,levofloxacin,tablet,J01MA12,Watch,6.20,Jan Aushadhi
+Ofloxacin 200,ofloxacin,tablet,J01MA01,Watch,3.40,Jan Aushadhi
+Taxim-O 200,cefixime,tablet,J01DD08,Watch,7.80,Jan Aushadhi
+Monocef 1g,ceftriaxone,injection,J01DD04,Watch,28.50,Jan Aushadhi
+Doxy-1,doxycycline,capsule,J01AA02,Access,1.90,Jan Aushadhi
+O2 500,ornidazole+ofloxacin,tablet,J01XD01+J01MA01,Watch,8.20,Jan Aushadhi
+Flagyl 400,metronidazole,tablet,J01XD01,Access,1.50,Jan Aushadhi
+Glycomet 500,metformin,tablet,A10BA02,Access,1.10,Jan Aushadhi
+Glimep 2,glimepiride,tablet,A10BB12,Access,2.40,Jan Aushadhi
+Gliclazide 60,gliclazide,tablet,A10BB09,Access,3.30,Jan Aushadhi
+Januvia 50,sitagliptin,tablet,A10BH01,Access,21.60,Jan Aushadhi
+Lantus SoloStar,insulin glargine,pen,A10AE04,Access,310.00,Jan Aushadhi
+Storvas 20,atorvastatin,tablet,C10AA05,Access,2.90,Jan Aushadhi
+Rozavel 10,rosuvastatin,tablet,C10AA07,Access,4.60,Jan Aushadhi
+Fenlor-XL,fenofibrate,tablet,C10AB05,Access,3.10,Jan Aushadhi
+Amlong 5,amlodipine,tablet,C08CA01,Access,1.00,Jan Aushadhi
+Losar 50,losartan,tablet,C09CA01,Access,2.20,Jan Aushadhi
+Telma 40,telmisartan,tablet,C09CA07,Access,3.00,Jan Aushadhi
+Envas 5,enalapril,tablet,C09AA02,Access,1.40,Jan Aushadhi
+Ramistar 5,ramipril,tablet,C09AA05,Access,1.70,Jan Aushadhi
+Lasix 40,furosemide,tablet,C03CA01,Access,0.90,Jan Aushadhi
+Aldactone 25,spironolactone,tablet,C03DA01,Access,2.60,Jan Aushadhi
+Dytor 10,torasemide,tablet,C03CA04,Access,3.20,Jan Aushadhi
+Aten 50,atenolol,tablet,C07AB03,Access,0.80,Jan Aushadhi
+Metolar 25,metoprolol,tablet,C07AB02,Access,1.30,Jan Aushadhi
+Concor 5,bisoprolol,tablet,C07AB07,Access,3.40,Jan Aushadhi
+Clopilet 75,clopidogrel,tablet,B01AC04,Access,3.90,Jan Aushadhi
+Deplatt 75,clopidogrel,tablet,B01AC04,Access,3.90,Jan Aushadhi
+Warf 5,warfarin,tablet,B01AA03,Access,2.10,Jan Aushadhi
+Pan 40,pantoprazole,tablet,A02BC02,Access,2.70,Jan Aushadhi
+Omez 20,omeprazole,capsule,A02BC01,Access,1.90,Jan Aushadhi
+Rantac 150,ranitidine,tablet,A02BA02,Access,0.70,Jan Aushadhi
+Cetzine 10,cetirizine,tablet,R06AE07,Access,0.80,Jan Aushadhi
+Teczine 5,levocetirizine,tablet,R06AE09,Access,0.90,Jan Aushadhi
+Montair LC,montelukast+levocetirizine,tablet,R03DC03+R06AE09,Access,6.10,Jan Aushadhi
+Asthalin Inhaler,salbutamol,inhaler,R03AC02,Access,98.00,Jan Aushadhi
+Wysolone 10,prednisolone,tablet,H02AB06,Access,1.60,Jan Aushadhi
+Decadron,dexamethasone,tablet,H02AB02,Access,1.20,Jan Aushadhi
+Thyronorm 50,levothyroxine,tablet,H03AA01,Access,1.80,Jan Aushadhi
+Neomercazole 5,carbimazole,tablet,H03BB01,Access,1.40,Jan Aushadhi
+Albenza,albendazole,tablet,P02CA03,Access,3.60,Jan Aushadhi
+Zental,albendazole,chewable,P02CA03,Access,3.60,Jan Aushadhi
+Nervup PG,pregabalin+methylcobalamin,capsule,N03AX16+B03BA,Access,7.20,Jan Aushadhi
+Lyrica 75,pregabalin,capsule,N03AX16,Access,8.10,Jan Aushadhi
+Zolfresh 5,zolpidem,tablet,N05CF02,Access,4.90,Jan Aushadhi
+Tramazac 50,tramadol,capsule,N02AX02,Access,3.80,Jan Aushadhi
+Udiliv 300,ursodeoxycholic acid,tablet,A05AA02,Access,9.30,Jan Aushadhi
+Mesacol 400,mesalamine,tablet,A07EC02,Access,11.20,Jan Aushadhi
+Folitrax 10,methotrexate,tablet,L01BA01,Access,5.40,Jan Aushadhi
+Ecospirin AV 75,aspirin+atorvastatin,capsule,B01AC06+C10AA05,Access,4.20,Jan Aushadhi
+Eptoin 100,phenytoin,tablet,N03AB02,Access,1.10,Jan Aushadhi
+Tegrital 200,carbamazepine,tablet,N03AF01,Access,2.30,Jan Aushadhi
+Levipil 500,levetiracetam,tablet,N03AX14,Access,6.80,Jan Aushadhi
+Digoxin 0.25,digoxin,tablet,C01AA05,Access,0.70,Jan Aushadhi
+Theophylline 200,theophylline,tablet,R03DA04,Access,1.60,Jan Aushadhi
+Ondavell 4,ondansetron,injection,A04AA01,Access,4.50,Jan Aushadhi
+Citalopram 20,citalopram,tablet,N06AB04,Access,3.20,Jan Aushadhi
+Sertraline 50,sertraline,tablet,N06AB06,Access,4.10,Jan Aushadhi
+Fludac 20,fluoxetine,capsule,N06AB03,Access,3.40,Jan Aushadhi
+Alprax 0.5,alprazolam,tablet,N05BA12,Access,1.90,Jan Aushadhi
+Rivotril 2,clonazepam,tablet,N03AE01,Access,2.10,Jan Aushadhi
+Simvotin 20,simvastatin,tablet,C10AA01,Access,2.80,Jan Aushadhi
+Claribid 500,clarithromycin,tablet,J01FA09,Access,9.10,Jan Aushadhi
+Hydroquin 200,hydroxychloroquine,tablet,P01BA02,Access,3.90,Jan Aushadhi
+Potassium Chloride SR,potassium chloride,tablet,B05XA01,Access,2.40,Jan Aushadhi
+Lisinopril 10,lisinopril,tablet,C09AA03,Access,1.30,Jan Aushadhi
+Digoxin Tab,digoxin,tablet,C01AA05,Access,0.70,Jan Aushadhi
+Tizan 2,tizanidine,tablet,M03BX02,Access,2.20,Jan Aushadhi
+Shellcal 500,calcium carbonate,tablet,A12AA04,Access,1.10,Jan Aushadhi
+Codicough,codeine,syrup,R05DA04,Access,3.10,Jan Aushadhi
