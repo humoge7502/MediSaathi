@@ -11,8 +11,8 @@
     "typecheck": "tsc --noEmit",
     "selftest": "bun scripts/selftest.ts",
     "test": "bun test tests/",
-    "e2e": "bun run build && DATABASE_URL=file:./db/custom.db bun run db:push && playwright test",
-    "db:push": "prisma db push --accept-data-loss",
+    "e2e": "bun run build && bun run db:push && playwright test",
+    "db:push": "mkdir -p db && DATABASE_URL=\"${DATABASE_URL:-file:../db/custom.db}\" prisma db push --accept-data-loss",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset"

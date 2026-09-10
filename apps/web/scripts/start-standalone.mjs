@@ -8,7 +8,7 @@
  *
  * Usage: bun run start   (after `bun run build`)
  */
-import { existsSync } from "node:fs";
+import { existsSync, mkdirSync } from "node:fs";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
@@ -17,8 +17,10 @@ const here = dirname(fileURLToPath(import.meta.url));
 const appRoot = resolve(here, "..");
 
 if (!process.env.DATABASE_URL) {
-  // Match prisma/schema.prisma's datasource (`file:../db/custom.db`).
+  // Match prisma/schema.prisma's datasource (`file:../db/custom.db`) and the
+  // db:push script's default — same absolute path, every entry point.
   const dbPath = join(appRoot, "db", "custom.db");
+  if (!existsSync(dirname(dbPath))) mkdirSync(dirname(dbPath), { recursive: true });
   process.env.DATABASE_URL = `file:${dbPath}`;
   console.log(`[start] DATABASE_URL -> ${process.env.DATABASE_URL}`);
 }
