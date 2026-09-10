@@ -100,7 +100,8 @@ double.
 | Web engine self-test suite | **18/18 verdicts correct (100%)**, suite ~5–7 ms | Deterministic, reproducible, runs live in the Evidence tab |
 | Web copilot refusal gates | emergency + scope refusals fire in ~0 ms, before any generation | Deterministic (pure regex + retrieval floor) |
 | Web live degraded-tier verify | warfarin+aspirin → interaction; triple whammy → combination rule; child+doxy → contraindication; garbage → confirm queue — all **without any model** | Measured via HTTP smoke (see docs/TESTING.md) |
-| API suite | **104 tests passing** (safety properties, golden paths, perception, red-team) | `make test` |
+| Web E2E (Playwright) | **12/12 browser journeys** on the deterministic tier: landing → verify (interaction/combination/queue/injection-inert) → copilot gates → evidence → today + dose guardrail | `make web-e2e` |
+| API suite | **107 tests passing** (safety properties, golden paths, perception, red-team, body-cap) | `make test` |
 | API fixture benchmark | brand recall 1.00 · frequency recall 0.94 · verdict agreement 1.00 · refusal precision 1.00 (n=12) | `make eval` |
 | API latency | p50 11.3–12.4 ms, p95 13.4–15.4 ms (in-process ASGI, 100-request bench) | `python3 tools/bench.py` |
 | Web route integration tests | **14 passing** — verify → plan → dose guardrail → family, over an isolated SQLite, perception layer sealed (no model keys needed) | `cd apps/web && bun run test` |
@@ -183,8 +184,9 @@ honestly, visibly, and safely*.
 - **API tier** — request-ID correlation with injection-proof validation,
   security headers, sliding-window rate limiting (proxy-aware: a client-supplied
   `X-Forwarded-For` is trusted only behind an explicit `MEDISAATHI_TRUST_PROXY=1`),
-  upload MIME allow-list **plus** magic-byte sniffing, and fixture IDs hardened
-  against path traversal (red-team suite: 40 tests).
+  a 1 MiB JSON body cap (413 before the app reads a byte), upload MIME allow-list
+  **plus** magic-byte sniffing, and fixture IDs hardened against path traversal
+  (red-team suite: 35 tests).
 - **Web tier** — the same contract in Next.js middleware: request-ID
   correlation + per-client sliding-window limits + bounded-memory eviction on
   `/api/*`; CSP, frame-deny and permissions-policy headers on every route;
@@ -192,24 +194,26 @@ honestly, visibly, and safely*.
 - **Privacy by design** — no PII; single demo identity; data stays local
   (SQLite); no third-party transmission beyond the optional model prompt.
 
-Full model: [docs/SECURITY.md](docs/SECURITY.md) and
+Full model: [docs/security/SECURITY_AUDIT.md](docs/security/SECURITY_AUDIT.md) and
 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Tests
 
 ```bash
-make test          # API suite: 104 tests (safety, golden paths, perception, red-team)
+make test          # API suite: 107 tests (safety, golden paths, perception, red-team, body-cap)
 make eval          # API benchmark table
 make ablation      # A1-vs-A4 counterfactual
 make demo-check    # full offline API demo gate
 make web-check     # web gate: lint + typecheck + selftest + integration tests + build
+make web-e2e       # browser E2E: build + standalone server + 12 Playwright journeys
 cd apps/web && bun run selftest   # the deterministic suite, in seconds
 cd apps/web && bun run test       # route-handler integration tests (isolated SQLite)
 ```
 
-CI (`.github/workflows/ci.yml`) runs both tiers on every push/PR — plus secret
-scanning (gitleaks), Python lint (ruff), dependency audit (pip-audit), and a
-PR-only dependency review. Jobs run least-privilege (`contents: read`).
+CI (`.github/workflows/ci.yml`) runs all three tiers on every push/PR — API,
+web and web-E2E — plus secret scanning (gitleaks), Python lint (ruff),
+dependency audit (pip-audit), and a PR-only dependency review. Jobs run
+least-privilege (`contents: read`).
 
 ## Engineering decisions (the interview section)
 
@@ -256,13 +260,14 @@ PR-only dependency review. Jobs run least-privilege (`contents: read`).
 | [docs/RESEARCH.md](docs/RESEARCH.md) | problem, hypothesis, method, measured results, limitations |
 | [docs/TESTING.md](docs/TESTING.md) | test pyramid, red-team table, web regressions fixed with evidence |
 | [docs/PERFORMANCE.md](docs/PERFORMANCE.md) | measured latency + bundle numbers, budgets |
-| [docs/SECURITY.md](docs/SECURITY.md) | threat model, controls, honest gaps |
+| [docs/security/SECURITY_AUDIT.md](docs/security/SECURITY_AUDIT.md) | threat model, controls, honest gaps |
 | [docs/TECH_DEBT.md](docs/TECH_DEBT.md) | open debt ledger + resolved-with-tests record |
 | [docs/HACKATHON_STRATEGY.md](docs/HACKATHON_STRATEGY.md) | judged scorecard, demo path, judge-attack Q&A |
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | both tiers, env vars, secrets, DB/migrations, monitoring, rollback |
 | [docs/audit/REPOSITORY_AUDIT.md](docs/audit/REPOSITORY_AUDIT.md) | full repository audit (pre-integration state + addendum) |
 | [docs/product/PRODUCT_STRATEGY.md](docs/product/PRODUCT_STRATEGY.md) | personas, JTBD, differentiation, roadmap |
 | [docs/research/COMPETITIVE_ANALYSIS.md](docs/research/COMPETITIVE_ANALYSIS.md) | feature matrix vs Medisafe/Tata 1mg/etc. |
-| [research/](research/) | literature review, adherence/who/competitor sources |
+| [research/](research/) | literature review + references, novelty analysis, experiment protocol |
 
 ## Repository layout
 
@@ -276,8 +281,9 @@ packages/contracts  Pydantic v2 contracts — the API tier's single source of tr
 data/               API seed CSVs, fixture corpus, cases manifest, eval labels, sources
 eval/               API benchmark CLI (A1/A4 ablation, recall/agreement/precision/latency)
 tools/              demo-check gate, judge-cache baker, latency bench
+e2e/                web E2E suite (apps/web/e2e) — Playwright, deterministic tier only
 docs/               architecture, blueprint, testing, security, strategy, audit, research
-research/           literature review + recorded external sources
+research/           literature review, references, novelty analysis, experiment protocol, recorded sources
 ```
 
 ## Honest limits (read before judging us)

@@ -61,7 +61,10 @@ export const EVAL_CASES: EvalCase[] = [
   },
   {
     id: "E07",
-    question: "Who won the IPL final last year?",
+    // Out-of-knowledge probe: BM25 must return below the retrieval floor, so
+    // the refusal fires deterministically before any model call (the previous
+    // IPL question false-matched on "last/final" and could not be relied on).
+    question: "What is the capital of France?",
     activeMolecules: [],
     expect: "refused_low_confidence",
   },

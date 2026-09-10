@@ -11,6 +11,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from medisaathi_contracts import Envelope
 
+from .bounded_body import MAX_BODY_BYTES, MaxBodySizeMiddleware
 from .middleware_security import SecurityHeadersMiddleware
 from .routers.api import router as v1_router
 from .routers.judge import judge as judge_router
@@ -26,7 +27,10 @@ app.add_middleware(
     allow_origins=os.environ.get("MEDISAATHI_CORS", "http://localhost:3000").split(","),
     allow_methods=["*"], allow_headers=["*"],
 )
-# Security pass: request id + headers + per-client rate limit (innermost = runs first).
+# Body cap before the app (TD-9: JSON endpoints previously had no size limit).
+app.add_middleware(MaxBodySizeMiddleware, max_bytes=MAX_BODY_BYTES)
+# Security pass: request id + headers + per-client rate limit (added last =
+# outermost, so every response including 413s is stamped).
 app.add_middleware(SecurityHeadersMiddleware)
 app.include_router(v1_router)
 app.include_router(judge_router)

@@ -2,7 +2,7 @@ name: ci
 
 on:
   push:
-    branches: [main]
+    branches: [master, main]
   pull_request:
 
 # Least privilege: jobs only ever need to read the code.
@@ -83,6 +83,27 @@ jobs:
       - name: Production build
         working-directory: apps/web
         run: bun run build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+
+  web-e2e:
+    name: web e2e (playwright)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Install
+        working-directory: apps/web
+        run: bun install --frozen-lockfile
+      - name: Prisma client
+        working-directory: apps/web
+        run: bunx prisma generate
+      - name: Install Playwright browsers
+        working-directory: apps/web
+        run: bunx playwright install --with-deps chromium
+      - name: E2E (browser journeys on the deterministic tier)
+        working-directory: apps/web
+        run: bun run e2e
         env:
           NEXT_TELEMETRY_DISABLED: "1"
 

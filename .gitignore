@@ -32,3 +32,13 @@ next-env.d.ts
 # Archive / notebooks junk
 .ipynb_checkpoints/
 *.zip
+*.bundle
+
+# Playwright E2E
+apps/web/test-results/
+apps/web/playwright-report/
+apps/web/blob-report/
+
+# dev logs
+apps/web/dev.log
+apps/web/server.log

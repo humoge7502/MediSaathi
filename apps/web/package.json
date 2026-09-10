@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit",
     "selftest": "bun scripts/selftest.ts",
     "test": "bun test tests/",
+    "e2e": "bun run build && DATABASE_URL=file:./db/custom.db bun run db:push && playwright test",
     "db:push": "prisma db push --accept-data-loss",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
@@ -30,6 +31,7 @@
     "z-ai-web-dev-sdk": "^0.0.18"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/react": "^19",
     "@types/react-dom": "^19",

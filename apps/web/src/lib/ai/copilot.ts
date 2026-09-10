@@ -32,7 +32,7 @@ export interface CopilotCitation {
 }
 
 export interface CopilotResponse {
-  kind: "grounded" | "refused_scope" | "refused_low_confidence" | "emergency";
+  kind: "grounded" | "refused_scope" | "refused_low_confidence" | "service_unavailable" | "emergency";
   answer: string;
   citations: CopilotCitation[];
   retrievalScores: number[];
@@ -143,7 +143,7 @@ export async function answerCopilot(req: CopilotRequest): Promise<CopilotRespons
     raw = completion.choices[0]?.message?.content?.trim() ?? "";
   } catch {
     return {
-      kind: "refused_low_confidence",
+      kind: "service_unavailable",
       answer: "The language service is unavailable right now, so I can't generate an answer — I won't improvise on medication topics. The deterministic safety checks (interactions, contraindications, dose caps) still run without any AI, so your plan verification remains fully active.",
       citations: [],
       retrievalScores: scores,

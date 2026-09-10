@@ -1,8 +1,9 @@
 # Testing Strategy & Results
 
 **Latest runs (both actual, nothing aspirational):**
-- API tier: **93 passed in 1.01s** (safety-plane properties + API golden paths + perception + red-team).
+- API tier: **107 passed in ~1.3s** (safety-plane properties + API golden paths + perception + red-team + JSON body cap).
 - Web tier: **18/18 engine self-test (100%) + 3/3 copilot refusal gates** (pure TS, zero network), typecheck clean, `next build` green.
+- Web E2E: **12/12 Playwright journeys green** on the deterministic tier (TD-3 resolved).
 
 ```bash
 make test          # API suite (safety properties + API + perception + red-team)
@@ -26,6 +27,7 @@ cd apps/web && bun run selftest   # deterministic engine suite + copilot gates (
 | **Web: copilot gates** | `scripts/selftest.ts` → `lib/ai/copilot.ts` | emergency triage and scope refusal fire deterministically, **before any generation** (the same `copilotGate()` path the API uses) | 3 gates |
 | **Web: typecheck + build** | `bun run typecheck` + `bun run build` | strict TS, standalone production build with all 13 routes | 2 gates |
 | **Web: smoke** | manual E2E (single command) | verify → plan → dose → catch-up guardrail → family → analytics → metrics | 15 checks |
+| **Web: browser E2E (TD-3 resolved)** | `apps/web/e2e/product.spec.ts` via Playwright | landing story + metrics, workspace launch, verify (severe interaction w/ DDInter source, triple whammy, confirm queue, prompt-injection inert), copilot gates (emergency, scope, low-confidence), evidence 18/18, today plan, first-action-wins dose guardrail | **12 journeys**, all deterministic-tier, `make web-e2e` |
 
 ## API red-team coverage (`tests/test_redteam.py`) — what each test protects
 
@@ -37,6 +39,9 @@ cd apps/web && bun run selftest   # deterministic engine suite + copilot gates (
 | `test_upload_*` (magic bytes, MIME mismatch, ISO-BMFF, oversized) | spoofed/mismatched/oversized uploads reaching the vision path |
 | `test_rate_limit_429_and_recovery` | unbounded write abuse; 429 must be an Envelope, not a raw string |
 | `test_metrics_schema_fail_counter_is_real` | **Verified regression:** `llm_schema_fail_total` was hardcoded `0` — now bound to the real counter |
+| `test_json_body_cap_rejects_declared_oversize` | oversized JSON with a declared Content-Length must 413 before the app reads a byte (TD-9) |
+| `test_json_body_cap_rejects_chunked_oversize` | chunked bodies without Content-Length are byte-counted and aborted at the cap |
+| `test_json_body_cap_allows_normal_body` | the cap must not reject legitimate payloads |
 | `test_confirm_rejects_*` | IDOR-adjacent input abuse on the confirm endpoint |
 | `test_context_garbage_keys_are_dropped_silently` | unknown context codes influencing rules |
 | `test_formulary_search_unicode_and_injection_safe` | injection/unicode/oversize search abuse |

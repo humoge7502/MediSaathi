@@ -155,6 +155,7 @@ function kindClass(kind?: string): string {
     case "emergency": return "vy-banner-severe";
     case "refused_scope": return "vy-banner-moderate";
     case "refused_low_confidence": return "vy-banner-neutral";
+    case "service_unavailable": return "vy-banner-neutral";
     default: return "bg-card border";
   }
 }
@@ -165,6 +166,7 @@ function KindBadge({ kind, guarded }: { kind?: string; guarded?: boolean }) {
     kind === "grounded" ? (guarded ? "grounded · post-check guarded" : "grounded") :
     kind === "emergency" ? "emergency redirect" :
     kind === "refused_scope" ? "refused — out of scope" :
+    kind === "service_unavailable" ? "service unavailable — refused to improvise" :
     "refused — low retrieval confidence";
   return <p className="vy-eyebrow !text-[10px]">{label}</p>;
 }

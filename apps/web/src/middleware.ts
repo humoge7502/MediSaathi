@@ -33,15 +33,15 @@ interface Bucket {
 
 const buckets = new Map<string, Bucket>();
 
-function allow(key: string, limit: number, windowMs: number, now: number): boolean {
-  const b = buckets.get(key);
+function allow(classedKey: string, limit: number, windowMs: number, now: number): boolean {
+  const b = buckets.get(classedKey);
   if (b) {
-    buckets.delete(key); // re-insert below => most-recently-used position
-    buckets.set(key, b);
+    buckets.delete(classedKey); // re-insert below => most-recently-used position
+    buckets.set(classedKey, b);
   } else {
-    buckets.set(key, { hits: [] });
+    buckets.set(classedKey, { hits: [] });
   }
-  const bucket = buckets.get(key)!;
+  const bucket = buckets.get(classedKey)!;
   const cutoff = now - windowMs;
   bucket.hits = bucket.hits.filter((t) => t > cutoff);
   if (bucket.hits.length >= limit) return false;
@@ -75,7 +75,11 @@ export function middleware(req: NextRequest) {
   const isWrite = WRITE_METHODS.has(req.method);
   const limit = isWrite ? WRITE_LIMIT : READ_LIMIT;
   const window = isWrite ? WRITE_WINDOW_MS : READ_WINDOW_MS;
-  const key = clientKey(req);
+  // Separate window per (class, client) — mirroring the FastAPI tier's distinct
+  // _WRITES/_READS limiters. A single shared bucket would let read traffic
+  // consume the write budget (and vice versa): a read-heavy browser session
+  // would 429 its first POST after ~60 combined hits, which is wrong.
+  const key = `${isWrite ? "w" : "r"}:${clientKey(req)}`;
 
   if (!allow(key, limit, window, Date.now())) {
     const res = NextResponse.json(

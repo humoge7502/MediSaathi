@@ -3,6 +3,46 @@
 All notable changes. Format based on Keep a Changelog; versions here map to
 the event build blocks.
 
+## [0.3.2] - 2026-09-10 - integration pass: security + E2E lines united
+
+Unifies the two parallel hardening passes (the 0.3.1 security line and the
+uncommitted E2E line) into one tree:
+
+### Added
+- **Browser E2E (TD-3 resolution, now merged)** — `apps/web/e2e/product.spec.ts`:
+  12 Playwright journeys on the deterministic tier, wired into `make web-e2e`
+  and a dedicated CI job.
+- **JSON body cap (TD-9 resolution, now merged)** — `apps/api/app/bounded_body.py`:
+  1 MiB cap on every non-multipart request (413 envelope; declared
+  Content-Length fast path + streaming receive counter), pinned by 3 red-team
+  tests. `MEDISAATHI_MAX_BODY_BYTES` documented in `.env.example` and
+  docs/DEPLOYMENT.md.
+- **CI union** — secret scan, ruff, pip-audit, eval + ablation + demo-check,
+  eslint, integration tests, and the Playwright job in one workflow; push
+  trigger now covers the actual default branch (`master`).
+
+### Fixed
+- **Web middleware rate limiter shared one window across read AND write
+  requests** — the Python tier keeps separate `_WRITES`/`_READS` limiters, but
+  the TS port keyed one bucket per client, so ~60 combined API calls a minute
+  (browser journeys issue many reads) 429'd the next write. Found by the E2E
+  dose-guardrail journey failing with HTTP 429; windows are now per
+  (class, client), mirroring the FastAPI tier. Pinned by the E2E suite
+  (12/12) which fails-first on the old behavior.
+- **Makefile recipe indentation** — recipes used spaces, so every target
+  failed with "missing separator"; restored tabs and verified `make -n` plus a
+  full `make web-check` run.
+- Copilot outage kind (`service_unavailable`) now has its own UI badge instead
+  of masquerading as a low-confidence refusal (RES-12).
+- Eval case E07 replaced with a below-floor BM25 probe so the low-confidence
+  refusal fires deterministically (RES-13).
+
+### Verified (this tree, this environment)
+- API: **107/107 pytest**, eval (recall 1.00 / agreement 1.00 / refusal
+  precision 1.00), ablation, demo-check, ruff clean.
+- Web: eslint + tsc clean, 18/18 self-test, 3/3 copilot gates, 14/14
+  integration tests, production build, **12/12 Playwright journeys**.
+
 ## [0.3.1] - 2026-09-10 - red-team hardening, web test suite, dependency discipline
 
 ### Security (all confirmed findings from a second-pass red-team, each pinned by tests)

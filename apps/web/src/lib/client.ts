@@ -78,7 +78,7 @@ export interface Analytics {
 }
 
 export interface CopilotResult {
-  kind: "grounded" | "refused_scope" | "refused_low_confidence" | "emergency";
+  kind: "grounded" | "refused_scope" | "refused_low_confidence" | "service_unavailable" | "emergency";
   answer: string;
   citations: { n: number; id: string; title: string; source: string }[];
   retrievalScores: number[];

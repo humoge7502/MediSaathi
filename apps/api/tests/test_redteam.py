@@ -257,6 +257,37 @@ def test_metrics_schema_fail_counter_is_real():
     assert m["llm_schema_fail_total"] == v.schema_fail_count()
 
 
+# ================================================================ TD-9: body cap
+def test_json_body_cap_rejects_declared_oversize():
+    """A declared Content-Length above the cap is rejected before any read."""
+    from app.bounded_body import MAX_BODY_BYTES
+    big = {"medicine": "x" * (MAX_BODY_BYTES + 100)}
+    r = client.post("/api/v1/adr-reports", json=big)
+    assert r.status_code == 413
+    body = r.json()
+    assert body["ok"] is False and "limit" in body["error"].lower()
+    # still an Envelope-shaped response with security headers and a request id
+    assert r.headers["x-content-type-options"] == "nosniff"
+    assert r.headers["x-request-id"]
+
+
+def test_json_body_cap_allows_normal_body():
+    r = client.post("/api/v1/adr-reports", json={"medicine": "Dolo 650", "reaction": "rash"})
+    assert r.status_code == 200
+
+
+def test_json_body_cap_rejects_chunked_oversize():
+    """Chunked transfer (no Content-Length) is bounded by the receive wrapper."""
+    from app.bounded_body import MAX_BODY_BYTES
+    chunks = iter([b'{"medicine": "', b"x" * (MAX_BODY_BYTES + 100), b'"}'])
+    r = client.post("/api/v1/adr-reports", content=chunks)
+    assert r.status_code == 413
+    assert r.json()["ok"] is False
+
+
+
+
+
 # ================================================================ adversarial
 def test_unknown_sample_is_404_not_crash():
     r = client.post("/api/v1/prescriptions", params={"sample_id": "RX-9999"})
