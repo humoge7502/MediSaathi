@@ -12,8 +12,12 @@ Design notes:
   * Request IDs are server-generated UUIDs; client-supplied ids are accepted
     only if they match a sane id pattern, so they can never smuggle header
     content into logs or responses (CRLF/unicode abuse).
-  * The client key is the forwarded-for first hop when present, else the socket
-    address. We do not log or persist it.
+  * Client key = socket address. X-Forwarded-For is honored ONLY when
+    MEDISAATHI_TRUST_PROXY=1. Red-team finding: an unconditionally-trusted XFF
+    lets an attacker rotate the header to mint a fresh bucket per request
+    (limit bypass) AND spray junk keys to evict real clients. Behind a proxy
+    that overwrites XFF, set the env flag; never trust client-supplied hops.
+  * We do not log or persist the client key.
 """
 from __future__ import annotations
 
@@ -36,6 +40,8 @@ WRITE_LIMIT = int(os.environ.get("MEDISAATHI_RATE_WRITE", "60"))   # requests
 WRITE_WINDOW_S = int(os.environ.get("MEDISAATHI_RATE_WRITE_WINDOW", "60"))
 READ_LIMIT = int(os.environ.get("MEDISAATHI_RATE_READ", "300"))
 READ_WINDOW_S = int(os.environ.get("MEDISAATHI_RATE_READ_WINDOW", "60"))
+# Set ONLY behind a proxy that overwrites X-Forwarded-For (nginx, ALB, ...).
+TRUST_PROXY = os.environ.get("MEDISAATHI_TRUST_PROXY", "0") == "1"
 
 _SECURITY_HEADERS = {
     "x-content-type-options": "nosniff",
@@ -46,7 +52,17 @@ _SECURITY_HEADERS = {
 
 
 class SlidingWindowLimiter:
-    """Fixed-memory sliding window: one deque of timestamps per client key."""
+    """Fixed-memory sliding window: one deque of timestamps per client key.
+
+    Memory policy (red-team hardened): when the key table exceeds MAX_KEYS,
+    the OLDEST keys are evicted (approx-LRU via dict insertion order) instead
+    of flushing every bucket. The old clear-all policy let an attacker spraying
+    spoofed keys reset everyone's budgets at once - a denial-of-service against
+    the limiter itself.
+    """
+
+    MAX_KEYS = 10_000
+    EVICT_BATCH = 1_000
 
     def __init__(self, limit: int, window_s: int) -> None:
         self.limit = limit
@@ -55,16 +71,21 @@ class SlidingWindowLimiter:
 
     def allow(self, key: str, now: float | None = None) -> bool:
         now = time.monotonic() if now is None else now
-        q = self._hits[key]
+        q = self._hits.get(key)
+        if q is not None:  # touch => mark as recently used (re-insert at end)
+            del self._hits[key]
+            self._hits[key] = q
+        else:
+            q = self._hits[key]
         cutoff = now - self.window
         while q and q[0] <= cutoff:
             q.popleft()
         if len(q) >= self.limit:
             return False
         q.append(now)
-        # Bound memory: a key that never talks to us again holds one empty deque.
-        if len(self._hits) > 10_000:  # pragma: no cover - abuse guard
-            self._hits.clear()
+        if len(self._hits) > self.MAX_KEYS:  # pragma: no cover - abuse guard
+            for oldest in list(self._hits)[: self.EVICT_BATCH]:
+                self._hits.pop(oldest, None)
         return True
 
 
@@ -113,9 +134,14 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 
     @staticmethod
     def _client_key(request: Request) -> str:
-        fwd = request.headers.get("x-forwarded-for", "")
-        first_hop = fwd.split(",")[0].strip() if fwd else ""
-        return first_hop or (request.client.host if request.client else "unknown")
+        # Trust the proxy chain only when explicitly declared. A client-supplied
+        # X-Forwarded-For is a credential claim, not a fact (see module docstring).
+        if TRUST_PROXY:
+            fwd = request.headers.get("x-forwarded-for", "")
+            first_hop = fwd.split(",")[0].strip() if fwd else ""
+            if first_hop:
+                return first_hop
+        return request.client.host if request.client else "unknown"
 
     @staticmethod
     def _stamp(response: Response, request_id: str) -> None:

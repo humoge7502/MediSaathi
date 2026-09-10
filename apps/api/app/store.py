@@ -43,25 +43,36 @@ _INDEX = (
 _MIGRATE_V2_TO_V3 = "ALTER TABLE prescriptions ADD COLUMN verdict_kind TEXT"
 
 _write_lock = threading.Lock()
-_conn: sqlite3.Connection | None = None
+_local = threading.local()  # one connection per thread (reads never share state)
 
 
 def _connect() -> sqlite3.Connection:
-    global _conn
-    if _conn is None:
-        _conn = sqlite3.connect(_DB_PATH, check_same_thread=False)
-        _conn.execute("PRAGMA journal_mode=WAL")
-        # Order matters: create the table, THEN migrate old schemas (add the
-        # column + backfill), THEN create the index - the index references a
-        # column that pre-v3 databases do not have yet.
-        _conn.executescript(_INIT)
-        cols = {r[1] for r in _conn.execute("PRAGMA table_info(prescriptions)")}
-        if "verdict_kind" not in cols:
-            _conn.execute(_MIGRATE_V2_TO_V3)
-            _backfill_verdict_kind(_conn)
-        _conn.execute(_INDEX)
-        _conn.commit()
-    return _conn
+    """Thread-local connection. The previous single shared connection (with
+    check_same_thread=False) meant concurrent reads could interleave with a
+    write transaction on the same connection object; per-thread connections
+    remove that coupling entirely. WAL mode keeps writer/reader concurrency."""
+    conn = getattr(_local, "conn", None)
+    if conn is None:
+        conn = sqlite3.connect(_DB_PATH)  # owned by this thread, enforced by sqlite3
+        conn.execute("PRAGMA journal_mode=WAL")
+        conn.execute("PRAGMA busy_timeout=5000")
+        _local.conn = conn
+        with _write_lock:  # schema init is idempotent and must run exactly once logically
+            _ensure_schema(conn)
+    return conn
+
+
+def _ensure_schema(conn: sqlite3.Connection) -> None:
+    # Order matters: create the table, THEN migrate old schemas (add the
+    # column + backfill), THEN create the index - the index references a
+    # column that pre-v3 databases do not have yet.
+    conn.executescript(_INIT)
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(prescriptions)")}
+    if "verdict_kind" not in cols:
+        conn.execute(_MIGRATE_V2_TO_V3)
+        _backfill_verdict_kind(conn)
+    conn.execute(_INDEX)
+    conn.commit()
 
 
 def _backfill_verdict_kind(conn: sqlite3.Connection) -> None:
