@@ -41,8 +41,13 @@ export async function POST(req: NextRequest) {
   const patient = await db.patient.findFirst();
   if (!patient) return fail("No patient profile yet — verify a prescription first");
 
+  // Event ids are cuids; anything else is malformed input, not a lookup.
+  const eventIdOk =
+    typeof body.eventId === "string" && /^[a-z0-9]{20,36}$/i.test(body.eventId);
+
   // acknowledge an event from the family view
   if (body.action === "acknowledge" && body.eventId) {
+    if (!eventIdOk) return fail("Malformed eventId");
     await db.escalationEvent.update({ where: { id: body.eventId }, data: { acknowledged: true } });
     await audit("family.acknowledged", { eventId: body.eventId });
     return ok({ acknowledged: true });
@@ -50,6 +55,7 @@ export async function POST(req: NextRequest) {
 
   // caregiver view acknowledges via code
   if (body.action === "acknowledge_by_code" && body.eventId && body.code) {
+    if (!eventIdOk) return fail("Malformed eventId");
     const link = await db.caregiverLink.findUnique({ where: { code: body.code } });
     if (!link) return fail("Invalid family code", 403);
     await db.escalationEvent.update({ where: { id: body.eventId }, data: { acknowledged: true } });
@@ -57,7 +63,7 @@ export async function POST(req: NextRequest) {
     return ok({ acknowledged: true });
   }
 
-  const name = (body.caregiverName ?? "").trim();
+  const name = (body.caregiverName ?? "").trim().slice(0, 60);
   if (!name) return fail("caregiverName is required");
 
   let link = await db.caregiverLink.findFirst({ where: { patientId: patient.id } });
@@ -76,6 +82,11 @@ export async function POST(req: NextRequest) {
 }
 
 function familyCode(): string {
+  // CSPRNG, not Math.random(): the join code is the only credential that
+  // grants a caregiver read access to the escalation feed. A predictable
+  // PRNG makes codes guessable; crypto.getRandomValues does not.
   const alphabet = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
-  return Array.from({ length: 6 }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join("");
+  const bytes = new Uint32Array(6);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (b) => alphabet[b % alphabet.length]).join("");
 }
