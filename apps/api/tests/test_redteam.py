@@ -124,17 +124,16 @@ def test_upload_rejects_wrong_declared_mime(monkeypatch):
 
 def test_upload_accepts_real_jpeg_magic(monkeypatch):
     """Magic bytes + declared type agree: passes validation, then fails on the
-    (mocked) network - proving validation ran and the pipeline was reached."""
-    import httpx
-
+    (mocked) live call - proving validation ran and the pipeline was reached.
+    We patch _live_call (not httpx.Client.post) because TestClient itself rides
+    on httpx; a class-level patch would intercept our own test transport."""
     import app.vision as v
     monkeypatch.setattr(v, "LIVE_KEY", "test-key")
 
-    def boom(self, *a, **kw):
-        request = httpx.Request("POST", "https://example.invalid/chat/completions")
-        raise httpx.ConnectError("down", request=request)
+    def fail(*a, **kw):
+        raise RuntimeError("live vision failed after retry: upstream down")
 
-    monkeypatch.setattr(httpx.Client, "post", boom)
+    monkeypatch.setattr(v, "_live_call", fail)
     jpeg = b"\xff\xd8\xff\xe0" + b"\x00" * 64
     r = client.post("/api/v1/prescriptions/upload",
                     files={"image": ("rx.jpg", jpeg, "image/jpeg")})
