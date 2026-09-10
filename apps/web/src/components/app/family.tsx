@@ -2,7 +2,7 @@
 
 /** Family panel — caregiver circle: join code, escalation feed, acknowledgements. */
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { api, post, type FamilyPayload } from "@/lib/client";
 
 export function FamilyPanel({ refreshKey }: { refreshKey: number }) {
@@ -20,9 +20,20 @@ export function FamilyPanel({ refreshKey }: { refreshKey: number }) {
     }
   }, []);
 
+  // Auto-load on mount / refresh with stale-response cancellation: when
+  // refreshKey changes while a fetch is in flight, the older response must
+  // never clobber the newer one.
+  const loadSeq = useRef(0);
   useEffect(() => {
-    void load();
-  }, [load, refreshKey]);
+    const seq = ++loadSeq.current;
+    api<FamilyPayload>("/api/family")
+      .then((d) => {
+        if (seq === loadSeq.current) setData(d);
+      })
+      .catch(() => {
+        if (seq === loadSeq.current) setData(null);
+      });
+  }, [refreshKey]);
 
   async function link() {
     if (!name.trim()) return;

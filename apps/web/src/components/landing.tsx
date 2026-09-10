@@ -46,18 +46,18 @@ export function Landing({ onLaunch }: Props) {
       {/* ---------------- hero ---------------- */}
       <section className="mx-auto max-w-6xl px-6 pt-16 pb-20 md:pt-24 md:pb-28">
         <p className="vy-eyebrow">VMEDITHON V3.0 · Bio × Engineering</p>
-        <h1 className="vy-serif mt-5 text-5xl leading-[1.05] md:text-7xl" style={{ color: "var(--vy-pine-ink)" }}>
+        <h1 className="vy-serif mt-5 text-5xl leading-[1.05] md:text-7xl vy-fade-up" style={{ color: "var(--vy-pine-ink)" }}>
           Every medicine,<br />
           <span className="italic">checked. Every dose,</span><br />
           remembered.
         </h1>
-        <p className="mt-7 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+        <p className="mt-7 max-w-2xl text-lg leading-relaxed text-muted-foreground vy-fade-up-d1">
           Vaidya is a closed-loop medication guardian: it <strong className="text-foreground">verifies</strong> prescriptions
           with a deterministic safety engine, <strong className="text-foreground">schedules</strong> the therapy,
           <strong className="text-foreground"> measures</strong> adherence, and <strong className="text-foreground">explains</strong> —
           in plain language, with citations — while refusing, never guessing, when confidence drops.
         </p>
-        <div className="mt-9 flex flex-wrap items-center gap-4">
+        <div className="mt-9 flex flex-wrap items-center gap-4 vy-fade-up-d2">
           <button
             onClick={onLaunch}
             className="rounded-full px-7 py-3 text-sm font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.99]"
@@ -82,8 +82,8 @@ export function Landing({ onLaunch }: Props) {
           <p className="vy-eyebrow">The gap</p>
           <h2 className="vy-serif mt-3 text-3xl md:text-4xl">Everyone sells or reminds.<br />Nobody verifies.</h2>
           <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {GAP_STATS.map((s) => (
-              <div key={s.value} className="vy-hairline-card p-6">
+            {GAP_STATS.map((s, i) => (
+              <div key={s.value} className="vy-hairline-card p-6 vy-fade-up" style={{ animationDelay: `${i * 0.08}s` }}>
                 <div className="vy-numeral vy-serif text-4xl" style={{ color: "var(--vy-pine)" }}>{s.value}</div>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
               </div>
@@ -117,7 +117,7 @@ export function Landing({ onLaunch }: Props) {
               <p>
                 An LLM reads the prescription and proposes structured lines with an honest confidence for each.
                 It never decides anything that touches safety. That happens in a deterministic engine:
-                brand→molecule normalization against a {metrics?.dataset?.brands ?? 95}-brand formulary, then
+                brand→molecule normalization against a {metrics?.dataset?.brands ?? "—"}-brand formulary, then
                 interaction pairs, combination rules, contraindications, duplicate-molecule detection and
                 aggregate dose-cap arithmetic — all computed in under ten milliseconds, offline, with zero network.
               </p>

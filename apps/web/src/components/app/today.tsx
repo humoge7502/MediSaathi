@@ -2,7 +2,7 @@
 
 /** Today panel — the daily dose timeline with catch-up guardrails. */
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { api, post, type TodayPayload } from "@/lib/client";
 
 interface ActionFeedback {
@@ -32,19 +32,35 @@ export function TodayPanel({ refreshKey }: { refreshKey: number }) {
   const [feedback, setFeedback] = useState<ActionFeedback | null>(null);
 
   const load = useCallback(async () => {
-    setLoading(true);
     try {
       setData(await api<TodayPayload>("/api/plans"));
     } catch {
       setData(null);
-    } finally {
-      setLoading(false);
     }
   }, []);
 
+  // Auto-load on mount / refresh. Stale responses are discarded: when
+  // refreshKey changes while a fetch is in flight, the older response must
+  // never clobber the newer one (cancelled-fetch pattern). `loading` is true
+  // only until the FIRST response lands; later refreshes update in place
+  // instead of flashing the skeleton back on.
+  const loadSeq = useRef(0);
   useEffect(() => {
-    void load();
-  }, [load, refreshKey]);
+    const seq = ++loadSeq.current;
+    api<TodayPayload>("/api/plans")
+      .then((d) => {
+        if (seq === loadSeq.current) {
+          setData(d);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (seq === loadSeq.current) {
+          setData(null);
+          setLoading(false);
+        }
+      });
+  }, [refreshKey]);
 
   async function act(doseId: string, action: "taken" | "skipped") {
     setBusyDose(doseId);

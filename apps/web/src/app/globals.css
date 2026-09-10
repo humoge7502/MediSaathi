@@ -140,6 +140,27 @@
   ::selection {
     background: color-mix(in oklch, var(--vy-pine) 22%, transparent);
   }
+  /* Keyboard focus must always be visible (WCAG 2.4.7): a 2px pine ring with
+     offset, applied only for keyboard focus so mouse users see no noise. */
+  :focus-visible {
+    outline: 2px solid var(--vy-pine);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  /* Skip navigation: first tab stop jumps straight to the product. */
+  .vy-skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 50;
+    background: var(--vy-pine);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0 0 0.5rem 0;
+  }
+  .vy-skip-link:focus-visible {
+    left: 0;
+  }
 }
 
 /* ---------- Vaidya component classes ---------- */
@@ -208,6 +229,15 @@
 }
 .vy-fade-up { animation: vy-fade-up 0.5s ease both; }
 
+/* Staggered entrance for landing sections: one motion, three delays —
+   hierarchy communicated by rhythm, not by different animations. */
+.vy-fade-up-d1 { animation: vy-fade-up 0.5s ease 0.08s both; }
+.vy-fade-up-d2 { animation: vy-fade-up 0.5s ease 0.16s both; }
+.vy-fade-up-d3 { animation: vy-fade-up 0.5s ease 0.24s both; }
+
+/* WCAG 2.3.3 / prefers-reduced-motion: every entrance animation above is
+   disabled; content simply appears. No animation ever blocks a task. */
 @media (prefers-reduced-motion: reduce) {
-  .vy-fade-up { animation: none; }
+  .vy-fade-up, .vy-fade-up-d1, .vy-fade-up-d2, .vy-fade-up-d3 { animation: none; }
+  .hover\:scale-\[1\.02\]:hover, .hover\:scale-\[1\.01\]:hover { transform: none; }
 }

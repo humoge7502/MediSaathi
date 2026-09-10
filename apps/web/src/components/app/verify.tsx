@@ -127,7 +127,7 @@ export function VerifyPanel({ onPlanStarted }: { onPlanStarted: () => void }) {
       </div>
 
       {/* -------- result -------- */}
-      <div className="space-y-4">
+      <div className="space-y-4" aria-live="polite">
         {!result && !busy && (
           <div className="vy-hairline-card flex h-full min-h-72 flex-col items-center justify-center p-10 text-center">
             <div className="vy-serif text-5xl italic" style={{ color: "var(--vy-hairline)" }}>Rx</div>

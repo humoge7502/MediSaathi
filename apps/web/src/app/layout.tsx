@@ -38,7 +38,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        {children}
+        <a href="#main" className="vy-skip-link">
+          Skip to content
+        </a>
+        <main id="main">{children}</main>
         <Toaster />
       </body>
     </html>
