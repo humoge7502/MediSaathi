@@ -3,6 +3,132 @@
 All notable changes. Format based on Keep a Changelog; versions here map to
 the event build blocks.
 
+## [0.6.0] - 2026-09-11 - patent-readiness evidence spine (MED-001..MED-028)
+
+Turns the engineering into *reproducible* evidence. The organising law: no
+number is quoted anywhere without an archived run manifest behind it.
+
+### Added — evidence spine
+- **`ml/`** research package: corpus loader/splits/strata, the A0-A4 baseline
+  ladder + A4 ablations, calibration (ECE / Brier / reliability curves /
+  threshold sweep / operating-point selection), the corruption+injection+
+  confusable+replay robustness suite, the HITL simulation, sha256 dataset
+  manifests and the run-manifest writer.
+- **`tools/run_experiments.py`** — one command runs E-A..E-G and archives
+  `eval/runs/<id>/{manifest,metrics,cases}` (config, dataset SHAs, engine
+  commit, environment). Writes `eval/results/RESULTS.md`.
+- **`tools/build_binder.py`** (MED-020) — compiles the run archive into
+  `docs/patent/EVIDENCE_BINDER.md` + `eval/results/binder.json`, including the
+  negative results.
+- **`tools/export_evidence.py`** (MED-013) — compiles the archive into the
+  Evidence-tab artifact, labelled with its snapshot/commit and honest limits.
+- **`tools/import_snapshot.py`** (MED-027) — governed knowledge-snapshot
+  import: schema validation, sha256, diff report, explicit `--apply`.
+- **`data/corpus/`** (MED-005/006) — 300-case adjudicated corpus with a
+  70/15/15 stratified split, annotation codebook and sha256 manifest.
+
+### Added — product surfaces
+- **Pharmacist review console** (MED-012) — a Review tab over the persisted
+  confirm queue: band/fused/why per queued field, confirm/correct/reject with
+  actor + reason, per-prescription audit trail, and the plan-block state.
+- **Evidence tab v2** (MED-013/014) — renders the archived baseline ladder,
+  ablations, calibration reliability curve, frozen operating point, parity and
+  latency, with run provenance and explicit honesty notes. Verify now shows the
+  band, fused score and why-queued explanation per queued field.
+- **FHIR R4 export mapping** (MED-028) — `GET /prescriptions/{id}/fhir` returns
+  a MedicationRequest collection Bundle **only for verified prescriptions**; a
+  queued or refused prescription exports 409, because an unverified read must
+  never be laundered into a clinical record.
+- **Consent-artifact stub** (MED-025) — ABDM-vocabulary consent records
+  (pseudonymous ref only, expiring, fail-closed on revoke/expiry). Explicitly a
+  stub, not a live ABDM gateway.
+- **Multilingual NLG coverage tests** (MED-026) — the slot-traceability law is
+  now asserted across en/ta/hi, including “no unformatted placeholder survives”.
+
+### Added — documentation
+- **`docs/patent/`** — invention disclosure (MED-021), claim-concept pack +
+  strength matrix (MED-022), normative pseudocode of the gate/fusion/precedence/
+  queue laws, experiment protocol + results, prior-art matrix, and the generated
+  binder.
+- **Disclosure pause** (MED-001) in `CONTRIBUTING.md` + `docs/patent/README.md`:
+  the repository is public, so post-push mechanism detail is a public disclosure.
+
+### Changed — cross-engine parity (MED-015)
+- The golden corpus moved from a 25-case in-code copy per language to **one
+  shared, versioned file** (`eval/parity/golden.json`), expanded to **110 cases**;
+  both planes read the identical bytes, so corpus drift is impossible by
+  construction.
+- **Three real drifts found and fixed by the expansion:** the TS formulary mapped
+  `Hydroquin 200` to hydrochlorothiazide where the source-of-truth CSV says
+  hydroxychloroquine (so a QT/pairwise rule silently did not fire on that tier);
+  three formulary rows (`Zental`, `Monocef 1g`, `Digoxin Tab`) and three
+  contraindication rows present in the Python data were missing from the TS
+  dataset.
+
+### Fixed
+- `ml.manifest.git_sha()` passed `--short` without a revision, so every run
+  manifest recorded `engine_git_sha: "unknown"`.
+- The E-C corruption ladder no longer perturbs perception confidence when
+  injecting instruction text: labels are confidence-derived, so moving
+  confidence invalidated the label. Boundary sensitivity is instead measured and
+  reported as its own diagnostic (`confidence_boundary_sensitivity`).
+- `ml.hitl` raw arm reported 0 coverage while auto-accepting everything, and the
+  acceptance test used `>` where equality was the honest comparison.
+
+### Verified (this tree)
+API: **179/179 pytest**, ruff clean, eval + eval regression gate, parity
+110/110 both engines, demo-check PASS. Web: eslint + tsc clean, 18/18 selftest,
+110/110 parity, 68/68 integration tests, production build, **14/14 Playwright**.
+Experiments: E-A..E-G archived with manifests; E-A A4 agreement 1.000 / unsafe
+0.000 on the frozen test split vs A1 0.705 / 0.295.
+
+## [0.5.0] - 2026-09-11 - observability + property-based safety proofs
+
+Two engineering-depth additions, both dependency-free and both *proven* by
+tests rather than claimed:
+
+### Added
+- **Observability stack (API tier, zero deps)** — `app/obs.py`:
+  · structured JSON-lines logging (one machine-parseable object per request:
+  ts/level/route/method/status/latency_ms/request_id; unwhitelisted fields
+  can never leak into the stream),
+  · `GET /slo` — per-endpoint p50/p95/p99/max from bounded per-route rings
+  (512 obs each; memory O(routes), never O(traffic)),
+  · `GET /metrics.prometheus` — Prometheus/OpenMetrics text exposition of the
+  existing counters + latency summary with correct HELP/TYPE and label
+  escaping. Pinned by 8 tests: format parses, counts match /metrics, labels
+  escape correctly.
+- **Property-based safety proofs (hypothesis)** — `tests/test_properties.py`:
+  ~900 generated prescriptions must uphold the five product invariants:
+  P1 totality (never crash; verdict stays in the shared vocabulary),
+  P2 gate integrity (low-confidence fields are queued and never feed
+  findings), P3 symmetry (screen(a,b) ≡ screen(b,a)), P4 dose caps (the
+  aggregate paracetamol cap fires iff the summed daily mg exceeds it —
+  combination molecules like Combiflam legitimately trip other molecules'
+  caps), P5 monotonicity (raising perception confidence can never produce a
+  refusal). The deterministic core is the right place for property testing:
+  a single counterexample is a real bug class, not a flake.
+- **Retry/backoff on the live vision call** — exponential backoff between
+  attempts (0.5s → 1s → …, env-capped), attempt count env-tunable; pinned by
+  two deterministic tests (fake transport): backoff schedule is exactly
+  [0.5, 1.0] for 3 attempts, and a transient failure recovers on attempt 2.
+- **Circuit breaker for the copilot (web tier)** — `lib/ai/breaker.ts`: after
+  3 consecutive model failures the breaker opens; queries fail fast and
+  honestly (`service_unavailable`) instead of paying the network timeout;
+  after a 30 s cooldown the next call probes (half-open) and recovery is
+  automatic. Clock-injected so the state machine is walked deterministically
+  (7 tests, no sleeps).
+- **Web `/api/metrics`** now reports a live engine-plane latency measurement.
+
+### Changed
+- CI test step renamed to include properties + observability;
+  `hypothesis` pinned in `constraints.txt` and `apps/api[dev]`.
+
+### Verified (this tree)
+API: 125/125 pytest (was 112), ruff clean, eval gate, parity 25/25 both
+engines. Web: tsc/eslint clean, 48/48 integration tests (was 41), build,
+12/12 Playwright.
+
 ## [0.4.1] - 2026-09-11 - container stack fixed and verified live end-to-end
 
 The Docker path was asserted, never executed. Built both images, booted the

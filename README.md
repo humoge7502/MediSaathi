@@ -74,13 +74,21 @@ That is the difference between an AI wrapper and an engineered system.
    heatmap — the metrics the adherence literature uses.
 4. **Protect** — a family circle receives timestamped escalations for late
    doses, skipped doses, and plans that started with safety findings.
-5. **Explain** — a grounded copilot answers from a curated, source-attributed
+5. **Review** — a **pharmacist review console** over the persisted confirm
+   queue: every field the confidence gate could not auto-confirm is listed with
+   the band, fused score and reason that routed it; a human confirms, corrects
+   the brand, or rejects the read. While any row is pending the prescription
+   **cannot** generate a therapy plan (enforced in the plan transaction, not in
+   the UI), and every transition is appended to an audit trail.
+6. **Explain** — a grounded copilot answers from a curated, source-attributed
    knowledge base (MedlinePlus/NIH, NHS, WHO) with three deterministic gates:
    emergency triage → scope refusal → grounded generation with citations.
    Low retrieval ⇒ refusal, not improvisation.
-6. **Measure** — the in-app Evidence tab runs an 18-case engine self-test
-   (no LLM, no network) and a 10-case copilot evaluation with an automated
-   rubric judge. What is measured is shown; nothing is claimed.
+7. **Measure** — the in-app Evidence tab runs an 18-case engine self-test
+   (no LLM, no network), a 10-case copilot evaluation with an automated rubric
+   judge, and renders the **archived experiment evidence** (the A0–A4 baseline
+   ladder, ablations, calibration curve and frozen operating point, parity and
+   latency). What is measured is shown with its provenance; nothing is claimed.
 
 ## Repository — two tiers, one law
 
@@ -100,19 +108,61 @@ double.
 | Web engine self-test suite | **18/18 verdicts correct (100%)**, suite ~5–7 ms | Deterministic, reproducible, runs live in the Evidence tab |
 | Web copilot refusal gates | emergency + scope refusals fire in ~0 ms, before any generation | Deterministic (pure regex + retrieval floor) |
 | Web live degraded-tier verify | warfarin+aspirin → interaction; triple whammy → combination rule; child+doxy → contraindication; garbage → confirm queue — all **without any model** | Measured via HTTP smoke (see docs/TESTING.md) |
-| Web E2E (Playwright) | **12/12 browser journeys** on the deterministic tier: landing → verify (interaction/combination/queue/injection-inert) → copilot gates → evidence → today + dose guardrail | `make web-e2e` |
-| API suite | **112 tests passing** (safety properties, golden paths, perception, red-team, parity gate, body-cap) | `make test` |
+| Web E2E (Playwright) | **14/14 browser journeys** on the deterministic tier: landing → verify (interaction/combination/queue/injection-inert) → pharmacist review console (queue blocks the plan, human resolves) → copilot gates → evidence (+ archived experiments) → today + dose guardrail | `make web-e2e` |
+| API suite | **179 tests passing** (safety properties, golden paths, perception, red-team, parity gate, property-based invariants, observability, egress proof, FHIR export, consent stub, NLG coverage) | `make test` |
 | API fixture benchmark | brand recall 1.00 · frequency recall 0.94 · verdict agreement 1.00 · refusal precision 1.00 (n=12) | `make eval` |
 | API latency | p50 11.3–12.4 ms, p95 13.4–15.4 ms (in-process ASGI, 100-request bench) | `python3 tools/bench.py` |
-| Web route integration tests | **41 passing** — verify → plan → dose guardrail → family, plus middleware security contracts and the copilot gates, over an isolated SQLite, perception layer sealed (no model keys needed) | `cd apps/web && bun run test` |
-| Cross-engine parity (ADR-0012) | **25/25 golden cases agree** between the TypeScript and Python safety planes | `make parity` |
+| Web route integration tests | **68 passing** — verify → plan → dose guardrail → family → confirm-queue state machine → gate law → circuit breaker, plus middleware security contracts and the copilot gates, over an isolated SQLite, perception layer sealed (no model keys needed) | `cd apps/web && bun run test` |
+| Cross-engine parity (ADR-0012/MED-015) | **110/110 golden cases agree** between the TypeScript and Python safety planes, from one shared versioned corpus | `make parity` |
 | A1/A4 ablation | verdict agreement **1.00 → 0.17** without the gate/formulary | `make ablation` — the safety plane, not the reading, is the product |
+| **Baseline ladder E-A** (300-case corpus, frozen test split n=44) | A0 agreement 0.23 / unsafe 0.77 · A1 0.71 / 0.30 · **A4 1.00 / 0.000** | `python tools/run_experiments.py --experiments E-A` |
+| **Ablations E-B** (Δ vs A4) | removing the gate **−0.295 agreement / +0.295 unsafe**; removing the formulary fusion or queue blocking **−0.250 / +0.250** | `python tools/run_experiments.py --experiments E-B` |
+| **Calibration E-D** | frozen operating point `v1-2026-09` on the held-out split: agreement 1.000 · unsafe 0.000 · ECE(safety) 0.148 | `python tools/run_experiments.py --experiments E-D` |
+| **Robustness E-C** | zero unsafe auto-confirms across 6 corruption levels (256 cases); invented brands never auto-confirm; queue replays refused | `python tools/run_experiments.py --experiments E-C` |
+| **Deterministic plane E-F** | p50 ≈ 0.07 ms / p95 ≈ 0.11 ms per verification over the whole corpus; offline verdict delta 0 | `python tools/run_experiments.py --experiments E-F` |
+| **Human-in-the-loop E-G** | queue arm matches blanket-refusal accuracy (1.000) at ~4.5× less review time, and beats blind automation (0.705) | `python tools/run_experiments.py --experiments E-G` |
+| API property tests | **5 safety invariants hold across ~900 generated prescriptions** (totality, gate integrity, pair symmetry, dose caps, gate monotonicity) — hypothesis finds no counterexample | `pytest apps/api/tests/test_properties.py` |
 | Copilot eval (10 labeled cases) | 100% type accuracy, groundedness 1.00, safety 1.00 (single run, automated rubric judge) | Engineering telemetry, **not** clinical validation |
 
 Honesty rules embedded in the product: dataset provenance (DDInter / Stockley /
 FDA / CredibleMeds / BMJ / WHO / NHS / MedlinePlus) is displayed wherever data
 is used; refusal is a designed success state; the eval panel states it is not
 clinical validation; every screen says "information layer — not a doctor".
+
+## Research & evidence layer (patent-readiness)
+
+The engineering above is turned into *reproducible* evidence by a research
+harness whose one law is: **no number is quoted without a run manifest.**
+
+```bash
+python tools/run_experiments.py --all   # E-A..E-G -> eval/runs/ + eval/results/
+python tools/export_evidence.py         # -> apps/web/src/data/evidence.json (Evidence tab)
+python tools/build_binder.py            # -> docs/patent/EVIDENCE_BINDER.md
+python tools/import_snapshot.py --kind interactions --source new_ddi.csv   # governed data updates
+```
+
+- **`ml/`** — the corpus loader, baseline ladder (A0–A4) + ablations, calibration
+  (ECE / Brier / reliability / threshold sweep), corruption + injection suite, and
+  the human-in-the-loop simulation. Deterministic and offline.
+- **`data/corpus/`** — a 300-case labeled corpus with a 70/15/15 stratified
+  split, an annotation codebook, and sha256 manifests (`data/manifest.json`).
+- **`eval/runs/`** — one archived manifest per experiment run: config, dataset
+  SHAs, engine commit, environment, metrics, per-case outcomes.
+- **`docs/patent/`** — invention disclosure, claim concepts + strength matrix,
+  normative pseudocode, experiment protocol, prior-art matrix, and the generated
+  evidence binder.
+
+**Honest limits of this evidence** (stated here, not buried): the corpus is
+synthetic-curated and dual human annotation with a kappa is still outstanding;
+perception accuracy on real images is a separate open experiment; the E-G
+reviewer is a simulated policy, not a human panel; and the 15% review-burden
+target is reported as unmet rather than redefined. Full detail in
+`docs/patent/EXPERIMENTS.md`.
+
+> ⚠️ **Disclosure pause.** The repository is public, so mechanism detail added
+> after the initial push is a public disclosure. Before posting, demoing or
+> publishing the gate law, fusion function, queue semantics or calibration
+> numbers, read `docs/patent/README.md` and `CONTRIBUTING.md`.
 
 ## Quickstart
 
@@ -176,7 +226,9 @@ honestly, visibly, and safely*.
 - **Deterministic safety gates** — dose-change, stop/start and emergency
   classes refuse before any generation; the double-dose guardrail is a
   first-action-wins law with audit; catch-up guidance is conservative and
-  never advises doubling.
+  never advises doubling. The copilot sits behind a circuit breaker: a dead
+  model service means fast, honest `service_unavailable` answers, never a
+  30-second hang per query (recovery probes are automatic).
 - **Prompt-injection containment** — perception output is inert text; the LLM
   only proposes lines, rules decide; invented brands land in the confirm
   queue (tested in both tiers).
@@ -191,7 +243,9 @@ honestly, visibly, and safely*.
   `X-Forwarded-For` is trusted only behind an explicit `MEDISAATHI_TRUST_PROXY=1`),
   a 1 MiB JSON body cap (413 before the app reads a byte), upload MIME allow-list
   **plus** magic-byte sniffing, and fixture IDs hardened against path traversal
-  (red-team suite: 46 tests).
+  (red-team suite: 48 tests). Structured JSON logs, per-endpoint latency SLOs
+  (`/slo`, bounded windows) and a Prometheus scrape endpoint
+  (`/metrics.prometheus`) — zero new dependencies, pinned by tests.
 - **Web tier** — the same contract in Next.js middleware: request-ID
   correlation + per-client sliding-window limits + bounded-memory eviction on
   `/api/*`; CSP, frame-deny and permissions-policy headers on every route;
@@ -205,13 +259,17 @@ Full model: [docs/security/SECURITY_AUDIT.md](docs/security/SECURITY_AUDIT.md) a
 ## Tests
 
 ```bash
-make test          # API suite: 112 tests (safety, golden paths, perception, red-team, parity, body-cap)
-make eval          # API benchmark table
-make ablation      # A1-vs-A4 counterfactual
-make demo-check    # full offline API demo gate (sealed cases + tests + eval + python parity)
-make parity        # cross-engine parity gate: both planes agree 25/25 (needs bun; parity-py = python side only)
-make web-check     # web gate: lint + typecheck + selftest + parity + integration tests + build
-make web-e2e       # browser E2E: build + standalone server + 12 Playwright journeys
+make test              # API suite: 179 tests (safety, golden paths, perception, red-team, parity, properties, observability, egress, FHIR/consent, NLG)
+make eval              # API benchmark table
+make ablation          # A1-vs-A4 counterfactual
+make demo-check        # full offline API demo gate (sealed cases + tests + eval + python parity)
+make parity            # cross-engine parity gate: both planes agree 110/110 (needs bun; parity-py = python side only)
+make experiments       # run E-A..E-G and archive a run manifest for each
+make experiments-quick # fast smoke of the experiment spine
+make evidence          # compile the run archive into the Evidence-tab artifact
+make binder            # build the patent evidence binder from the run archive
+make web-check         # web gate: lint + typecheck + selftest + parity + integration tests + build
+make web-e2e           # browser E2E: build + standalone server + 14 Playwright journeys
 cd apps/web && bun run selftest   # the deterministic suite, in seconds
 cd apps/web && bun run test       # route-handler integration tests (isolated SQLite)
 ```
@@ -274,6 +332,7 @@ least-privilege (`contents: read`).
 | [docs/product/PRODUCT_STRATEGY.md](docs/product/PRODUCT_STRATEGY.md) | personas, JTBD, differentiation, roadmap |
 | [docs/research/COMPETITIVE_ANALYSIS.md](docs/research/COMPETITIVE_ANALYSIS.md) | feature matrix vs Medisafe/Tata 1mg/etc. |
 | [research/](research/) | literature review + references, novelty analysis, experiment protocol |
+| [docs/patent/](docs/patent/) | **patent evidence package**: invention disclosure, claim concepts + strength matrix, normative pseudocode of the gate/fusion/precedence/queue laws, experiment protocol + results, prior-art matrix, and the generated evidence binder |
 
 ## Repository layout
 

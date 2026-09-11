@@ -34,6 +34,14 @@ next-env.d.ts
 *.zip
 *.bundle
 
+# Strategy reports — deliberately NOT published (disclosure pause, MED-001).
+# These contain the full patent analysis, prior-art threat assessment and draft
+# claim strategy. Committing them to a public repository would be a public
+# disclosure of mechanism detail before a priority date is secured.
+# See docs/patent/README.md and CONTRIBUTING.md -> "Disclosure pause".
+MediSaathi_Patent_Readiness_Analysis.pdf
+MediSaathi_Transformation_Report.pdf
+
 # Playwright E2E
 apps/web/test-results/
 apps/web/playwright-report/
