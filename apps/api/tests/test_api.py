@@ -9,6 +9,10 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from app.main import app  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
 
+# The judge tests below exercise the demo's opted-in state; the flag now
+# defaults to 0 (MS-08), so tests that need the route set it explicitly.
+os.environ.setdefault("MEDISAATHI_JUDGE_OPEN", "1")
+
 client = TestClient(app)
 
 

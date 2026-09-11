@@ -55,54 +55,62 @@ export async function POST(req: NextRequest) {
     patient = await db.patient.create({ data: { name: "Asha (demo patient)", ageYears: 67, sex: "female" } });
   }
 
-  // Replace any previous active plan for the demo identity (single-patient event build)
-  const existingActive = await db.therapyPlan.findFirst({
-    where: { patientId: patient.id, status: "active" },
-    include: { medications: true },
-  });
-  if (existingActive) {
-    await db.therapyPlan.update({ where: { id: existingActive.id }, data: { status: "archived" } });
-  }
-
-  const plan = await db.therapyPlan.create({
-    data: {
-      patientId: patient.id,
-      prescriptionId: prescription.id,
-      label: report.confirmed.map((m) => m.brand).join(" + "),
-      status: "active",
-    },
-  });
-
+  // Replace any previous active plan for the demo identity (single-patient event build).
+  // The whole swap — archive old plan, create plan + medications + doses — runs in ONE
+  // interactive transaction (audit TD-E): a failure mid-loop used to leave a partially
+  // scheduled plan, and two concurrent starts could interleave archives and creates.
   const start = new Date();
-  let slotCount = 0;
-  for (const med of report.confirmed) {
-    const times = defaultTimes(med.frequency || "OD");
-    const created = await db.medication.create({
+  const created = await db.$transaction(async (tx) => {
+    const existingActive = await tx.therapyPlan.findFirst({
+      where: { patientId: patient.id, status: "active" },
+      include: { medications: true },
+    });
+    if (existingActive) {
+      await tx.therapyPlan.update({ where: { id: existingActive.id }, data: { status: "archived" } });
+    }
+
+    const plan = await tx.therapyPlan.create({
       data: {
-        planId: plan.id,
-        brand: med.brand ?? med.rawText,
-        molecule: med.molecule,
-        atcClass: med.atc,
-        doseMg: med.strengthMg ?? 0,
-        frequencyCode: med.frequency || "OD",
-        timesJson: JSON.stringify(times),
-        durationDays: med.durationDays ?? 7,
-        instructions: med.instructions,
+        patientId: patient.id,
+        prescriptionId: prescription.id,
+        label: report.confirmed.map((m) => m.brand).join(" + "),
+        status: "active",
       },
     });
-    const doses = times.flatMap((t) => {
-      const [hh, mm] = t.split(":").map((x) => parseInt(x, 10));
-      const days = Math.min(med.durationDays ?? 7, 14);
-      return Array.from({ length: days }, (_, d) => {
-        const when = new Date(start);
-        when.setDate(when.getDate() + d);
-        when.setHours(hh, mm, 0, 0);
-        return { medicationId: created.id, scheduledAt: when, status: "pending" };
+
+    let slotCount = 0;
+    for (const med of report.confirmed) {
+      const times = defaultTimes(med.frequency || "OD");
+      const createdMed = await tx.medication.create({
+        data: {
+          planId: plan.id,
+          brand: med.brand ?? med.rawText,
+          molecule: med.molecule,
+          atcClass: med.atc,
+          doseMg: med.strengthMg ?? 0,
+          frequencyCode: med.frequency || "OD",
+          timesJson: JSON.stringify(times),
+          durationDays: med.durationDays ?? 7,
+          instructions: med.instructions,
+        },
       });
-    });
-    if (doses.length > 0) await db.dose.createMany({ data: doses });
-    slotCount += doses.length;
-  }
+      const doses = times.flatMap((t) => {
+        const [hh, mm] = t.split(":").map((x) => parseInt(x, 10));
+        const days = Math.min(med.durationDays ?? 7, 14);
+        return Array.from({ length: days }, (_, d) => {
+          const when = new Date(start);
+          when.setDate(when.getDate() + d);
+          when.setHours(hh, mm, 0, 0);
+          return { medicationId: createdMed.id, scheduledAt: when, status: "pending" };
+        });
+      });
+      if (doses.length > 0) await tx.dose.createMany({ data: doses });
+      slotCount += doses.length;
+    }
+    return { plan, slotCount };
+  });
+  const plan = created.plan;
+  const slotCount = created.slotCount;
 
   // If the verdict carried findings, raise an escalation event for the family feed
   if (findings.length > 0) {

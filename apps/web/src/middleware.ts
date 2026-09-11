@@ -6,14 +6,25 @@ import { NextRequest, NextResponse } from "next/server";
  * (apps/api/app/middleware_security.py) so both tiers answer with the same
  * headers and the same 429 envelope shape.
  *
- * Threat-model notes (mirrored from the API tier, see docs/SECURITY.md):
+ * Threat-model notes (mirrored from the API tier, see docs/security/SECURITY_AUDIT.md):
  *  - X-Forwarded-For is honored ONLY when MEDISAATHI_TRUST_PROXY=1. A client
  *    that can set its own XFF must not be able to mint a fresh bucket per
  *    request (limit bypass) or flood the key table (memory pressure).
+ *  - KEY SOURCE LAW (audit finding MS-02): without a trusted proxy, Next.js
+ *    edge middleware cannot see the socket address, and `x-real-ip` is a
+ *    CLIENT-SUPPLIED header — trusting it would let any caller rotate a fresh
+ *    rate-limit bucket per request. The fallback is therefore a SHARED bucket
+ *    ("anon"): unauthenticated strangers share one budget, and only a proxy
+ *    we explicitly trust can give a client its own key. Same law as the API
+ *    tier (XFF honored only behind MEDISAATHI_TRUST_PROXY=1).
  *  - The limiter is per process/instance, deliberately: this is a demo-scale
  *    monolith. Swap point for Redis = `limit()` (see docs/DECISIONS.md).
  *  - Memory is bounded: at most MAX_KEYS buckets; eviction removes the
  *    OLDEST keys (insertion-order approximation of LRU), never clear-all.
+ *  - Mutations carry a same-origin check (defense in depth for the day
+ *    cookie sessions exist — audit finding MS-10). Cross-origin JSON POSTs
+ *    are rejected before any handler runs; same-origin and server-to-server
+ *    callers without an Origin header pass.
  */
 
 const WRITE_LIMIT = Number(process.env.MEDISAATHI_RATE_WRITE ?? 60);
@@ -33,7 +44,8 @@ interface Bucket {
 
 const buckets = new Map<string, Bucket>();
 
-function allow(classedKey: string, limit: number, windowMs: number, now: number): boolean {
+/** Sliding-window allow with approx-LRU eviction. Exported for the contract tests. */
+export function allow(classedKey: string, limit: number, windowMs: number, now: number): boolean {
   const b = buckets.get(classedKey);
   if (b) {
     buckets.delete(classedKey); // re-insert below => most-recently-used position
@@ -54,16 +66,33 @@ function allow(classedKey: string, limit: number, windowMs: number, now: number)
   return true;
 }
 
-function clientKey(req: NextRequest): string {
+/**
+ * Rate-limit key source. NEVER trusts a client-settable header without an
+ * explicit proxy trust flag: unproxied callers share the "anon" bucket
+ * instead of minting private ones. Exported for the contract tests.
+ */
+export function clientKey(headers: Headers): string {
   if (TRUST_PROXY) {
-    const fwd = req.headers.get("x-forwarded-for") ?? "";
+    const fwd = headers.get("x-forwarded-for") ?? "";
     const firstHop = fwd.split(",")[0]?.trim() ?? "";
     if (firstHop) return firstHop;
   }
-  // Self-hosted without a proxy: Next does not expose the socket address to
-  // middleware; x-real-ip is what the platform/runner sets. Fall back to a
-  // shared bucket rather than trusting a client-supplied header.
-  return req.headers.get("x-real-ip") ?? "local";
+  return "anon";
+}
+
+/**
+ * Same-origin check for state-changing requests (MS-10 defense in depth).
+ * Browsers always attach Origin on cross-origin POSTs; non-browser callers
+ * (curl, service-to-service) send no Origin and are allowed — the demo API
+ * is curl-driven by design. Exported for the contract tests.
+ */
+export function originAllowed(origin: string | null, host: string): boolean {
+  if (!origin) return true; // non-browser client (curl / same-origin server call)
+  try {
+    return new URL(origin).host === host;
+  } catch {
+    return false;
+  }
 }
 
 export function middleware(req: NextRequest) {
@@ -73,13 +102,24 @@ export function middleware(req: NextRequest) {
       : crypto.randomUUID().replace(/-/g, "");
 
   const isWrite = WRITE_METHODS.has(req.method);
+
+  // MS-10: reject cross-origin mutations before any handler runs.
+  if (isWrite && !originAllowed(req.headers.get("origin"), req.headers.get("host") ?? "")) {
+    const res = NextResponse.json(
+      { ok: false, error: "cross-origin mutation rejected" },
+      { status: 403 }
+    );
+    res.headers.set("x-request-id", requestId);
+    return res;
+  }
+
   const limit = isWrite ? WRITE_LIMIT : READ_LIMIT;
   const window = isWrite ? WRITE_WINDOW_MS : READ_WINDOW_MS;
   // Separate window per (class, client) — mirroring the FastAPI tier's distinct
   // _WRITES/_READS limiters. A single shared bucket would let read traffic
   // consume the write budget (and vice versa): a read-heavy browser session
   // would 429 its first POST after ~60 combined hits, which is wrong.
-  const key = `${isWrite ? "w" : "r"}:${clientKey(req)}`;
+  const key = `${isWrite ? "w" : "r"}:${clientKey(req.headers)}`;
 
   if (!allow(key, limit, window, Date.now())) {
     const res = NextResponse.json(

@@ -187,11 +187,6 @@ async def upload_prescription(image: UploadFile = File(...), context: str = "") 
     return Envelope(data=rx.model_dump(), meta={"verdict": rx.verdict.kind.value})
 
 
-def _refusal(engine_ref: SafetyEngine, reason: str):
-    """Backward-compatible alias used by older tests/demos."""
-    return refusal_from_exception(engine_ref, reason)
-
-
 @router.get("/prescriptions/{prescription_id}")
 def prescription_state(prescription_id: str) -> Envelope:
     rx = get(prescription_id)

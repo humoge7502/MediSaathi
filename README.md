@@ -101,10 +101,11 @@ double.
 | Web copilot refusal gates | emergency + scope refusals fire in ~0 ms, before any generation | Deterministic (pure regex + retrieval floor) |
 | Web live degraded-tier verify | warfarin+aspirin → interaction; triple whammy → combination rule; child+doxy → contraindication; garbage → confirm queue — all **without any model** | Measured via HTTP smoke (see docs/TESTING.md) |
 | Web E2E (Playwright) | **12/12 browser journeys** on the deterministic tier: landing → verify (interaction/combination/queue/injection-inert) → copilot gates → evidence → today + dose guardrail | `make web-e2e` |
-| API suite | **107 tests passing** (safety properties, golden paths, perception, red-team, body-cap) | `make test` |
+| API suite | **112 tests passing** (safety properties, golden paths, perception, red-team, parity gate, body-cap) | `make test` |
 | API fixture benchmark | brand recall 1.00 · frequency recall 0.94 · verdict agreement 1.00 · refusal precision 1.00 (n=12) | `make eval` |
 | API latency | p50 11.3–12.4 ms, p95 13.4–15.4 ms (in-process ASGI, 100-request bench) | `python3 tools/bench.py` |
-| Web route integration tests | **14 passing** — verify → plan → dose guardrail → family, over an isolated SQLite, perception layer sealed (no model keys needed) | `cd apps/web && bun run test` |
+| Web route integration tests | **41 passing** — verify → plan → dose guardrail → family, plus middleware security contracts and the copilot gates, over an isolated SQLite, perception layer sealed (no model keys needed) | `cd apps/web && bun run test` |
+| Cross-engine parity (ADR-0012) | **25/25 golden cases agree** between the TypeScript and Python safety planes | `make parity` |
 | A1/A4 ablation | verdict agreement **1.00 → 0.17** without the gate/formulary | `make ablation` — the safety plane, not the reading, is the product |
 | Copilot eval (10 labeled cases) | 100% type accuracy, groundedness 1.00, safety 1.00 (single run, automated rubric judge) | Engineering telemetry, **not** clinical validation |
 
@@ -186,7 +187,7 @@ honestly, visibly, and safely*.
   `X-Forwarded-For` is trusted only behind an explicit `MEDISAATHI_TRUST_PROXY=1`),
   a 1 MiB JSON body cap (413 before the app reads a byte), upload MIME allow-list
   **plus** magic-byte sniffing, and fixture IDs hardened against path traversal
-  (red-team suite: 35 tests).
+  (red-team suite: 46 tests).
 - **Web tier** — the same contract in Next.js middleware: request-ID
   correlation + per-client sliding-window limits + bounded-memory eviction on
   `/api/*`; CSP, frame-deny and permissions-policy headers on every route;
@@ -200,11 +201,12 @@ Full model: [docs/security/SECURITY_AUDIT.md](docs/security/SECURITY_AUDIT.md) a
 ## Tests
 
 ```bash
-make test          # API suite: 107 tests (safety, golden paths, perception, red-team, body-cap)
+make test          # API suite: 112 tests (safety, golden paths, perception, red-team, parity, body-cap)
 make eval          # API benchmark table
 make ablation      # A1-vs-A4 counterfactual
 make demo-check    # full offline API demo gate
-make web-check     # web gate: lint + typecheck + selftest + integration tests + build
+make parity        # cross-engine parity gate: both planes agree 25/25
+make web-check     # web gate: lint + typecheck + selftest + parity + integration tests + build
 make web-e2e       # browser E2E: build + standalone server + 12 Playwright journeys
 cd apps/web && bun run selftest   # the deterministic suite, in seconds
 cd apps/web && bun run test       # route-handler integration tests (isolated SQLite)

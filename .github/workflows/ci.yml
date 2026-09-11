@@ -34,11 +34,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install
+      - name: Install (pinned via constraints.txt, MS-11)
         run: |
           python -m pip install --upgrade pip
-          pip install -e packages/contracts
-          pip install -e "apps/api[dev]"
+          pip install -c constraints.txt -e packages/contracts
+          pip install -c constraints.txt -e "apps/api[dev]"
       - name: Lint (ruff)
         run: |
           pip install "ruff>=0.6"
@@ -47,8 +47,10 @@ jobs:
         run: |
           pip install pip-audit
           pip-audit --skip-editable --progress-spinner off
-      - name: Test (safety plane + golden paths + perception + red-team)
+      - name: Test (safety plane + golden paths + perception + red-team + parity)
         run: pytest apps/api -q
+      - name: Eval regression gate (floors + committed baseline, ADR-0013)
+        run: python eval/regression_gate.py
       - name: Eval (fixture benchmark, A4)
         run: python eval/eval.py
       - name: Ablation smoke (A1 counterfactual runs)
@@ -77,9 +79,19 @@ jobs:
       - name: Deterministic selftest (engine 18-case suite + copilot gates)
         working-directory: apps/web
         run: bun run selftest
-      - name: Integration tests (route handlers over isolated SQLite)
+      - name: Cross-engine parity gate (ADR-0012, 25/25 required)
+        working-directory: apps/web
+        run: bun run parity
+      - name: Integration tests (route handlers + middleware security over isolated SQLite)
         working-directory: apps/web
         run: bun run test
+      - name: bun audit (JS-tier advisory gate, MS-11)
+        working-directory: apps/web
+        # High-and-above must be clean. The single dev-only advisory
+        # (deepmerge-ts stack exhaustion via prisma's config loader, build-time
+        # only) is an accepted, documented exception: no fix exists within
+        # prisma's own range (GHSA-ggr8-5vv4-36mx). Re-visit on prisma bumps.
+        run: bun audit --audit-level=high --ignore GHSA-ggr8-5vv4-36mx
       - name: Production build
         working-directory: apps/web
         run: bun run build

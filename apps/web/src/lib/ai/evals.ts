@@ -127,7 +127,8 @@ ASSISTANT ANSWER: ${answer.slice(0, 700)}`;
     const zai = (await import("z-ai-web-dev-sdk")).default;
     const z = await zai.create();
     const completion = await z.chat.completions.create({
-      messages: [{ role: "assistant", content: rubric }, { role: "user", content: "Judge now." }],
+      // MS-09: rubric travels as role "system" (instruction hierarchy).
+      messages: [{ role: "system", content: rubric }, { role: "user", content: "Judge now." }],
       thinking: { type: "disabled" },
     });
     const content = completion.choices[0]?.message?.content ?? "";

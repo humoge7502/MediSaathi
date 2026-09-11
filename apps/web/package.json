@@ -10,9 +10,10 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "selftest": "bun scripts/selftest.ts",
+    "parity": "bun ../../eval/parity/parity.ts",
     "test": "bun test tests/",
     "e2e": "bun run build && bun run db:push && playwright test",
-    "db:push": "mkdir -p db && DATABASE_URL=\"${DATABASE_URL:-file:../db/custom.db}\" prisma db push --accept-data-loss",
+    "db:push": "mkdir -p db && DATABASE_URL=\"${DATABASE_URL:-file:../db/custom.db}\" prisma db push",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset"

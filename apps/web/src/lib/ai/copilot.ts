@@ -17,6 +17,7 @@
 import ZAI from "z-ai-web-dev-sdk";
 import { DOSAGE_ADVICE_PATTERNS, EMERGENCY_PATTERNS } from "./knowledge";
 import { retrieve } from "./retrieval";
+import { modelEgressDisabled } from "./extraction";
 
 export interface CopilotRequest {
   question: string;
@@ -52,6 +53,37 @@ export function copilotGate(question: string): { kind: "emergency" | "refused_sc
   if (EMERGENCY_PATTERNS.some((p) => p.test(q))) return { kind: "emergency" };
   if (DOSAGE_ADVICE_PATTERNS.some((p) => p.test(q))) return { kind: "refused_scope" };
   return { kind: "ok" };
+}
+
+/**
+ * The post-generation dosage post-check, as a named export (audit TD-G: it
+ * was inline and untested). `detect` is the regex law; `always/allowed`
+ * phrasing is exempt because it describes dispensing facts, not a personal
+ * prescription. Unit list EXTENDED under TD-G: the new test suite's insulin
+ * probe ("switch to insulin 10 units") escaped the original units — `units?`
+ * and `iu` are now covered.
+ */
+export const DOSAGE_POSTCHECK = {
+  detect(raw: string): boolean {
+    return (
+      /\b(take|switch to|start|stop)\b[^.]{0,40}?\b\d+\s?(mg|mcg|ml|units?|iu|tablets?|pills?)\b/i.test(raw) &&
+      !/\ball(owed|ays)/i.test(raw)
+    );
+  },
+};
+
+/**
+ * Citation contract (audit TD-G: "converts a prompt-policy into an enforced
+ * contract"). A grounded answer MUST carry at least one inline [n] citation,
+ * and every [n] must map to a retrieved chunk (1..retrievedCount).
+ * Deterministic — runs before any judge or telemetry, in microseconds.
+ */
+export function validateCitations(answer: string, retrievedCount: number): { ok: true } | { ok: false; reason: string } {
+  const cited = [...answer.matchAll(/\[(\d+)\]/g)].map((m) => parseInt(m[1], 10));
+  if (cited.length === 0) return { ok: false, reason: "no citations found" };
+  const outOfRange = cited.filter((n) => n < 1 || n > retrievedCount);
+  if (outOfRange.length > 0) return { ok: false, reason: `citation(s) out of range: ${[...new Set(outOfRange)].join(", ")}` };
+  return { ok: true };
 }
 
 export async function answerCopilot(req: CopilotRequest): Promise<CopilotResponse> {
@@ -127,14 +159,20 @@ export async function answerCopilot(req: CopilotRequest): Promise<CopilotRespons
     medContext,
   ].join("\n");
 
-  const messages: { role: "assistant" | "user"; content: string }[] = [
-    { role: "assistant", content: system },
+  // MS-09: the system prompt travels as role "system", not "assistant" —
+  // instruction hierarchy matters for gates 1-2; an assistant-role system
+  // prompt reads as peer conversation and raises injection success odds.
+  const messages: { role: "system" | "user" | "assistant"; content: string }[] = [
+    { role: "system", content: system },
     ...((req.history ?? []).slice(-4).map((m) => ({ role: m.role, content: m.content.slice(0, 500) }))),
     { role: "user", content: question },
   ];
 
   let raw = "";
   try {
+    if (modelEgressDisabled()) {
+      throw new Error("model egress disabled by MEDISAATHI_DISABLE_MODEL_EGRESS");
+    }
     const zai = await ZAI.create();
     const completion = await zai.chat.completions.create({
       messages,
@@ -170,12 +208,28 @@ export async function answerCopilot(req: CopilotRequest): Promise<CopilotRespons
     };
   }
 
-  // Post-check: strip dosage prescriptions the model may have added
-  const guarded = /\b(take|switch to|start|stop)\b[^.]{0,40}?\b\d+\s?(mg|mcg|ml|tablets?|pills?)\b/i.test(raw) && !/\ball(owed|ays)/i.test(raw);
+  // Post-check: strip dosage prescriptions the model may have added (TD-G:
+  // the law lives in the exported DOSAGE_POSTCHECK, tested in isolation).
+  const guarded = DOSAGE_POSTCHECK.detect(raw);
   if (guarded) {
     return {
       kind: "refused_scope",
       answer: "Let me keep that general: I can't advise specific doses — your doctor or pharmacist sets those. Generally: " + raw.replace(/^.*?:\s*/, "").slice(0, 400),
+      citations: hits.map((h, i) => ({ n: i + 1, id: h.chunk.id, title: h.chunk.title, source: h.chunk.source })),
+      retrievalScores: scores,
+      latencyMs: Date.now() - t0,
+      guarded: true,
+    };
+  }
+
+  // Citation contract: a grounded answer must cite what it was grounded in.
+  // Violations are demoted to low-confidence refusal — the copilot never
+  // ships an uncited claim (TD-G telemetry branch: citationViolation).
+  const citationCheck = validateCitations(raw, hits.length);
+  if (!citationCheck.ok) {
+    return {
+      kind: "refused_low_confidence",
+      answer: "I can't return that answer without its sources. " + raw.slice(0, 300),
       citations: hits.map((h, i) => ({ n: i + 1, id: h.chunk.id, title: h.chunk.title, source: h.chunk.source })),
       retrievalScores: scores,
       latencyMs: Date.now() - t0,

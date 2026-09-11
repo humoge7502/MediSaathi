@@ -22,7 +22,13 @@ def _manifest() -> dict:
 
 
 def _flag() -> bool:
-    return os.environ.get("MEDISAATHI_JUDGE_OPEN", "1") == "1"
+    """Judge route gate (audit MS-08): default CLOSED.
+
+    Demo laptops opt in explicitly with MEDISAATHI_JUDGE_OPEN=1 (the compose
+    file sets it); any deployment that forgets gets 403, not exposure. The
+    old default-open behavior leaked demo internals to the public.
+    """
+    return os.environ.get("MEDISAATHI_JUDGE_OPEN", "0") == "1"
 
 
 @judge.get("/cases")

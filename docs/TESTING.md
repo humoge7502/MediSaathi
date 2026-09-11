@@ -58,7 +58,7 @@ end-to-end without any model key — in a developer shell or in CI.
 
 | Suite | What it proves |
 |---|---|
-| verify | warfarin+aspirin → severe interaction (persisted); garbage → refused; short input → 400; doxycycline + `age_under_12` → contraindication |
+| verify | warfarin+aspirin → severe interaction (persisted); unreadable input → confirm queue (offline tier: unmatched formulary lines queue, B9); no lines → refused; short input → 400; doxycycline + `age_under_12` → contraindication |
 | plan lifecycle | pass verdict → plan with scheduled doses; GET returns today's doses; second plan archives the first; refused prescriptions can never become plans |
 | dose guardrail | first `taken` wins; replaying the action is inert (`already_acted`); unknown actions rejected |
 | family | join code matches the CSPRNG alphabet; malformed `eventId` rejected before lookup |

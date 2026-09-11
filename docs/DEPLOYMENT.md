@@ -51,7 +51,10 @@ Both tiers read `.env` (gitignored). The complete, documented set is in
 | `MEDISAATHI_CORS` | api | Allowed web origin | `http://localhost:3000` |
 | `MEDISAATHI_RATE_WRITE/READ` (+ windows) | api | Per-client sliding-window limits | 60/300 per 60 s |
 | `MEDISAATHI_MAX_BODY_BYTES` | api | JSON body cap (413) | 1 MiB |
-| `MEDISAATHI_JUDGE_OPEN` | api | `1` = judge route open (demo laptop only; set `0` publicly) | 1 |
+| `MEDISAATHI_JUDGE_OPEN` | api | judge route gate; **default `0` = closed (403)**. Set `1` only on a demo laptop | 0 |
+| `MEDISAATHI_DISABLE_MODEL_EGRESS` | both | `1` = hard-disable every outbound model call (deterministic tier only; zero third-party transmission) | 0 |
+| `MEDISAATHI_ENV` | web | `development` allows the demo seed force-reset; any other value requires `MEDISAATHI_ADMIN_TOKEN` for force resets | development |
+| `MEDISAATHI_ADMIN_TOKEN` | web | admin token for `POST /api/seed {force:true}` outside development (sent as `x-admin-token`); empty = never unlockable | — |
 | `MEDISAATHI_BUILD_TAG` | api | Stamped into eval JSON | dev |
 
 **Secrets policy:** never commit `.env`, keys, or tokens. Demo runs fully
@@ -97,7 +100,7 @@ tier server-side.
 - Health-check both tiers after any deploy (`curl /healthz`, `curl /readyz`).
 - Rollback = redeploy the previous image/commit; SQLite makes the demo
   stateless-enough (re-seed with `POST /api/seed` from the UI).
-- For a public deployment: set `MEDISAATHI_JUDGE_OPEN=0`, tighten rate
+- For a public deployment: keep `MEDISAATHI_JUDGE_OPEN` at its default `0`, set `MEDISAATHI_ENV=production`, tighten rate
   limits, put TLS + a reverse proxy in front, and add real auth (first
   roadmap item — see docs/MASTER_PLAN.md).
 

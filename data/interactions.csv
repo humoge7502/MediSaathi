@@ -46,3 +46,37 @@ levothyroxine,calcium carbonate,moderate,Chelation impairs levothyroxine absorpt
 levothyroxine,omeprazole,moderate,Reduced gastric acidity impairs levothyroxine absorption,DDInter
 levofloxacin,omeprazole,moderate,Possible QT-pharmacodynamic interaction; monitor in high-risk patients,DDInter
 warfarin,levofloxacin,moderate,Fluoroquinolone potentiation of warfarin effect; INR rise,DDInter
+warfarin,amiodarone,severe,CYP2C9/CYP3A4 inhibition raises warfarin exposure; INR rise,Stockley
+warfarin,ciprofloxacin,moderate,Fluoroquinolone potentiation of warfarin effect; INR rise,Stockley
+ibuprofen,ramipril,moderate,NSAID-ACEi interaction; renal risk,DDInter
+diclofenac,enalapril,moderate,NSAID-ACEi interaction; renal risk,DDInter
+aspirin,enalapril,moderate,NSAID may blunt ACE-inhibitor effect in heart failure,Stockley
+ramipril,potassium chloride,severe,Additive hyperkalemia,DDInter
+telmisartan,potassium chloride,severe,Additive hyperkalemia,DDInter
+losartan,potassium chloride,severe,Additive hyperkalemia,DDInter
+hydrochlorothiazide,digoxin,moderate,Thiazide hypokalemia predisposes to digoxin toxicity,Stockley
+digoxin,amiodarone,severe,Amiodarone reduces digoxin clearance; toxicity risk,Stockley
+digoxin,clarithromycin,moderate,P-glycoprotein inhibition raises digoxin levels,Stockley
+digoxin,spironolactone,moderate,Spironolactone raises digoxin levels; monitor,Stockley
+ciprofloxacin,ondansetron,moderate,Additive QT prolongation,CredibleMeds
+levofloxacin,ondansetron,moderate,Additive QT prolongation,CredibleMeds
+azithromycin,ondansetron,moderate,Additive QT prolongation,CredibleMeds
+clarithromycin,theophylline,moderate,CYP3A4 inhibition raises theophylline exposure,Stockley
+amitriptyline,tramadol,severe,Serotonin syndrome and seizure threshold risk,Stockley
+amitriptyline,fluoxetine,moderate,CYP2D6 inhibition raises TCA levels; cardiac risk,Stockley
+sertraline,sumatriptan,severe,Serotonin syndrome risk (SSRI + triptan),FDA
+fluoxetine,sumatriptan,severe,Serotonin syndrome risk (SSRI + triptan),FDA
+sertraline,aspirin,moderate,SSRI impairs platelet function; GI bleeding risk,BMJ
+sertraline,ibuprofen,moderate,SSRI + NSAID additive GI bleeding risk,BMJ
+fluoxetine,aspirin,moderate,SSRI impairs platelet function; GI bleeding risk,BMJ
+lithium carbonate,ibuprofen,severe,NSAID reduces lithium clearance; toxicity risk,Stockley
+lithium carbonate,lisinopril,moderate,ACEi raises lithium levels; monitor,Stockley
+lithium carbonate,hydrochlorothiazide,severe,Thiazide raises lithium levels; toxicity risk,Stockley
+simvastatin,amlodipine,moderate,Simvastatin dose cap 20mg/day with amlodipine,FDA
+simvastatin,amiodarone,moderate,Simvastatin dose cap 20mg/day with amiodarone,FDA
+gemfibrozil,simvastatin,severe,Additive myopathy/rhabdomyolysis risk; combination not recommended,FDA
+gemfibrozil,atorvastatin,moderate,Additive myopathy risk,FDA
+glimepiride,fluconazole,severe,CYP2C9 inhibition raises sulfonylurea levels; hypoglycemia,Stockley
+methotrexate,cotrimoxazole,severe,Antifolate synergy; severe myelosuppression risk,Stockley
+levothyroxine,ferrous sulfate,moderate,Chelation impairs levothyroxine absorption; separate by 4h,Stockley
+sildenafil,isosorbide dinitrate,severe,Profound hypotension; nitrate + PDE5 inhibitor is contraindicated,FDA

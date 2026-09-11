@@ -18,6 +18,16 @@ from fastapi.testclient import TestClient  # noqa: E402
 client = TestClient(app)
 
 
+def test_judge_route_default_closed(monkeypatch):
+    """MS-08 regression: forgetting MEDISAATHI_JUDGE_OPEN must NOT expose the
+    judge route. Old default was open ("1"); safe default is closed ("0")."""
+    from app.routers import judge as judge_router
+    monkeypatch.delenv("MEDISAATHI_JUDGE_OPEN", raising=False)
+    assert judge_router._flag() is False
+    r = client.get("/api/v1/judge/cases")
+    assert r.status_code == 403
+
+
 # ================================================================ regression
 # REGRESSION: the confirm endpoint used to re-run the safety engine with an
 # empty context, silently dropping contraindication screening after any human
@@ -339,9 +349,33 @@ def test_state_endpoint_unknown_id_404():
     assert r.status_code == 404
 
 
-def test_judge_cache_missing_id_is_404():
+def test_judge_cache_missing_id_is_404(monkeypatch):
+    """Judge-path 404 semantics. The flag defaults to 0 (MS-08: closed); the
+    test opts in explicitly so it is self-contained when this file runs
+    alone (a bare `pytest apps/api/tests/test_redteam.py`)."""
+    from app.routers import judge as judge_router
+    monkeypatch.setenv("MEDISAATHI_JUDGE_OPEN", "1")
+    assert judge_router._flag() is True
     r = client.get("/api/v1/judge/cases/RX-9999/cached")
     assert r.status_code == 404
+
+
+# ================================================== model egress kill switch
+def test_model_egress_switch_blocks_live_vision(monkeypatch):
+    """MEDISAATHI_DISABLE_MODEL_EGRESS=1 must hard-disable the live vision
+    path even with a key present — the privacy switch is operational, not
+    rhetorical (Ch.12)."""
+    import app.vision as v
+    monkeypatch.setenv("MEDISAATHI_DISABLE_MODEL_EGRESS", "1")
+    monkeypatch.setattr(v, "LIVE_KEY", "test-key")  # key present, egress still off
+    with pytest.raises(RuntimeError, match="egress disabled"):
+        v.extract_live(b"fake-image-bytes")
+
+
+def test_model_egress_switch_defaults_off(monkeypatch):
+    import app.vision as v
+    monkeypatch.delenv("MEDISAATHI_DISABLE_MODEL_EGRESS", raising=False)
+    assert v.model_egress_disabled() is False
 
 
 # ================================================= fixture path traversal

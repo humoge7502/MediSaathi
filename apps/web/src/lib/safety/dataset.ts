@@ -153,6 +153,8 @@ export const BRANDS: BrandRow[] = [
   { brand: "Lopid 600", molecule: "gemfibrozil", form: "tablet", atc: "C10AB04", aware: "Access", priceInr: 5.2 },
   { brand: "Zofran ODT", molecule: "ondansetron", form: "tablet", atc: "A04AA01", aware: "Access", priceInr: 5.1 },
   { brand: "Amitone 10", molecule: "amitriptyline", form: "tablet", atc: "N06AA09", aware: "Access", priceInr: 1.4 },
+  { brand: "Warfone 5", molecule: "warfarin", form: "tablet", atc: "B01AA03", aware: "Watch", priceInr: 1.1 },
+  { brand: "Cotrimoxazole DS", molecule: "cotrimoxazole", form: "tablet", atc: "J01EE01", aware: "Watch", priceInr: 1.8 },
 ];
 
 export const INTERACTIONS: InteractionRow[] = [
@@ -240,6 +242,9 @@ export const INTERACTIONS: InteractionRow[] = [
   { a: "methotrexate", b: "aspirin", severity: "severe", mechanism: "Salicylates reduce methotrexate clearance; toxicity", source: "DDInter" },
   { a: "methotrexate", b: "ibuprofen", severity: "severe", mechanism: "NSAID reduces renal methotrexate clearance", source: "DDInter" },
   { a: "methotrexate", b: "cotrimoxazole", severity: "severe", mechanism: "Antifolate synergy; severe myelosuppression risk", source: "Stockley" },
+  // Added for cross-tier parity (ADR-0012): pairs that existed only in the API corpus
+  { a: "warfarin", b: "cotrimoxazole", severity: "severe", mechanism: "CYP2C9 inhibition plus protein binding displacement", source: "DDInter" },
+  { a: "metformin", b: "furosemide", severity: "moderate", mechanism: "Diuretic may affect renal function and lactate clearance", source: "DDInter" },
   { a: "levothyroxine", b: "calcium carbonate", severity: "moderate", mechanism: "Chelation impairs levothyroxine absorption; separate by 4h", source: "DDInter" },
   { a: "levothyroxine", b: "omeprazole", severity: "moderate", mechanism: "Reduced gastric acidity impairs levothyroxine absorption", source: "DDInter" },
   { a: "levothyroxine", b: "ferrous sulfate", severity: "moderate", mechanism: "Chelation impairs levothyroxine absorption; separate by 4h", source: "Stockley" },

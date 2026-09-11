@@ -10,14 +10,14 @@ PY ?= python3
 API_DIR := apps/api
 WEB_DIR := apps/web
 
-.PHONY: setup test eval ablation audit demo-check bake-judge run web web-build web-typecheck web-selftest web-test web-check web-e2e db-push docker clean
+.PHONY: setup test eval ablation audit demo-check bake-judge run parity web web-build web-typecheck web-selftest web-test web-check web-e2e db-push docker clean
 
 setup:            ## install contracts + api (editable) and dev deps
 	cd packages/contracts && $(PY) -m pip install -e . -q
 	cd $(API_DIR) && $(PY) -m pip install -e ".[dev]" -q
 	@echo "setup complete"
 
-test:             ## API tier: safety-plane properties + API golden paths + red-team
+test:             ## API tier: safety-plane properties + API golden paths + red-team + parity gate
 	cd $(API_DIR) && $(PY) -m pytest -q
 
 eval:             ## fixture benchmark (A4 full pipeline)
@@ -31,11 +31,16 @@ audit:            ## static sanity: contracts importable, eval harness runs
 	$(PY) -c "import medisaathi_contracts as m; print('contracts', m.__version__)"
 	$(PY) eval/eval.py --json > /dev/null && echo "eval harness OK"
 
-demo-check:       ## FULL offline demo gate - API tier (sealed cases + tests + eval)
+parity:           ## cross-engine parity gate (ADR-0012): both planes must agree 25/25
+	$(PY) eval/parity/parity.py
+	cd $(WEB_DIR) && bun run parity
+
+demo-check:       ## FULL offline demo gate - API tier (sealed cases + tests + eval + parity)
 	@echo "== demo-check: offline pipeline through sealed cases =="
 	$(PY) tools/demo_check.py
 	$(MAKE) -s test
 	$(MAKE) -s eval
+	$(MAKE) -s parity
 
 bake-judge:       ## re-bake the zero-network judge cache from the live pipeline
 	$(PY) tools/bake_judge_cache.py
@@ -59,8 +64,8 @@ web-selftest:     ## deterministic engine self-test (18 cases) + copilot gates
 web-test:         ## route-handler integration tests (isolated SQLite)
 	cd $(WEB_DIR) && bun run test
 
-web-check:        ## full web gate: lint + typecheck + selftest + integration tests + build
-	cd $(WEB_DIR) && bun run lint && bun run typecheck && bun run selftest && bun run test && bun run build
+web-check:        ## full web gate: lint + typecheck + selftest + parity + integration tests + build
+	cd $(WEB_DIR) && bun run lint && bun run typecheck && bun run selftest && bun run parity && bun run test && bun run build
 
 web-e2e:          ## browser E2E: build + boot standalone + Playwright suite
 	cd $(WEB_DIR) && bun run e2e

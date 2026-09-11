@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
 import { ok, fail, bumpMetric, audit } from "@/lib/api-helpers";
-import { runSafetyPlane } from "@/lib/safety/engine";
+import { runSafetyPlane, overallConfidence } from "@/lib/safety/engine";
 import { extractPrescriptionLines } from "@/lib/ai/extraction";
 
 export const runtime = "nodejs";
@@ -80,19 +80,21 @@ export async function POST(req: NextRequest) {
     lineConfidence: extraction.engine === "llm" ? extraction.lines.map((l) => l.confidence) : undefined,
   });
 
-  // Formulary-match factor: LLM brand claims that resolve nowhere lose confidence
-  const overallConfidence =
-    report.confirmed.length + report.confirmQueue.length > 0
-      ? Math.round(((report.confirmed.length / (report.confirmed.length + report.confirmQueue.length)) * 0.4 +
-          (extraction.lines.reduce((a, l) => a + l.confidence, 0) / extraction.lines.length) * 0.6) * 100) / 100
-      : 0;
+  // Formulary-match factor: LLM brand claims that resolve nowhere lose confidence.
+  // The formula lives in the safety plane as overallConfidence() (audit TD-F):
+  // named, documented, boundary-tested — not a magic-weight inline expression.
+  const confidence = overallConfidence(
+    report.confirmed.length,
+    report.confirmQueue.length,
+    extraction.lines.map((l) => l.confidence)
+  );
 
   // 3. Persist with provenance
   const prescription = await db.prescription.create({
     data: {
-      rawText: text,
-      verdict: report.verdict,
-      confidence: overallConfidence,
+        rawText: text,
+        verdict: report.verdict,
+        confidence: confidence,
       extractionJson: JSON.stringify({ lines: extraction.lines, engine: extraction.engine, note: extraction.note ?? null }),
       findingsJson: JSON.stringify(report.findings),
       engineSnapshot: report.snapshot,
@@ -117,7 +119,7 @@ export async function POST(req: NextRequest) {
     aggregateDailyMg: report.aggregateDailyMg,
     extractionEngine: extraction.engine,
     extractionNote: extraction.note,
-    confidence: overallConfidence,
+    confidence: confidence,
     snapshot: report.snapshot,
     engineMs: report.engineMs,
     pipelineMs: extraction.llmMs + report.engineMs,

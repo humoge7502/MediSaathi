@@ -22,7 +22,9 @@ const dbUrl = `file:${join(dbDir, "test.db")}`;
 process.env.DATABASE_URL = dbUrl;
 
 beforeAll(() => {
-  execSync("bunx prisma db push --accept-data-loss --skip-generate", {
+  // Test-isolation bootstrapping only: a throwaway tmpdir DB. Production
+  // schema changes go through `prisma migrate` (audit MS-05).
+  execSync("bunx prisma db push --skip-generate", {
     cwd: join(__dirname, ".."),
     env: { ...process.env, DATABASE_URL: dbUrl },
     stdio: "pipe",
@@ -45,6 +47,9 @@ mock.module("@/lib/ai/extraction", () => ({
       .map((raw) => ({ raw, confidence: 0.95 }));
     return sealedLines(lines);
   },
+  // copilot.ts imports this from the same module; the mock replaces ALL
+  // exports, so the egress switch must be re-exported here.
+  modelEgressDisabled: () => false,
 }));
 
 // bun's mock.module is hoisted; route modules must be imported AFTER it.

@@ -3,6 +3,91 @@
 All notable changes. Format based on Keep a Changelog; versions here map to
 the event build blocks.
 
+## [0.4.0] - 2026-09-11 - audit hardening pass: parity contract, safe defaults, privacy switch
+
+Third audit pass. Every item below is pinned by a test and verified green in
+this tree (112/112 pytest · eval gate · parity 25/25 both engines · eslint +
+tsc · 18/18 selftest · 41/41 web tests · build · 12/12 Playwright).
+
+### Added
+- **Cross-engine parity gate (ADR-0012)** — `eval/parity/parity.{py,ts}`: a
+  25-case golden corpus (pass / interaction / contraindication / duplicate /
+  confirm_queue / refused) run through BOTH safety planes; any disagreement
+  blocks the merge (`make parity`, pytest `test_parity.py`, `bun run parity`,
+  CI). Closes the two-plane drift risk (R-7/TD-D).
+- **Eval regression gate (ADR-0013)** — `eval/regression_gate.py` + committed
+  `eval/baseline.json`: CI benchmark now FAILS on severity/recall drift
+  instead of printing a table. Floors: brand recall 0.95, verdict agreement
+  1.00, refusal precision 1.00.
+- **Privacy kill switch (Ch.12)** — `MEDISAATHI_DISABLE_MODEL_EGRESS=1`
+  hard-disables every outbound model call on both tiers (extraction, copilot,
+  live vision); the deterministic plane runs at full strength with zero
+  third-party transmission. Pinned by tests in both tiers.
+- **Combination graph rules ported to the Python plane (ADR-0012)** — triple
+  whammy, QT stacks, serotonin stacks, bleeding stack now fire in
+  `apps/api/app/safety/engine.py`, mirrored 1:1 from the TS plane; parity
+  corpus P16/P17/P23 pins them across engines.
+- **`MEDISAATHI_ENV` + `MEDISAATHI_ADMIN_TOKEN`** — `POST /api/seed
+  {force:true}` (destructive demo reset) is deny-by-default outside
+  development: 403 unless a constant-time-compared admin token is presented;
+  an empty token never unlocks it (MS-03).
+- **Pinned CI installs (MS-11)** — `constraints.txt`; both pip installs run
+  `-c constraints.txt`; `bun audit --audit-level=high` added to the web job
+  (with the one documented dev-only exception).
+- **Citation contract for the grounded copilot (TD-G)** — `validateCitations()`:
+  a grounded answer MUST carry inline `[n]` citations, all within the
+  retrieved range; violations demote to refusal. The dosage post-check regex
+  is exported and unit-tested (`DOSAGE_POSTCHECK`).
+- **Named confidence formula (TD-F)** — `overallConfidence()` in the safety
+  plane with documented 0.4/0.6 weighting and boundary tests; the verify route
+  no longer carries an inline magic-weight expression.
+
+### Security
+- **Judge route default CLOSED (MS-08)** — `MEDISAATHI_JUDGE_OPEN` now
+  defaults to `0` (403); demo laptops opt in explicitly. Regression test pins
+  the forgotten-env case.
+- **Web rate-limit key law (MS-02)** — without a trusted proxy the limiter
+  uses a shared `anon` bucket; `x-real-ip` (client-supplied) is never
+  trusted, so callers cannot mint fresh buckets per request.
+- **Same-origin mutation check (MS-10)** — cross-origin writes are rejected
+  at middleware with 403 before any handler runs (defense in depth; pinned by
+  the middleware security contract tests).
+- **System-prompt role (MS-09)** — system instructions travel as role
+  `system`, not `assistant`, in every model call (extraction, copilot, rubric
+  judge): instruction hierarchy matters for gates 1–2.
+- **Containers run non-root (MS-06)** — both Dockerfiles add a dedicated
+  `medisaathi` user; the web image's SQLite dir is 0750; the boot-time
+  `prisma db push --accept-data-loss` was REMOVED from the web CMD (MS-05):
+  schema is applied deliberately by the operator, never silently at start.
+- **Short-brand matcher hardening** — sub-4-char brand cores ("Pan 40")
+  match only as full brand tokens; parity case P03 pins the law in both
+  engines.
+
+### Fixed
+- **Offline-tier confirm/refuse boundary** — the TS gate's all-refused band
+  consumed formulary `brandConfidence` when no LLM ran, REFUSING garbage that
+  the Python law (and decision B9) queues for human confirmation. The
+  refusal band now consumes perception confidence only — exactly mirroring
+  `apps/api/app/verdict.py` (gate 2). Found by the E2E confirm-queue and
+  prompt-injection journeys failing; parity + selftest + E2E all pin it.
+- **Plan-start atomicity (TD-E)** — archive-old-plan → create-plan →
+  medications → doses now runs in ONE interactive transaction; a mid-loop
+  failure no longer leaves a partially scheduled plan.
+- **Judge test isolation** — judge-path tests opt in via `monkeypatch` so
+  each file is self-contained under the new closed-by-default flag.
+- **Corpus sync** — brands/interactions CSVs extended for cross-tier parity
+  (warfarin+cotrimoxazole, metformin+furosemide, PDE5+nitrate, lithium and
+  statin stacks, …); TS dataset adds Warfone 5 / Cotrimoxazole DS.
+
+### Verified (this tree, this environment)
+- API: **112/112 pytest** (incl. parity gate + egress switch + judge default),
+  eval gate at floors (brand recall 1.00 · frequency recall 0.9444 · verdict
+  agreement 1.00 · refusal precision 1.00), ablation, demo-check, ruff clean,
+  bench p50 ~13 ms.
+- Web: eslint + tsc clean, 18/18 self-test + 3/3 copilot gates, **TS parity
+  25/25**, **41/41 integration tests**, production build, **12/12 Playwright
+  journeys**.
+
 ## [0.3.2] - 2026-09-10 - integration pass: security + E2E lines united
 
 Unifies the two parallel hardening passes (the 0.3.1 security line and the

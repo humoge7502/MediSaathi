@@ -13,7 +13,7 @@ This is an event-scope, read-only demo. Honest threat model:
 - **Live vision key handling.** `MEDISAATHI_VISION_KEY` stays server-side; the
   web client never sees it. Images uploaded to `/prescriptions/upload` are
   proxied to the configured provider and NOT persisted.
-- **Judge route.** Gated by `MEDISAATHI_JUDGE_OPEN`; set `0` outside the demo
+- **Judge route.** Gated by `MEDISAATHI_JUDGE_OPEN`, default **closed** (403); demo laptops opt in with `1`
   laptop.
 
 ## Controls implemented (verified by tests in `apps/api/tests/test_redteam.py`)

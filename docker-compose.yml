@@ -8,7 +8,9 @@ services:
       - MEDISAATHI_VISION_KEY=${MEDISAATHI_VISION_KEY:-}
       - MEDISAATHI_VISION_MODEL=${MEDISAATHI_VISION_MODEL:-gemini-2.0-flash}
       - MEDISAATHI_VISION_BASE_URL=${MEDISAATHI_VISION_BASE_URL:-https://generativelanguage.googleapis.com/v1beta/openai}
-      - MEDISAATHI_JUDGE_OPEN=${MEDISAATHI_JUDGE_OPEN:-1}
+      - MEDISAATHI_JUDGE_OPEN=${MEDISAATHI_JUDGE_OPEN:-0}
+      - MEDISAATHI_DISABLE_MODEL_EGRESS=${MEDISAATHI_DISABLE_MODEL_EGRESS:-0}
+      - MEDISAATHI_ENV=${MEDISAATHI_ENV:-development}
       - MEDISAATHI_DB_PATH=/data/medisaathi.db
     volumes:
       - medisaathi-data:/data

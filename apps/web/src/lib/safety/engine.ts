@@ -191,14 +191,20 @@ export function normalizeLine(line: string, lineNo: number): NormalizedMed {
     brand = exact;
     brandConfidence = 1.0;
   } else {
-    // scored substring match: brand token coverage
+    // scored substring match: brand token coverage. Short brand cores
+    // ("Pan 40" -> core "pan") are too false-match-prone as bare substrings,
+    // so they match only as a FULL brand token ("pan 40 ...") — parity with
+    // the Python engine's exact/substring resolver, pinned by corpus case P03.
     let best: { row: (typeof BRANDS)[number]; score: number } | null = null;
     for (const row of BRANDS) {
       const bLower = row.brand.toLowerCase();
       const core = bLower.replace(/\s*\d+.*$/, "").trim(); // "Dolo 650" -> "dolo"
-      if (core.length < 4) continue;
-      if (new RegExp(`\\b${escapeRe(core)}\\b`).test(lower)) {
-        const score = core.length / Math.max(bLower.length, 1) + 0.4;
+      const matched =
+        core.length >= 4
+          ? new RegExp(`\\b${escapeRe(core)}\\b`).test(lower)
+          : new RegExp(`\\b${escapeRe(bLower)}\\b`).test(lower);
+      if (matched) {
+        const score = core.length >= 4 ? core.length / Math.max(bLower.length, 1) + 0.4 : 0.9;
         if (!best || score > best.score) best = { row, score };
       }
     }
@@ -247,6 +253,40 @@ export function frequencyPerDay(freq: string): number | null {
   return null;
 }
 
+/**
+ * Overall prescription confidence (audit TD-F — named, documented, tested).
+ *
+ * Blends two factors:
+ *   · formulary ratio (weight 0.4): share of parsed lines the plane CONFIRMED
+ *     against the formulary. A brand the model invents resolves nowhere and
+ *     drags this down — invented lines are worse than blurry ones.
+ *   · mean line reading confidence (weight 0.6): how sure perception was of
+ *     what it read.
+ *
+ * Rationale for the weighting: the plane can recover from a fuzzy read
+ * (formulary re-normalization), but NOT from a confidently wrong brand, so
+ * reading confidence matters more — yet a 100%-unreadable formulary mismatch
+ * must never average out to "trustworthy". Rounded to 2 decimals.
+ *
+ * Boundary behavior (pinned by tests/middleware.security.test.ts's engine
+ * sibling, scripts/selftest.ts, and the route integration suite):
+ *   · no lines at all                          -> 0
+ *   · all lines confirmed, all conf 1.0        -> 1.0
+ *   · all lines queued (ratio 0), conf 1.0     -> 0.6
+ *   · all confirmed (ratio 1), conf 0.5        -> 0.7
+ */
+export function overallConfidence(
+  confirmedCount: number,
+  queueCount: number,
+  lineConfidences: number[]
+): number {
+  const total = confirmedCount + queueCount;
+  if (total === 0 || lineConfidences.length === 0) return 0;
+  const ratio = confirmedCount / total;
+  const mean = lineConfidences.reduce((a, c) => a + c, 0) / lineConfidences.length;
+  return Math.round((ratio * 0.4 + mean * 0.6) * 100) / 100;
+}
+
 // -------------------------------------------------- the plane
 
 export interface EngineInput {
@@ -273,10 +313,37 @@ export function runSafetyPlane(input: EngineInput): SafetyReport {
     return finish("refused", "No medication lines detected — refusing rather than guessing.", findings, confirmed, confirmQueue, {}, t0);
   }
 
-  // 1. confidence gate
+  // 1. confidence gate — the gate law (first match wins, mirroring
+  // apps/api/app/verdict.py and pinned by the cross-engine parity corpus):
+  //    all lines below REFUSE (perception confidence) -> refused (never guess)
+  //    any line below REFUSE                          -> confirm_queue
+  //    any line below CONFIRM / unmatched brand       -> confirm_queue
+  //
+  // The refusal band consumes PERCEPTION confidence only: the plane cannot
+  // second-guess what the reader said it saw. When the deterministic splitter
+  // runs (no LLM), there is no perception confidence — undefined lineConfidence
+  // means the gate falls back to formulary brandConfidence for the
+  // confirm/auto-confirm bands, but never for the refusal band: an unmatched
+  // formulary line in the offline tier is exactly what the human confirm queue
+  // exists for (decision B9: "garbage still queues"), NOT a refusal.
   if (!input.skipGate) {
-    meds.forEach((med, i) => {
-      const conf = input.lineConfidence?.[i] ?? med.brandConfidence;
+    const perceptionProvided = input.lineConfidence !== undefined;
+    const confs = meds.map((med, i) => ({
+      med,
+      conf: perceptionProvided ? (input.lineConfidence?.[i] ?? med.brandConfidence) : med.brandConfidence,
+    }));
+    if (perceptionProvided && confs.length > 0 && confs.every(({ conf }) => conf < 0.75)) {
+      return finish(
+        "refused",
+        "Refused — no line could be verified with confidence. In medication questions the system refuses rather than guesses.",
+        findings,
+        confirmed,
+        confirmQueue,
+        {},
+        t0
+      );
+    }
+    for (const { med, conf } of confs) {
       if (conf < 0.75) {
         confirmQueue.push({ line: med.line, rawText: med.rawText, reason: `Low reading confidence (${Math.round(conf * 100)}%)` });
       } else if (conf < 0.9 || !med.brand) {
@@ -284,7 +351,7 @@ export function runSafetyPlane(input: EngineInput): SafetyReport {
       } else {
         confirmed.push(med);
       }
-    });
+    }
   } else {
     // self-test mode: no perception layer, but unresolvable lines still queue
     for (const med of meds) {

@@ -44,6 +44,21 @@ SEV_RANK = {"none": 0, "mild": 1, "moderate": 2, "severe": 3}
 # regulatory terms on the CSV -> pipeline Severity enum
 CONTRA_SEV_MAP = {"absolute": "severe", "relative": "moderate"}
 
+# Molecule groups for the combination (graph) rules — ported 1:1 from the TS
+# safety plane (apps/web/src/lib/safety/dataset.ts, MOLECULE_GROUPS) under
+# ADR-0012 so both engines run the same law on the same corpus.
+MOLECULE_GROUPS: dict[str, tuple[str, ...]] = {
+    "nsaid": ("ibuprofen", "diclofenac", "naproxen", "aceclofenac", "aspirin"),
+    "raas_blocker": ("enalapril", "ramipril", "lisinopril", "losartan", "telmisartan"),
+    "loop_or_thiazide": ("furosemide", "torasemide", "hydrochlorothiazide"),
+    "qt_prolonging": ("azithromycin", "ciprofloxacin", "levofloxacin", "ofloxacin",
+                      "ondansetron", "citalopram", "amiodarone", "hydroxychloroquine"),
+    "ssri": ("sertraline", "fluoxetine", "citalopram"),
+    "serotonergic": ("tramadol", "sumatriptan", "amitriptyline"),
+    "anticoagulant_or_antiplatelet": ("warfarin", "aspirin", "clopidogrel"),
+    "benzodiazepine": ("alprazolam", "clonazepam"),
+}
+
 
 @dataclass
 class SafetyEngine:
@@ -174,6 +189,18 @@ class SafetyEngine:
                         molecule=mol, condition_code=rule["condition_code"],
                         severity=Severity(rule["severity"]), note=rule["note"]))
 
+        # 3. combination (graph) rules — dangers that are pairwise-invisible.
+        # Ported from the TS plane (ADR-0012); emitted as InteractionFindings so
+        # the verdict law consumes one finding stream. Group order mirrors TS.
+        mol_list: list[str] = []
+        seen_mols: set[str] = set()
+        for m in meds:
+            for mol in _split_molecules(m.molecule):
+                if mol not in seen_mols:
+                    seen_mols.add(mol)
+                    mol_list.append(mol)
+        interactions.extend(_combination_rules(mol_list))
+
         duplicates = self.find_duplicates(meds)
 
         # Aggregate daily-cap rule: two paracetamol brands can each sit under
@@ -197,6 +224,7 @@ class SafetyEngine:
             duplicates=duplicates, warnings=warnings,
             checks={
                 "normalize": True, "interaction_graph": True,
+                "combination_rules": True,
                 "contraindication_rules": True, "duplicate_atc": True,
                 "aware_tagging": True, "dose_plausibility": True,
             })
@@ -227,6 +255,56 @@ class SafetyEngine:
 
 def _split_molecules(s: str) -> list[str]:
     return [m.strip().lower() for m in (s or "").replace(",", "+").split("+") if m.strip()]
+
+
+def _group_members(group: str, molecules: list[str]) -> list[str]:
+    """Molecules of `molecules` that belong to `group`, in group-declaration
+    order (mirrors the TS plane's filter-then-index behavior)."""
+    present = set(molecules)
+    return [m for m in MOLECULE_GROUPS.get(group, ()) if m in present]
+
+
+def _combination_rules(molecules: list[str]) -> list[InteractionFinding]:
+    """Graph rules over the ACTIVE molecule set (ported 1:1 from the TS plane,
+    ADR-0012). Each rule catches a danger the pairwise table cannot express:
+    triple whammy (ARB/ACEi + diuretic + NSAID -> AKI), QT stacks (>=3
+    prolongers), serotonin stacks (SSRI + >=2 serotonergic), and the bleeding
+    stack (antithrombotic + SSRI + NSAID). All are severe by definition.
+    """
+    out: list[InteractionFinding] = []
+    raas = _group_members("raas_blocker", molecules)
+    diu = _group_members("loop_or_thiazide", molecules)
+    nsaid = _group_members("nsaid", molecules)
+    qt = _group_members("qt_prolonging", molecules)
+    ssri = _group_members("ssri", molecules)
+    seroton = [m for m in _group_members("serotonergic", molecules) if m not in ssri]
+    blood = _group_members("anticoagulant_or_antiplatelet", molecules)
+
+    if raas and diu and nsaid:
+        out.append(InteractionFinding(
+            molecule_a=raas[0], molecule_b=" + ".join([diu[0], nsaid[0]]),
+            severity=Severity.severe,
+            mechanism="RAAS blocker + diuretic + NSAID (triple whammy) - acute kidney injury risk",
+            source="BMJ/AKI guidance"))
+    if len(qt) >= 3:
+        out.append(InteractionFinding(
+            molecule_a=qt[0], molecule_b=" + ".join(qt[1:]),
+            severity=Severity.severe,
+            mechanism=f"{len(qt)} QT-prolonging medicines together - torsades risk",
+            source="CredibleMeds"))
+    if ssri and len(seroton) >= 2:
+        out.append(InteractionFinding(
+            molecule_a=ssri[0], molecule_b=" + ".join(seroton),
+            severity=Severity.severe,
+            mechanism="SSRI with multiple serotonergic agents - serotonin syndrome risk",
+            source="FDA/Stockley"))
+    if blood and ssri and nsaid:
+        out.append(InteractionFinding(
+            molecule_a=blood[0], molecule_b=" + ".join([ssri[0], nsaid[0]]),
+            severity=Severity.severe,
+            mechanism="Antithrombotic + SSRI + NSAID - compounded GI bleeding risk",
+            source="BMJ"))
+    return out
 
 
 def _split_atc(s: str) -> list[str]:

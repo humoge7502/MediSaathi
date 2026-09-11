@@ -32,15 +32,31 @@ Rules:
 - Do NOT resolve brands to molecules. Do NOT invent medicines. If the text is not a prescription, return {"lines":[]}.
 - Maximum 15 lines.`;
 
+/**
+ * Privacy kill switch (audit Ch.12): MEDISAATHI_DISABLE_MODEL_EGRESS=1
+ * hard-disables every outbound model call. The deterministic splitter takes
+ * over and the safety plane runs at full strength — zero third-party
+ * transmission, by configuration rather than by promise.
+ */
+export function modelEgressDisabled(): boolean {
+  return process.env.MEDISAATHI_DISABLE_MODEL_EGRESS === "1";
+}
+
 export async function extractPrescriptionLines(text: string): Promise<ExtractionOutcome> {
   const t0 = Date.now();
   const clipped = text.trim().slice(0, 2000);
+
+  if (modelEgressDisabled()) {
+    throw new Error("model egress disabled by MEDISAATHI_DISABLE_MODEL_EGRESS");
+  }
 
   try {
     const zai = await ZAI.create();
     const completion = await zai.chat.completions.create({
       messages: [
-        { role: "assistant", content: SYSTEM },
+        // MS-09: system instructions travel as role "system" (instruction
+        // hierarchy), not as an assistant turn the user content outranks.
+        { role: "system", content: SYSTEM },
         { role: "user", content: clipped },
       ],
       thinking: { type: "disabled" },

@@ -32,6 +32,14 @@ from medisaathi_contracts import (
 
 FIXTURE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "fixtures")
 LIVE_KEY = os.environ.get("MEDISAATHI_VISION_KEY", "")
+
+
+def model_egress_disabled() -> bool:
+    """Privacy kill switch (docs Ch.12 / roadmap W1): MEDISAATHI_DISABLE_MODEL_EGRESS=1
+    hard-disables every outbound model call so a sensitive deployment can run
+    the deterministic plane with zero third-party transmission — the degraded
+    tier already proves the product works without egress."""
+    return os.environ.get("MEDISAATHI_DISABLE_MODEL_EGRESS", "0") == "1"
 LIVE_MODEL = os.environ.get("MEDISAATHI_VISION_MODEL", "gemini-2.0-flash")
 LIVE_BASE_URL = os.environ.get(
     "MEDISAATHI_VISION_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai"
@@ -97,22 +105,10 @@ _DURATION_WORD = re.compile(r"\b(\d+\s*(?:days?|weeks?|months?))\b", re.I)
 _DOSE = re.compile(r"\b(\d+(?:\.\d+)?\s*(?:mg|g|ml|mcg|iu|units?))\b", re.I)
 _STRENGTH_NUM = re.compile(r"(\d+(?:\.\d+)?)")
 
-_DOSE_PER_DAY = {
-    "OD": 1, "HS": 1, "QHS": 1, "BD": 2, "TDS": 3, "QID": 4, "SOS": 1,
-}
-
-
-def parse_frequency_per_day(freq: str) -> int | None:
-    """TAC code 1-0-1 -> 2; BD -> 2; unknown -> None. Deterministic."""
-    freq = (freq or "").strip()
-    m = re.fullmatch(r"(\d+)\s*-\s*(\d+)\s*-\s*(\d+)", freq)
-    if m:
-        return sum(int(g) for g in m.groups())
-    word = _DOSE_PER_DAY.get(freq.upper())
-    if word:
-        return word
-    total = sum(int(x) for x in re.findall(r"\d+", freq))
-    return total or None
+# Frequency parsing lives in ONE place: app.safety.dosing (audit code review:
+# this file used to carry an identical copy — deduped, re-exported for the
+# tests' public surface).
+from .safety.dosing import parse_frequency_per_day  # noqa: E402, F401
 
 
 def _strength_from(brand_text: str, dose: str) -> str:
@@ -267,6 +263,8 @@ def extract_live(image_bytes: bytes) -> ExtractionResult:
     """Live vision-LLM path. Key-gated; NOT used in the offline demo.
     Below-threshold fields NEVER bypass the confirm queue - the confidence
     numbers flow straight into the same gate as fixture fields."""
+    if model_egress_disabled():
+        raise RuntimeError("model egress disabled by MEDISAATHI_DISABLE_MODEL_EGRESS")
     if not LIVE_KEY:
         raise RuntimeError("live vision requires MEDISAATHI_VISION_KEY")
     t0 = time.perf_counter()

@@ -1,17 +1,37 @@
 import { db } from "@/lib/db";
-import { ok, audit } from "@/lib/api-helpers";
+import { ok, fail, audit } from "@/lib/api-helpers";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 /**
- * POST /api/seed — demo seeding with a `force` reset.
+ * POST /api/seed — demo seeding with a `force` reset (audit MS-03).
  * Body: { force?: boolean }
- *  - force: archive any active plans, then create the demo plan with
- *    14 days of realistic dose history (~82% adherence). Deterministic.
- *  - no force: seed only when no active plan exists (idempotent).
+ *  - no force: seed only when no active plan exists (idempotent, harmless).
+ *  - force: archive any active plans, then create the demo plan with 14 days
+ *    of realistic dose history. DESTRUCTIVE to the adherence timeline, so it
+ *    is gated:
+ *      · Default deployments (MEDISAATHI_ENV unset/"development"): allowed —
+ *        the demo product relies on "Reset demo data".
+ *      · Any non-development deployment (MEDISAATHI_ENV=production|staging):
+ *        403 unless the caller presents MEDISAATHI_ADMIN_TOKEN in
+ *        `x-admin-token`. An empty token value never unlocks the route.
+ * The gate is deny-by-default on an unrecognized env value.
  */
+function forceAllowed(req: Request): boolean {
+  const env = (process.env.MEDISAATHI_ENV ?? "development").toLowerCase();
+  if (env === "development") return true;
+  const expected = process.env.MEDISAATHI_ADMIN_TOKEN ?? "";
+  if (!expected) return false; // misconfigured production: fail closed
+  const supplied = req.headers.get("x-admin-token") ?? "";
+  if (supplied.length !== expected.length) return false;
+  // Constant-time compare (timing-safe equal length walk).
+  let diff = 0;
+  for (let i = 0; i < expected.length; i++) diff |= expected.charCodeAt(i) ^ supplied.charCodeAt(i);
+  return diff === 0;
+}
+
 export async function POST(req: Request) {
   let force = false;
   try {
@@ -19,6 +39,11 @@ export async function POST(req: Request) {
     force = body?.force === true;
   } catch {
     // empty body is fine
+  }
+
+  if (force && !forceAllowed(req)) {
+    await audit("seed.force_denied", { env: process.env.MEDISAATHI_ENV ?? "development" });
+    return fail("Force reset is not permitted in this deployment (admin token required)", 403);
   }
 
   let patient = await db.patient.findFirst();
@@ -115,6 +140,6 @@ export async function POST(req: Request) {
     ],
   });
 
-  await audit("seed.demo", { planId: plan.id });
+  await audit("seed.demo", { planId: plan.id, forced: force });
   return ok({ seeded: true, planId: plan.id, patientId: patient.id });
 }
