@@ -1,17 +1,9 @@
 {
   "config": {
-    "held_in_n": 256,
-    "levels": [
-      "L0_baseline",
-      "L1_abbreviation",
-      "L2_ocr_numeric",
-      "L3_ocr_brand",
-      "L4_layout",
-      "L5_injection"
-    ],
-    "quick": false
+    "quick": false,
+    "requests_per_endpoint": 200
   },
-  "created_at": "2026-09-11T16:31:39+00:00",
+  "created_at": "2026-09-11T16:34:54+00:00",
   "dataset": {
     "files": {
       "data/brands.csv": "a9a018a9d6b3df41b2913247282484152f90dae6b44d37685409e6ae2cc0a595",
@@ -27,12 +19,12 @@
     },
     "snapshot_id": "9b55abc2339e8265"
   },
-  "engine_git_sha": "4074dc1",
+  "engine_git_sha": "a349342",
   "environment": {
     "machine": "x86_64",
     "platform": "Linux-6.17.0-1010-azure-x86_64-with-glibc2.39",
     "python": "3.13.12"
   },
-  "experiment": "E-C-robustness",
-  "run_id": "20260911T163139Z-E-C-robustness-5f36e1"
+  "experiment": "E-F-latency-availability",
+  "run_id": "20260911T163454Z-E-F-latency-availability-40138a"
 }

@@ -5,84 +5,84 @@
     "results": [
       {
         "endpoint": "GET /healthz",
-        "max_ms": 20.005,
-        "mean_ms": 2.31,
+        "max_ms": 21.042,
+        "mean_ms": 2.317,
         "n": 200,
-        "p50_ms": 2.195,
-        "p95_ms": 2.493,
-        "p99_ms": 2.968
+        "p50_ms": 2.216,
+        "p95_ms": 2.504,
+        "p99_ms": 2.746
       },
       {
         "endpoint": "GET /metrics (O(1) GROUP BY)",
-        "max_ms": 5.813,
-        "mean_ms": 3.461,
+        "max_ms": 6.388,
+        "mean_ms": 3.648,
         "n": 200,
-        "p50_ms": 3.361,
-        "p95_ms": 4.484,
-        "p99_ms": 5.14
+        "p50_ms": 3.53,
+        "p95_ms": 4.429,
+        "p99_ms": 5.344
       },
       {
         "endpoint": "GET /formulary/search?q=par",
-        "max_ms": 3.828,
-        "mean_ms": 2.649,
+        "max_ms": 3.938,
+        "mean_ms": 2.566,
         "n": 200,
-        "p50_ms": 2.596,
-        "p95_ms": 3.049,
-        "p99_ms": 3.514
+        "p50_ms": 2.56,
+        "p95_ms": 2.908,
+        "p99_ms": 3.412
       },
       {
         "endpoint": "POST /prescriptions RX-001 (full pipeline)",
-        "max_ms": 280.916,
-        "mean_ms": 15.69,
+        "max_ms": 91.462,
+        "mean_ms": 14.202,
         "n": 200,
-        "p50_ms": 13.042,
-        "p95_ms": 17.061,
-        "p99_ms": 51.816
+        "p50_ms": 12.98,
+        "p95_ms": 17.193,
+        "p99_ms": 31.649
       },
       {
         "endpoint": "POST /prescriptions RX-002 (full pipeline)",
-        "max_ms": 120.137,
-        "mean_ms": 14.332,
+        "max_ms": 117.301,
+        "mean_ms": 14.106,
         "n": 200,
-        "p50_ms": 13.017,
-        "p95_ms": 16.202,
-        "p99_ms": 17.92
+        "p50_ms": 12.687,
+        "p95_ms": 16.004,
+        "p99_ms": 42.856
       },
       {
         "endpoint": "POST /prescriptions RX-004 (full pipeline)",
-        "max_ms": 116.67,
-        "mean_ms": 14.486,
+        "max_ms": 111.433,
+        "mean_ms": 14.488,
         "n": 200,
-        "p50_ms": 13.071,
-        "p95_ms": 16.513,
-        "p99_ms": 18.695
+        "p50_ms": 12.901,
+        "p95_ms": 16.822,
+        "p99_ms": 37.43
       },
       {
         "endpoint": "POST /prescriptions RX-008 (full pipeline)",
-        "max_ms": 91.342,
-        "mean_ms": 14.714,
+        "max_ms": 121.68,
+        "mean_ms": 14.873,
         "n": 200,
-        "p50_ms": 13.36,
-        "p95_ms": 16.575,
-        "p99_ms": 50.304
+        "p50_ms": 13.379,
+        "p95_ms": 16.491,
+        "p99_ms": 51.251
       },
       {
         "endpoint": "POST /prescriptions RX-009 (full pipeline)",
-        "max_ms": 892.313,
-        "mean_ms": 19.116,
+        "max_ms": 114.038,
+        "mean_ms": 14.713,
         "n": 200,
-        "p50_ms": 13.305,
-        "p95_ms": 16.848,
-        "p99_ms": 105.626
+        "p50_ms": 13.146,
+        "p95_ms": 17.381,
+        "p99_ms": 39.123
       },
       {
         "endpoint": "POST /prescriptions RX-012 (full pipeline)",
-        "max_ms": 112.18,
-        "mean_ms": 14.725,
+        "max_ms": 137.297,
+        "mean_ms": 13.652,
         "n": 200,
-        "p50_ms": 13.27,
-        "p95_ms": 16.813,
-        "p99_ms": 27.112
+        "p50_ms": 12.207,
+        "p95_ms": 15.055,
+        "p99_ms": 22.12
       }
     ],
     "transport": "asgi-in-process"
@@ -93,8 +93,8 @@
   "offline_verdict_delta": 0,
   "plane_full_corpus": {
     "n": 300,
-    "p50_ms": 0.073,
-    "p95_ms": 0.107
+    "p50_ms": 0.075,
+    "p95_ms": 0.106
   },
   "within_budget": true
 }

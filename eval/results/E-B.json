@@ -237,8 +237,8 @@
         ]
       },
       "finding_recall": 0.5667,
-      "latency_ms_p50": 0.076,
-      "latency_ms_p95": 0.112,
+      "latency_ms_p50": 0.078,
+      "latency_ms_p95": 0.127,
       "missed_serious": 0,
       "missed_serious_rate": 0.0,
       "n": 44,
@@ -496,8 +496,8 @@
           ]
         },
         "finding_recall": 0.5667,
-        "latency_ms_p50": 0.07,
-        "latency_ms_p95": 0.098,
+        "latency_ms_p50": 0.069,
+        "latency_ms_p95": 0.096,
         "missed_serious": 2,
         "missed_serious_rate": 0.0455,
         "n": 44,
@@ -755,7 +755,7 @@
         },
         "finding_recall": 0.5667,
         "latency_ms_p50": 0.077,
-        "latency_ms_p95": 0.108,
+        "latency_ms_p95": 0.117,
         "missed_serious": 0,
         "missed_serious_rate": 0.0,
         "n": 44,
@@ -1012,8 +1012,8 @@
           ]
         },
         "finding_recall": 0.5667,
-        "latency_ms_p50": 0.074,
-        "latency_ms_p95": 0.1,
+        "latency_ms_p50": 0.072,
+        "latency_ms_p95": 0.104,
         "missed_serious": 0,
         "missed_serious_rate": 0.0,
         "n": 44,
@@ -1270,8 +1270,8 @@
           ]
         },
         "finding_recall": 0.5667,
-        "latency_ms_p50": 0.074,
-        "latency_ms_p95": 0.106,
+        "latency_ms_p50": 0.076,
+        "latency_ms_p95": 0.104,
         "missed_serious": 0,
         "missed_serious_rate": 0.0,
         "n": 44,
@@ -1528,8 +1528,8 @@
           ]
         },
         "finding_recall": 0.5667,
-        "latency_ms_p50": 0.072,
-        "latency_ms_p95": 0.105,
+        "latency_ms_p50": 0.075,
+        "latency_ms_p95": 0.103,
         "missed_serious": 0,
         "missed_serious_rate": 0.0,
         "n": 44,
@@ -1602,5 +1602,5 @@
     "n": 44,
     "split": "test"
   },
-  "run": "eval/runs/20260911T163139Z-E-B-ablations-d2336c"
+  "run": "eval/runs/20260911T163434Z-E-B-ablations-eb06d2"
 }

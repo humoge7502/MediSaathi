@@ -8,10 +8,10 @@ that reads as a legal conclusion requires review by a registered patent professi
 
 ## 0. Provenance of this binder
 
-- engine git SHA: `4074dc1`
+- engine git SHA: `a349342-dirty`
 - dataset snapshot id: `9b55abc2339e8265`
 - cross-engine parity corpus `eval/parity/golden.json` sha256: `8ebb4f6e4b2ab6dce20adfd309424a446298539e83edd8737d513eb0d3692fd1`
-- generated: 2026-09-11T16:32:41+00:00
+- generated: 2026-09-11T16:35:14+00:00
 - archived runs referenced: 7
 
 All seven experiments have an archived run; no gaps.
@@ -147,7 +147,7 @@ data were missing from the TS dataset. After the fix both engines agree on every
 
 ## 7. E-F — Latency, availability and offline determinism
 
-- deterministic plane over 300 cases: p50 0.073 ms, p95 0.107 ms
+- deterministic plane over 300 cases: p50 0.075 ms, p95 0.106 ms
 - within the p50 < 10 ms / p95 < 25 ms budget: **True**
 - offline verdict delta: 0 (apps/api/tests/test_egress.py asserts zero outbound calls with a poisoned socket and invariant verdicts)
 
@@ -174,13 +174,13 @@ analysis, not a human-factors result.
 
 | run id | experiment | engine SHA | dataset snapshot |
 |---|---|---|---|
-| `20260911T163139Z-E-A-baseline-ladder-2c1570` | E-A-baseline-ladder | `4074dc1` | `9b55abc2339e8265` |
-| `20260911T163139Z-E-B-ablations-d2336c` | E-B-ablations | `4074dc1` | `9b55abc2339e8265` |
-| `20260911T163139Z-E-C-robustness-5f36e1` | E-C-robustness | `4074dc1` | `9b55abc2339e8265` |
-| `20260911T163140Z-E-D-calibration-operating-point-3e9460` | E-D-calibration-operating-point | `4074dc1` | `9b55abc2339e8265` |
-| `20260911T163140Z-E-E-cross-engine-parity-41fe0f` | E-E-cross-engine-parity | `4074dc1` | `9b55abc2339e8265` |
-| `20260911T163201Z-E-F-latency-availability-4d422a` | E-F-latency-availability | `4074dc1` | `9b55abc2339e8265` |
-| `20260911T163201Z-E-G-human-in-the-loop-883fa2` | E-G-human-in-the-loop | `4074dc1` | `9b55abc2339e8265` |
+| `20260911T163434Z-E-A-baseline-ladder-946e37` | E-A-baseline-ladder | `a349342` | `9b55abc2339e8265` |
+| `20260911T163434Z-E-B-ablations-eb06d2` | E-B-ablations | `a349342` | `9b55abc2339e8265` |
+| `20260911T163434Z-E-C-robustness-4e5671` | E-C-robustness | `a349342` | `9b55abc2339e8265` |
+| `20260911T163434Z-E-D-calibration-operating-point-b8055f` | E-D-calibration-operating-point | `a349342` | `9b55abc2339e8265` |
+| `20260911T163435Z-E-E-cross-engine-parity-3a0394` | E-E-cross-engine-parity | `a349342` | `9b55abc2339e8265` |
+| `20260911T163454Z-E-F-latency-availability-40138a` | E-F-latency-availability | `a349342` | `9b55abc2339e8265` |
+| `20260911T163454Z-E-G-human-in-the-loop-f1b732` | E-G-human-in-the-loop | `a349342` | `9b55abc2339e8265` |
 
 ## 10. Cross-references
 

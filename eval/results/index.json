@@ -3,32 +3,32 @@
   "experiments": {
     "E-A": {
       "metrics_file": "eval/results/E-A.json",
-      "run": "eval/runs/20260911T163139Z-E-A-baseline-ladder-2c1570"
+      "run": "eval/runs/20260911T163434Z-E-A-baseline-ladder-946e37"
     },
     "E-B": {
       "metrics_file": "eval/results/E-B.json",
-      "run": "eval/runs/20260911T163139Z-E-B-ablations-d2336c"
+      "run": "eval/runs/20260911T163434Z-E-B-ablations-eb06d2"
     },
     "E-C": {
       "metrics_file": "eval/results/E-C.json",
-      "run": "eval/runs/20260911T163139Z-E-C-robustness-5f36e1"
+      "run": "eval/runs/20260911T163434Z-E-C-robustness-4e5671"
     },
     "E-D": {
       "metrics_file": "eval/results/E-D.json",
-      "run": "eval/runs/20260911T163140Z-E-D-calibration-operating-point-3e9460"
+      "run": "eval/runs/20260911T163434Z-E-D-calibration-operating-point-b8055f"
     },
     "E-E": {
       "metrics_file": "eval/results/E-E.json",
-      "run": "eval/runs/20260911T163140Z-E-E-cross-engine-parity-41fe0f"
+      "run": "eval/runs/20260911T163435Z-E-E-cross-engine-parity-3a0394"
     },
     "E-F": {
       "metrics_file": "eval/results/E-F.json",
-      "run": "eval/runs/20260911T163201Z-E-F-latency-availability-4d422a"
+      "run": "eval/runs/20260911T163454Z-E-F-latency-availability-40138a"
     },
     "E-G": {
       "metrics_file": "eval/results/E-G.json",
-      "run": "eval/runs/20260911T163201Z-E-G-human-in-the-loop-883fa2"
+      "run": "eval/runs/20260911T163454Z-E-G-human-in-the-loop-f1b732"
     }
   },
-  "generated_at": "2026-09-11T16:32:01+00:00"
+  "generated_at": "2026-09-11T16:34:54+00:00"
 }

@@ -181,8 +181,8 @@
     "within_review_target_15pct": []
   },
   "dataset_snapshot": "9b55abc2339e8265",
-  "engine_git_sha": "4074dc1",
-  "generated_at": "2026-09-11T16:32:01+00:00",
+  "engine_git_sha": "a349342-dirty",
+  "generated_at": "2026-09-11T16:35:14+00:00",
   "hitl": {
     "acceptance": {
       "queue_automates_at_least_as_much_as_refusal": true,
@@ -234,53 +234,53 @@
     "bench": [
       {
         "endpoint": "GET /healthz",
-        "p50_ms": 2.195,
-        "p95_ms": 2.493
+        "p50_ms": 2.216,
+        "p95_ms": 2.504
       },
       {
         "endpoint": "GET /metrics (O(1) GROUP BY)",
-        "p50_ms": 3.361,
-        "p95_ms": 4.484
+        "p50_ms": 3.53,
+        "p95_ms": 4.429
       },
       {
         "endpoint": "GET /formulary/search?q=par",
-        "p50_ms": 2.596,
-        "p95_ms": 3.049
+        "p50_ms": 2.56,
+        "p95_ms": 2.908
       },
       {
         "endpoint": "POST /prescriptions RX-001 (full pipeline)",
-        "p50_ms": 13.042,
-        "p95_ms": 17.061
+        "p50_ms": 12.98,
+        "p95_ms": 17.193
       },
       {
         "endpoint": "POST /prescriptions RX-002 (full pipeline)",
-        "p50_ms": 13.017,
-        "p95_ms": 16.202
+        "p50_ms": 12.687,
+        "p95_ms": 16.004
       },
       {
         "endpoint": "POST /prescriptions RX-004 (full pipeline)",
-        "p50_ms": 13.071,
-        "p95_ms": 16.513
+        "p50_ms": 12.901,
+        "p95_ms": 16.822
       },
       {
         "endpoint": "POST /prescriptions RX-008 (full pipeline)",
-        "p50_ms": 13.36,
-        "p95_ms": 16.575
+        "p50_ms": 13.379,
+        "p95_ms": 16.491
       },
       {
         "endpoint": "POST /prescriptions RX-009 (full pipeline)",
-        "p50_ms": 13.305,
-        "p95_ms": 16.848
+        "p50_ms": 13.146,
+        "p95_ms": 17.381
       },
       {
         "endpoint": "POST /prescriptions RX-012 (full pipeline)",
-        "p50_ms": 13.27,
-        "p95_ms": 16.813
+        "p50_ms": 12.207,
+        "p95_ms": 15.055
       }
     ],
     "plane_n": 300,
-    "plane_p50_ms": 0.073,
-    "plane_p95_ms": 0.107,
+    "plane_p50_ms": 0.075,
+    "plane_p95_ms": 0.106,
     "within_budget": true
   },
   "missing_runs": [],
@@ -364,13 +364,13 @@
     "replay_refusal_rate": 0.75
   },
   "runs": {
-    "E-A": "eval/runs/20260911T163139Z-E-A-baseline-ladder-2c1570",
-    "E-B": "eval/runs/20260911T163139Z-E-B-ablations-d2336c",
-    "E-C": "eval/runs/20260911T163139Z-E-C-robustness-5f36e1",
-    "E-D": "eval/runs/20260911T163140Z-E-D-calibration-operating-point-3e9460",
-    "E-E": "eval/runs/20260911T163140Z-E-E-cross-engine-parity-41fe0f",
-    "E-F": "eval/runs/20260911T163201Z-E-F-latency-availability-4d422a",
-    "E-G": "eval/runs/20260911T163201Z-E-G-human-in-the-loop-883fa2"
+    "E-A": "eval/runs/20260911T163434Z-E-A-baseline-ladder-946e37",
+    "E-B": "eval/runs/20260911T163434Z-E-B-ablations-eb06d2",
+    "E-C": "eval/runs/20260911T163434Z-E-C-robustness-4e5671",
+    "E-D": "eval/runs/20260911T163434Z-E-D-calibration-operating-point-b8055f",
+    "E-E": "eval/runs/20260911T163435Z-E-E-cross-engine-parity-3a0394",
+    "E-F": "eval/runs/20260911T163454Z-E-F-latency-availability-40138a",
+    "E-G": "eval/runs/20260911T163454Z-E-G-human-in-the-loop-f1b732"
   },
   "schema_version": 1
 }
