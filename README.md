@@ -126,6 +126,10 @@ bun run dev            # http://localhost:3000
 # API tier (verification service) — requires python3
 make setup
 make run               # http://localhost:8000/docs
+
+# Or the whole stack in containers (verified end-to-end; see docs/DEPLOYMENT.md):
+make docker                        # web :3000, API :8000 (both non-root, healthchecked)
+docker compose run --rm schema     # one-shot: apply the SQLite schema to a fresh volume
 ```
 
 The landing page is the pitch; **Launch app** opens the workspace. First run:

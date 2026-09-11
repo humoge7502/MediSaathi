@@ -15,13 +15,31 @@ services plug in.
 ## Option A — Docker (recommended for the demo/hackathon)
 
 ```bash
-make docker        # docker compose up --build -d
-# web on :3000, API on :8000 (/docs), API /healthz /readyz
+make docker        # docker compose up --build -d  (web :3000, API :8000, /healthz /readyz)
+docker compose run --rm schema    # ONE-SHOT: apply the SQLite schema to the fresh volume
 ```
 
 `docker-compose.yml` builds both images from their Dockerfiles. The web
-container runs the standalone server; the API container runs uvicorn with the
-seed data baked into the image.
+container runs the standalone server as a non-root user (uid 10001); the API
+container runs uvicorn with the seed data baked into the image (also
+non-root).
+
+Container notes (each verified live in this environment):
+- **Schema is never pushed at boot** (MS-05). Run `docker compose run --rm
+  schema` once per fresh volume — it is a no-op when the schema already
+  matches — or run `prisma migrate deploy` in your deploy pipeline. The
+  `schema` service is profile-gated (`--profile tools` implied by `run`).
+- The schema stage shares uid/gid 10001 with the runner so the SQLite file it
+  creates is writable by the web server user; the prisma CLI's engines dir is
+  chowned for the same reason.
+- Both stages install `openssl` (Prisma cannot detect the engine on slim
+  images without it) and pin `HOSTNAME=0.0.0.0` (Docker's container-id
+  HOSTNAME otherwise breaks the standalone server with `EAI_AGAIN`).
+- The web **build** stage runs `next build` with Node, not bun: bun 1.2's
+  worker_threads/CommonJS loader breaks the Next 16 production build inside a
+  container. Bun still owns installs (the lockfile is `bun.lock`).
+- Healthchecks: API probes `/healthz` (curl); web probes the deterministic
+  `/api/evidence` route (node fetch) — no model dependency on either.
 
 ## Option B — Bare metal (dev / judging laptop)
 

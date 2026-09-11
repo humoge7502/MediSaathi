@@ -21,6 +21,7 @@ services:
     build:
       context: apps/web
       dockerfile: Dockerfile
+      target: runner
     environment:
       # The web app is self-contained (route handlers + SQLite). The API
       # service above remains the deep-verification companion.
@@ -30,13 +31,25 @@ services:
     ports:
       - "3000:3000"
     healthcheck:
-      # bun is guaranteed present in the runner image; probes the deterministic
-      # evidence route (no model dependency).
-      test: ["CMD", "bun", "-e", "fetch('http://127.0.0.1:3000/api/evidence').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      # node:22-slim runner: node probes the deterministic evidence route
+      # (no model dependency, no extra tooling in the image).
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/evidence').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 20s
+
+  # One-shot schema apply (MS-05: never at boot). Run ONCE per fresh volume:
+  #   docker compose run --rm schema    (a no-op when the schema matches)
+  # or, on the host:  cd apps/web && bun run db:push
+  schema:
+    build:
+      context: apps/web
+      dockerfile: Dockerfile
+      target: schema
+    profiles: ["tools"]
+    volumes:
+      - medisaathi-web-db:/app/db
 
 volumes:
   medisaathi-data:

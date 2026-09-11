@@ -3,6 +3,39 @@
 All notable changes. Format based on Keep a Changelog; versions here map to
 the event build blocks.
 
+## [0.4.1] - 2026-09-11 - container stack fixed and verified live end-to-end
+
+The Docker path was asserted, never executed. Built both images, booted the
+compose stack on a clean volume, and drove every check below through the
+published ports. Four real defects found and fixed:
+
+### Fixed
+- **web image could not build** — the build stage ran `next build` under
+  bun 1.2, whose unimplemented worker_threads options and CommonJS loader
+  break the Next 16 production build inside a container (it passed on the
+  host only because `bun run` shells out to node). Build now runs on
+  `node:22-slim`; bun still owns installs (`bun.lock`).
+- **web container could not start** — the runner was `oven/bun` calling
+  `node server.js` (no node in the image). Runner is now `node:22-slim`, and
+  `HOSTNAME=0.0.0.0` is pinned (Docker's container-id HOSTNAME made the
+  standalone server die with `EAI_AGAIN`).
+- **api container exited at import** — the Dockerfile never copied the
+  repo-root `data/` corpus, so `SafetyEngine.load()` raised
+  FileNotFoundError on `/srv/data/brands.csv`. Corpus is now baked in.
+- **web DB was read-only at runtime** — Prisma needs a detectable OpenSSL on
+  slim images (installed), and the MS-05 removal of the boot-time push
+  requires an operator one-shot: a profile-gated `schema` compose service
+  (uid 10001, shared with the runner) applies the schema deliberately.
+
+### Verified (clean volume, published ports)
+web: warfarin+aspirin -> interaction; triple whammy -> interaction; garbage
+-> confirm_queue; seed OK; evidence selftest 18/18 in-container;
+cross-origin write -> 403. api: RX-002 -> interaction; /healthz + /readyz
+ok; judge route default-closed (403). Both containers healthy, non-root.
+
+Also: demo-check no longer pulls `make parity` (which needs bun) in the
+python-only CI job — `parity-py` is the API-tier gate (CI green on master).
+
 ## [0.4.0] - 2026-09-11 - audit hardening pass: parity contract, safe defaults, privacy switch
 
 Third audit pass. Every item below is pinned by a test and verified green in

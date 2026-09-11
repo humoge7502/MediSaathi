@@ -15,6 +15,11 @@ COPY packages/contracts packages/contracts
 RUN pip install --no-cache-dir packages/contracts
 
 COPY apps/api apps/api
+# Corpus (brands/interactions/contraindications CSVs): the engine loads it
+# from <root>/data by default (app/routers/api.py DATA_DIR -> /srv/data here).
+# Verified live: without this line the container exits FileNotFoundError
+# /srv/data/brands.csv at import time.
+COPY data data/
 RUN pip install --no-cache-dir "apps/api[prod]"
 
 ENV MEDISAATHI_DB_PATH=/data/medisaathi.db
