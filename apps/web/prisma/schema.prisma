@@ -37,8 +37,52 @@ model Prescription {
   // was screened against — preserved so plan-start re-screening cannot
   // silently drop contraindications (same regression law as the API tier).
   contextsJson   String   @default("[]")
+  // Gate-law provenance (MED-003): the frozen threshold-set id and the
+  // prescription-level fused score (0.4·formulary ratio + 0.6·mean reading
+  // confidence). A verdict without its parameters cannot be re-derived.
+  thresholdSetId      String  @default("v1-2026-09")
+  prescriptionFused   Float   @default(0)
   createdAt      DateTime @default(now())
   plans          TherapyPlan[]
+  queueItems     ConfirmQueueItem[]
+}
+
+// Persisted confirmation queue — the human-resolution half of the gate law.
+// A non-empty `pending` set for a prescription deterministically blocks plan
+// generation (enforced inside the plan transaction, not in the UI).
+model ConfirmQueueItem {
+  id                String   @id @default(cuid())
+  prescriptionId    String
+  prescription      Prescription @relation(fields: [prescriptionId], references: [id])
+  fieldIndex        Int
+  rawText           String   @default("")
+  readingConfidence Float    @default(0)
+  fused             Float    @default(0)
+  band              String   @default("confirm") // refused | confirm | auto
+  why               String   @default("")
+  state             String   @default("pending") // pending | confirmed | rejected
+  resolvedBrand     String?
+  actor             String   @default("system")
+  note              String   @default("")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([prescriptionId, fieldIndex])
+  @@index([prescriptionId, state])
+}
+
+// Append-only audit of every queue transition (first transition wins).
+model QueueTransition {
+  id             String   @id @default(cuid())
+  prescriptionId String
+  fieldIndex     Int
+  fromState      String
+  toState        String
+  actor          String   @default("system")
+  note           String   @default("")
+  createdAt      DateTime @default(now())
+
+  @@index([prescriptionId, fieldIndex])
 }
 
 model TherapyPlan {

@@ -7,6 +7,7 @@ silently drift from the backend contract: every response is an `Envelope`.
 from __future__ import annotations
 
 from enum import Enum
+from typing import Optional  # noqa: F401  (forward-ref clarity for consumers)
 
 from pydantic import BaseModel, Field
 
@@ -128,9 +129,37 @@ class SafetyReport(BaseModel):
     duplicates: list[DuplicateFinding]
     checks: dict[str, bool]  # rule_name -> executed_ok
     warnings: list[str] = []  # dose-plausibility notes (deterministic)
+    #: Gate-law provenance for this run: which bands fired, with which fused
+    #: scores, under which versioned threshold set. Never optional in spirit -
+    #: a verdict without its threshold set is not reproducible.
+    gate: GateMetadata | None = None
 
 
 # ---------------------------------------------------------------- gate + verdict
+
+
+class GateFieldDecision(BaseModel):
+    """One field's band decision with its fusion provenance (patent core)."""
+
+    field_index: int
+    band: str                       # refused | confirm | auto
+    fused: float
+    resolvable: bool
+    reading_confidence: float
+    reason: str
+
+
+class GateMetadata(BaseModel):
+    """Versioned parameters + per-field decisions that produced a verdict."""
+
+    threshold_set_id: str
+    refuse_below: float
+    confirm_below: float
+    fusion: dict[str, float]
+    banding: str                    # reading | fused
+    prescription_fused: float
+    prescription_band: str          # refused | confirm | auto
+    decisions: list[GateFieldDecision] = []
 
 
 class ConfirmItem(BaseModel):
@@ -138,6 +167,11 @@ class ConfirmItem(BaseModel):
     raw_text: str
     confidence: float
     reason: str
+    #: why-queued explainability (MED-014): band, fused value and the exact
+    #: mechanism that routed the field to a human.
+    band: str = "confirm"
+    fused: float = 0.0
+    why: str = ""
 
 
 class ProvenanceEntry(BaseModel):
@@ -221,6 +255,12 @@ class PrescriptionState(BaseModel):
     confirm_queue: list[ConfirmItem] = []
     spoken_plan: SpokenPlan | None = None
     price_rows: list[PriceRow] = []
+    #: Provenance of the gate law that produced this verdict (MED-003): the
+    #: frozen threshold-set id and the prescription-level fused score. A
+    #: Prescription row without these cannot be re-derived, so both engines
+    #: write them on every run.
+    threshold_set_id: str = ""
+    prescription_fused: float = 0.0
     meta: dict = {}
 
 
@@ -231,3 +271,51 @@ class Envelope(BaseModel):
     data: dict | None = None
     error: str | None = None
     meta: dict = {"api_version": "v1", "engines_version": "fixture-v0"}
+
+
+# ---------------------------------------------------------------- confirm queue
+
+
+class QueueItemState(str, Enum):
+    pending = "pending"
+    confirm = "confirmed"
+    reject = "rejected"
+
+
+class QueueItem(BaseModel):
+    """One persisted confirmation-queue row (MED-002 state machine).
+
+    ``state`` is a single-transition field: pending -> confirmed | rejected,
+    first transition wins, replays are refused (`already_resolved`). A
+    non-empty ``pending`` set for a prescription deterministically blocks
+    downstream therapy-plan generation.
+    """
+
+    item_id: str
+    prescription_id: str
+    field_index: int
+    raw_text: str
+    reading_confidence: float
+    fused: float
+    band: str = "confirm"
+    why: str = ""
+    state: QueueItemState = QueueItemState.pending
+    resolved_brand: str | None = None
+    actor: str = "system"
+    note: str = ""
+    created_at: str = ""
+    updated_at: str = ""
+
+
+class QueueTransition(BaseModel):
+    """Append-only audit row for every queue state transition."""
+
+    transition_id: str
+    prescription_id: str
+    field_index: int
+    from_state: str
+    to_state: str
+    actor: str
+    note: str = ""
+    created_at: str = ""
+

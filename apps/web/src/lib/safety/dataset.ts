@@ -98,7 +98,10 @@ export const BRANDS: BrandRow[] = [
   { brand: "Lasix 40", molecule: "furosemide", form: "tablet", atc: "C03CA01", aware: "Access", priceInr: 0.9 },
   { brand: "Aldactone 25", molecule: "spironolactone", form: "tablet", atc: "C03DA01", aware: "Access", priceInr: 2.6 },
   { brand: "Dytor 10", molecule: "torasemide", form: "tablet", atc: "C03CA04", aware: "Access", priceInr: 3.2 },
-  { brand: "Hydroquin 200", molecule: "hydrochlorothiazide", form: "tablet", atc: "C03AA03", aware: "Access", priceInr: 1.1 },
+  // E-E drift fix: the source-of-truth CSV maps Hydroquin 200 to
+  // hydroxychloroquine (P01BA02). The TS plane had it as hydrochlorothiazide,
+  // so a hydroxychloroquine QT/pairwise rule silently did not fire here.
+  { brand: "Hydroquin 200", molecule: "hydroxychloroquine", form: "tablet", atc: "P01BA02", aware: "Access", priceInr: 3.9 },
   { brand: "Aten 50", molecule: "atenolol", form: "tablet", atc: "C07AB03", aware: "Access", priceInr: 0.8 },
   { brand: "Metolar 25", molecule: "metoprolol", form: "tablet", atc: "C07AB02", aware: "Access", priceInr: 1.3 },
   { brand: "Concor 5", molecule: "bisoprolol", form: "tablet", atc: "C07AB07", aware: "Access", priceInr: 3.4 },
@@ -155,6 +158,13 @@ export const BRANDS: BrandRow[] = [
   { brand: "Amitone 10", molecule: "amitriptyline", form: "tablet", atc: "N06AA09", aware: "Access", priceInr: 1.4 },
   { brand: "Warfone 5", molecule: "warfarin", form: "tablet", atc: "B01AA03", aware: "Watch", priceInr: 1.1 },
   { brand: "Cotrimoxazole DS", molecule: "cotrimoxazole", form: "tablet", atc: "J01EE01", aware: "Watch", priceInr: 1.8 },
+  // --- parity drift fix (E-E): these three rows exist in data/brands.csv (the
+  // Python plane's formulary) but were missing here, so the TS plane queued
+  // reads the Python plane resolved (Zental/albendazole double-dosing,
+  // Hydroquin/hydroxychloroquine QT, Digoxin Tab). One law, one dataset.
+  { brand: "Zental", molecule: "albendazole", form: "chewable", atc: "P02CA03", aware: "Access", priceInr: 3.6 },
+  { brand: "Monocef 1g", molecule: "ceftriaxone", form: "injection", atc: "J01DD04", aware: "Watch", priceInr: 28.5 },
+  { brand: "Digoxin Tab", molecule: "digoxin", form: "tablet", atc: "C01AA05", aware: "Access", priceInr: 0.7 },
 ];
 
 export const INTERACTIONS: InteractionRow[] = [
@@ -288,6 +298,11 @@ export const CONTRAINDICATIONS: ContraindicationRow[] = [
   { molecule: "cetirizine", condition: "renal_severe", severity: "relative", note: "Dose reduction required" },
   { molecule: "ciprofloxacin", condition: "epilepsy", severity: "relative", note: "Seizure-threshold lowering in CNS disorders" },
   { molecule: "lithium carbonate", condition: "pregnancy", severity: "relative", note: "Ebstein anomaly risk; specialist decision" },
+  // --- parity drift fix (E-E): rows present in data/contraindications.csv but
+  // missing here (Python plane flagged them, TS plane did not).
+  { molecule: "diclofenac", condition: "hf_refduced", severity: "relative", note: "NSAIDs worsen heart failure volume status" },
+  { molecule: "metformin", condition: "iodinated_contrast_48h", severity: "relative", note: "Hold around contrast administration" },
+  { molecule: "insulin glargine", condition: "hypoglycemia_unaware", severity: "relative", note: "Specialist titration; CGM advised" },
 ];
 
 /** Daily dose caps (mg/day) used by the dose-plausibility checker. */

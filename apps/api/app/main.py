@@ -7,14 +7,17 @@ from __future__ import annotations
 import os
 import time
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from medisaathi_contracts import Envelope
 
 from .bounded_body import MAX_BODY_BYTES, MaxBodySizeMiddleware
 from .middleware_security import SecurityHeadersMiddleware
+from .obs import configure_logging, log_event, render_prometheus, tracker
 from .routers.api import router as v1_router
 from .routers.judge import judge as judge_router
+
+configure_logging()
 
 app = FastAPI(
     title="MediSaathi API",
@@ -40,8 +43,15 @@ app.include_router(judge_router)
 async def add_latency(request: Request, call_next):
     t0 = time.perf_counter()
     response = await call_next(request)
-    response.headers["x-medisaathi-latency-ms"] = str(
-        int((time.perf_counter() - t0) * 1000))
+    latency_ms = (time.perf_counter() - t0) * 1000
+    route = request.scope.get("route")
+    route_path = getattr(route, "path", request.url.path)
+    tracker.observe(request.method, route_path, latency_ms)
+    response.headers["x-medisaathi-latency-ms"] = str(int(latency_ms))
+    if request.url.path not in ("/healthz", "/readyz", "/metrics", "/slo", "/metrics.prometheus"):
+        log_event("http_request", route=str(route_path), method=request.method,
+                  status=response.status_code, latency_ms=int(latency_ms),
+                  request_id=getattr(request.state, "request_id", None))
     return response
 
 
@@ -80,3 +90,27 @@ def metrics() -> dict:
         "confirm_queue_total": counts.get("confirm_queue", 0),
         "llm_schema_fail_total": schema_fail_count(),
     }
+
+
+@app.get("/slo")
+def slo() -> dict:
+    """Per-endpoint latency percentiles from the in-process observation window.
+
+    These are *service* SLOs (endpoint latency), measured live — distinct from
+    the pipeline benchmark in tools/bench.py. Window is bounded (512 obs per
+    route), so this reflects recent traffic, not all-time history.
+    """
+    return {"window_per_route": tracker.WINDOW, "endpoints": tracker.summary()}
+
+
+@app.get("/metrics.prometheus",
+         responses={200: {"content": {"text/plain; version=0.0.4": {}}}},
+         include_in_schema=False)
+def prometheus() -> Response:
+    """Prometheus scrape endpoint (OpenMetrics text; counters + latency summary)."""
+    from .store import count, verdict_counts
+    from .vision import schema_fail_count
+    body = render_prometheus(
+        pipeline_started=count(), verdicts=verdict_counts(),
+        schema_failures=schema_fail_count())
+    return Response(content=body, media_type="text/plain; version=0.0.4; charset=utf-8")

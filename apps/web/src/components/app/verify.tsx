@@ -213,12 +213,23 @@ export function VerifyPanel({ onPlanStarted }: { onPlanStarted: () => void }) {
 
             {result.confirmQueue.length > 0 && (
               <div className="vy-hairline-card p-5">
-                <p className="vy-eyebrow">Confirm queue ({result.confirmQueue.length})</p>
+                <p className="vy-eyebrow">Confirm queue ({result.confirmQueue.length}) — plan blocked</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  These reads were not confident enough to automate. Each one must be resolved in the Review console
+                  before a therapy plan can be started; the block is enforced in the plan transaction.
+                </p>
                 <ul className="mt-3 space-y-2">
                   {result.confirmQueue.map((c) => (
                     <li key={c.line} className="rounded-lg border px-3 py-2 text-sm">
-                      <span className="font-mono text-xs">{c.rawText}</span>
-                      <span className="ml-2 text-xs vy-sev-moderate">{c.reason}</span>
+                      <div className="flex flex-wrap items-baseline gap-2">
+                        <span className="font-mono text-xs">{c.rawText}</span>
+                        <span className="text-xs vy-sev-moderate">{c.reason}</span>
+                      </div>
+                      <div className="mt-1 vy-numeral text-[11px] text-muted-foreground">
+                        {c.band && <span>band {c.band}</span>}
+                        {c.fused != null && <span> · fused {c.fused.toFixed(3)}</span>}
+                        {c.why && <span> · {c.why}</span>}
+                      </div>
                     </li>
                   ))}
                 </ul>

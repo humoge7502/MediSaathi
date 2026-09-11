@@ -1,0 +1,25 @@
+{
+  "generator": "tools/build_corpus.py",
+  "human_annotation": {
+    "note": "synthetic-curated corpus; dual human annotation + kappa is the outstanding MED-005 step (human-bound)",
+    "status": "pending"
+  },
+  "label_fields": [
+    "verdict",
+    "findings",
+    "fields.brand",
+    "fields.strength_mg",
+    "fields.frequency",
+    "fields.duration_days"
+  ],
+  "seed": 20260911,
+  "verdict_vocabulary": [
+    "pass",
+    "interaction",
+    "contraindication",
+    "duplicate_atc",
+    "confirm_queue",
+    "refused"
+  ],
+  "version": 1
+}

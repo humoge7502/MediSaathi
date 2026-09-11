@@ -18,6 +18,7 @@ import ZAI from "z-ai-web-dev-sdk";
 import { DOSAGE_ADVICE_PATTERNS, EMERGENCY_PATTERNS } from "./knowledge";
 import { retrieve } from "./retrieval";
 import { modelEgressDisabled } from "./extraction";
+import { modelBreaker } from "./breaker";
 
 export interface CopilotRequest {
   question: string;
@@ -173,13 +174,24 @@ export async function answerCopilot(req: CopilotRequest): Promise<CopilotRespons
     if (modelEgressDisabled()) {
       throw new Error("model egress disabled by MEDISAATHI_DISABLE_MODEL_EGRESS");
     }
+    // Circuit breaker (R-9): after repeated failures, fail fast and honestly
+    // instead of making every query pay the network timeout. The probe
+    // (half-open) still happens on later requests so recovery is automatic.
+    if (!modelBreaker.allow()) {
+      throw Object.assign(new Error("model circuit breaker open"), { breakerOpen: true });
+    }
     const zai = await ZAI.create();
     const completion = await zai.chat.completions.create({
       messages,
       thinking: { type: "disabled" },
     });
     raw = completion.choices[0]?.message?.content?.trim() ?? "";
-  } catch {
+    modelBreaker.success();
+  } catch (err) {
+    if (!(err as { breakerOpen?: boolean }).breakerOpen &&
+        !(err instanceof Error && err.message.includes("egress disabled"))) {
+      modelBreaker.failure();
+    }
     return {
       kind: "service_unavailable",
       answer: "The language service is unavailable right now, so I can't generate an answer — I won't improvise on medication topics. The deterministic safety checks (interactions, contraindications, dose caps) still run without any AI, so your plan verification remains fully active.",

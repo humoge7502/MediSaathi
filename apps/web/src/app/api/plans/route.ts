@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
 import { ok, fail, bumpMetric, audit } from "@/lib/api-helpers";
 import { defaultTimes } from "@/lib/safety/adherence";
+import { PlanBlockedError, assertPlanAllowed, blockedReason } from "@/lib/queue";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -25,6 +26,12 @@ export async function POST(req: NextRequest) {
   const prescription = await db.prescription.findUnique({ where: { id: body.prescriptionId } });
   if (!prescription) return fail("Prescription not found", 404);
   if (prescription.verdict === "refused") return fail("This prescription was refused and cannot become a plan");
+
+  // Persisted-queue block (MED-002): uncertainty deterministically halts
+  // downstream automation. Checked here for a precise message AND again inside
+  // the transaction below so the check and the write share one write lock.
+  const reason = await blockedReason(body.prescriptionId);
+  if (reason) return fail(reason, 409);
 
   const extraction = JSON.parse(prescription.extractionJson) as { lines?: { raw: string }[] };
   const findings = JSON.parse(prescription.findingsJson) as unknown[];
@@ -60,7 +67,11 @@ export async function POST(req: NextRequest) {
   // interactive transaction (audit TD-E): a failure mid-loop used to leave a partially
   // scheduled plan, and two concurrent starts could interleave archives and creates.
   const start = new Date();
-  const created = await db.$transaction(async (tx) => {
+  let created: { plan: { id: string; label: string }; slotCount: number };
+  try {
+    created = await db.$transaction(async (tx) => {
+    // Transactional plan gate: throws while any confirm-queue row is pending.
+    await assertPlanAllowed(tx, body.prescriptionId!);
     const existingActive = await tx.therapyPlan.findFirst({
       where: { patientId: patient.id, status: "active" },
       include: { medications: true },
@@ -108,7 +119,12 @@ export async function POST(req: NextRequest) {
       slotCount += doses.length;
     }
     return { plan, slotCount };
-  });
+    });
+  } catch (e) {
+    // A pending confirm-queue row is a designed 409, not a server error.
+    if (e instanceof PlanBlockedError) return fail(e.message, 409);
+    throw e;
+  }
   const plan = created.plan;
   const slotCount = created.slotCount;
 

@@ -10,7 +10,7 @@ PY ?= python3
 API_DIR := apps/api
 WEB_DIR := apps/web
 
-.PHONY: setup test eval ablation audit demo-check bake-judge run parity parity-py web web-build web-typecheck web-selftest web-test web-check web-e2e db-push docker clean
+.PHONY: setup test eval ablation audit demo-check bake-judge run parity parity-py experiments experiments-quick evidence binder web web-build web-typecheck web-selftest web-test web-check web-e2e db-push docker clean
 
 setup:            ## install contracts + api (editable) and dev deps
 	cd packages/contracts && $(PY) -m pip install -e . -q
@@ -31,11 +31,11 @@ audit:            ## static sanity: contracts importable, eval harness runs
 	$(PY) -c "import medisaathi_contracts as m; print('contracts', m.__version__)"
 	$(PY) eval/eval.py --json > /dev/null && echo "eval harness OK"
 
-parity:           ## cross-engine parity gate (ADR-0012): both planes must agree 25/25 (needs bun)
+parity:           ## cross-engine parity gate (ADR-0012/MED-015): both planes must agree 110/110 on the shared golden corpus (needs bun)
 	$(MAKE) -s parity-py
 	cd $(WEB_DIR) && bun run parity
 
-parity-py:        ## Python-side parity gate (25/25) — the API tier's engine-only check
+parity-py:        ## Python-side parity gate (110/110) — the API tier's engine-only check
 	$(PY) eval/parity/parity.py
 
 demo-check:       ## FULL offline demo gate - API tier (sealed cases + tests + eval + python parity)
@@ -50,6 +50,22 @@ bake-judge:       ## re-bake the zero-network judge cache from the live pipeline
 
 run:              ## local API on :8000
 	cd $(API_DIR) && $(PY) -m uvicorn app.main:app --reload --port 8000
+
+# ------------------------------------------------------------------ evidence
+# The evidence spine (MED-007..MED-020). Every reported number must come from a
+# run manifest under eval/runs/; these targets produce and compile them.
+experiments:      ## run E-A..E-G and archive a run manifest for each
+	$(PY) tools/run_experiments.py --all
+
+# same, with reduced case counts (fast smoke; does NOT overwrite eval/results)
+experiments-quick: ## quick E-A..E-G smoke (small case counts)
+	$(PY) tools/run_experiments.py --all --quick --json > /dev/null && echo "experiments quick: OK"
+
+evidence:         ## compile archived runs into the web app evidence artifact
+	$(PY) tools/export_evidence.py
+
+binder:           ## build the patent evidence binder from the run archive
+	$(PY) tools/build_binder.py
 
 # ------------------------------------------------------------------ web tier
 web:              ## web app dev server on :3000 (demo product)

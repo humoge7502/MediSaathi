@@ -17,6 +17,8 @@ from medisaathi_contracts import (
 )
 from pydantic import BaseModel, Field
 
+from .. import consent, queue
+from ..fhir import ExportBlockedError, to_fhir_bundle
 from ..nlg import build_spoken_plan
 from ..safety.engine import SafetyEngine
 from ..store import create, get, put
@@ -38,6 +40,14 @@ class ConfirmRequest(BaseModel):
     accepted: bool = True
 
 
+class QueueResolveRequest(BaseModel):
+    field_index: int
+    accepted: bool = True
+    brand_text: str | None = None
+    actor: str = "pharmacist"
+    note: str = ""
+
+
 class AdrDraft(BaseModel):
     prescription_id: str | None = None
     medicine: str
@@ -45,6 +55,16 @@ class AdrDraft(BaseModel):
     severity: str = "moderate"
     onset_days: int = 1
     outcome: str = "recovering"
+
+
+class ConsentRequest(BaseModel):
+    """ABDM-vocabulary consent request (MED-025). Pseudonymous by construction."""
+
+    patient_ref: str = Field(min_length=1, description="pseudonymous reference, never PII")
+    purpose: str = Field(description="ABDM purpose code, e.g. CAREMGT")
+    hi_types: list[str] = Field(default_factory=lambda: ["Prescription"])
+    ttl_days: int = Field(default=30, gt=0, le=365)
+    signature_ref: str = ""
 
 
 # Upload hardening: declared content-type AND magic bytes must both say "image".
@@ -104,6 +124,30 @@ def _parse_context(context: str) -> dict[str, bool]:
         {k.strip(): True for k in context.split(",") if k.strip()})
 
 
+def _record_gate(rx, report) -> None:
+    """Persist the gate-law provenance (threshold-set id + fused score)."""
+    if report.gate is not None:
+        rx.threshold_set_id = report.gate.threshold_set_id
+        rx.prescription_fused = report.gate.prescription_fused
+
+
+def _rescreen_and_assemble(rx) -> None:
+    """Re-run the deterministic plane against the run's ORIGINAL context and
+    re-assemble the verdict, then reconcile the persisted confirm queue.
+
+    Every human resolution (or rejection) must re-screen: a confirmation that
+    unlocks a molecule the earlier read hid can *create* a contraindication.
+    """
+    if rx.extraction is None:
+        return
+    report, items, _ = engine.run(rx.extraction.fields, rx.context or {})
+    rx.safety = report
+    rx.confirm_queue = [ConfirmItem(**i) for i in items]
+    rx.verdict = assemble(engine, rx.extraction, report, rx.confirm_queue)
+    _record_gate(rx, report)
+    queue.sync(rx.prescription_id, [c.model_dump() for c in rx.confirm_queue])
+
+
 # ------------------------------------------------------------------ pipeline
 @router.post("/prescriptions")
 def start_prescription(sample_id: str, context: str = "") -> Envelope:
@@ -133,11 +177,15 @@ def start_prescription(sample_id: str, context: str = "") -> Envelope:
     rx.safety = report
     rx.confirm_queue = confirms
     rx.verdict = assemble(engine, result, report, rx.confirm_queue)
+    _record_gate(rx, report)
+    queue.sync(rx.prescription_id, [c.model_dump() for c in confirms])
     put(rx)
     return Envelope(data=rx.model_dump(), meta={
         "verdict": rx.verdict.kind.value,
         "latency_ms": result.latency_ms,
         "checks": report.checks,
+        "threshold_set_id": rx.threshold_set_id,
+        "prescription_fused": rx.prescription_fused,
     })
 
 
@@ -183,6 +231,8 @@ async def upload_prescription(image: UploadFile = File(...), context: str = "") 
     rx.safety = report
     rx.confirm_queue = [ConfirmItem(**i) for i in items]
     rx.verdict = assemble(engine, result, report, rx.confirm_queue)
+    _record_gate(rx, report)
+    queue.sync(rx.prescription_id, [c.model_dump() for c in rx.confirm_queue])
     put(rx)
     return Envelope(data=rx.model_dump(), meta={"verdict": rx.verdict.kind.value})
 
@@ -212,15 +262,15 @@ def confirm_field(prescription_id: str, body: ConfirmRequest) -> Envelope:
     fld.brand_text = row["brand"]
     fld.confidence = 1.0
     fld.source = FieldSource.user_confirmation
-    rx.confirm_queue = [c for c in rx.confirm_queue if c.field_index != body.field_index]
 
+    # The human decision IS the queue transition (first transition wins).
+    queue.resolve(rx.prescription_id, body.field_index, accepted=True,
+                  resolved_brand=row["brand"], actor="user_confirmation",
+                  note="field confirmed against the formulary")
     # Re-screen against the patient context the run STARTED with (regression:
     # this used to re-run with an empty context, silently dropping
     # contraindication screening after any human confirmation).
-    report, items, _ = engine.run(rx.extraction.fields, rx.context or {})
-    rx.safety = report
-    rx.confirm_queue = [ConfirmItem(**i) for i in items]
-    rx.verdict = assemble(engine, rx.extraction, report, rx.confirm_queue)
+    _rescreen_and_assemble(rx)
     put(rx)
     return Envelope(data=rx.model_dump(), meta={"verdict": rx.verdict.kind.value})
 
@@ -249,12 +299,103 @@ def formulary_search(q: str, limit: int = 8) -> Envelope:
     return Envelope(data={"results": results}, meta={"count": len(results)})
 
 
+# ------------------------------------------------------------------ confirm queue
+@router.get("/prescriptions/{prescription_id}/queue")
+def queue_state(prescription_id: str) -> Envelope:
+    """List the persisted confirmation queue + the plan-block state (MED-011)."""
+    if get(prescription_id) is None:
+        raise HTTPException(status_code=404, detail="unknown prescription")
+    state = queue.status(prescription_id)
+    return Envelope(data=state, meta={"blocked": state["blocked"]})
+
+
+@router.get("/prescriptions/{prescription_id}/queue/history")
+def queue_history(prescription_id: str) -> Envelope:
+    """Append-only transition audit for the confirm queue (MED-011)."""
+    if get(prescription_id) is None:
+        raise HTTPException(status_code=404, detail="unknown prescription")
+    rows = queue.history(prescription_id)
+    return Envelope(data={"transitions": [r.model_dump() for r in rows]},
+                    meta={"count": len(rows)})
+
+
+@router.post("/prescriptions/{prescription_id}/queue/resolve")
+def queue_resolve(prescription_id: str, body: QueueResolveRequest) -> Envelope:
+    """Resolve one queued field. First transition wins; replays are refused."""
+    rx = get(prescription_id)
+    if rx is None:
+        raise HTTPException(status_code=404, detail="unknown prescription")
+    # First transition wins: a replay against a terminal row is a protocol
+    # outcome, never an error and never a second mutation. Checked before any
+    # brand validation so a replay never depends on payload shape.
+    existing = next((i for i in queue.list_items(prescription_id)
+                     if i.field_index == body.field_index), None)
+    if existing is None:
+        raise HTTPException(status_code=404, detail="no queue row for that field index")
+    if existing.state.value != "pending":
+        return Envelope(data={
+            "status": "already_resolved",
+            "item": existing.model_dump(),
+            "queue": queue.status(prescription_id),
+            "verdict": rx.verdict.kind.value if rx.verdict else "pending",
+        }, meta={"replayed": True})
+
+    resolved_brand: str | None = None
+    if body.accepted:
+        # A human read may correct the brand (the whole point of the queue), or
+        # simply accept the machine's read. Either way the result must resolve
+        # against the formulary: an invented brand is never confirmed.
+        fld_candidate = ""
+        if rx.extraction is not None and 0 <= body.field_index < len(rx.extraction.fields):
+            f = rx.extraction.fields[body.field_index]
+            fld_candidate = f.brand_text or f.raw_text
+        row = engine.normalize(body.brand_text or fld_candidate)
+        if row is None:
+            raise HTTPException(
+                status_code=422,
+                detail="brand not in formulary map; supply the corrected brand name")
+        resolved_brand = row["brand"]
+    try:
+        item, replayed = queue.resolve(
+            prescription_id, body.field_index, body.accepted,
+            resolved_brand=resolved_brand, actor=body.actor, note=body.note)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    if not replayed and rx.extraction is not None \
+            and 0 <= body.field_index < len(rx.extraction.fields):
+        fld = rx.extraction.fields[body.field_index]
+        if body.accepted:
+            fld.brand_text = resolved_brand or fld.brand_text
+            fld.confidence = 1.0  # a human read is the highest confidence there is
+            fld.source = FieldSource.user_confirmation
+        else:
+            # A rejected field cannot be verified -> the read is withdrawn, the
+            # band collapses to refusal, and the plan stays blocked.
+            fld.confidence = 0.0
+        _rescreen_and_assemble(rx)
+        put(rx)
+
+    return Envelope(data={
+        "status": "already_resolved" if replayed else "resolved",
+        "item": item.model_dump(),
+        "queue": queue.status(prescription_id),
+        "verdict": rx.verdict.kind.value if rx.verdict else "pending",
+    }, meta={"replayed": replayed})
+
+
 # ------------------------------------------------------------------ plan
 @router.get("/prescriptions/{prescription_id}/explanation")
 def explanation(prescription_id: str, lang: str = "en") -> Envelope:
     rx = get(prescription_id)
     if rx is None:
         raise HTTPException(status_code=404, detail="unknown prescription")
+    # Plan blocking is evaluated against PERSISTED queue state, not against the
+    # in-memory verdict only (MED-002): the block survives a restart and cannot
+    # be bypassed by a stale verdict object.
+    reason = queue.blocked_reason(prescription_id)
+    if reason:
+        raise HTTPException(status_code=409, detail=reason)
     if rx.verdict and rx.verdict.kind in (VerdictKind.refused, VerdictKind.confirm_queue):
         raise HTTPException(status_code=409, detail="plan blocked until verdict is verified")
     if rx.safety is None or rx.extraction is None:
@@ -316,6 +457,57 @@ def price(prescription_id: str) -> Envelope:
 
 
 # ------------------------------------------------------------------ ADR
+@router.get("/prescriptions/{prescription_id}/fhir")
+def export_fhir(prescription_id: str) -> Envelope:
+    """Export a VERIFIED prescription as a FHIR R4 collection Bundle (MED-028).
+
+    Export-only mapping: there is no live FHIR/ABDM gateway. A prescription whose
+    confirm queue is non-empty, or whose verdict is a refusal, exports nothing
+    (409) — an unverified read must never be laundered into a clinical record.
+    """
+    rx = get(prescription_id)
+    if rx is None:
+        raise HTTPException(status_code=404, detail="unknown prescription_id")
+    try:
+        bundle = to_fhir_bundle(rx)
+    except ExportBlockedError as exc:
+        raise HTTPException(status_code=409, detail=exc.reason) from exc
+    return Envelope(data={"bundle": bundle, "note": "export-only mapping; not a live FHIR integration"})
+
+
+@router.post("/consent")
+def grant_consent(req: ConsentRequest) -> Envelope:
+    """Create a consent artefact (ABDM vocabulary). Stub, not a live gateway.
+
+    No patient identifiers are accepted; the artefact references a pseudonymous
+    `patient_ref` only, and expires (fail-closed on expiry and revocation).
+    """
+    try:
+        artefact = consent.grant(
+            patient_ref=req.patient_ref, purpose=req.purpose,
+            hi_types=req.hi_types, ttl_days=req.ttl_days,
+            signature_ref=req.signature_ref)
+    except consent.ConsentError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    return Envelope(data=artefact)
+
+
+@router.get("/consent/{consent_id}")
+def get_consent(consent_id: str) -> Envelope:
+    artefact = consent.get(consent_id)
+    if artefact is None:
+        raise HTTPException(status_code=404, detail="unknown consent_id")
+    return Envelope(data=artefact)
+
+
+@router.post("/consent/{consent_id}/revoke")
+def revoke_consent(consent_id: str) -> Envelope:
+    artefact = consent.revoke(consent_id)
+    if artefact is None:
+        raise HTTPException(status_code=404, detail="unknown consent_id")
+    return Envelope(data=artefact)
+
+
 @router.post("/adr-reports")
 def adr_draft(body: AdrDraft) -> Envelope:
     """One-tap structured PvPI-format adverse-event draft (information layer)."""

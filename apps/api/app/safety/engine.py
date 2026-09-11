@@ -19,6 +19,8 @@ from medisaathi_contracts import (
     ContraindicationFinding,
     DuplicateFinding,
     ExtractionField,
+    GateFieldDecision,
+    GateMetadata,
     InteractionFinding,
     NormalizedMedication,
     ProvenanceEntry,
@@ -26,6 +28,15 @@ from medisaathi_contracts import (
     Severity,
 )
 
+from ..gate import (
+    AUTO,
+    CONFIRM,
+    REFUSED,
+    all_below_refusal,
+    band_of,
+    fuse_prescription,
+    get_threshold_set,
+)
 from .dosing import DAILY_CAPS_MG, daily_dose_mg, dose_warning
 
 DATA_DIR = os.environ.get(
@@ -35,7 +46,13 @@ DATA_DIR = os.environ.get(
 
 SNAPSHOT = "2026-09"
 
-# Confidence gate thresholds (product law: refuse below LOW, confirm between)
+# Confidence gate thresholds (product law: refuse below LOW, confirm between).
+# These are the *defaults of the frozen v1 threshold set*; the authoritative
+# values now live in app.gate.THRESHOLD_SETS so both engines and every
+# experiment read one source of truth (MED-003). Kept as module constants
+# because callers and the parity corpus reference them by name.
+from ..gate import DEFAULT_THRESHOLD_SET_ID as DEFAULT_THRESHOLD_SET_ID  # noqa: E402
+
 CONFIRM_BELOW = 0.90
 REFUSE_BELOW = 0.75
 
@@ -134,24 +151,50 @@ class SafetyEngine:
 
     # -------------------------------------------------------------- full pass
     def run(self, fields: list[ExtractionField],
-            context: dict | None = None) -> tuple[SafetyReport, list, bool]:
+            context: dict | None = None,
+            threshold_set_id: str | None = None,
+            skip_gate: bool = False,
+            ) -> tuple[SafetyReport, list, bool]:
         """Returns (report, confirm_items, all_fields_verified).
 
         all_fields_verified is False when any field sits below the gate.
         The caller (verdict assembly) MUST route unverified fields away from
         spoken/rendered safety output - that is the product's core law.
+
+        The band decision for every field is delegated to ``app.gate.band_of``
+        so the gate law exists exactly once per tier and carries its fused
+        score + threshold-set id into the report's provenance.
+
+        ``skip_gate`` is the experiment-only switch (A3 / ablations in
+        ``ml/ladder.py``): resolvable fields are treated as auto-confirmed so
+        the rule plane can be measured on its own. The product path never sets
+        it; the TS mirror exposes the same flag as ``EngineInput.skipGate``.
         """
+        thresholds = get_threshold_set(threshold_set_id)
         context = self.validate_context(context or {})
         meds: list[NormalizedMedication] = []
         confirm_items: list = []
         warnings: list[str] = []
+        decisions: list[GateFieldDecision] = []
+        band_decisions: list = []  # app.gate.FieldDecision (raw band objects)
         for i, fld in enumerate(fields):
             row = self.normalize(fld.brand_text or fld.raw_text)
+            resolvable = row is not None
+            reading_conf = 1.0 if (skip_gate and resolvable) else fld.confidence
+            decision = band_of(reading_conf, resolvable, thresholds)
+            band_decisions.append(decision)
+            decisions.append(GateFieldDecision(
+                field_index=i, band=decision.band, fused=decision.fused,
+                resolvable=resolvable,
+                reading_confidence=decision.reading_confidence,
+                reason=decision.reason))
             if row is None:
                 confirm_items.append({
                     "field_index": i, "raw_text": fld.raw_text,
                     "confidence": fld.confidence,
                     "reason": "brand not in formulary map",
+                    "band": decision.band, "fused": decision.fused,
+                    "why": decision.reason,
                 })
                 continue
             meds.append(NormalizedMedication(
@@ -159,11 +202,13 @@ class SafetyEngine:
                 atc=row["atc"], aware_class=row["aware_class"],
                 jas_price_inr=row["jas_price_inr"], fields=[fld],
             ))
-            if fld.confidence < CONFIRM_BELOW:
+            if decision.queued or decision.refused:
                 confirm_items.append({
                     "field_index": i, "raw_text": fld.raw_text,
                     "confidence": fld.confidence,
                     "reason": "low field confidence",
+                    "band": decision.band, "fused": decision.fused,
+                    "why": decision.reason,
                 })
             w = dose_warning(fld, row["molecule"].lower())
             if w:
@@ -219,9 +264,29 @@ class SafetyEngine:
                     f"combined {mol} daily dose {total:g} mg from "
                     f"{len(meds)} line(s) exceeds the {cap:g} mg/day cap")
 
+        # Gate provenance: the fused score (formulary resolvability + reading
+        # confidence) and the band it lands in, persisted with the verdict.
+        if all_below_refusal(band_decisions):
+            prescription_band = REFUSED
+        elif confirm_items:
+            prescription_band = CONFIRM
+        else:
+            prescription_band = AUTO
+        gate = GateMetadata(
+            threshold_set_id=thresholds.set_id,
+            refuse_below=thresholds.refuse_below,
+            confirm_below=thresholds.confirm_below,
+            fusion=thresholds.fusion.as_dict(),
+            banding=thresholds.banding,
+            prescription_fused=fuse_prescription(
+                len(meds), len(confirm_items),
+                [f.confidence for f in fields], thresholds.fusion),
+            prescription_band=prescription_band,
+            decisions=decisions)
+
         report = SafetyReport(
             medications=meds, interactions=interactions, contraindications=contras,
-            duplicates=duplicates, warnings=warnings,
+            duplicates=duplicates, warnings=warnings, gate=gate,
             checks={
                 "normalize": True, "interaction_graph": True,
                 "combination_rules": True,

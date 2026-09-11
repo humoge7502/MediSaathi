@@ -378,6 +378,90 @@ def test_model_egress_switch_defaults_off(monkeypatch):
     assert v.model_egress_disabled() is False
 
 
+# =============================================== retry/backoff on the live call
+def test_live_call_backs_off_between_attempts(monkeypatch):
+    """Retry law: a failing endpoint is retried LIVE_MAX_ATTEMPTS times with
+    exponential backoff sleeps BETWEEN attempts (never before the first)."""
+    import httpx
+    from app import vision as v
+
+    monkeypatch.setattr(v, "LIVE_MAX_ATTEMPTS", 3)
+    monkeypatch.setattr(v, "LIVE_BACKOFF_CAP_S", 5)
+    sleeps: list[float] = []
+    monkeypatch.setattr(v.time, "sleep", lambda s: sleeps.append(s))
+    calls = {"n": 0}
+
+    class FakeResp:
+        def raise_for_status(self):
+            raise httpx.HTTPError("boom")
+
+        def json(self):
+            return {}
+
+    class FakeClient:
+        def __init__(self, *a, **k):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        def post(self, *a, **k):
+            calls["n"] += 1
+            return FakeResp()
+
+    monkeypatch.setattr(v.httpx, "Client", FakeClient)
+    with pytest.raises(RuntimeError, match="failed after retry"):
+        v._live_call(b"img", model="m", base_url="http://x", api_key="k")
+    assert calls["n"] == 3, "wrong attempt count"
+    # backoff between attempts only: none before the first, doubling after
+    assert sleeps == [0.5, 1.0], f"unexpected backoff schedule: {sleeps}"
+    assert v.schema_fail_count() >= 3  # each failure recorded
+
+
+def test_live_call_succeeds_on_second_attempt(monkeypatch):
+    """The retry must actually recover: first call fails, second returns a
+    schema-valid payload -> result, no exception."""
+    from app import vision as v
+    from medisaathi_contracts import LiveExtraction
+
+    monkeypatch.setattr(v, "LIVE_MAX_ATTEMPTS", 2)
+    monkeypatch.setattr(v, "LIVE_BACKOFF_CAP_S", 0)
+    monkeypatch.setattr(v.time, "sleep", lambda s: None)
+    payload = LiveExtraction(prescription_detected=True, refusal_reason=None,
+                             lines=[]).model_dump_json()
+    state = {"n": 0}
+
+    class FakeResp:
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            state["n"] += 1
+            if state["n"] == 1:
+                raise ValueError("transient")
+            return {"choices": [{"message": {"content": payload}}]}
+
+    class FakeClient:
+        def __init__(self, *a, **k):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        def post(self, *a, **k):
+            return FakeResp()
+
+    monkeypatch.setattr(v.httpx, "Client", FakeClient)
+    result = v._live_call(b"img", model="m", base_url="http://x", api_key="k")
+    assert result.prescription_detected is True
+
+
 # ================================================= fixture path traversal
 # CONFIRMED FINDING (red-team, this audit): sample_id was joined into a path
 # with no containment check, so

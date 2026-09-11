@@ -14,9 +14,11 @@ const InsightsPanel = dynamic(() => import("@/components/app/insights").then((m)
 const CopilotPanel = dynamic(() => import("@/components/app/copilot").then((m) => m.CopilotPanel));
 const FamilyPanel = dynamic(() => import("@/components/app/family").then((m) => m.FamilyPanel));
 const EvidencePanel = dynamic(() => import("@/components/app/evidence").then((m) => m.EvidencePanel));
+const ReviewConsole = dynamic(() => import("@/components/app/console").then((m) => m.ReviewConsole));
 
 const TABS = [
   { id: "verify", label: "Verify" },
+  { id: "review", label: "Review" },
   { id: "today", label: "Today" },
   { id: "insights", label: "Insights" },
   { id: "copilot", label: "Copilot" },
@@ -99,6 +101,7 @@ export function Workspace({ onExit }: { onExit: () => void }) {
 
       <div className="mt-6">
         {tab === "verify" && <VerifyPanel onPlanStarted={refresh} />}
+        {tab === "review" && <ReviewConsole />}
         {tab === "today" && <TodayPanel refreshKey={refreshKey} />}
         {tab === "insights" && <InsightsPanel refreshKey={refreshKey} />}
         {tab === "copilot" && <CopilotPanel />}

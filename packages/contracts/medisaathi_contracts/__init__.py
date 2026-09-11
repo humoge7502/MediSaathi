@@ -9,6 +9,8 @@ from medisaathi_contracts.models import (  # noqa: F401
     ExtractionField,
     ExtractionResult,
     FieldSource,
+    GateFieldDecision,
+    GateMetadata,
     InteractionFinding,
     LiveExtraction,
     LiveLine,
@@ -19,6 +21,9 @@ from medisaathi_contracts.models import (  # noqa: F401
     PriceRow,
     PriceSummary,
     ProvenanceEntry,
+    QueueItem,
+    QueueItemState,
+    QueueTransition,
     SafetyReport,
     Severity,
     SpokenPlan,
@@ -26,7 +31,7 @@ from medisaathi_contracts.models import (  # noqa: F401
     VerdictKind,
 )
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 # Patient-context codes the deterministic contraindication engine understands.
 # The product contract: context is DECLARED by the user, never inferred by a model.

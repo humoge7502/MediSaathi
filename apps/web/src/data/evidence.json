@@ -1,0 +1,376 @@
+{
+  "ablations": {
+    "deltas": {
+      "A4_minus_combination": {
+        "delta_queue_rate": 0.0,
+        "delta_unsafe_rate": 0.0455,
+        "delta_verdict_agreement": -0.0455,
+        "queue_rate": 0.25,
+        "unsafe_auto_confirm_rate": 0.0455,
+        "verdict_agreement": 0.9545
+      },
+      "A4_minus_formulary_fusion": {
+        "delta_queue_rate": -0.25,
+        "delta_unsafe_rate": 0.25,
+        "delta_verdict_agreement": -0.25,
+        "queue_rate": 0.0,
+        "unsafe_auto_confirm_rate": 0.25,
+        "verdict_agreement": 0.75
+      },
+      "A4_minus_gate": {
+        "delta_queue_rate": -0.25,
+        "delta_unsafe_rate": 0.2955,
+        "delta_verdict_agreement": -0.2955,
+        "queue_rate": 0.0,
+        "unsafe_auto_confirm_rate": 0.2955,
+        "verdict_agreement": 0.7045
+      },
+      "A4_minus_queue_blocking": {
+        "delta_queue_rate": -0.25,
+        "delta_unsafe_rate": 0.25,
+        "delta_verdict_agreement": -0.25,
+        "queue_rate": 0.0,
+        "unsafe_auto_confirm_rate": 0.25,
+        "verdict_agreement": 0.75
+      },
+      "A4_minus_refusal_band": {
+        "delta_queue_rate": 0.0455,
+        "delta_unsafe_rate": 0.0,
+        "delta_verdict_agreement": -0.0455,
+        "queue_rate": 0.2955,
+        "unsafe_auto_confirm_rate": 0.0,
+        "verdict_agreement": 0.9545
+      }
+    },
+    "n": 44
+  },
+  "baseline_ladder": {
+    "arms": {
+      "A0": {
+        "ece_safety": 0.6727,
+        "queue_rate": 0.0,
+        "refusal_rate": 0.0,
+        "unsafe_auto_confirm_rate": 0.7727,
+        "verdict_agreement": 0.2273,
+        "verdict_macro_f1": 0.0617
+      },
+      "A1": {
+        "ece_safety": 0.2304,
+        "queue_rate": 0.0,
+        "refusal_rate": 0.0,
+        "unsafe_auto_confirm_rate": 0.2955,
+        "verdict_agreement": 0.7045,
+        "verdict_macro_f1": 0.601
+      },
+      "A2": {
+        "ece_safety": 0.5918,
+        "queue_rate": 0.2955,
+        "refusal_rate": 0.0,
+        "unsafe_auto_confirm_rate": 0.4773,
+        "verdict_agreement": 0.4773,
+        "verdict_macro_f1": 0.2341
+      },
+      "A3": {
+        "ece_safety": 0.2955,
+        "queue_rate": 0.0,
+        "refusal_rate": 0.0,
+        "unsafe_auto_confirm_rate": 0.2955,
+        "verdict_agreement": 0.7045,
+        "verdict_macro_f1": 0.601
+      },
+      "A4": {
+        "ece_safety": 0.1482,
+        "queue_rate": 0.25,
+        "refusal_rate": 0.0455,
+        "unsafe_auto_confirm_rate": 0.0,
+        "verdict_agreement": 1.0,
+        "verdict_macro_f1": 1.0
+      }
+    },
+    "n": 44,
+    "split": "test"
+  },
+  "calibration": {
+    "calibration_split_n": 44,
+    "default_id": "v1-2026-09",
+    "finding": "no fitted point beat the shipped default on burden without weakening safety; v1-2026-09 remains frozen",
+    "frozen_on_test": {
+      "brier_safety": 0.0591,
+      "ece_safety": 0.1482,
+      "queue_rate": 0.25,
+      "refusal_rate": 0.0455,
+      "reliability": [
+        {
+          "accuracy": null,
+          "hi": 0.1,
+          "lo": 0.0,
+          "mean_confidence": null,
+          "n": 0
+        },
+        {
+          "accuracy": null,
+          "hi": 0.2,
+          "lo": 0.1,
+          "mean_confidence": null,
+          "n": 0
+        },
+        {
+          "accuracy": null,
+          "hi": 0.3,
+          "lo": 0.2,
+          "mean_confidence": null,
+          "n": 0
+        },
+        {
+          "accuracy": null,
+          "hi": 0.4,
+          "lo": 0.3,
+          "mean_confidence": null,
+          "n": 0
+        },
+        {
+          "accuracy": 1.0,
+          "hi": 0.5,
+          "lo": 0.4,
+          "mean_confidence": 0.47,
+          "n": 1
+        },
+        {
+          "accuracy": 1.0,
+          "hi": 0.6,
+          "lo": 0.5,
+          "mean_confidence": 0.5625,
+          "n": 12
+        },
+        {
+          "accuracy": null,
+          "hi": 0.7,
+          "lo": 0.6,
+          "mean_confidence": null,
+          "n": 0
+        },
+        {
+          "accuracy": null,
+          "hi": 0.8,
+          "lo": 0.7,
+          "mean_confidence": null,
+          "n": 0
+        },
+        {
+          "accuracy": null,
+          "hi": 0.9,
+          "lo": 0.8,
+          "mean_confidence": null,
+          "n": 0
+        },
+        {
+          "accuracy": 1.0,
+          "hi": 1.0,
+          "lo": 0.9,
+          "mean_confidence": 0.9761,
+          "n": 31
+        }
+      ],
+      "unsafe_auto_confirm_rate": 0.0,
+      "verdict_agreement": 1.0
+    },
+    "frozen_operating_point_id": "v1-2026-09",
+    "grid_points": 20,
+    "promoted_fitted_point": false,
+    "test_split_n": 44,
+    "within_review_target_15pct": []
+  },
+  "dataset_snapshot": "9b55abc2339e8265",
+  "engine_git_sha": "4074dc1",
+  "generated_at": "2026-09-11T16:32:01+00:00",
+  "hitl": {
+    "acceptance": {
+      "queue_automates_at_least_as_much_as_refusal": true,
+      "queue_beats_raw_accuracy": true,
+      "queue_beats_refusal_accuracy": true,
+      "queue_costs_less_review_time_than_refusal": true
+    },
+    "arms": {
+      "queue": {
+        "arm": "queue",
+        "coverage": 0.7045,
+        "mean_seconds_per_case": 5.91,
+        "n": 44,
+        "review_burden_per_100": 29.55,
+        "reviewed_fields": 13,
+        "task_accuracy": 1.0,
+        "total_review_minutes": 4.33
+      },
+      "raw": {
+        "arm": "raw",
+        "coverage": 1.0,
+        "mean_seconds_per_case": 0.0,
+        "n": 44,
+        "review_burden_per_100": 0.0,
+        "reviewed_fields": 0,
+        "task_accuracy": 0.7045,
+        "total_review_minutes": 0.0
+      },
+      "refusal": {
+        "arm": "refusal",
+        "coverage": 0.7045,
+        "mean_seconds_per_case": 26.59,
+        "n": 44,
+        "review_burden_per_100": 29.55,
+        "reviewed_fields": 13,
+        "task_accuracy": 1.0,
+        "total_review_minutes": 19.5
+      }
+    },
+    "reviewer": {
+      "kind": "simulated policy (not human subjects)",
+      "resolve_accuracy": 0.95,
+      "seconds_per_field": 20.0,
+      "seconds_per_refusal": 90.0
+    }
+  },
+  "honesty": "Software benchmark evidence from a synthetic-curated corpus, not clinical validation. Perception accuracy on real images is a separate, open experiment (live model required). The HITL arm uses a simulated reviewer policy, not a human subjects panel.",
+  "latency": {
+    "bench": [
+      {
+        "endpoint": "GET /healthz",
+        "p50_ms": 2.195,
+        "p95_ms": 2.493
+      },
+      {
+        "endpoint": "GET /metrics (O(1) GROUP BY)",
+        "p50_ms": 3.361,
+        "p95_ms": 4.484
+      },
+      {
+        "endpoint": "GET /formulary/search?q=par",
+        "p50_ms": 2.596,
+        "p95_ms": 3.049
+      },
+      {
+        "endpoint": "POST /prescriptions RX-001 (full pipeline)",
+        "p50_ms": 13.042,
+        "p95_ms": 17.061
+      },
+      {
+        "endpoint": "POST /prescriptions RX-002 (full pipeline)",
+        "p50_ms": 13.017,
+        "p95_ms": 16.202
+      },
+      {
+        "endpoint": "POST /prescriptions RX-004 (full pipeline)",
+        "p50_ms": 13.071,
+        "p95_ms": 16.513
+      },
+      {
+        "endpoint": "POST /prescriptions RX-008 (full pipeline)",
+        "p50_ms": 13.36,
+        "p95_ms": 16.575
+      },
+      {
+        "endpoint": "POST /prescriptions RX-009 (full pipeline)",
+        "p50_ms": 13.305,
+        "p95_ms": 16.848
+      },
+      {
+        "endpoint": "POST /prescriptions RX-012 (full pipeline)",
+        "p50_ms": 13.27,
+        "p95_ms": 16.813
+      }
+    ],
+    "plane_n": 300,
+    "plane_p50_ms": 0.073,
+    "plane_p95_ms": 0.107,
+    "within_budget": true
+  },
+  "missing_runs": [],
+  "parity": {
+    "both_engines_agree": true,
+    "corpus": "n=110 confirm_queue=15 contraindication=15 duplicate_atc=16 interaction=35 pass=20 refused=9",
+    "n": 110,
+    "python_ok": true,
+    "typescript_ok": true
+  },
+  "robustness": {
+    "all_invariants_hold": true,
+    "boundary_sensitivity": {
+      "delta": 0.01,
+      "flip_rate_on_bump": 0.0039,
+      "flips_on_bump": 1,
+      "flips_on_drop": 0,
+      "interpretation": "threshold-rule boundary sensitivity, not an injection breach: these are cases within `delta` of a band edge (motivates E-D calibration and an operating point chosen with margin)",
+      "n": 256,
+      "queued_on_bump": 0,
+      "unsafe_flips_on_bump": 1
+    },
+    "corruption": {
+      "L0_baseline": {
+        "level": "L0_baseline",
+        "n": 256,
+        "queue_rate": 0.25,
+        "refusal_rate": 0.0508,
+        "unsafe_auto_confirm_rate": 0.0,
+        "unsafe_auto_confirms": 0,
+        "verdict_changed_rate": 0.0
+      },
+      "L1_abbreviation": {
+        "level": "L1_abbreviation",
+        "n": 256,
+        "queue_rate": 0.25,
+        "refusal_rate": 0.0508,
+        "unsafe_auto_confirm_rate": 0.0,
+        "unsafe_auto_confirms": 0,
+        "verdict_changed_rate": 0.0
+      },
+      "L2_ocr_numeric": {
+        "level": "L2_ocr_numeric",
+        "n": 256,
+        "queue_rate": 0.25,
+        "refusal_rate": 0.0508,
+        "unsafe_auto_confirm_rate": 0.0,
+        "unsafe_auto_confirms": 0,
+        "verdict_changed_rate": 0.0
+      },
+      "L3_ocr_brand": {
+        "level": "L3_ocr_brand",
+        "n": 256,
+        "queue_rate": 0.9492,
+        "refusal_rate": 0.0508,
+        "unsafe_auto_confirm_rate": 0.0,
+        "unsafe_auto_confirms": 0,
+        "verdict_changed_rate": 0.6992
+      },
+      "L4_layout": {
+        "level": "L4_layout",
+        "n": 256,
+        "queue_rate": 0.25,
+        "refusal_rate": 0.0508,
+        "unsafe_auto_confirm_rate": 0.0,
+        "unsafe_auto_confirms": 0,
+        "verdict_changed_rate": 0.0
+      },
+      "L5_injection": {
+        "level": "L5_injection",
+        "n": 256,
+        "queue_rate": 0.25,
+        "refusal_rate": 0.0508,
+        "unsafe_auto_confirm_rate": 0.0,
+        "unsafe_auto_confirms": 0,
+        "verdict_changed_rate": 0.0
+      }
+    },
+    "held_in_n": 256,
+    "invented_brand_auto_confirm_rate": 0.0,
+    "replay_refusal_rate": 0.75
+  },
+  "runs": {
+    "E-A": "eval/runs/20260911T163139Z-E-A-baseline-ladder-2c1570",
+    "E-B": "eval/runs/20260911T163139Z-E-B-ablations-d2336c",
+    "E-C": "eval/runs/20260911T163139Z-E-C-robustness-5f36e1",
+    "E-D": "eval/runs/20260911T163140Z-E-D-calibration-operating-point-3e9460",
+    "E-E": "eval/runs/20260911T163140Z-E-E-cross-engine-parity-41fe0f",
+    "E-F": "eval/runs/20260911T163201Z-E-F-latency-availability-4d422a",
+    "E-G": "eval/runs/20260911T163201Z-E-G-human-in-the-loop-883fa2"
+  },
+  "schema_version": 1
+}

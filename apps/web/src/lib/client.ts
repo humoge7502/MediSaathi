@@ -21,6 +21,10 @@ export interface ConfirmItem {
   line: number;
   rawText: string;
   reason: string;
+  /** Gate-law provenance (MED-014): the band, fused score and reason. */
+  band?: "refused" | "confirm" | "auto";
+  fused?: number;
+  why?: string;
 }
 
 export interface ConfirmedMed {

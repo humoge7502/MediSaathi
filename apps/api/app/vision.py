@@ -45,6 +45,10 @@ LIVE_BASE_URL = os.environ.get(
     "MEDISAATHI_VISION_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai"
 ).rstrip("/")
 LIVE_TIMEOUT_S = float(os.environ.get("MEDISAATHI_VISION_TIMEOUT_S", "30"))
+# Retry policy (reliability audit): 1 retry by default (2 attempts total).
+# Backoff doubles per attempt, capped so worst-case added latency stays bounded.
+LIVE_MAX_ATTEMPTS = int(os.environ.get("MEDISAATHI_VISION_MAX_ATTEMPTS", "2"))
+LIVE_BACKOFF_CAP_S = float(os.environ.get("MEDISAATHI_VISION_BACKOFF_CAP_S", "2"))
 
 
 class RefusalCandidate(Exception):
@@ -243,7 +247,11 @@ def _live_call(image_bytes: bytes, *, model: str, base_url: str, api_key: str) -
     }
     headers = {"Authorization": f"Bearer {api_key}"}
     last_error: Exception | None = None
-    for _attempt in range(2):  # one retry on schema failure, per plan
+    for attempt in range(LIVE_MAX_ATTEMPTS):  # one retry on schema failure, per plan
+        if attempt:
+            # Exponential backoff with jitter cap: 0.5s, 1s, 2s... — bounded by
+            # the caller's timeout budget. Pure time.sleep: no extra dependency.
+            time.sleep(min(0.5 * 2 ** (attempt - 1), LIVE_BACKOFF_CAP_S))
         try:
             with httpx.Client(timeout=LIVE_TIMEOUT_S) as client:
                 resp = client.post(f"{base_url}/chat/completions",

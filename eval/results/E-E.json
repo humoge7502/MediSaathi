@@ -1,0 +1,17 @@
+{
+  "metrics": {
+    "both_engines_agree": true,
+    "corpus": "n=110 confirm_queue=15 contraindication=15 duplicate_atc=16 interaction=35 pass=20 refused=9",
+    "n": 110,
+    "python_side": {
+      "ok": true,
+      "summary": "Python parity: 110/110 agree (n=110 confirm_queue=15 contraindication=15 duplicate_atc=16 interaction=35 pass=20 refused=9)"
+    },
+    "typescript_side": {
+      "ok": true,
+      "output": "TS parity: 110/110 agree (n=110 confirm_queue=15 contraindication=15 duplicate_atc=16 interaction=35 pass=20 refused=9)\nPARITY PASSED",
+      "ran": true
+    }
+  },
+  "run": "eval/runs/20260911T163140Z-E-E-cross-engine-parity-41fe0f"
+}

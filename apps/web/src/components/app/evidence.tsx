@@ -19,6 +19,71 @@ interface EvidenceData {
   };
   dataset: { brands: number; interactions: number; contraindications: number; combinationRules: number; interactionSources: string[] };
   copilot: { knowledgeChunks: number; sources: string[] };
+  experiments: ExperimentEvidence;
+}
+
+/** Shape of the generated artifact `apps/web/src/data/evidence.json` (MED-013). */
+interface ExperimentEvidence {
+  schema_version: number;
+  generated_at: string;
+  dataset_snapshot: string;
+  engine_git_sha: string;
+  missing_runs: string[];
+  runs: Record<string, string | null>;
+  baseline_ladder: {
+    split: string | null;
+    n: number | null;
+    arms: Record<string, {
+      verdict_agreement: number | null;
+      verdict_macro_f1: number | null;
+      unsafe_auto_confirm_rate: number | null;
+      queue_rate: number | null;
+      refusal_rate: number | null;
+      ece_safety: number | null;
+    }>;
+  };
+  ablations: { n: number | null; deltas: Record<string, { delta_verdict_agreement: number; delta_unsafe_rate: number; delta_queue_rate: number }> };
+  robustness: {
+    held_in_n: number | null;
+    all_invariants_hold: boolean | null;
+    invented_brand_auto_confirm_rate: number | null;
+    replay_refusal_rate: number | null;
+    corruption: Record<string, { unsafe_auto_confirm_rate: number; queue_rate: number; verdict_changed_rate: number }>;
+    boundary_sensitivity: { delta?: number; flips_on_bump?: number; unsafe_flips_on_bump?: number; interpretation?: string };
+  };
+  calibration: {
+    default_id: string | null;
+    frozen_operating_point_id: string | null;
+    promoted_fitted_point: boolean | null;
+    finding: string | null;
+    calibration_split_n: number | null;
+    test_split_n: number | null;
+    grid_points: number;
+    within_review_target_15pct: unknown[];
+    frozen_on_test: {
+      verdict_agreement: number | null;
+      unsafe_auto_confirm_rate: number | null;
+      queue_rate: number | null;
+      refusal_rate: number | null;
+      ece_safety: number | null;
+      brier_safety: number | null;
+      reliability: { lo: number; hi: number; n: number; mean_confidence: number | null; accuracy: number | null }[];
+    };
+  };
+  parity: { n: number | null; corpus: string | null; python_ok: boolean | null; typescript_ok: boolean | null; both_engines_agree: boolean | null };
+  latency: {
+    plane_n: number | null;
+    plane_p50_ms: number | null;
+    plane_p95_ms: number | null;
+    within_budget: boolean | null;
+    bench: { endpoint: string; p50_ms: number; p95_ms: number }[];
+  };
+  hitl: {
+    reviewer: Record<string, unknown>;
+    arms: Record<string, { task_accuracy: number; coverage: number; reviewed_fields: number; mean_seconds_per_case: number }>;
+    acceptance: Record<string, boolean>;
+  };
+  honesty: string;
 }
 
 interface EvalOutcome {
@@ -176,8 +241,162 @@ export function EvidencePanel() {
           </div>
         )}
       </div>
+
+      {/* ---------- archived experiment evidence (MED-013) ---------- */}
+      {data.experiments && <ExperimentEvidencePanel x={data.experiments} />}
     </div>
   );
+}
+
+function ExperimentEvidencePanel({ x }: { x: ExperimentEvidence }) {
+  const arms = Object.entries(x.baseline_ladder.arms);
+  const abls = Object.entries(x.ablations.deltas);
+  const reliability = x.calibration.frozen_on_test.reliability ?? [];
+  const cal = x.calibration;
+
+  return (
+    <div className="vy-hairline-card p-5">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="vy-eyebrow">Archived experiment evidence (E-A..E-G)</p>
+          <p className="mt-1 max-w-3xl text-xs text-muted-foreground">
+            Compiled from the run archive by <span className="font-mono">tools/export_evidence.py</span>. These are the
+            stored numbers with their provenance — not recomputed at request time. Every row traces to a run
+            directory under <span className="font-mono">eval/runs/</span>.
+          </p>
+        </div>
+        <div className="text-right vy-numeral text-xs text-muted-foreground">
+          <div>snapshot {x.dataset_snapshot}</div>
+          <div>engine {x.engine_git_sha}</div>
+          <div>{x.generated_at}</div>
+        </div>
+      </div>
+
+      {x.missing_runs.length > 0 && (
+        <p className="mt-3 rounded-md border px-3 py-2 text-xs vy-sev-moderate">
+          Missing runs (reported as — rather than invented): {x.missing_runs.join(", ")}
+        </p>
+      )}
+
+      {/* headline operating point */}
+      <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <EvalKPI label="Frozen threshold set" value={cal.frozen_operating_point_id ?? "—"} />
+        <EvalKPI label="Unsafe auto-confirms (test split)" value={fmtPct(cal.frozen_on_test.unsafe_auto_confirm_rate)} />
+        <EvalKPI label="Review burden (queue rate)" value={fmtPct(cal.frozen_on_test.queue_rate)} />
+        <EvalKPI label="Calibration ECE (safety)" value={fmt(cal.frozen_on_test.ece_safety, 4)} />
+      </div>
+      <p className="mt-2 text-[11px] text-muted-foreground">
+        {cal.finding} · sweep over {cal.grid_points} grid points on the calibration split ({cal.calibration_split_n} cases), frozen point evaluated once on the held-out test split ({cal.test_split_n} cases).
+      </p>
+
+      {/* safety x burden ladder */}
+      <div className="vy-scroll mt-5 overflow-x-auto rounded-lg border">
+        <table className="w-full text-left text-xs">
+          <thead className="bg-secondary text-muted-foreground">
+            <tr>
+              <th className="px-3 py-2 font-medium">arm (E-A, n={x.baseline_ladder.n})</th>
+              <th className="px-3 py-2 font-medium">verdict agreement</th>
+              <th className="px-3 py-2 font-medium">macro F1</th>
+              <th className="px-3 py-2 font-medium">unsafe auto-confirm</th>
+              <th className="px-3 py-2 font-medium">queue rate</th>
+              <th className="px-3 py-2 font-medium">refusal rate</th>
+            </tr>
+          </thead>
+          <tbody className="vy-numeral">
+            {arms.map(([arm, a]) => (
+              <tr key={arm} className={`border-t ${arm === "A4" ? "font-semibold" : ""}`}>
+                <td className="px-3 py-2">{arm}{arm === "A4" ? " (shipped)" : ""}</td>
+                <td className="px-3 py-2">{fmt(a.verdict_agreement, 3)}</td>
+                <td className="px-3 py-2">{fmt(a.verdict_macro_f1, 3)}</td>
+                <td className={`px-3 py-2 ${a.unsafe_auto_confirm_rate ? "vy-sev-severe" : "vy-sev-pass"}`}>{fmt(a.unsafe_auto_confirm_rate, 3)}</td>
+                <td className="px-3 py-2">{fmt(a.queue_rate, 3)}</td>
+                <td className="px-3 py-2">{fmt(a.refusal_rate, 3)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* ablations + reliability */}
+      <div className="mt-5 grid gap-4 lg:grid-cols-2">
+        <div className="rounded-lg border p-4">
+          <p className="vy-eyebrow">Ablations (E-B) — necessity of each stage</p>
+          <table className="mt-3 w-full text-left text-xs">
+            <thead className="text-muted-foreground">
+              <tr><th className="py-1 font-medium">removed</th><th className="py-1 font-medium">Δ agreement</th><th className="py-1 font-medium">Δ unsafe</th></tr>
+            </thead>
+            <tbody className="vy-numeral">
+              {abls.map(([arm, d]) => (
+                <tr key={arm} className="border-t">
+                  <td className="py-1.5">{arm.replace("A4_minus_", "−")}</td>
+                  <td className={`py-1.5 ${d.delta_verdict_agreement < 0 ? "vy-sev-severe" : ""}`}>{d.delta_verdict_agreement >= 0 ? "+" : ""}{d.delta_verdict_agreement.toFixed(3)}</td>
+                  <td className={`py-1.5 ${d.delta_unsafe_rate > 0 ? "vy-sev-severe" : ""}`}>{d.delta_unsafe_rate >= 0 ? "+" : ""}{d.delta_unsafe_rate.toFixed(3)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="rounded-lg border p-4">
+          <p className="vy-eyebrow">Reliability (E-D) — does 0.9 mean 0.9?</p>
+          <p className="mt-1 text-[11px] text-muted-foreground">Reported confidence vs empirical safety on the automated set. ECE {fmt(cal.frozen_on_test.ece_safety, 4)} · Brier {fmt(cal.frozen_on_test.brier_safety, 4)}.</p>
+          <div className="mt-3 space-y-1">
+            {reliability.filter((b) => b.n > 0).map((b) => (
+              <div key={`${b.lo}`} className="flex items-center gap-2 text-[11px]">
+                <span className="vy-numeral w-16 text-muted-foreground">{b.lo.toFixed(1)}–{b.hi.toFixed(1)}</span>
+                <div className="relative h-3 flex-1 overflow-hidden rounded bg-secondary" title={`n=${b.n} confidence=${b.mean_confidence} accuracy=${b.accuracy}`}>
+                  <div className="absolute inset-y-0 left-0 rounded" style={{ width: `${(b.mean_confidence ?? 0) * 100}%`, background: "var(--vy-pine)" }} />
+                  <div className="absolute inset-y-0 w-0.5 rounded" style={{ left: `${(b.accuracy ?? 0) * 100}%`, background: "var(--vy-clay)" }} />
+                </div>
+                <span className="vy-numeral w-20 text-right text-muted-foreground">n={b.n}</span>
+              </div>
+            ))}
+          </div>
+          <p className="mt-2 text-[10px] text-muted-foreground">bar = mean confidence · tick = empirical accuracy</p>
+        </div>
+      </div>
+
+      {/* robustness, parity, latency */}
+      <div className="mt-5 grid gap-3 sm:grid-cols-3">
+        <EvidenceStat
+          label="Robustness (E-C)"
+          value={x.robustness.all_invariants_hold ? "invariants hold" : "see report"}
+          sub={`${x.robustness.held_in_n} cases × 6 corruption levels · invented brands auto-confirmed ${fmt(x.robustness.invented_brand_auto_confirm_rate, 3)}`}
+        />
+        <EvidenceStat
+          label={`Cross-engine parity (E-E)`}
+          value={x.parity.both_engines_agree ? `${x.parity.n}/${x.parity.n}` : "divergence"}
+          sub={x.parity.corpus ?? ""}
+        />
+        <EvidenceStat
+          label="Deterministic plane latency (E-F)"
+          value={`${fmt(x.latency.plane_p50_ms, 3)} ms p50`}
+          sub={`p95 ${fmt(x.latency.plane_p95_ms, 3)} ms over ${x.latency.plane_n} cases · offline delta 0`}
+        />
+      </div>
+
+      <p className="mt-4 rounded-md border bg-background/60 px-3 py-2 text-[11px] text-muted-foreground">
+        {x.honesty}
+      </p>
+    </div>
+  );
+}
+
+function EvidenceStat({ label, value, sub }: { label: string; value: string; sub: string }) {
+  return (
+    <div className="rounded-lg border p-4">
+      <p className="vy-eyebrow">{label}</p>
+      <p className="vy-numeral mt-1 text-xl font-semibold">{value}</p>
+      <p className="mt-1 text-[11px] text-muted-foreground vy-numeral">{sub}</p>
+    </div>
+  );
+}
+
+function fmt(v: number | null | undefined, digits = 3): string {
+  return v == null ? "—" : v.toFixed(digits);
+}
+function fmtPct(v: number | null | undefined): string {
+  return v == null ? "—" : `${(v * 100).toFixed(1)}%`;
 }
 
 function Provenance({ label, value, sub }: { label: string; value: string; sub: string }) {

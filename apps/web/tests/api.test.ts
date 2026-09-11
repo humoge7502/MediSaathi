@@ -59,6 +59,9 @@ const plansGET = (await import("@/app/api/plans/route")).GET;
 const dosesPOST = (await import("@/app/api/doses/action/route")).POST;
 const familyPOST = (await import("@/app/api/family/route")).POST;
 const metricsGET = (await import("@/app/api/metrics/route")).GET;
+const queueGET = (await import("@/app/api/queue/route")).GET;
+const queuePOST = (await import("@/app/api/queue/route")).POST;
+const queueHistoryGET = (await import("@/app/api/queue/history/route")).GET;
 
 const jsonReq = (url: string, body: unknown) =>
   new Request(url, {
@@ -197,12 +200,101 @@ describe("family circle", () => {
   });
 });
 
+describe("confirm queue state machine (MED-002)", () => {
+  let prescriptionId = "";
+  let fieldIndex = 0;
+
+  test("an invented brand verifies to confirm_queue and persists a pending row", async () => {
+    const res = await verifyPOST(
+      jsonReq("http://localhost/api/verify", {
+        // The sealed perception layer reports high confidence; the FORMULARY is
+        // what fails to resolve this brand, so it can never auto-confirm.
+        text: "Fakezol 500 mg OD 5 days",
+        contexts: [],
+      })
+    );
+    const b = await body(res);
+    expect(b.data!.verdict).toBe("confirm_queue");
+    expect(b.data!.prescriptionBand).toBe("confirm");
+    prescriptionId = b.data!.prescriptionId as string;
+    expect(typeof prescriptionId).toBe("string");
+
+    const state = await body(await queueGET(new Request(`http://localhost/api/queue?prescriptionId=${prescriptionId}`)));
+    const items = state.data!.items as { fieldIndex: number; state: string; why: string; band: string }[];
+    expect(state.data!.blocked).toBe(true);
+    expect(items.length).toBe(1);
+    expect(items[0].state).toBe("pending");
+    expect(items[0].why).toContain("not in formulary");
+    fieldIndex = items[0].fieldIndex;
+  });
+
+  test("a plan is blocked with 409 while the queue is non-empty", async () => {
+    const res = await plansPOST(jsonReq("http://localhost/api/plans", { prescriptionId }));
+    expect(res.status).toBe(409);
+    const b = await body(res);
+    expect(b.ok).toBe(false);
+    expect(b.error).toContain("human confirmation");
+  });
+
+  test("resolving with a corrected brand re-screens and unlocks the plan", async () => {
+    const resolved = await body(
+      await queuePOST(
+        jsonReq("http://localhost/api/queue", {
+          prescriptionId,
+          fieldIndex,
+          accepted: true,
+          brandText: "Pan 40",
+          actor: "pharmacist",
+          note: "corrected misread",
+        })
+      )
+    );
+    expect(resolved.data!.status).toBe("resolved");
+    const q = resolved.data!.queue as { blocked: boolean; confirmed: number };
+    expect(q.blocked).toBe(false);
+    expect(q.confirmed).toBe(1);
+
+    const plan = await body(await plansPOST(jsonReq("http://localhost/api/plans", { prescriptionId })));
+    expect(plan.ok).toBe(true);
+  });
+
+  test("replays are refused, not applied (first transition wins)", async () => {
+    const replay = await body(
+      await queuePOST(jsonReq("http://localhost/api/queue", { prescriptionId, fieldIndex, accepted: false }))
+    );
+    expect(replay.data!.status).toBe("already_resolved");
+    const item = replay.data!.item as { state: string };
+    expect(item.state).toBe("confirmed"); // the reject did NOT overwrite the confirm
+  });
+
+  test("queue history is append-only and complete", async () => {
+    const res = await queueHistoryGET(new Request(`http://localhost/api/queue/history?prescriptionId=${prescriptionId}`));
+    const b = await body(res);
+    const transitions = b.data!.transitions as { fromState: string; toState: string }[];
+    expect(transitions.map((t) => `${t.fromState}->${t.toState}`)).toEqual(["none->pending", "pending->confirmed"]);
+  });
+
+  test("an uncorrected invented brand cannot be confirmed (422)", async () => {
+    const v = await body(
+      await verifyPOST(jsonReq("http://localhost/api/verify", { text: "Nonsensex 20 mg OD 3 days", contexts: [] }))
+    );
+    const pid = v.data!.prescriptionId as string;
+    const state = await body(await queueGET(new Request(`http://localhost/api/queue?prescriptionId=${pid}`)));
+    const items = state.data!.items as { fieldIndex: number }[];
+    const res = await queuePOST(
+      jsonReq("http://localhost/api/queue", { prescriptionId: pid, fieldIndex: items[0].fieldIndex, accepted: true })
+    );
+    expect(res.status).toBe(422);
+  });
+});
+
 describe("metrics", () => {
   test("counters moved after the suite exercised the pipeline", async () => {
     const res = await metricsGET();
     const b = await body(res);
-    const d = b.data as { verifications: number; dataset: { brands: number } };
+    const d = b.data as { verifications: number; dataset: { brands: number }; confirmQueuePending: number };
     expect(d.verifications).toBeGreaterThan(3);
     expect(d.dataset.brands).toBeGreaterThan(50);
+    expect(typeof d.confirmQueuePending).toBe("number");
   });
 });

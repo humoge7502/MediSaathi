@@ -1,10 +1,13 @@
-"""Cross-engine parity gate (ADR-0012, audit finding TD-D).
+"""Cross-engine parity gate (ADR-0012, audit finding TD-D / MED-015).
 
-Runs the shared 25-case golden corpus through the Python safety plane and
-asserts every case lands on the expected verdict class. The TypeScript mirror
-(eval/parity/parity.ts via bun run parity) runs the identical corpus through
-the TS plane; CI requires BOTH to be 25/25, so the two engines cannot drift
-silently again (the corpus split 94/79/34 vs 84/47/27 is closed).
+Runs the shared 100+-case golden corpus (eval/parity/golden.json) through the
+Python safety plane and asserts every case lands on the expected verdict class.
+The TypeScript mirror (eval/parity/parity.ts via bun run parity) reads the
+IDENTICAL file and runs the TS plane; CI requires BOTH to be 100%, so the two
+engines cannot drift silently again (the corpus split 94/79/34 vs 84/47/27 is
+closed, and the 25 -> 110 expansion closed three further drifts: a wrong
+molecule mapping for Hydroquin 200, three missing formulary rows and three
+missing contraindication rows on the TS side).
 """
 from __future__ import annotations
 
@@ -20,14 +23,17 @@ from parity import corpus_summary, load_parity_cases, run_parity_python  # noqa:
 
 def test_corpus_exists_and_is_labeled() -> None:
     cases = load_parity_cases()
-    assert len(cases) == 25
+    # MED-015: the golden corpus must stay above the 100-case floor the plan
+    # set; a shrinking corpus is a silent weakening of the drift gate.
+    assert len(cases) >= 100, f"parity corpus shrank to {len(cases)} cases"
     ids = [c["id"] for c in cases]
-    assert len(set(ids)) == 25, "duplicate parity case ids"
+    assert len(set(ids)) == len(ids), "duplicate parity case ids"
     for c in cases:
         assert c["expect"] in {"pass", "interaction", "contraindication", "duplicate_atc", "confirm_queue", "refused"}
+        assert len(c["lines"]) == len(c["confidences"]), f"{c['id']}: lines/confidences mismatch"
 
 
-def test_parity_python_25_of_25() -> None:
+def test_parity_python_all_agree() -> None:
     rows = run_parity_python()
     failed = [r for r in rows if not r["ok"]]
     summary = corpus_summary()

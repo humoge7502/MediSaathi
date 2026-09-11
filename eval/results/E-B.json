@@ -1,0 +1,1606 @@
+{
+  "metrics": {
+    "a4": {
+      "arm": "A4",
+      "calibration": {
+        "bins": 10,
+        "brier": 0.0591,
+        "ece": 0.1482,
+        "n": 44,
+        "reliability": [
+          {
+            "accuracy": null,
+            "hi": 0.1,
+            "lo": 0.0,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": null,
+            "hi": 0.2,
+            "lo": 0.1,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": null,
+            "hi": 0.3,
+            "lo": 0.2,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": null,
+            "hi": 0.4,
+            "lo": 0.3,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": 1.0,
+            "hi": 0.5,
+            "lo": 0.4,
+            "mean_confidence": 0.47,
+            "n": 1
+          },
+          {
+            "accuracy": 1.0,
+            "hi": 0.6,
+            "lo": 0.5,
+            "mean_confidence": 0.5625,
+            "n": 12
+          },
+          {
+            "accuracy": null,
+            "hi": 0.7,
+            "lo": 0.6,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": null,
+            "hi": 0.8,
+            "lo": 0.7,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": null,
+            "hi": 0.9,
+            "lo": 0.8,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": 1.0,
+            "hi": 1.0,
+            "lo": 0.9,
+            "mean_confidence": 0.9761,
+            "n": 31
+          }
+        ]
+      },
+      "calibration_safety": {
+        "bins": 10,
+        "brier": 0.0591,
+        "ece": 0.1482,
+        "n": 44,
+        "reliability": [
+          {
+            "accuracy": null,
+            "hi": 0.1,
+            "lo": 0.0,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": null,
+            "hi": 0.2,
+            "lo": 0.1,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": null,
+            "hi": 0.3,
+            "lo": 0.2,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": null,
+            "hi": 0.4,
+            "lo": 0.3,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": 1.0,
+            "hi": 0.5,
+            "lo": 0.4,
+            "mean_confidence": 0.47,
+            "n": 1
+          },
+          {
+            "accuracy": 1.0,
+            "hi": 0.6,
+            "lo": 0.5,
+            "mean_confidence": 0.5625,
+            "n": 12
+          },
+          {
+            "accuracy": null,
+            "hi": 0.7,
+            "lo": 0.6,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": null,
+            "hi": 0.8,
+            "lo": 0.7,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": null,
+            "hi": 0.9,
+            "lo": 0.8,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": 1.0,
+            "hi": 1.0,
+            "lo": 0.9,
+            "mean_confidence": 0.9761,
+            "n": 31
+          }
+        ]
+      },
+      "calibration_selective": {
+        "bins": 10,
+        "brier": 0.0006,
+        "ece": 0.0239,
+        "n": 31,
+        "reliability": [
+          {
+            "accuracy": null,
+            "hi": 0.1,
+            "lo": 0.0,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": null,
+            "hi": 0.2,
+            "lo": 0.1,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": null,
+            "hi": 0.3,
+            "lo": 0.2,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": null,
+            "hi": 0.4,
+            "lo": 0.3,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": null,
+            "hi": 0.5,
+            "lo": 0.4,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": null,
+            "hi": 0.6,
+            "lo": 0.5,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": null,
+            "hi": 0.7,
+            "lo": 0.6,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": null,
+            "hi": 0.8,
+            "lo": 0.7,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": null,
+            "hi": 0.9,
+            "lo": 0.8,
+            "mean_confidence": null,
+            "n": 0
+          },
+          {
+            "accuracy": 1.0,
+            "hi": 1.0,
+            "lo": 0.9,
+            "mean_confidence": 0.9761,
+            "n": 31
+          }
+        ]
+      },
+      "finding_recall": 0.5667,
+      "latency_ms_p50": 0.076,
+      "latency_ms_p95": 0.112,
+      "missed_serious": 0,
+      "missed_serious_rate": 0.0,
+      "n": 44,
+      "queue_rate": 0.25,
+      "refusal_precision": 1.0,
+      "refusal_rate": 0.0455,
+      "refusal_recall": 1.0,
+      "selective_coverage": 0.7045,
+      "selective_risk": 0.0,
+      "threshold_set_id": "v1-2026-09",
+      "unsafe_auto_confirm_rate": 0.0,
+      "unsafe_auto_confirms": 0,
+      "unsafe_ci": [
+        0.0,
+        0.0803
+      ],
+      "verdict_agreement": 1.0,
+      "verdict_macro_f1": 1.0
+    },
+    "ablations": {
+      "A4_minus_combination": {
+        "arm": "A4_minus_combination",
+        "calibration": {
+          "bins": 10,
+          "brier": 0.1018,
+          "ece": 0.16,
+          "n": 44,
+          "reliability": [
+            {
+              "accuracy": null,
+              "hi": 0.1,
+              "lo": 0.0,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.2,
+              "lo": 0.1,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.3,
+              "lo": 0.2,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.4,
+              "lo": 0.3,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 1.0,
+              "hi": 0.5,
+              "lo": 0.4,
+              "mean_confidence": 0.47,
+              "n": 1
+            },
+            {
+              "accuracy": 1.0,
+              "hi": 0.6,
+              "lo": 0.5,
+              "mean_confidence": 0.5625,
+              "n": 12
+            },
+            {
+              "accuracy": null,
+              "hi": 0.7,
+              "lo": 0.6,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.8,
+              "lo": 0.7,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.9,
+              "lo": 0.8,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 0.9355,
+              "hi": 1.0,
+              "lo": 0.9,
+              "mean_confidence": 0.9761,
+              "n": 31
+            }
+          ]
+        },
+        "calibration_safety": {
+          "bins": 10,
+          "brier": 0.1018,
+          "ece": 0.16,
+          "n": 44,
+          "reliability": [
+            {
+              "accuracy": null,
+              "hi": 0.1,
+              "lo": 0.0,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.2,
+              "lo": 0.1,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.3,
+              "lo": 0.2,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.4,
+              "lo": 0.3,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 1.0,
+              "hi": 0.5,
+              "lo": 0.4,
+              "mean_confidence": 0.47,
+              "n": 1
+            },
+            {
+              "accuracy": 1.0,
+              "hi": 0.6,
+              "lo": 0.5,
+              "mean_confidence": 0.5625,
+              "n": 12
+            },
+            {
+              "accuracy": null,
+              "hi": 0.7,
+              "lo": 0.6,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.8,
+              "lo": 0.7,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.9,
+              "lo": 0.8,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 0.9355,
+              "hi": 1.0,
+              "lo": 0.9,
+              "mean_confidence": 0.9761,
+              "n": 31
+            }
+          ]
+        },
+        "calibration_selective": {
+          "bins": 10,
+          "brier": 0.0613,
+          "ece": 0.0406,
+          "n": 31,
+          "reliability": [
+            {
+              "accuracy": null,
+              "hi": 0.1,
+              "lo": 0.0,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.2,
+              "lo": 0.1,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.3,
+              "lo": 0.2,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.4,
+              "lo": 0.3,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.5,
+              "lo": 0.4,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.6,
+              "lo": 0.5,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.7,
+              "lo": 0.6,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.8,
+              "lo": 0.7,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.9,
+              "lo": 0.8,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 0.9355,
+              "hi": 1.0,
+              "lo": 0.9,
+              "mean_confidence": 0.9761,
+              "n": 31
+            }
+          ]
+        },
+        "finding_recall": 0.5667,
+        "latency_ms_p50": 0.07,
+        "latency_ms_p95": 0.098,
+        "missed_serious": 2,
+        "missed_serious_rate": 0.0455,
+        "n": 44,
+        "queue_rate": 0.25,
+        "refusal_precision": 1.0,
+        "refusal_rate": 0.0455,
+        "refusal_recall": 1.0,
+        "selective_coverage": 0.7045,
+        "selective_risk": 0.0645,
+        "threshold_set_id": "v1-2026-09",
+        "unsafe_auto_confirm_rate": 0.0455,
+        "unsafe_auto_confirms": 2,
+        "unsafe_ci": [
+          0.0126,
+          0.1514
+        ],
+        "verdict_agreement": 0.9545,
+        "verdict_macro_f1": 0.972
+      },
+      "A4_minus_formulary_fusion": {
+        "arm": "A4_minus_formulary_fusion",
+        "calibration": {
+          "bins": 10,
+          "brier": 0.2327,
+          "ece": 0.2291,
+          "n": 44,
+          "reliability": [
+            {
+              "accuracy": null,
+              "hi": 0.1,
+              "lo": 0.0,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.2,
+              "lo": 0.1,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.3,
+              "lo": 0.2,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.4,
+              "lo": 0.3,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 1.0,
+              "hi": 0.5,
+              "lo": 0.4,
+              "mean_confidence": 0.45,
+              "n": 1
+            },
+            {
+              "accuracy": 1.0,
+              "hi": 0.6,
+              "lo": 0.5,
+              "mean_confidence": 0.58,
+              "n": 1
+            },
+            {
+              "accuracy": null,
+              "hi": 0.7,
+              "lo": 0.6,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.8,
+              "lo": 0.7,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.9,
+              "lo": 0.8,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 0.7381,
+              "hi": 1.0,
+              "lo": 0.9,
+              "mean_confidence": 0.955,
+              "n": 42
+            }
+          ]
+        },
+        "calibration_safety": {
+          "bins": 10,
+          "brier": 0.2327,
+          "ece": 0.2291,
+          "n": 44,
+          "reliability": [
+            {
+              "accuracy": null,
+              "hi": 0.1,
+              "lo": 0.0,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.2,
+              "lo": 0.1,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.3,
+              "lo": 0.2,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.4,
+              "lo": 0.3,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 1.0,
+              "hi": 0.5,
+              "lo": 0.4,
+              "mean_confidence": 0.45,
+              "n": 1
+            },
+            {
+              "accuracy": 1.0,
+              "hi": 0.6,
+              "lo": 0.5,
+              "mean_confidence": 0.58,
+              "n": 1
+            },
+            {
+              "accuracy": null,
+              "hi": 0.7,
+              "lo": 0.6,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.8,
+              "lo": 0.7,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.9,
+              "lo": 0.8,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 0.7381,
+              "hi": 1.0,
+              "lo": 0.9,
+              "mean_confidence": 0.955,
+              "n": 42
+            }
+          ]
+        },
+        "calibration_selective": {
+          "bins": 10,
+          "brier": 0.2324,
+          "ece": 0.2169,
+          "n": 42,
+          "reliability": [
+            {
+              "accuracy": null,
+              "hi": 0.1,
+              "lo": 0.0,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.2,
+              "lo": 0.1,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.3,
+              "lo": 0.2,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.4,
+              "lo": 0.3,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.5,
+              "lo": 0.4,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.6,
+              "lo": 0.5,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.7,
+              "lo": 0.6,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.8,
+              "lo": 0.7,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.9,
+              "lo": 0.8,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 0.7381,
+              "hi": 1.0,
+              "lo": 0.9,
+              "mean_confidence": 0.955,
+              "n": 42
+            }
+          ]
+        },
+        "finding_recall": 0.5667,
+        "latency_ms_p50": 0.077,
+        "latency_ms_p95": 0.108,
+        "missed_serious": 0,
+        "missed_serious_rate": 0.0,
+        "n": 44,
+        "queue_rate": 0.0,
+        "refusal_precision": 1.0,
+        "refusal_rate": 0.0455,
+        "refusal_recall": 1.0,
+        "selective_coverage": 0.9545,
+        "selective_risk": 0.2619,
+        "threshold_set_id": "v1-2026-09",
+        "unsafe_auto_confirm_rate": 0.25,
+        "unsafe_auto_confirms": 11,
+        "unsafe_ci": [
+          0.1457,
+          0.3944
+        ],
+        "verdict_agreement": 0.75,
+        "verdict_macro_f1": 0.7742
+      },
+      "A4_minus_gate": {
+        "arm": "A4_minus_gate",
+        "calibration": {
+          "bins": 10,
+          "brier": 0.2955,
+          "ece": 0.2955,
+          "n": 44,
+          "reliability": [
+            {
+              "accuracy": null,
+              "hi": 0.1,
+              "lo": 0.0,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.2,
+              "lo": 0.1,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.3,
+              "lo": 0.2,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.4,
+              "lo": 0.3,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.5,
+              "lo": 0.4,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.6,
+              "lo": 0.5,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.7,
+              "lo": 0.6,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.8,
+              "lo": 0.7,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.9,
+              "lo": 0.8,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 0.7045,
+              "hi": 1.0,
+              "lo": 0.9,
+              "mean_confidence": 1.0,
+              "n": 44
+            }
+          ]
+        },
+        "calibration_safety": {
+          "bins": 10,
+          "brier": 0.2955,
+          "ece": 0.2955,
+          "n": 44,
+          "reliability": [
+            {
+              "accuracy": null,
+              "hi": 0.1,
+              "lo": 0.0,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.2,
+              "lo": 0.1,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.3,
+              "lo": 0.2,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.4,
+              "lo": 0.3,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.5,
+              "lo": 0.4,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.6,
+              "lo": 0.5,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.7,
+              "lo": 0.6,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.8,
+              "lo": 0.7,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.9,
+              "lo": 0.8,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 0.7045,
+              "hi": 1.0,
+              "lo": 0.9,
+              "mean_confidence": 1.0,
+              "n": 44
+            }
+          ]
+        },
+        "calibration_selective": {
+          "bins": 10,
+          "brier": 0.2955,
+          "ece": 0.2955,
+          "n": 44,
+          "reliability": [
+            {
+              "accuracy": null,
+              "hi": 0.1,
+              "lo": 0.0,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.2,
+              "lo": 0.1,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.3,
+              "lo": 0.2,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.4,
+              "lo": 0.3,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.5,
+              "lo": 0.4,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.6,
+              "lo": 0.5,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.7,
+              "lo": 0.6,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.8,
+              "lo": 0.7,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.9,
+              "lo": 0.8,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 0.7045,
+              "hi": 1.0,
+              "lo": 0.9,
+              "mean_confidence": 1.0,
+              "n": 44
+            }
+          ]
+        },
+        "finding_recall": 0.5667,
+        "latency_ms_p50": 0.074,
+        "latency_ms_p95": 0.1,
+        "missed_serious": 0,
+        "missed_serious_rate": 0.0,
+        "n": 44,
+        "queue_rate": 0.0,
+        "refusal_precision": 0.0,
+        "refusal_rate": 0.0,
+        "refusal_recall": 0.0,
+        "selective_coverage": 1.0,
+        "selective_risk": 0.2955,
+        "threshold_set_id": "v1-2026-09",
+        "unsafe_auto_confirm_rate": 0.2955,
+        "unsafe_auto_confirms": 13,
+        "unsafe_ci": [
+          0.1816,
+          0.4422
+        ],
+        "verdict_agreement": 0.7045,
+        "verdict_macro_f1": 0.601
+      },
+      "A4_minus_queue_blocking": {
+        "arm": "A4_minus_queue_blocking",
+        "calibration": {
+          "bins": 10,
+          "brier": 0.2327,
+          "ece": 0.2291,
+          "n": 44,
+          "reliability": [
+            {
+              "accuracy": null,
+              "hi": 0.1,
+              "lo": 0.0,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.2,
+              "lo": 0.1,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.3,
+              "lo": 0.2,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.4,
+              "lo": 0.3,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 1.0,
+              "hi": 0.5,
+              "lo": 0.4,
+              "mean_confidence": 0.45,
+              "n": 1
+            },
+            {
+              "accuracy": 1.0,
+              "hi": 0.6,
+              "lo": 0.5,
+              "mean_confidence": 0.58,
+              "n": 1
+            },
+            {
+              "accuracy": null,
+              "hi": 0.7,
+              "lo": 0.6,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.8,
+              "lo": 0.7,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.9,
+              "lo": 0.8,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 0.7381,
+              "hi": 1.0,
+              "lo": 0.9,
+              "mean_confidence": 0.955,
+              "n": 42
+            }
+          ]
+        },
+        "calibration_safety": {
+          "bins": 10,
+          "brier": 0.2327,
+          "ece": 0.2291,
+          "n": 44,
+          "reliability": [
+            {
+              "accuracy": null,
+              "hi": 0.1,
+              "lo": 0.0,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.2,
+              "lo": 0.1,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.3,
+              "lo": 0.2,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.4,
+              "lo": 0.3,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 1.0,
+              "hi": 0.5,
+              "lo": 0.4,
+              "mean_confidence": 0.45,
+              "n": 1
+            },
+            {
+              "accuracy": 1.0,
+              "hi": 0.6,
+              "lo": 0.5,
+              "mean_confidence": 0.58,
+              "n": 1
+            },
+            {
+              "accuracy": null,
+              "hi": 0.7,
+              "lo": 0.6,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.8,
+              "lo": 0.7,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.9,
+              "lo": 0.8,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 0.7381,
+              "hi": 1.0,
+              "lo": 0.9,
+              "mean_confidence": 0.955,
+              "n": 42
+            }
+          ]
+        },
+        "calibration_selective": {
+          "bins": 10,
+          "brier": 0.2324,
+          "ece": 0.2169,
+          "n": 42,
+          "reliability": [
+            {
+              "accuracy": null,
+              "hi": 0.1,
+              "lo": 0.0,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.2,
+              "lo": 0.1,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.3,
+              "lo": 0.2,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.4,
+              "lo": 0.3,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.5,
+              "lo": 0.4,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.6,
+              "lo": 0.5,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.7,
+              "lo": 0.6,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.8,
+              "lo": 0.7,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.9,
+              "lo": 0.8,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 0.7381,
+              "hi": 1.0,
+              "lo": 0.9,
+              "mean_confidence": 0.955,
+              "n": 42
+            }
+          ]
+        },
+        "finding_recall": 0.5667,
+        "latency_ms_p50": 0.074,
+        "latency_ms_p95": 0.106,
+        "missed_serious": 0,
+        "missed_serious_rate": 0.0,
+        "n": 44,
+        "queue_rate": 0.0,
+        "refusal_precision": 1.0,
+        "refusal_rate": 0.0455,
+        "refusal_recall": 1.0,
+        "selective_coverage": 0.9545,
+        "selective_risk": 0.2619,
+        "threshold_set_id": "v1-2026-09",
+        "unsafe_auto_confirm_rate": 0.25,
+        "unsafe_auto_confirms": 11,
+        "unsafe_ci": [
+          0.1457,
+          0.3944
+        ],
+        "verdict_agreement": 0.75,
+        "verdict_macro_f1": 0.7742
+      },
+      "A4_minus_refusal_band": {
+        "arm": "A4_minus_refusal_band",
+        "calibration": {
+          "bins": 10,
+          "brier": 0.06,
+          "ece": 0.1241,
+          "n": 44,
+          "reliability": [
+            {
+              "accuracy": null,
+              "hi": 0.1,
+              "lo": 0.0,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.2,
+              "lo": 0.1,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.3,
+              "lo": 0.2,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.4,
+              "lo": 0.3,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 0.0,
+              "hi": 0.5,
+              "lo": 0.4,
+              "mean_confidence": 0.47,
+              "n": 1
+            },
+            {
+              "accuracy": 0.9167,
+              "hi": 0.6,
+              "lo": 0.5,
+              "mean_confidence": 0.5625,
+              "n": 12
+            },
+            {
+              "accuracy": null,
+              "hi": 0.7,
+              "lo": 0.6,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.8,
+              "lo": 0.7,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.9,
+              "lo": 0.8,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 1.0,
+              "hi": 1.0,
+              "lo": 0.9,
+              "mean_confidence": 0.9761,
+              "n": 31
+            }
+          ]
+        },
+        "calibration_safety": {
+          "bins": 10,
+          "brier": 0.0591,
+          "ece": 0.1482,
+          "n": 44,
+          "reliability": [
+            {
+              "accuracy": null,
+              "hi": 0.1,
+              "lo": 0.0,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.2,
+              "lo": 0.1,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.3,
+              "lo": 0.2,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.4,
+              "lo": 0.3,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 1.0,
+              "hi": 0.5,
+              "lo": 0.4,
+              "mean_confidence": 0.47,
+              "n": 1
+            },
+            {
+              "accuracy": 1.0,
+              "hi": 0.6,
+              "lo": 0.5,
+              "mean_confidence": 0.5625,
+              "n": 12
+            },
+            {
+              "accuracy": null,
+              "hi": 0.7,
+              "lo": 0.6,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.8,
+              "lo": 0.7,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.9,
+              "lo": 0.8,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 1.0,
+              "hi": 1.0,
+              "lo": 0.9,
+              "mean_confidence": 0.9761,
+              "n": 31
+            }
+          ]
+        },
+        "calibration_selective": {
+          "bins": 10,
+          "brier": 0.0006,
+          "ece": 0.0239,
+          "n": 31,
+          "reliability": [
+            {
+              "accuracy": null,
+              "hi": 0.1,
+              "lo": 0.0,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.2,
+              "lo": 0.1,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.3,
+              "lo": 0.2,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.4,
+              "lo": 0.3,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.5,
+              "lo": 0.4,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.6,
+              "lo": 0.5,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.7,
+              "lo": 0.6,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.8,
+              "lo": 0.7,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": null,
+              "hi": 0.9,
+              "lo": 0.8,
+              "mean_confidence": null,
+              "n": 0
+            },
+            {
+              "accuracy": 1.0,
+              "hi": 1.0,
+              "lo": 0.9,
+              "mean_confidence": 0.9761,
+              "n": 31
+            }
+          ]
+        },
+        "finding_recall": 0.5667,
+        "latency_ms_p50": 0.072,
+        "latency_ms_p95": 0.105,
+        "missed_serious": 0,
+        "missed_serious_rate": 0.0,
+        "n": 44,
+        "queue_rate": 0.2955,
+        "refusal_precision": 0.0,
+        "refusal_rate": 0.0,
+        "refusal_recall": 0.0,
+        "selective_coverage": 0.7045,
+        "selective_risk": 0.0,
+        "threshold_set_id": "v1-2026-09",
+        "unsafe_auto_confirm_rate": 0.0,
+        "unsafe_auto_confirms": 0,
+        "unsafe_ci": [
+          0.0,
+          0.0803
+        ],
+        "verdict_agreement": 0.9545,
+        "verdict_macro_f1": 0.8194
+      }
+    },
+    "components_whose_removal_degrades_safety_or_agreement": [
+      "A4_minus_combination",
+      "A4_minus_formulary_fusion",
+      "A4_minus_gate",
+      "A4_minus_queue_blocking",
+      "A4_minus_refusal_band"
+    ],
+    "deltas": {
+      "A4_minus_combination": {
+        "delta_queue_rate": 0.0,
+        "delta_unsafe_rate": 0.0455,
+        "delta_verdict_agreement": -0.0455,
+        "queue_rate": 0.25,
+        "unsafe_auto_confirm_rate": 0.0455,
+        "verdict_agreement": 0.9545
+      },
+      "A4_minus_formulary_fusion": {
+        "delta_queue_rate": -0.25,
+        "delta_unsafe_rate": 0.25,
+        "delta_verdict_agreement": -0.25,
+        "queue_rate": 0.0,
+        "unsafe_auto_confirm_rate": 0.25,
+        "verdict_agreement": 0.75
+      },
+      "A4_minus_gate": {
+        "delta_queue_rate": -0.25,
+        "delta_unsafe_rate": 0.2955,
+        "delta_verdict_agreement": -0.2955,
+        "queue_rate": 0.0,
+        "unsafe_auto_confirm_rate": 0.2955,
+        "verdict_agreement": 0.7045
+      },
+      "A4_minus_queue_blocking": {
+        "delta_queue_rate": -0.25,
+        "delta_unsafe_rate": 0.25,
+        "delta_verdict_agreement": -0.25,
+        "queue_rate": 0.0,
+        "unsafe_auto_confirm_rate": 0.25,
+        "verdict_agreement": 0.75
+      },
+      "A4_minus_refusal_band": {
+        "delta_queue_rate": 0.0455,
+        "delta_unsafe_rate": 0.0,
+        "delta_verdict_agreement": -0.0455,
+        "queue_rate": 0.2955,
+        "unsafe_auto_confirm_rate": 0.0,
+        "verdict_agreement": 0.9545
+      }
+    },
+    "n": 44,
+    "split": "test"
+  },
+  "run": "eval/runs/20260911T163139Z-E-B-ablations-d2336c"
+}

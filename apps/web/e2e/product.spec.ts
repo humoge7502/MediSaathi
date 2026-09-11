@@ -3,11 +3,12 @@
  *
  * Covers (in order):
  *   1. Landing story + live metrics
- *   2. Workspace launch + all six sections
+ *   2. Workspace launch + all seven sections
  *   3. Verify: severe interaction with source, triple whammy, confirm queue
- *   4. Copilot: emergency triage + scope refusal fire deterministically
- *   5. Evidence: 18-case engine self-test at 100%
- *   6. Today: demo plan renders + first-action-wins dose guardrail
+ *   4. Review console: gate law -> persisted queue -> human resolution
+ *   5. Copilot: emergency triage + scope refusal fire deterministically
+ *   6. Evidence: 18-case engine self-test at 100% + archived experiment evidence
+ *   7. Today: demo plan renders + first-action-wins dose guardrail
  *
  * Deterministic tier only: every assertion here runs with zero model calls.
  * `beforeAll` force-seeds the demo data so the suite is repeatable.
@@ -43,9 +44,9 @@ test("landing page tells the story and loads live metrics", async ({ page }) => 
   await expect(page.getByText(/interaction rules/).first()).toBeVisible();
 });
 
-test("workspace opens with all six sections", async ({ page }) => {
+test("workspace opens with all seven sections", async ({ page }) => {
   await openWorkspace(page);
-  for (const tab of ["Verify", "Today", "Insights", "Copilot", "Family", "Evidence"]) {
+  for (const tab of ["Verify", "Review", "Today", "Insights", "Copilot", "Family", "Evidence"]) {
     await expect(page.getByRole("button", { name: tab, exact: true })).toBeVisible();
   }
 });
@@ -86,6 +87,34 @@ test("verify: prompt-injection text is inert (queued, no fabricated verdict)", a
   await expect(page.locator("li").filter({ hasText: "ignore previous instructions" })).toBeVisible();
 });
 
+test("review console: an uncertain read queues, blocks the plan, and a human resolves it", async ({ page }) => {
+  await openWorkspace(page);
+  // An invented brand: the formulary cannot resolve it, so the fused score can
+  // never reach the auto band. The gate routes it to the human queue.
+  await page.locator("#rx-text").fill("Fakezol 500 mg OD 5 days");
+  await page.getByRole("button", { name: "Run verification" }).click();
+  await expect(page.getByText("Confirmation needed")).toBeVisible();
+  // the reason text differs by tier (formulary miss vs low reading confidence),
+  // so assert the gate's designed outcome instead of a specific wording
+  await expect(page.getByText(/plan blocked/i)).toBeVisible();
+  await expect(page.getByText(/Fakezol 500/).first()).toBeVisible();
+
+  await page.getByRole("button", { name: "Review", exact: true }).click();
+  await expect(page.getByText("Pharmacist review console")).toBeVisible();
+  const row = page.locator(".vy-hairline-card").filter({ hasText: "Fakezol 500" }).first();
+  await expect(row).toBeVisible();
+
+  // The audit trail shows the persisted block: pending > 0 means no plan.
+  await row.getByRole("button", { name: "Audit trail" }).click();
+  await expect(page.getByText(/plan BLOCKED/i).first()).toBeVisible();
+
+  // Resolve with a corrected brand that IS in the formulary: the field leaves
+  // the queue and the prescription is re-screened against the same context.
+  await row.getByLabel(/Corrected brand/i).fill("Pan 40");
+  await row.getByRole("button", { name: "Confirm read" }).click();
+  await expect(page.getByText(/Field confirmed/i)).toBeVisible();
+});
+
 test("copilot: emergency triage redirects before any generation", async ({ page }) => {
   await openWorkspace(page);
   await page.getByRole("button", { name: "Copilot", exact: true }).click();
@@ -118,6 +147,17 @@ test("evidence: 18-case engine self-test passes at 100% with provenance", async 
   await expect(page.getByText("100%")).toBeVisible();
   await expect(page.getByText(/18 cases/i)).toBeVisible();
   await expect(page.getByText(/DDInter|CredibleMeds|Stockley/i).first()).toBeVisible();
+});
+
+test("evidence: archived experiment evidence renders the operating point and ladder", async ({ page }) => {
+  await openWorkspace(page);
+  await page.getByRole("button", { name: "Evidence", exact: true }).click();
+  await expect(page.getByText(/Archived experiment evidence/i)).toBeVisible();
+  // the frozen threshold set and the shipped arm are the substance of the panel
+  await expect(page.getByText("Frozen threshold set")).toBeVisible();
+  await expect(page.getByText("v1-2026-09").first()).toBeVisible();
+  await expect(page.getByText(/A4 \(shipped\)/)).toBeVisible();
+  await expect(page.getByText(/Reliability \(E-D\)/)).toBeVisible();
 });
 
 test("today: demo plan renders with scheduled doses", async ({ page }) => {

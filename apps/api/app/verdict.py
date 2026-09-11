@@ -32,14 +32,42 @@ _SEV_ORDER = {Severity.none: 0, Severity.mild: 1, Severity.moderate: 2, Severity
 
 
 def assemble(engine: SafetyEngine, extraction: ExtractionResult,
-             report: SafetyReport, confirm_items: list[ConfirmItem]) -> Verdict:
+             report: SafetyReport, confirm_items: list[ConfirmItem],
+             *, enable_refusal: bool = True, enable_queue: bool = True,
+             queue_unmatched: bool = True) -> Verdict:
+    """Assemble the verdict under the gate law (first match wins).
+
+    The keyword switches exist ONLY for the ablation harness (E-B in
+    `ml/ladder.py`): the product path never passes them. Each one removes one
+    component of the claimed mechanism so its necessity can be measured:
+
+      ``enable_refusal``    False -> the refusal band is removed
+      ``enable_queue``      False -> the queue becomes advisory, not blocking
+      ``queue_unmatched``   False -> the fusion's formulary term is removed
+                                     (an invented brand no longer queues)
+    """
     prov = engine.provenance()
     prov.append(ProvenanceEntry(
         kind="extraction", name="field extraction",
         source=f"{extraction.engine}; per-field confidence recorded",
         snapshot="live"))
+    # Gate provenance (MED-003): record the threshold set and fused score that
+    # produced this verdict. A verdict is only reproducible with its parameters.
+    if report.gate is not None:
+        g = report.gate
+        bands = {d.band for d in g.decisions}
+        prov.append(ProvenanceEntry(
+            kind="gate_law", name="confidence gate + fusion",
+            source=(
+                f"threshold set {g.threshold_set_id} "
+                f"(refuse<{g.refuse_below:g}, confirm<{g.confirm_below:g}, "
+                f"banding={g.banding}); "
+                f"fused={g.prescription_fused:.2f}; bands={sorted(bands) or ['none']}"
+            ),
+            snapshot=g.threshold_set_id))
 
-    if extraction.fields and all(f.confidence < REFUSE_BELOW for f in extraction.fields):
+    if enable_refusal and extraction.fields and all(
+            f.confidence < REFUSE_BELOW for f in extraction.fields):
         return Verdict(
             kind=VerdictKind.refused,
             headline="Refused: image could not be verified",
@@ -49,13 +77,13 @@ def assemble(engine: SafetyEngine, extraction: ExtractionResult,
             refusal_reason="all_fields_below_refusal_threshold",
             provenance=prov)
 
-    if any(f.confidence < REFUSE_BELOW for f in extraction.fields):
+    if enable_refusal and any(f.confidence < REFUSE_BELOW for f in extraction.fields):
         return _queue(confirm_items, prov, "fields below refusal threshold")
 
-    if not report.medications:
+    if queue_unmatched and not report.medications:
         return _queue(confirm_items, prov, "no medicine matched the formulary map")
 
-    if confirm_items:
+    if enable_queue and confirm_items:
         return _queue(confirm_items, prov, "low-confidence fields await confirmation")
 
     if report.contraindications:

@@ -2,6 +2,8 @@ import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
 import { ok, fail, bumpMetric, audit } from "@/lib/api-helpers";
 import { runSafetyPlane, overallConfidence } from "@/lib/safety/engine";
+import { DEFAULT_THRESHOLD_SET_ID } from "@/lib/safety/gate";
+import { syncQueue } from "@/lib/queue";
 import { extractPrescriptionLines } from "@/lib/ai/extraction";
 
 export const runtime = "nodejs";
@@ -78,6 +80,7 @@ export async function POST(req: NextRequest) {
     rawLines: extraction.lines.map((l) => l.raw),
     contexts,
     lineConfidence: extraction.engine === "llm" ? extraction.lines.map((l) => l.confidence) : undefined,
+    thresholdSetId: DEFAULT_THRESHOLD_SET_ID,
   });
 
   // Formulary-match factor: LLM brand claims that resolve nowhere lose confidence.
@@ -99,8 +102,15 @@ export async function POST(req: NextRequest) {
       findingsJson: JSON.stringify(report.findings),
       engineSnapshot: report.snapshot,
       contextsJson: JSON.stringify(contexts),
+      // Gate-law provenance (MED-003): threshold set + fused score per verdict.
+      thresholdSetId: report.gate?.thresholdSetId ?? DEFAULT_THRESHOLD_SET_ID,
+      prescriptionFused: report.gate?.prescriptionFused ?? confidence,
     },
   });
+
+  // Persist the human-confirmation band as a state machine (MED-002). The plan
+  // endpoint blocks while any of these rows is pending.
+  await syncQueue(prescription.id, report.confirmQueue);
 
   await Promise.all([
     bumpMetric("verifications"),
@@ -123,5 +133,10 @@ export async function POST(req: NextRequest) {
     snapshot: report.snapshot,
     engineMs: report.engineMs,
     pipelineMs: extraction.llmMs + report.engineMs,
+    // Gate provenance + why-queued explanations (MED-014).
+    thresholdSetId: report.gate?.thresholdSetId ?? DEFAULT_THRESHOLD_SET_ID,
+    prescriptionFused: report.gate?.prescriptionFused ?? confidence,
+    prescriptionBand: report.gate?.prescriptionBand ?? null,
+    gateDecisions: report.gate?.decisions ?? [],
   });
 }

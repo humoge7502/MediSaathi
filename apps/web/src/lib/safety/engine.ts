@@ -18,6 +18,15 @@ import {
   SNAPSHOT,
   type InteractionRow,
 } from "./dataset";
+import {
+  allBelowRefusal,
+  bandOf,
+  fusePrescription,
+  getThresholdSet,
+  type FieldDecision,
+  type GateMetadata,
+  type ThresholdSet,
+} from "./gate";
 
 export type Severity = "none" | "mild" | "moderate" | "severe";
 
@@ -102,12 +111,18 @@ export interface SafetyReport {
   aggregateDailyMg: Record<string, number>;
   snapshot: string;
   engineMs: number;
+  /** Gate-law provenance (threshold set + fused score + per-field bands). */
+  gate?: GateMetadata;
 }
 
 export interface ConfirmItem {
   line: number;
   rawText: string;
   reason: string;
+  /** why-queued explainability (MED-014): the exact band + fused score. */
+  band?: "refused" | "confirm" | "auto";
+  fused?: number;
+  why?: string;
 }
 
 // ---------------------------------------------------------------- tables
@@ -280,11 +295,10 @@ export function overallConfidence(
   queueCount: number,
   lineConfidences: number[]
 ): number {
-  const total = confirmedCount + queueCount;
-  if (total === 0 || lineConfidences.length === 0) return 0;
-  const ratio = confirmedCount / total;
-  const mean = lineConfidences.reduce((a, c) => a + c, 0) / lineConfidences.length;
-  return Math.round((ratio * 0.4 + mean * 0.6) * 100) / 100;
+  // The formula itself now lives in the gate module (single source of truth
+  // alongside the threshold set); this export is kept because callers and the
+  // route-integration suite reference it by name.
+  return fusePrescription(confirmedCount, queueCount, lineConfidences);
 }
 
 // -------------------------------------------------- the plane
@@ -296,6 +310,8 @@ export interface EngineInput {
   lineConfidence?: number[];
   /** skip the confidence gate (engine self-tests run without a perception layer) */
   skipGate?: boolean;
+  /** threshold-set id for the gate law (default: frozen v1 set) */
+  thresholdSetId?: string;
 }
 
 export function runSafetyPlane(input: EngineInput): SafetyReport {
@@ -315,9 +331,8 @@ export function runSafetyPlane(input: EngineInput): SafetyReport {
 
   // 1. confidence gate — the gate law (first match wins, mirroring
   // apps/api/app/verdict.py and pinned by the cross-engine parity corpus):
-  //    all lines below REFUSE (perception confidence) -> refused (never guess)
-  //    any line below REFUSE                          -> confirm_queue
-  //    any line below CONFIRM / unmatched brand       -> confirm_queue
+  //    all lines in the refusal band -> refused (never guess)
+  //    any line refused / below CONFIRM / unmatched -> confirm_queue
   //
   // The refusal band consumes PERCEPTION confidence only: the plane cannot
   // second-guess what the reader said it saw. When the deterministic splitter
@@ -326,13 +341,19 @@ export function runSafetyPlane(input: EngineInput): SafetyReport {
   // confirm/auto-confirm bands, but never for the refusal band: an unmatched
   // formulary line in the offline tier is exactly what the human confirm queue
   // exists for (decision B9: "garbage still queues"), NOT a refusal.
+  //
+  // All band decisions are delegated to lib/safety/gate.ts so the law exists
+  // exactly once per tier (MED-003) and carries fused scores + threshold id.
+  const thresholds = getThresholdSet(input.thresholdSetId);
+  let gateDecisions: (FieldDecision & { line: number })[] = [];
   if (!input.skipGate) {
     const perceptionProvided = input.lineConfidence !== undefined;
     const confs = meds.map((med, i) => ({
       med,
       conf: perceptionProvided ? (input.lineConfidence?.[i] ?? med.brandConfidence) : med.brandConfidence,
     }));
-    if (perceptionProvided && confs.length > 0 && confs.every(({ conf }) => conf < 0.75)) {
+    gateDecisions = confs.map(({ med, conf }) => ({ ...bandOf(conf, !!med.brand, thresholds), line: med.line }));
+    if (perceptionProvided && gateDecisions.length > 0 && allBelowRefusal(gateDecisions)) {
       return finish(
         "refused",
         "Refused — no line could be verified with confidence. In medication questions the system refuses rather than guesses.",
@@ -340,16 +361,27 @@ export function runSafetyPlane(input: EngineInput): SafetyReport {
         confirmed,
         confirmQueue,
         {},
-        t0
+        t0,
+        buildGate(gateDecisions, confs.map((c) => c.conf), 0, confs.length, thresholds)
       );
     }
-    for (const { med, conf } of confs) {
-      if (conf < 0.75) {
-        confirmQueue.push({ line: med.line, rawText: med.rawText, reason: `Low reading confidence (${Math.round(conf * 100)}%)` });
-      } else if (conf < 0.9 || !med.brand) {
-        confirmQueue.push({ line: med.line, rawText: med.rawText, reason: !med.brand ? "Not in formulary — needs human confirmation" : `Confidence ${Math.round(conf * 100)}% below auto-confirm threshold` });
-      } else {
+    for (let i = 0; i < confs.length; i++) {
+      const { med, conf } = confs[i];
+      const d = gateDecisions[i];
+      if (d.band === "auto") {
         confirmed.push(med);
+      } else if (d.band === "refused") {
+        confirmQueue.push({
+          line: med.line, rawText: med.rawText,
+          reason: `Low reading confidence (${Math.round(conf * 100)}%)`,
+          band: d.band, fused: d.fused, why: d.reason,
+        });
+      } else {
+        confirmQueue.push({
+          line: med.line, rawText: med.rawText,
+          reason: !med.brand ? "Not in formulary — needs human confirmation" : `Confidence ${Math.round(conf * 100)}% below auto-confirm threshold`,
+          band: d.band, fused: d.fused, why: d.reason,
+        });
       }
     }
   } else {
@@ -421,7 +453,41 @@ export function runSafetyPlane(input: EngineInput): SafetyReport {
 
   // 7. verdict assembly (first match wins)
   const verdict = assembleVerdict(findings, confirmQueue);
-  return finish(verdict, headlineFor(verdict, findings, confirmQueue), findings, confirmed, confirmQueue, aggregate, t0);
+  const gate = gateDecisions.length
+    ? buildGate(
+        gateDecisions,
+        input.lineConfidence ?? meds.map((m) => m.brandConfidence),
+        confirmed.length,
+        confirmQueue.length,
+        thresholds
+      )
+    : undefined;
+  return finish(verdict, headlineFor(verdict, findings, confirmQueue), findings, confirmed, confirmQueue, aggregate, t0, gate);
+}
+
+/** Assemble the gate provenance block persisted with every verdict. */
+function buildGate(
+  decisions: (FieldDecision & { line: number })[],
+  lineConfidences: number[],
+  confirmedCount: number,
+  queueCount: number,
+  ts: ThresholdSet
+): GateMetadata {
+  const prescriptionBand: "refused" | "confirm" | "auto" = allBelowRefusal(decisions)
+    ? "refused"
+    : queueCount > 0
+      ? "confirm"
+      : "auto";
+  return {
+    thresholdSetId: ts.setId,
+    refuseBelow: ts.refuseBelow,
+    confirmBelow: ts.confirmBelow,
+    fusion: ts.fusion,
+    banding: ts.banding,
+    prescriptionFused: fusePrescription(confirmedCount, queueCount, lineConfidences, ts.fusion),
+    prescriptionBand,
+    decisions,
+  };
 }
 
 function combinationRules(molecules: string[]): Finding[] {
@@ -526,7 +592,8 @@ function finish(
   confirmed: NormalizedMed[],
   confirmQueue: ConfirmItem[],
   aggregate: Record<string, number>,
-  t0: number
+  t0: number,
+  gate?: GateMetadata
 ): SafetyReport {
   return {
     verdict,
@@ -537,6 +604,7 @@ function finish(
     aggregateDailyMg: aggregate,
     snapshot: SNAPSHOT,
     engineMs: Math.round((performance.now() - t0) * 10) / 10,
+    gate,
   };
 }
 

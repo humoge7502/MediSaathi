@@ -1,0 +1,72 @@
+{
+  "corpus": {
+    "cases": 300,
+    "generator": "tools/build_corpus.py",
+    "seed": 20260911,
+    "splits": {
+      "calibration": 44,
+      "test": 44,
+      "train": 212
+    },
+    "strata": {
+      "adversarial_confusable": 15,
+      "adversarial_corruption": 15,
+      "adversarial_injection": 10,
+      "adversarial_invented": 15,
+      "clean_pass": 55,
+      "combination": 20,
+      "confirm_queue": 30,
+      "contraindication": 25,
+      "duplicate": 20,
+      "moderate_pair": 25,
+      "refused": 15,
+      "script_mix": 15,
+      "severe_pair": 40
+    }
+  },
+  "created_at": "2026-09-11T12:38:47+00:00",
+  "files": {
+    "data/brands.csv": {
+      "bytes": 6365,
+      "sha256": "a9a018a9d6b3df41b2913247282484152f90dae6b44d37685409e6ae2cc0a595"
+    },
+    "data/cases_manifest.json": {
+      "bytes": 2900,
+      "sha256": "c46e8384a1987b9b64db91ce8868e85ad63e6d8db7e5305a39f4ae6672004296"
+    },
+    "data/contraindications.csv": {
+      "bytes": 1987,
+      "sha256": "811d6b3bcdd0312cce0191b5e0a06e019a35b472f7dde0b1a4aa6d8e21595cb6"
+    },
+    "data/corpus/adversarial.jsonl": {
+      "bytes": 41356,
+      "sha256": "f3d1a07952f2c8f55840ade0d1688305c506014be13a9caaf0618c228a6c2280"
+    },
+    "data/corpus/cases.jsonl": {
+      "bytes": 238148,
+      "sha256": "ab30dbdf003c2c76128c86a94ee4bb4c33510add5261f1e5928ad5cc5ed47f85"
+    },
+    "data/corpus/codebook.json": {
+      "bytes": 544,
+      "sha256": "51cb5806e907199c76d8aeeaa21a94b9dac62d26288064e0b2d7c9ad44a8ecea"
+    },
+    "data/corpus/splits.json": {
+      "bytes": 3764,
+      "sha256": "8ec31186e3ff81f82a28d7103391e519bc21d75c6444410b795c53ca47a415ab"
+    },
+    "data/eval_labels.csv": {
+      "bytes": 604,
+      "sha256": "36a6b977fe50fb9155d1f483847e1fb810e7874039790f8234d63b14431e97cc"
+    },
+    "data/interactions.csv": {
+      "bytes": 7118,
+      "sha256": "7a060917e768f1b06ecb28b166e6412691cdc3f03152b6ea5f8518a34f48ecc7"
+    },
+    "data/sources.json": {
+      "bytes": 499,
+      "sha256": "1938bd3d358c6b8cedcce8f9a9d3cdf24355fd97f3627d1cba4a3c7ffe39f059"
+    }
+  },
+  "manifest_version": 1,
+  "snapshot_id": "9b55abc2339e8265"
+}

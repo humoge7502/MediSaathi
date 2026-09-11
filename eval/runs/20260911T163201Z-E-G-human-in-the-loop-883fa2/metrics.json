@@ -1,0 +1,48 @@
+{
+  "acceptance": {
+    "queue_automates_at_least_as_much_as_refusal": true,
+    "queue_beats_raw_accuracy": true,
+    "queue_beats_refusal_accuracy": true,
+    "queue_costs_less_review_time_than_refusal": true
+  },
+  "arms": {
+    "queue": {
+      "arm": "queue",
+      "coverage": 0.7045,
+      "mean_seconds_per_case": 5.91,
+      "n": 44,
+      "review_burden_per_100": 29.55,
+      "reviewed_fields": 13,
+      "task_accuracy": 1.0,
+      "total_review_minutes": 4.33
+    },
+    "raw": {
+      "arm": "raw",
+      "coverage": 1.0,
+      "mean_seconds_per_case": 0.0,
+      "n": 44,
+      "review_burden_per_100": 0.0,
+      "reviewed_fields": 0,
+      "task_accuracy": 0.7045,
+      "total_review_minutes": 0.0
+    },
+    "refusal": {
+      "arm": "refusal",
+      "coverage": 0.7045,
+      "mean_seconds_per_case": 26.59,
+      "n": 44,
+      "review_burden_per_100": 29.55,
+      "reviewed_fields": 13,
+      "task_accuracy": 1.0,
+      "total_review_minutes": 19.5
+    }
+  },
+  "n": 44,
+  "reviewer": {
+    "kind": "simulated policy (not human subjects)",
+    "resolve_accuracy": 0.95,
+    "seconds_per_field": 20.0,
+    "seconds_per_refusal": 90.0
+  },
+  "split": "test"
+}
