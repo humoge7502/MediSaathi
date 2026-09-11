@@ -35,7 +35,7 @@ RUNS_DIR = os.path.join(ROOT, "eval", "runs")
 OUT_MD = os.path.join(ROOT, "docs", "patent", "EVIDENCE_BINDER.md")
 OUT_JSON = os.path.join(ROOT, "eval", "results", "binder.json")
 
-EXPERIMENTS = ("E-A", "E-B", "E-C", "E-D", "E-E", "E-F", "E-G")
+EXPERIMENTS = ("E-A", "E-B", "E-C", "E-D", "E-E", "E-F", "E-G", "E-H")
 EXPERIMENT_TITLES = {
     "E-A": "Baseline ladder A0-A4 (safety x burden)",
     "E-B": "Component ablations (synergy evidence)",
@@ -44,6 +44,7 @@ EXPERIMENT_TITLES = {
     "E-E": "Cross-engine parity over the shared golden corpus",
     "E-F": "Latency, resource and offline-availability",
     "E-G": "Human-in-the-loop confirmation study",
+    "E-H": "Longitudinal regimen plane + read-uncertainty propagation",
 }
 
 
@@ -158,7 +159,7 @@ def render_markdown(results: dict, index: dict, gaps: list[str]) -> str:
         out += [f"- {g}" for g in gaps]
         out += [""]
     else:
-        out += ["All seven experiments have an archived run; no gaps.", ""]
+        out += ["All eight experiments have an archived run; no gaps.", ""]
 
     out += [
         "## 1. Dataset provenance (sha256 per file)",
@@ -385,8 +386,51 @@ def render_markdown(results: dict, index: dict, gaps: list[str]) -> str:
             "",
         ]
 
+    # ---- E-H
+    h = (results.get("E-H") or {}).get("metrics") or {}
+    if h:
+        me = h.get("marginal_effect") or {}
+        out += [
+            "## 9. E-H — Longitudinal regimen plane (mechanisms A+B)",
+            "",
+            "The 300-case corpus is single-prescription by construction, so it cannot contain a harm",
+            "that exists only because two prescriptions were composed. This experiment holds the",
+            "patient's active regimen fixed and varies the arriving prescription, comparing the",
+            "incumbent single-prescription law against (A) regimen composition and (A+B) regimen",
+            "composition with read-uncertainty propagation.",
+            "",
+            f"Corpus `data/corpus/regimen.jsonl`, n = {h.get('n')} "
+            f"({h.get('cross_prescription_cases')} cross-prescription).",
+            "",
+            "| arm | unsafe pass on harm | cross-prescription caught | queue rate | agreement |",
+            "|---|---|---|---|---|",
+        ]
+        for arm, m in (h.get("arms") or {}).items():
+            out.append(
+                f"| {arm} | {_fmt(m.get('unsafe_pass_rate'))} | "
+                f"{_fmt(m.get('cross_prescription_catch_rate'))} | "
+                f"{_fmt(m.get('queue_rate'))} | {_fmt(m.get('verdict_agreement'))} |")
+        out += [
+            "",
+            "**Reading.** The incumbent law cannot express a cross-prescription harm at all: it returns",
+            f"a bare `pass` on {_fmt(me.get('unsafe_pass_single_rx'))} of the harmful cases here and catches",
+            f"{_fmt(me.get('cross_catch_single_rx'))} of the cross-prescription harms. Composing the active",
+            "regimen (mechanism A) closes almost all of that gap; read-uncertainty propagation",
+            "(mechanism B) closes the remainder by routing a read whose confusion neighbourhood could",
+            "hide a harm to the confirm queue, and removes the last unsafe auto-confirmations. The",
+            "marginal queue cost of mechanism B is small and bounded, because the coupling fires only",
+            "when uncertainty could *hide* harm, not whenever the read is uncertain.",
+            "",
+            "**Limitation stated plainly.** The confusion neighbourhood is derived from brand-core string",
+            "similarity against this 96-brand formulary, so the fragile stratum is small (the number of",
+            "truly look-alike pairs the data contains). The mechanism is general; the size of its",
+            "demonstration here is bounded by the demo formulary, and a licensed DDInter/RxNorm snapshot",
+            "would widen it.",
+            "",
+        ]
+
     out += [
-        "## 9. Run index (every number above has one of these behind it)",
+        "## 10. Run index (every number above has one of these behind it)",
         "",
         "| run id | experiment | engine SHA | dataset snapshot |",
         "|---|---|---|---|",
@@ -396,7 +440,7 @@ def render_markdown(results: dict, index: dict, gaps: list[str]) -> str:
                    f"`{m['dataset_snapshot']}` |")
     out += [
         "",
-        "## 10. Cross-references",
+        "## 11. Cross-references",
         "",
         "- Mechanism, embodiments and fallback ladder: `docs/patent/INVENTION_DISCLOSURE.md`",
         "- Normative pseudocode of the gate/fusion/precedence/queue laws: `docs/patent/PSEUDOCODE.md`",

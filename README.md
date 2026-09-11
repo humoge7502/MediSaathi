@@ -109,7 +109,7 @@ double.
 | Web copilot refusal gates | emergency + scope refusals fire in ~0 ms, before any generation | Deterministic (pure regex + retrieval floor) |
 | Web live degraded-tier verify | warfarin+aspirin → interaction; triple whammy → combination rule; child+doxy → contraindication; garbage → confirm queue — all **without any model** | Measured via HTTP smoke (see docs/TESTING.md) |
 | Web E2E (Playwright) | **14/14 browser journeys** on the deterministic tier: landing → verify (interaction/combination/queue/injection-inert) → pharmacist review console (queue blocks the plan, human resolves) → copilot gates → evidence (+ archived experiments) → today + dose guardrail | `make web-e2e` |
-| API suite | **179 tests passing** (safety properties, golden paths, perception, red-team, parity gate, property-based invariants, observability, egress proof, FHIR export, consent stub, NLG coverage) | `make test` |
+| API suite | **191 tests passing** (safety properties, golden paths, perception, red-team, parity gate, property-based invariants, observability, egress proof, FHIR export, consent stub, NLG coverage, longitudinal regimen plane) | `make test` |
 | API fixture benchmark | brand recall 1.00 · frequency recall 0.94 · verdict agreement 1.00 · refusal precision 1.00 (n=12) | `make eval` |
 | API latency | p50 11.3–12.4 ms, p95 13.4–15.4 ms (in-process ASGI, 100-request bench) | `python3 tools/bench.py` |
 | Web route integration tests | **68 passing** — verify → plan → dose guardrail → family → confirm-queue state machine → gate law → circuit breaker, plus middleware security contracts and the copilot gates, over an isolated SQLite, perception layer sealed (no model keys needed) | `cd apps/web && bun run test` |
@@ -121,6 +121,7 @@ double.
 | **Robustness E-C** | zero unsafe auto-confirms across 6 corruption levels (256 cases); invented brands never auto-confirm; queue replays refused | `python tools/run_experiments.py --experiments E-C` |
 | **Deterministic plane E-F** | p50 ≈ 0.07 ms / p95 ≈ 0.11 ms per verification over the whole corpus; offline verdict delta 0 | `python tools/run_experiments.py --experiments E-F` |
 | **Human-in-the-loop E-G** | queue arm matches blanket-refusal accuracy (1.000) at ~4.5× less review time, and beats blind automation (0.705) | `python tools/run_experiments.py --experiments E-G` |
+| **Longitudinal regimen E-H** (n=113, 66 cross-prescription) | incumbent single-prescription law catches **0.000** of cross-prescription harms; **regimen composition 0.949**; **+ uncertainty propagation 1.000** at a 3.5% marginal queue cost | `python tools/run_experiments.py --experiments E-H` |
 | API property tests | **5 safety invariants hold across ~900 generated prescriptions** (totality, gate integrity, pair symmetry, dose caps, gate monotonicity) — hypothesis finds no counterexample | `pytest apps/api/tests/test_properties.py` |
 | Copilot eval (10 labeled cases) | 100% type accuracy, groundedness 1.00, safety 1.00 (single run, automated rubric judge) | Engineering telemetry, **not** clinical validation |
 
@@ -135,11 +136,20 @@ The engineering above is turned into *reproducible* evidence by a research
 harness whose one law is: **no number is quoted without a run manifest.**
 
 ```bash
-python tools/run_experiments.py --all   # E-A..E-G -> eval/runs/ + eval/results/
+python tools/run_experiments.py --all   # E-A..E-H -> eval/runs/ + eval/results/
 python tools/export_evidence.py         # -> apps/web/src/data/evidence.json (Evidence tab)
 python tools/build_binder.py            # -> docs/patent/EVIDENCE_BINDER.md
+python tools/build_regimen_corpus.py    # -> data/corpus/regimen.jsonl (cross-prescription)
 python tools/import_snapshot.py --kind interactions --source new_ddi.csv   # governed data updates
 ```
+
+**Longitudinal regimen plane (mechanisms A+B).** The shipped law verifies one
+prescription; the research plane extends it to the patient's time-composed
+regimen (a triple whammy assembled across two visits, a third QT-prolonger added
+later, the same molecule via a second brand) and propagates read-identity
+uncertainty to a verdict distribution, forcing the confirm queue when that
+uncertainty could *hide* harm. E-H quantifies both. Implemented in the Python
+plane; the TypeScript mirror is the filed next step (see `docs/TECH_DEBT.md`).
 
 - **`ml/`** — the corpus loader, baseline ladder (A0–A4) + ablations, calibration
   (ECE / Brier / reliability / threshold sweep), corruption + injection suite, and

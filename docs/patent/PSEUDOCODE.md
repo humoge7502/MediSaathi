@@ -186,3 +186,59 @@ provenance := {
 
 A verdict without its threshold set and dataset snapshot cannot be re-derived,
 so it is not persisted as a verdict.
+
+## 10. Regimen state composition and uncertainty propagation (A + B)
+
+The single-prescription law above treats the incoming artifact as the whole
+world. Mechanisms A and B extend it to the patient's time-composed regimen
+without changing any stage above.
+
+```
+# ---- A. regimen state: the decision object is the UNION, not the artifact
+active := [ med for med in patient.regimen if med.active_on(as_of_day) ]
+union  := molecules(active) UNION molecules(incoming_candidates)
+findings := pairwise(union) ++ combination_rules(union)
+            ++ contraindications(incoming, declared_context)
+            ++ duplicates_atc(active ++ incoming)          # new brand, same molecule
+# a finding is `crossing` when it involves both an active and an incoming molecule
+```
+
+```
+# ---- B. identity mass: a read is a distribution, not a fact
+identity_distribution(read, conf) -> [ (brand, molecules, mass) ]:
+    own := normalize(read)
+    if own != null: emit (own, conf); residual := 1 - conf
+    else:           residual := conf
+    neigh := formulary brands ranked by similarity(brand_core(read), brand_core(b))
+             with similarity >= floor
+    for (sim, b) in neigh: emit (b, residual * sim / sum(sim))
+    emit (unknown, residual - absorbed)          # can only DEMOTE, never promote
+    return top-k(re-normalised)
+```
+
+```
+# ---- exact verdict distribution over read worlds (deterministic, no sampling)
+worlds := prune_by_mass(cross_product(identity_distribution(f) for f in incoming))
+for (assignment, mass) in worlds:
+    findings := screen_union(active, assignment)      # stage 9's rules, unchanged
+    verdict_mass[assemble(findings)] += mass
+nominal     := verdict of the highest-mass assignment
+worst       := max-harm verdict reachable
+fragility   := 1 - mass(nominal)                       # read error could flip it
+```
+
+```
+# ---- the coupling, stated precisely
+could_hide_harm := harm(worst) > harm(nominal)
+queued := field_gate == CONFIRM
+          or (fragility > fragility_threshold and could_hide_harm)
+publish(REFUSED if field_gate == REFUSED
+        else CONFIRM_QUEUE if queued
+        else nominal)
+```
+
+The coupling fires only when read uncertainty could *hide* harm. If the nominal
+verdict is already the worst reachable one, the harm is surfaced regardless of
+the read, and an extra queue would tax the reviewer for nothing — so it does not
+fire. This is why mechanism B's marginal review cost is bounded (3.5% on the
+regimen corpus) rather than scaling with every uncertain field.

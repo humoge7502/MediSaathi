@@ -57,8 +57,10 @@ jobs:
         run: python eval/eval.py --ablation A1 > /dev/null
       - name: Demo check (offline sealed cases, all six verdict kinds)
         run: make demo-check
-      - name: Experiments (E-A..E-G, quick) - evidence spine smoke
+      - name: Experiments (E-A..E-H, quick) - evidence spine smoke
         run: python tools/run_experiments.py --all --quick --json > /dev/null
+      - name: Regimen corpus (mechanism A+B) rebuilds and verifies
+        run: python tools/build_regimen_corpus.py --report > /dev/null && python tools/build_corpus.py --verify
 
   web:
     name: web (next.js)

@@ -159,6 +159,48 @@ time, and beats blind automation by 0.295 absolute. **The reviewer is a
 simulated policy with an explicit accuracy knob, not a human-subjects panel**
 (`ml/hitl.py --reviewers-file` accepts a real panel's measured accuracy).
 
+## E-H — longitudinal regimen plane (mechanisms A + B)
+
+The 300-case corpus is single-prescription by construction: each case is screened
+alone, so it cannot contain a harm that exists only because two prescriptions
+were *composed*. This experiment holds the patient's active regimen fixed and
+varies the arriving prescription, comparing the incumbent single-prescription
+law against the extended plane.
+
+Corpus: `data/corpus/regimen.jsonl`, constructed by intent and verified against
+*both* planes — a cross-prescription case is kept only if the incumbent returns
+`pass` (it cannot see the harm) and the regimen plane catches it. Strata:
+triple-whammy spread across visits, a third QT-prolonger added later, a second
+serotonergic added to an SSRI, an NSAID added to an antithrombotic + SSRI, a
+duplicate molecule reached through a different brand, a fragile confusable read,
+a clean continuation, and an incoming-only control.
+
+| arm | unsafe pass on harm | cross-prescription caught | queue rate | agreement |
+|---|---|---|---|---|
+| `single_rx` (incumbent) | 0.832 | **0.000** | 0.000 | 0.310 |
+| `regimen` (A) | 0.000 | 0.949 | 0.000 | 0.947 |
+| `regimen+propagation` (A+B) | 0.000 | **1.000** | 0.035 | 0.982 |
+
+n = 113 (66 cross-prescription). Numbers are from the archived run; see the
+binder for the run id and SHAs.
+
+**Reading.** The incumbent law is structurally blind to harm assembled across
+prescriptions: it returns a bare `pass` on 83% of the harmful cases here and
+catches none of the cross-prescription harms. Mechanism A (compose the active
+regimen, screen the union) closes almost all of it. Mechanism B (propagate
+read-identity uncertainty to a verdict distribution, and force the confirm queue
+when the uncertainty could *hide* harm) closes the remainder, including the
+fragile reads that mechanism A would auto-confirm — at a marginal queue cost of
+3.5%, because the coupling fires only when uncertainty could hide harm, not
+whenever a read is merely uncertain.
+
+**Limitation stated plainly.** The confusion neighbourhood is derived from
+brand-core string similarity against the 96-brand demo formulary, so the fragile
+stratum is small (4 cases — the number of genuinely look-alike pairs the data
+contains). The mechanism is general; the size of its demonstration here is
+bounded by the demo formulary, and a licensed DDInter/RxNorm snapshot would
+widen it. The regimen corpus is synthetic-curated like the primary corpus.
+
 ## Reproducibility contract
 
 - Perception temperature 0; the engine is deterministic; corruption seeds pinned

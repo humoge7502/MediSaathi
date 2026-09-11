@@ -28,6 +28,34 @@ environment and is therefore marked `[REQUIRES VALIDATION]`.
 | Consumer adherence/SMAP products and reviews | Public products / peer-reviewed reviews | Caregiver notifications, reminders, adherence features | Family escalation (D11) | No verification-first architecture |
 | Ambient medical scribe review workflows (incl. confidence-routed review) | Products / studies 2025-26 | AI-drafted notes with clinician review-before-sign; some use confidence to route review | Confidence-routed human review in medical AI | Documentation drafting, not medication-safety verdicts; mechanism-level disclosure varies. Warrants a targeted claim-level search on "confidence threshold auto-finalize" `[REQUIRES VALIDATION]` |
 | Prompt-injection containment design patterns | Preprints/studies 2025-26 | Architectural containment of what a compromised LLM can affect | Inert-perception design rationale | Security pattern, not claimed as such |
+| Medication reconciliation / best-possible-medication-history systems | Clinical informatics literature + EHR vendors | Constructing and maintaining a patient's current medication list across encounters | The union/composition step of mechanism A | Reconciliation *assembles a list for a human*; it does not evaluate a deterministic rule graph over a time-composed union, and has no confidence-fused gate or queue-blocking semantics |
+| Cross-prescription / whole-medication-list interaction checking in CPOE | Hospital pharmacy informatics | Screening a patient's orders against DDI data rather than one order at a time | Regimen-level screening (mechanism A) | Hospital-order context; typically pairwise tables, often overrideable alerts; no LLM-reading uncertainty, no per-field identity mass, no fragility-gated queueing, no consumer closed loop |
+| Uncertainty quantification / conformal prediction for clinical ML | Peer-reviewed 2019-2026 | Calibrated confidence sets and abstention for clinical predictors | Mechanism B's uncertainty handling | Applied to *predictive models* (diagnosis/prognosis), not to the identity of extracted drug names propagated through a deterministic rule graph; typically produces a prediction set, not a queue-entry condition tied to downstream automation |
+| Selective prediction / abstention (incl. LLM abstention) | Preprints + peer-reviewed | Abstain when model uncertainty is high | The refusal band and fragility routing | General abstention theory; no medication rule plane, no identity-mass enumeration over a formulary confusion neighbourhood, no coupling of fragility to a persisted confirmation queue |
+
+## Differentiation — second mechanism
+
+The second mechanism's differentiation is *not* "check more than one drug".
+Hospital CPOE already screens whole order sets, and medication reconciliation
+already composes lists. What is not located is the specific conjunction:
+
+1. a deterministic, zero-network medication rule plane evaluated over the
+   **time-composed union** of an incoming artifact and the active regimen, with
+   findings tagged as crossing the composition boundary;
+2. each incoming field carrying an **explicit identity-mass distribution** with a
+   residual `unknown` mass that can only ever demote (never promote) a field;
+3. **exact enumeration** of read-identity assignments to a verdict distribution,
+   producing a `fragility` measure; and
+4. **fragility used as a queue-entry condition** restricted to the
+   could-hide-harm case, coupling uncertainty to the same blocking queue that the
+   first mechanism already persists.
+
+Elements 1 and 2 exist separately in the art; element 3 is a standard
+probabilistic technique applied to an unusual object (reading uncertainty over a
+rule graph); element 4 is the coupling whose necessity is measured by the E-H
+ablation. As with the first mechanism, the argument rests on the *measured
+operating characteristic* (cross-prescription catch 0.000 → 0.949 → 1.000 at a
+3.5% marginal queue cost) rather than on the novelty of any single element.
 
 ## Differentiation
 

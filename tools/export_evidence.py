@@ -27,7 +27,7 @@ sys.path.insert(0, ROOT)
 RESULTS_DIR = os.path.join(ROOT, "eval", "results")
 OUT_PATH = os.path.join(ROOT, "apps", "web", "src", "data", "evidence.json")
 
-EXPERIMENTS = ("E-A", "E-B", "E-C", "E-D", "E-E", "E-F", "E-G")
+EXPERIMENTS = ("E-A", "E-B", "E-C", "E-D", "E-E", "E-F", "E-G", "E-H")
 
 
 def _load(name: str, missing: list[str]) -> dict | None:
@@ -74,6 +74,7 @@ def build() -> dict:
     e_e = metrics("E-E")
     e_f = metrics("E-F")
     e_g = metrics("E-G")
+    e_h = metrics("E-H")
 
     # Headline: the frozen operating point's calibration curve + operating point.
     frozen_on_test = e_d.get("frozen_on_test") or {}
@@ -153,6 +154,21 @@ def build() -> dict:
             "reviewer": e_g.get("reviewer", {}),
             "arms": e_g.get("arms", {}),
             "acceptance": e_g.get("acceptance", {}),
+        },
+        "regimen": {
+            "n": e_h.get("n"),
+            "cross_prescription_cases": e_h.get("cross_prescription_cases"),
+            "strata": e_h.get("strata", {}),
+            "arms": {
+                arm: {
+                    "unsafe_pass_rate": m.get("unsafe_pass_rate"),
+                    "cross_prescription_catch_rate": m.get("cross_prescription_catch_rate"),
+                    "queue_rate": m.get("queue_rate"),
+                    "verdict_agreement": m.get("verdict_agreement"),
+                }
+                for arm, m in (e_h.get("arms") or {}).items()
+            },
+            "marginal_effect": e_h.get("marginal_effect", {}),
         },
         "honesty": (
             "Software benchmark evidence from a synthetic-curated corpus, not "

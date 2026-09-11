@@ -3,6 +3,48 @@
 All notable changes. Format based on Keep a Changelog; versions here map to
 the event build blocks.
 
+## [0.7.0] - 2026-09-11 - longitudinal regimen plane (mechanisms A+B)
+
+Extends the two-plane law from one prescription to the patient's time-composed
+regimen, and makes the gate operate on the *verdict* as well as the field.
+
+### Added
+- **`apps/api/app/safety/regimen.py`** — mechanism A (compose the active regimen
+  and screen the union, tagging findings that cross the composition boundary)
+  and mechanism B (per-field identity-mass propagation over a derived confusion
+  neighbourhood, exact enumeration to a verdict distribution, and a
+  fragility-to-queue coupling that fires only when read uncertainty could *hide*
+  harm). Deterministic, zero-network; reuses the existing rule plane unchanged.
+- **`data/corpus/regimen.jsonl`** — 113-case cross-prescription corpus,
+  constructed by intent and verified against *both* planes (kept only when the
+  incumbent returns `pass` and the regimen plane catches it).
+- **`ml/regimen.py`** + **`tools/build_regimen_corpus.py`** — the evaluation
+  harness (arms `single_rx` / `regimen` / `regimen+propagation`) and the corpus
+  builder.
+- **Experiment E-H** in `tools/run_experiments.py`, wired into the evidence
+  export, the patent binder, the Makefile (`make regimen-corpus`) and CI.
+- **`apps/api/tests/test_regimen.py`** — 12 tests: cross-prescription catch,
+  the fragility queue and its ablation, preserved refusal/queue semantics,
+  determinism and distribution normalisation.
+
+### Measured (E-H, n=113, 66 cross-prescription)
+- incumbent single-prescription law: unsafe pass on harm 0.832, cross-prescription
+  catch **0.000**;
+- regimen composition (A): 0.000 unsafe, cross catch 0.949, no added queue;
+- regimen + propagation (A+B): 0.000 unsafe, cross catch **1.000**, queue 0.035.
+
+### Documentation
+- `docs/patent/` extended: invention disclosure §10, second independent claim
+  concept, dependent claims D13-D15, normative pseudocode §10, prior-art rows
+  and a differentiation section, and the E-H protocol in `EXPERIMENTS.md`.
+- `INVENTION_DISCLOSURE.md` §7 now records that the second mechanism was
+  published by explicit project decision, and therefore becomes prior art.
+
+### Known limit (filed, not hidden)
+- The mechanism is implemented in the Python plane; the TypeScript mirror and a
+  regimen-mode parity corpus are the next step (TD-12). The fragile stratum is
+  small (4 cases) because the demo formulary contains few look-alike pairs.
+
 ## [0.6.0] - 2026-09-11 - patent-readiness evidence spine (MED-001..MED-028)
 
 Turns the engineering into *reproducible* evidence. The organising law: no

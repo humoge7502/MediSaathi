@@ -24,6 +24,7 @@ E-D  calibration (ECE / Brier / reliability) + threshold sweep, frozen point
 E-E  cross-engine parity over the golden corpus
 E-F  latency / resource / offline-invariance (bench + plane timing)
 E-G  human-in-the-loop simulation (raw / refusal / queue arms)
+E-H  longitudinal regimen plane vs the single-prescription law (mechanisms A+B)
 """
 from __future__ import annotations
 
@@ -48,10 +49,11 @@ from ml import corpus as corpus_module  # noqa: E402
 from ml import hitl as hitl_module  # noqa: E402
 from ml import ladder as ladder_module  # noqa: E402
 from ml import manifest as ds_manifest  # noqa: E402
+from ml import regimen as regimen_module  # noqa: E402
 from ml import runner  # noqa: E402
 
 RESULTS_DIR = os.path.join(ROOT, "eval", "results")
-EXPERIMENTS = ("E-A", "E-B", "E-C", "E-D", "E-E", "E-F", "E-G")
+EXPERIMENTS = ("E-A", "E-B", "E-C", "E-D", "E-E", "E-F", "E-G", "E-H")
 
 
 def _engine() -> SafetyEngine:
@@ -402,9 +404,64 @@ def run_e_g(engine: SafetyEngine, *, quick: bool = False) -> dict:
     return {"run": path, "metrics": metrics}
 
 
+# ------------------------------------------------------------------ E-H
+def run_e_h(engine: SafetyEngine, *, quick: bool = False) -> dict:
+    """Longitudinal regimen plane vs the incumbent single-prescription law.
+
+    Mechanism A: compose the arriving prescription with the patient's active
+    regimen and screen the union. Mechanism B: propagate read-identity
+    uncertainty to a verdict distribution and let fragility force the confirm
+    queue. The incumbent law is the control: it screens one artifact and so
+    cannot express a harm that only exists across two.
+    """
+    cases = regimen_module.load_cases()
+    if quick:
+        cases = cases[:max(8, len(cases) // 6)]
+    results = regimen_module.evaluate_all(engine, cases)
+    arms = {arm: res["metrics"] for arm, res in results.items()}
+    single = arms[regimen_module.ARM_SINGLE_RX]
+    regimen = arms[regimen_module.ARM_REGIMEN]
+    prop = arms[regimen_module.ARM_REGIMEN_PROP]
+    metrics = {
+        "n": len(cases),
+        "strata": _strata_counts(cases),
+        "cross_prescription_cases": sum(
+            1 for c in cases if c["labels"].get("crossing")),
+        "arms": arms,
+        "marginal_effect": {
+            "unsafe_pass_single_rx": single["unsafe_pass_rate"],
+            "unsafe_pass_regimen": regimen["unsafe_pass_rate"],
+            "unsafe_pass_regimen_propagation": prop["unsafe_pass_rate"],
+            "cross_catch_single_rx": single["cross_prescription_catch_rate"],
+            "cross_catch_regimen": regimen["cross_prescription_catch_rate"],
+            "cross_catch_regimen_propagation": prop["cross_prescription_catch_rate"],
+            "queue_cost_of_mechanism_A": regimen["queue_rate"],
+            "queue_cost_of_mechanism_B": round(
+                prop["queue_rate"] - regimen["queue_rate"], 4),
+            "fragile_cases": sum(1 for c in cases
+                                 if c["stratum"] == "fragile_confusable"),
+        },
+    }
+    all_rows = [{"arm": arm, **row}
+                for arm, res in results.items() for row in res["rows"]]
+    path = runner.write_run(
+        "E-H-regimen-longitudinal",
+        {"corpus": "data/corpus/regimen.jsonl", "arms": list(regimen_module.ARMS),
+         "quick": quick}, metrics, cases=all_rows)
+    print(regimen_module.summary_table(results))
+    return {"run": path, "metrics": metrics}
+
+
+def _strata_counts(cases: list[dict]) -> dict:
+    counts: dict[str, int] = {}
+    for c in cases:
+        counts[c["stratum"]] = counts.get(c["stratum"], 0) + 1
+    return dict(sorted(counts.items()))
+
+
 RUNNERS = {
     "E-A": run_e_a, "E-B": run_e_b, "E-C": run_e_c, "E-D": run_e_d,
-    "E-E": run_e_e, "E-F": run_e_f, "E-G": run_e_g,
+    "E-E": run_e_e, "E-F": run_e_f, "E-G": run_e_g, "E-H": run_e_h,
 }
 
 
@@ -533,6 +590,30 @@ def render_results_md(results: dict[str, dict]) -> str:
         m = results["E-E"]["metrics"]
         out += ["## E-E — cross-engine parity", "",
                 f"- corpus: {m['corpus']}", ""]
+    if "E-H" in results:
+        m = results["E-H"]["metrics"]
+        me = m["marginal_effect"]
+        out += ["## E-H — longitudinal regimen plane (mechanisms A+B)", "",
+                f"corpus: `data/corpus/regimen.jsonl`, n = {m['n']} "
+                f"({m['cross_prescription_cases']} cross-prescription)", "",
+                "| arm | unsafe pass on harm | cross-prescription caught | queue rate | "
+                "agreement |",
+                "|---|---|---|---|---|"]
+        for arm, a in m["arms"].items():
+            out.append(f"| {arm} | {a['unsafe_pass_rate']} | "
+                       f"{a['cross_prescription_catch_rate']} | {a['queue_rate']} | "
+                       f"{a['verdict_agreement']} |")
+        out += ["",
+                f"- incumbent single-prescription law catches "
+                f"**{me['cross_catch_single_rx']}** of cross-prescription harms",
+                f"- mechanism A (regimen composition) raises that to "
+                f"**{me['cross_catch_regimen']}** at a queue cost of "
+                f"{me['queue_cost_of_mechanism_A']}",
+                f"- mechanism B (uncertainty propagation) closes the remaining "
+                f"**{round((me['cross_catch_regimen_propagation'] or 0) - (me['cross_catch_regimen'] or 0), 4)}** "
+                f"at an added queue cost of {me['queue_cost_of_mechanism_B']} "
+                f"({me['fragile_cases']} fragile reads)",
+                ""]
     out += ["---", "",
             "_This is software benchmark evidence, not clinical validation. "
             "Perception accuracy on real images is a separate, open experiment "

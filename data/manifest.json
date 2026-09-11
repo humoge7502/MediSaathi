@@ -1,30 +1,5 @@
 {
-  "corpus": {
-    "cases": 300,
-    "generator": "tools/build_corpus.py",
-    "seed": 20260911,
-    "splits": {
-      "calibration": 44,
-      "test": 44,
-      "train": 212
-    },
-    "strata": {
-      "adversarial_confusable": 15,
-      "adversarial_corruption": 15,
-      "adversarial_injection": 10,
-      "adversarial_invented": 15,
-      "clean_pass": 55,
-      "combination": 20,
-      "confirm_queue": 30,
-      "contraindication": 25,
-      "duplicate": 20,
-      "moderate_pair": 25,
-      "refused": 15,
-      "script_mix": 15,
-      "severe_pair": 40
-    }
-  },
-  "created_at": "2026-09-11T12:38:47+00:00",
+  "created_at": "2026-09-11T16:54:40+00:00",
   "files": {
     "data/brands.csv": {
       "bytes": 6365,
@@ -50,6 +25,10 @@
       "bytes": 544,
       "sha256": "51cb5806e907199c76d8aeeaa21a94b9dac62d26288064e0b2d7c9ad44a8ecea"
     },
+    "data/corpus/regimen.jsonl": {
+      "bytes": 86077,
+      "sha256": "fa38b9bc67c7e70cd759452a35aa446c333935a4d52f8ec441d374dd47eea5d7"
+    },
     "data/corpus/splits.json": {
       "bytes": 3764,
       "sha256": "8ec31186e3ff81f82a28d7103391e519bc21d75c6444410b795c53ca47a415ab"
@@ -68,5 +47,20 @@
     }
   },
   "manifest_version": 1,
-  "snapshot_id": "9b55abc2339e8265"
+  "regimen_corpus": {
+    "cases": 113,
+    "generator": "tools/build_regimen_corpus.py",
+    "seed": 20260911,
+    "strata": {
+      "clean_continuation": 20,
+      "cross_bleeding": 12,
+      "cross_combination": 20,
+      "cross_duplicate": 15,
+      "cross_qt": 15,
+      "cross_serotonin": 12,
+      "fragile_confusable": 4,
+      "incoming_harm": 15
+    }
+  },
+  "snapshot_id": "86bce3e0d7c3b1e9"
 }

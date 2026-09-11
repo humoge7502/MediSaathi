@@ -54,12 +54,15 @@ run:              ## local API on :8000
 # ------------------------------------------------------------------ evidence
 # The evidence spine (MED-007..MED-020). Every reported number must come from a
 # run manifest under eval/runs/; these targets produce and compile them.
-experiments:      ## run E-A..E-G and archive a run manifest for each
+experiments:      ## run E-A..E-H and archive a run manifest for each
 	$(PY) tools/run_experiments.py --all
 
 # same, with reduced case counts (fast smoke; does NOT overwrite eval/results)
-experiments-quick: ## quick E-A..E-G smoke (small case counts)
+experiments-quick: ## quick E-A..E-H smoke (small case counts)
 	$(PY) tools/run_experiments.py --all --quick --json > /dev/null && echo "experiments quick: OK"
+
+regimen-corpus:   ## rebuild the cross-prescription regimen corpus (mechanism A+B evidence)
+	$(PY) tools/build_regimen_corpus.py
 
 evidence:         ## compile archived runs into the web app evidence artifact
 	$(PY) tools/export_evidence.py

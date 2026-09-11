@@ -76,6 +76,9 @@ A computer-implemented method for verifying a prescription, comprising:
 | D10 | Model-egress kill switch: configuration that disables all outbound model calls while preserving full deterministic verification | implemented + egress test |
 | D11 | Family-escalation embodiment: escalation when a plan originates with safety findings, and on adherence-decay thresholds | implemented |
 | D12 | Slot-traceable multilingual spoken plan: output assembled only from verified slots by templates, never free generation | implemented |
+| D13 | **Longitudinal regimen state**: the rule plane evaluated over the time-composed union of the incoming prescription and the patient's active regimen, findings tagged `crossing` | implemented + E-H (n=113) |
+| D14 | **Verdict-level uncertainty propagation**: per-field identity mass over a confusion neighbourhood + unknown residual; exact enumeration to a verdict distribution; the `crossing`/fragility quantities | implemented + tested |
+| D15 | **Fragility-to-queue coupling**: the confirm queue is entered when read uncertainty could *hide* harm and fragility exceeds a threshold, and deliberately not otherwise | implemented + E-H ablation |
 
 ## 4. Claim-strength matrix
 
@@ -95,6 +98,9 @@ A computer-implemented method for verifying a prescription, comprising:
 | D10 kill switch | Low | Low | Supporting | implemented | High |
 | D11 escalation | Low | Low | Product | implemented | High |
 | D12 spoken plans | Low-Medium | Low-Medium | Supporting | implemented | Medium-High |
+| D13 regimen-state composition | Medium | Medium | Strong | n=113, cross-catch 0.000 → 0.949 | Medium — union screening is a natural extension once the problem is recognised |
+| D14 verdict uncertainty propagation | Medium-High | Medium | Strong | implemented; E-H | Medium — the exact-enumeration + unknown-residual form is specific |
+| D15 fragility→queue coupling | Medium | Medium | Strong: bounded review cost | E-H ablation (0.949 → 1.000 at 3.5% queue) | Medium |
 
 ## 5. Ten-question red-team on the independent claim
 
@@ -131,7 +137,41 @@ A computer-implemented method for verifying a prescription, comprising:
     including queue-blocking removal; E-D calibration; a claim-level search of
     the nearest family.
 
-## 6. What must not be claimed
+## 6. Second independent claim concept (added 2026-09-11)
+
+A medication-verification method, comprising:
+
+- receiving a prescription artifact and extracting medication fields each with a
+  machine-generated reading confidence;
+- **composing a time-scoped regimen state** from one or more previously verified
+  medications active at a stated time, together with the incoming fields;
+- for each incoming field, computing a **distribution over database identities**
+  comprising the resolved identity at the reading confidence, a residual mass
+  distributed over a **confusion neighbourhood** of the resolved identity, and an
+  explicit residual `unknown` mass that cannot promote a field;
+- **enumerating assignments** of identities across the incoming fields and
+  evaluating a deterministic rule plane over the union of each assignment with
+  the regimen state, thereby obtaining a **distribution of verdicts**;
+- computing, from that distribution, a **fragility** = the mass of assignments
+  whose verdict differs from the assignment of highest mass;
+- **routing to a persisted confirmation queue** when (i) fragility exceeds a
+  threshold and (ii) a reachable verdict is of greater harm than the nominal
+  verdict, and otherwise publishing the nominal verdict;
+- and blocking downstream therapy-plan generation while the queue is non-empty.
+
+**Most vulnerable limitation.** "Medication reconciliation" and "uncertainty
+quantification" are both old. The defence is the *conjunction*: a rule plane
+over a time-composed union **and** an explicit identity-mass distribution with an
+unknown residual **and** the fragility-to-queue coupling restricted to the
+could-hide-harm condition **and** the measured operating curve. Any one alone is
+anticipated; the coupling and its measurement are the novelty claim.
+
+**Hardest limitation for prior art to satisfy.** Uncertainty that can only ever
+*demote* (an unknown residual cannot promote an identity), propagated exactly
+through a deterministic medication rule graph, and used as a queue-entry
+condition rather than an advisory score.
+
+## 7. What must not be claimed
 
 - The generic pattern "LLM proposes, rules decide" (broad prior art).
 - Human review of low-confidence machine output as such.

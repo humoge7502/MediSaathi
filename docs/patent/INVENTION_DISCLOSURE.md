@@ -116,6 +116,16 @@ including by the team. Everything added since (this package, the 300-case
 corpus, the run manifests, the calibration result, the binder) is **not** public
 until it is pushed. See `README.md` in this directory.
 
+**Disclosure recorded (2026-09-11, project decision).** The repository owner
+elected to publish the second mechanism (§10) together with its corpus and
+measurements, rather than hold it back for a provisional filing. That decision
+is recorded here because it changes the disclosure position: the regimen-state
+composition and the fragility-to-queue coupling are public from their push date
+and are therefore prior art against any later filing **by anyone, including the
+team**. This is a deliberate trade of patent optionality for public technical
+record. It is not a legal conclusion and it does not cure the need for
+professional review before filing anything else.
+
 ## 8. Inventor contribution records
 
 To be completed and signed by the team, with commit references. The commit
@@ -138,7 +148,67 @@ microservices; a vector database; a generic "AI + healthcare" framing; the
 public drug-interaction data itself; clinical efficacy. Any of these would
 weaken the claim story and invite easy rejection.
 
-## 10. Conclusions requiring professional review
+## 10. Second mechanism (added 2026-09-11): longitudinal regimen state with
+verdict-level uncertainty
+
+**Problem.** The first mechanism verifies *one artifact*. Harm is a property of
+the patient's whole regimen over time, not of a prescription in isolation. A
+comparison agent can add an NSAID to a regimen already containing a RAAS blocker
+and a diuretic (triple whammy), add a third QT-prolonger, add a second
+serotonergic to an SSRI, or reach the same molecule through a second brand — and
+the incumbent law, screening each artifact alone, returns `pass` on every one.
+Separately, a perception read is a *distribution*: a high-confidence read can
+still plausibly be a look-alike brand that changes the answer, and the incumbent
+gate treats a resolved read as certain once it clears the auto-confirm band.
+
+**Mechanism A — regimen-state composition.** The decision object becomes the
+union of (a) the gated incoming fields and (b) the medicines active on the
+patient at a stated time. The existing deterministic rule stages (pairwise,
+combination-class, contraindication, duplicate, cap) run over that union
+unchanged, and each finding is tagged `crossing` when it exists only because the
+two artifacts were composed.
+
+**Mechanism B — verdict-level uncertainty propagation.** Each incoming field
+carries a mass distribution over formulary identities: the resolved brand at its
+reading confidence, the residual mass spread over a *confusion neighbourhood*
+derived from brand-core string similarity, and whatever the neighbourhood cannot
+absorb left as an explicit `unknown` mass that can only demote. Enumerating the
+(pruned) cross-product of those distributions — exactly, with no sampling —
+yields a **verdict distribution**, from which two quantities follow: the
+`worst_verdict` reachable, and the `fragility` (mass of reads whose verdict
+differs from the nominal one).
+
+**The coupling (the inventive combination).** The gate now operates on the
+*verdict* as well as the field: a read whose uncertainty could **hide** harm
+(`harm(worst) > harm(nominal)`) and whose `fragility` exceeds a threshold is
+routed to the **same persisted confirmation queue** that blocks downstream plan
+generation in the first mechanism. The coupling deliberately fires only when
+uncertainty could hide harm, not whenever a read is uncertain — which keeps the
+marginal human-review cost bounded.
+
+**Technical effect (measured, E-H).** On a cross-prescription corpus (n = 113,
+66 cross-prescription), the incumbent law returns a bare `pass` on 0.832 of the
+harmful cases and catches **0.000** of the cross-prescription harms; mechanism A
+raises the catch rate to 0.949 with zero added queue; mechanisms A+B reach
+**1.000** at a 3.5% queue rate. See `EVIDENCE_BINDER.md` §9.
+
+**Independent claim concept.** A medication-verification system in which the
+decision plane is evaluated over a *time-composed union* of an incoming
+prescription and the patient's active regimen; each incoming field carries a
+mass distribution over database identities including a residual confusion
+neighbourhood and an explicit unknown mass; the system enumerates read-identity
+assignments to obtain a corresponding distribution of verdicts; computes a
+fragility from the mass of assignments that change the verdict; and, when the
+assignments could yield a worse verdict than the nominal one and fragility
+exceeds a threshold, routes the prescription to a persisted confirmation queue
+that blocks downstream generation — with the deterministic rule plane, not the
+model, assembling every verdict.
+
+**Fallback ladder (narrowest last).** F5 the union screen alone; F6 the union
+screen plus fragility computed from a single confusion neighbourhood; F7 the
+fragility-to-queue coupling alone, tied to per-field reading confidence.
+
+## 11. Conclusions requiring professional review
 
 Patentability of the claim concepts in `CLAIMS.md`; Section 3(k)/technical-effect
 characterisation; claim-level clearance around the nearest granted family;
