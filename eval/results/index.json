@@ -1,34 +1,38 @@
 {
-  "dataset_snapshot": "9b55abc2339e8265",
+  "dataset_snapshot": "86bce3e0d7c3b1e9",
   "experiments": {
     "E-A": {
       "metrics_file": "eval/results/E-A.json",
-      "run": "eval/runs/20260911T163434Z-E-A-baseline-ladder-946e37"
+      "run": "eval/runs/20260911T174112Z-E-A-baseline-ladder-830e89"
     },
     "E-B": {
       "metrics_file": "eval/results/E-B.json",
-      "run": "eval/runs/20260911T163434Z-E-B-ablations-eb06d2"
+      "run": "eval/runs/20260911T174112Z-E-B-ablations-87f07b"
     },
     "E-C": {
       "metrics_file": "eval/results/E-C.json",
-      "run": "eval/runs/20260911T163434Z-E-C-robustness-4e5671"
+      "run": "eval/runs/20260911T174113Z-E-C-robustness-782338"
     },
     "E-D": {
       "metrics_file": "eval/results/E-D.json",
-      "run": "eval/runs/20260911T163434Z-E-D-calibration-operating-point-b8055f"
+      "run": "eval/runs/20260911T174113Z-E-D-calibration-operating-point-cbda27"
     },
     "E-E": {
       "metrics_file": "eval/results/E-E.json",
-      "run": "eval/runs/20260911T163435Z-E-E-cross-engine-parity-3a0394"
+      "run": "eval/runs/20260911T174113Z-E-E-cross-engine-parity-b730b8"
     },
     "E-F": {
       "metrics_file": "eval/results/E-F.json",
-      "run": "eval/runs/20260911T163454Z-E-F-latency-availability-40138a"
+      "run": "eval/runs/20260911T174134Z-E-F-latency-availability-aaaef0"
     },
     "E-G": {
       "metrics_file": "eval/results/E-G.json",
-      "run": "eval/runs/20260911T163454Z-E-G-human-in-the-loop-f1b732"
+      "run": "eval/runs/20260911T174134Z-E-G-human-in-the-loop-b3b5f0"
+    },
+    "E-H": {
+      "metrics_file": "eval/results/E-H.json",
+      "run": "eval/runs/20260911T174134Z-E-H-regimen-longitudinal-48b096"
     }
   },
-  "generated_at": "2026-09-11T16:34:54+00:00"
+  "generated_at": "2026-09-11T17:41:34+00:00"
 }

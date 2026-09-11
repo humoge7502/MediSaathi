@@ -7,15 +7,16 @@
     "data/corpus/adversarial.jsonl": "f3d1a07952f2c8f55840ade0d1688305c506014be13a9caaf0618c228a6c2280",
     "data/corpus/cases.jsonl": "ab30dbdf003c2c76128c86a94ee4bb4c33510add5261f1e5928ad5cc5ed47f85",
     "data/corpus/codebook.json": "51cb5806e907199c76d8aeeaa21a94b9dac62d26288064e0b2d7c9ad44a8ecea",
+    "data/corpus/regimen.jsonl": "fa38b9bc67c7e70cd759452a35aa446c333935a4d52f8ec441d374dd47eea5d7",
     "data/corpus/splits.json": "8ec31186e3ff81f82a28d7103391e519bc21d75c6444410b795c53ca47a415ab",
     "data/eval_labels.csv": "36a6b977fe50fb9155d1f483847e1fb810e7874039790f8234d63b14431e97cc",
     "data/interactions.csv": "7a060917e768f1b06ecb28b166e6412691cdc3f03152b6ea5f8518a34f48ecc7",
     "data/sources.json": "1938bd3d358c6b8cedcce8f9a9d3cdf24355fd97f3627d1cba4a3c7ffe39f059"
   },
-  "dataset_snapshot": "9b55abc2339e8265",
-  "engine_git_sha": "a349342-dirty",
+  "dataset_snapshot": "86bce3e0d7c3b1e9",
+  "engine_git_sha": "38f69fb-dirty",
   "gaps": [],
-  "generated_at": "2026-09-11T16:35:14+00:00",
+  "generated_at": "2026-09-11T17:43:38+00:00",
   "parity_corpus_sha256": "8ebb4f6e4b2ab6dce20adfd309424a446298539e83edd8737d513eb0d3692fd1",
   "results": {
     "E-A": {
@@ -515,8 +516,8 @@
             ]
           },
           "finding_recall": 0.5667,
-          "latency_ms_p50": 0.076,
-          "latency_ms_p95": 0.117,
+          "latency_ms_p50": 0.078,
+          "latency_ms_p95": 0.115,
           "missed_serious": 0,
           "missed_serious_rate": 0.0,
           "n": 44,
@@ -773,8 +774,8 @@
             ]
           },
           "finding_recall": 0.0,
-          "latency_ms_p50": 0.054,
-          "latency_ms_p95": 0.081,
+          "latency_ms_p50": 0.056,
+          "latency_ms_p95": 0.086,
           "missed_serious": 21,
           "missed_serious_rate": 0.4773,
           "n": 44,
@@ -1031,8 +1032,8 @@
             ]
           },
           "finding_recall": 0.5667,
-          "latency_ms_p50": 0.071,
-          "latency_ms_p95": 0.113,
+          "latency_ms_p50": 0.072,
+          "latency_ms_p95": 0.106,
           "missed_serious": 0,
           "missed_serious_rate": 0.0,
           "n": 44,
@@ -1289,8 +1290,8 @@
             ]
           },
           "finding_recall": 0.5667,
-          "latency_ms_p50": 0.073,
-          "latency_ms_p95": 0.115,
+          "latency_ms_p50": 0.075,
+          "latency_ms_p95": 0.118,
           "missed_serious": 0,
           "missed_serious_rate": 0.0,
           "n": 44,
@@ -1550,8 +1551,8 @@
               ]
             },
             "finding_recall": 0.5714,
-            "latency_ms_p50": 0.081,
-            "latency_ms_p95": 0.125,
+            "latency_ms_p50": 0.078,
+            "latency_ms_p95": 0.119,
             "missed_serious": 0,
             "missed_serious_rate": 0.0,
             "n": 300,
@@ -1808,8 +1809,8 @@
               ]
             },
             "finding_recall": 0.5714,
-            "latency_ms_p50": 0.072,
-            "latency_ms_p95": 0.116,
+            "latency_ms_p50": 0.075,
+            "latency_ms_p95": 0.113,
             "missed_serious": 0,
             "missed_serious_rate": 0.0,
             "n": 300,
@@ -2073,7 +2074,7 @@
         },
         "finding_recall": 0.5667,
         "latency_ms_p50": 0.078,
-        "latency_ms_p95": 0.127,
+        "latency_ms_p95": 0.126,
         "missed_serious": 0,
         "missed_serious_rate": 0.0,
         "n": 44,
@@ -2331,8 +2332,8 @@
             ]
           },
           "finding_recall": 0.5667,
-          "latency_ms_p50": 0.069,
-          "latency_ms_p95": 0.096,
+          "latency_ms_p50": 0.071,
+          "latency_ms_p95": 0.106,
           "missed_serious": 2,
           "missed_serious_rate": 0.0455,
           "n": 44,
@@ -2589,8 +2590,8 @@
             ]
           },
           "finding_recall": 0.5667,
-          "latency_ms_p50": 0.077,
-          "latency_ms_p95": 0.117,
+          "latency_ms_p50": 0.078,
+          "latency_ms_p95": 0.105,
           "missed_serious": 0,
           "missed_serious_rate": 0.0,
           "n": 44,
@@ -2847,8 +2848,8 @@
             ]
           },
           "finding_recall": 0.5667,
-          "latency_ms_p50": 0.072,
-          "latency_ms_p95": 0.104,
+          "latency_ms_p50": 0.073,
+          "latency_ms_p95": 0.11,
           "missed_serious": 0,
           "missed_serious_rate": 0.0,
           "n": 44,
@@ -3106,7 +3107,7 @@
           },
           "finding_recall": 0.5667,
           "latency_ms_p50": 0.076,
-          "latency_ms_p95": 0.104,
+          "latency_ms_p95": 0.103,
           "missed_serious": 0,
           "missed_serious_rate": 0.0,
           "n": 44,
@@ -3363,8 +3364,8 @@
             ]
           },
           "finding_recall": 0.5667,
-          "latency_ms_p50": 0.075,
-          "latency_ms_p95": 0.103,
+          "latency_ms_p50": 0.073,
+          "latency_ms_p95": 0.102,
           "missed_serious": 0,
           "missed_serious_rate": 0.0,
           "n": 44,
@@ -3798,7 +3799,7 @@
         },
         "finding_recall": 0.35,
         "latency_ms_p50": 0.081,
-        "latency_ms_p95": 0.128,
+        "latency_ms_p95": 0.116,
         "missed_serious": 0,
         "missed_serious_rate": 0.0,
         "n": 44,
@@ -4055,8 +4056,8 @@
           ]
         },
         "finding_recall": 0.5667,
-        "latency_ms_p50": 0.078,
-        "latency_ms_p95": 0.112,
+        "latency_ms_p50": 0.075,
+        "latency_ms_p95": 0.11,
         "missed_serious": 0,
         "missed_serious_rate": 0.0,
         "n": 44,
@@ -4563,8 +4564,8 @@
           ]
         },
         "finding_recall": 0.5667,
-        "latency_ms_p50": 0.079,
-        "latency_ms_p95": 0.104,
+        "latency_ms_p50": 0.075,
+        "latency_ms_p95": 0.109,
         "missed_serious": 0,
         "missed_serious_rate": 0.0,
         "n": 44,
@@ -4865,8 +4866,8 @@
           ]
         },
         "finding_recall": 0.5667,
-        "latency_ms_p50": 0.079,
-        "latency_ms_p95": 0.104,
+        "latency_ms_p50": 0.075,
+        "latency_ms_p95": 0.109,
         "missed_serious": 0,
         "missed_serious_rate": 0.0,
         "n": 44,
@@ -5311,84 +5312,84 @@
         "results": [
           {
             "endpoint": "GET /healthz",
-            "max_ms": 21.042,
-            "mean_ms": 2.317,
+            "max_ms": 19.783,
+            "mean_ms": 2.121,
             "n": 200,
-            "p50_ms": 2.216,
-            "p95_ms": 2.504,
-            "p99_ms": 2.746
+            "p50_ms": 1.913,
+            "p95_ms": 2.485,
+            "p99_ms": 2.969
           },
           {
             "endpoint": "GET /metrics (O(1) GROUP BY)",
-            "max_ms": 6.388,
-            "mean_ms": 3.648,
+            "max_ms": 7.146,
+            "mean_ms": 4.14,
             "n": 200,
-            "p50_ms": 3.53,
-            "p95_ms": 4.429,
-            "p99_ms": 5.344
+            "p50_ms": 4.086,
+            "p95_ms": 5.304,
+            "p99_ms": 6.5
           },
           {
             "endpoint": "GET /formulary/search?q=par",
-            "max_ms": 3.938,
-            "mean_ms": 2.566,
+            "max_ms": 4.103,
+            "mean_ms": 2.687,
             "n": 200,
-            "p50_ms": 2.56,
-            "p95_ms": 2.908,
-            "p99_ms": 3.412
+            "p50_ms": 2.621,
+            "p95_ms": 3.104,
+            "p99_ms": 3.677
           },
           {
             "endpoint": "POST /prescriptions RX-001 (full pipeline)",
-            "max_ms": 91.462,
-            "mean_ms": 14.202,
+            "max_ms": 136.002,
+            "mean_ms": 14.04,
             "n": 200,
-            "p50_ms": 12.98,
-            "p95_ms": 17.193,
-            "p99_ms": 31.649
+            "p50_ms": 13.186,
+            "p95_ms": 16.027,
+            "p99_ms": 18.215
           },
           {
             "endpoint": "POST /prescriptions RX-002 (full pipeline)",
-            "max_ms": 117.301,
-            "mean_ms": 14.106,
+            "max_ms": 125.776,
+            "mean_ms": 15.55,
             "n": 200,
-            "p50_ms": 12.687,
-            "p95_ms": 16.004,
-            "p99_ms": 42.856
+            "p50_ms": 14.17,
+            "p95_ms": 17.764,
+            "p99_ms": 47.441
           },
           {
             "endpoint": "POST /prescriptions RX-004 (full pipeline)",
-            "max_ms": 111.433,
-            "mean_ms": 14.488,
+            "max_ms": 134.623,
+            "mean_ms": 15.213,
             "n": 200,
-            "p50_ms": 12.901,
-            "p95_ms": 16.822,
-            "p99_ms": 37.43
+            "p50_ms": 13.794,
+            "p95_ms": 17.443,
+            "p99_ms": 19.8
           },
           {
             "endpoint": "POST /prescriptions RX-008 (full pipeline)",
-            "max_ms": 121.68,
-            "mean_ms": 14.873,
+            "max_ms": 303.118,
+            "mean_ms": 16.774,
             "n": 200,
-            "p50_ms": 13.379,
-            "p95_ms": 16.491,
-            "p99_ms": 51.251
+            "p50_ms": 14.385,
+            "p95_ms": 18.317,
+            "p99_ms": 51.511
           },
           {
             "endpoint": "POST /prescriptions RX-009 (full pipeline)",
-            "max_ms": 114.038,
-            "mean_ms": 14.713,
+            "max_ms": 129.913,
+            "mean_ms": 15.628,
             "n": 200,
-            "p50_ms": 13.146,
-            "p95_ms": 17.381,
-            "p99_ms": 39.123
+            "p50_ms": 14.144,
+            "p95_ms": 18.045,
+            "p99_ms": 22.495
           },
           {
             "endpoint": "POST /prescriptions RX-012 (full pipeline)",
-            "max_ms": 137.297,
-            "mean_ms": 13.652,
+            "max_ms": 161.481,
+            "mean_ms": 15.404,
             "n": 200,
-            "p50_ms": 12.207,
-            "p95_ms": 15.055,
-            "p99_ms": 22.12
+            "p50_ms": 13.924,
+            "p95_ms": 16.991,
+            "p99_ms": 19.967
           }
         ],
         "transport": "asgi-in-process"
@@ -5399,8 +5400,8 @@
       "offline_verdict_delta": 0,
       "plane_full_corpus": {
         "n": 300,
-        "p50_ms": 0.075,
-        "p95_ms": 0.106
+        "p50_ms": 0.073,
+        "p95_ms": 0.112
       },
       "within_budget": true
     },
@@ -5451,6 +5452,72 @@
         "seconds_per_refusal": 90.0
       },
       "split": "test"
+    },
+    "E-H": {
+      "arms": {
+        "regimen": {
+          "arm": "regimen",
+          "cross_prescription_catch_rate": 0.9487,
+          "harmful_caught_rate": 1.0,
+          "mean_fragility": 0.0,
+          "n": 113,
+          "n_cross_prescription": 78,
+          "queue_rate": 0.0,
+          "serious_caught_rate": 0.8315,
+          "unsafe_pass": 0,
+          "unsafe_pass_rate": 0.0,
+          "verdict_agreement": 0.9469
+        },
+        "regimen+propagation": {
+          "arm": "regimen+propagation",
+          "cross_prescription_catch_rate": 1.0,
+          "harmful_caught_rate": 1.0,
+          "mean_fragility": 0.0448,
+          "n": 113,
+          "n_cross_prescription": 78,
+          "queue_rate": 0.0354,
+          "serious_caught_rate": 0.8315,
+          "unsafe_pass": 0,
+          "unsafe_pass_rate": 0.0,
+          "verdict_agreement": 0.9823
+        },
+        "single_rx": {
+          "arm": "single_rx",
+          "cross_prescription_catch_rate": 0.0,
+          "harmful_caught_rate": 0.1685,
+          "mean_fragility": 0.0,
+          "n": 113,
+          "n_cross_prescription": 78,
+          "queue_rate": 0.0,
+          "serious_caught_rate": 0.1685,
+          "unsafe_pass": 74,
+          "unsafe_pass_rate": 0.8315,
+          "verdict_agreement": 0.3097
+        }
+      },
+      "cross_prescription_cases": 78,
+      "marginal_effect": {
+        "cross_catch_regimen": 0.9487,
+        "cross_catch_regimen_propagation": 1.0,
+        "cross_catch_single_rx": 0.0,
+        "fragile_cases": 4,
+        "queue_cost_of_mechanism_A": 0.0,
+        "queue_cost_of_mechanism_B": 0.0354,
+        "unsafe_pass_regimen": 0.0,
+        "unsafe_pass_regimen_propagation": 0.0,
+        "unsafe_pass_single_rx": 0.8315
+      },
+      "n": 113,
+      "strata": {
+        "clean_continuation": 20,
+        "cross_bleeding": 12,
+        "cross_combination": 20,
+        "cross_duplicate": 15,
+        "cross_qt": 15,
+        "cross_serotonin": 12,
+        "fragile_confusable": 4,
+        "incoming_harm": 15
+      }
     }
   },
   "runs": [
@@ -5467,11 +5534,11 @@
         "split": "test",
         "threshold_set_id": "v1-2026-09"
       },
-      "created_at": "2026-09-11T16:34:34+00:00",
-      "dataset_snapshot": "9b55abc2339e8265",
-      "engine_git_sha": "a349342",
+      "created_at": "2026-09-11T17:41:12+00:00",
+      "dataset_snapshot": "86bce3e0d7c3b1e9",
+      "engine_git_sha": "38f69fb",
       "experiment": "E-A-baseline-ladder",
-      "run_id": "20260911T163434Z-E-A-baseline-ladder-946e37"
+      "run_id": "20260911T174112Z-E-A-baseline-ladder-830e89"
     },
     {
       "config": {
@@ -5484,11 +5551,11 @@
         ],
         "split": "test"
       },
-      "created_at": "2026-09-11T16:34:34+00:00",
-      "dataset_snapshot": "9b55abc2339e8265",
-      "engine_git_sha": "a349342",
+      "created_at": "2026-09-11T17:41:12+00:00",
+      "dataset_snapshot": "86bce3e0d7c3b1e9",
+      "engine_git_sha": "38f69fb",
       "experiment": "E-B-ablations",
-      "run_id": "20260911T163434Z-E-B-ablations-eb06d2"
+      "run_id": "20260911T174112Z-E-B-ablations-87f07b"
     },
     {
       "config": {
@@ -5503,11 +5570,11 @@
         ],
         "quick": false
       },
-      "created_at": "2026-09-11T16:34:34+00:00",
-      "dataset_snapshot": "9b55abc2339e8265",
-      "engine_git_sha": "a349342",
+      "created_at": "2026-09-11T17:41:13+00:00",
+      "dataset_snapshot": "86bce3e0d7c3b1e9",
+      "engine_git_sha": "38f69fb",
       "experiment": "E-C-robustness",
-      "run_id": "20260911T163434Z-E-C-robustness-4e5671"
+      "run_id": "20260911T174113Z-E-C-robustness-782338"
     },
     {
       "config": {
@@ -5517,32 +5584,32 @@
         "quick": false,
         "test_split_n": 44
       },
-      "created_at": "2026-09-11T16:34:34+00:00",
-      "dataset_snapshot": "9b55abc2339e8265",
-      "engine_git_sha": "a349342",
+      "created_at": "2026-09-11T17:41:13+00:00",
+      "dataset_snapshot": "86bce3e0d7c3b1e9",
+      "engine_git_sha": "38f69fb",
       "experiment": "E-D-calibration-operating-point",
-      "run_id": "20260911T163434Z-E-D-calibration-operating-point-b8055f"
+      "run_id": "20260911T174113Z-E-D-calibration-operating-point-cbda27"
     },
     {
       "config": {
         "corpus": "n=110 confirm_queue=15 contraindication=15 duplicate_atc=16 interaction=35 pass=20 refused=9"
       },
-      "created_at": "2026-09-11T16:34:35+00:00",
-      "dataset_snapshot": "9b55abc2339e8265",
-      "engine_git_sha": "a349342",
+      "created_at": "2026-09-11T17:41:13+00:00",
+      "dataset_snapshot": "86bce3e0d7c3b1e9",
+      "engine_git_sha": "38f69fb",
       "experiment": "E-E-cross-engine-parity",
-      "run_id": "20260911T163435Z-E-E-cross-engine-parity-3a0394"
+      "run_id": "20260911T174113Z-E-E-cross-engine-parity-b730b8"
     },
     {
       "config": {
         "quick": false,
         "requests_per_endpoint": 200
       },
-      "created_at": "2026-09-11T16:34:54+00:00",
-      "dataset_snapshot": "9b55abc2339e8265",
-      "engine_git_sha": "a349342",
+      "created_at": "2026-09-11T17:41:34+00:00",
+      "dataset_snapshot": "86bce3e0d7c3b1e9",
+      "engine_git_sha": "38f69fb",
       "experiment": "E-F-latency-availability",
-      "run_id": "20260911T163454Z-E-F-latency-availability-40138a"
+      "run_id": "20260911T174134Z-E-F-latency-availability-aaaef0"
     },
     {
       "config": {
@@ -5551,11 +5618,27 @@
         "reviewer_kind": "simulated policy (not human subjects)",
         "split": "test"
       },
-      "created_at": "2026-09-11T16:34:54+00:00",
-      "dataset_snapshot": "9b55abc2339e8265",
-      "engine_git_sha": "a349342",
+      "created_at": "2026-09-11T17:41:34+00:00",
+      "dataset_snapshot": "86bce3e0d7c3b1e9",
+      "engine_git_sha": "38f69fb",
       "experiment": "E-G-human-in-the-loop",
-      "run_id": "20260911T163454Z-E-G-human-in-the-loop-f1b732"
+      "run_id": "20260911T174134Z-E-G-human-in-the-loop-b3b5f0"
+    },
+    {
+      "config": {
+        "arms": [
+          "single_rx",
+          "regimen",
+          "regimen+propagation"
+        ],
+        "corpus": "data/corpus/regimen.jsonl",
+        "quick": false
+      },
+      "created_at": "2026-09-11T17:41:34+00:00",
+      "dataset_snapshot": "86bce3e0d7c3b1e9",
+      "engine_git_sha": "38f69fb",
+      "experiment": "E-H-regimen-longitudinal",
+      "run_id": "20260911T174134Z-E-H-regimen-longitudinal-48b096"
     }
   ]
 }

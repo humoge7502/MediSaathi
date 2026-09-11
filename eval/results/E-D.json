@@ -240,7 +240,7 @@
       },
       "finding_recall": 0.35,
       "latency_ms_p50": 0.081,
-      "latency_ms_p95": 0.128,
+      "latency_ms_p95": 0.116,
       "missed_serious": 0,
       "missed_serious_rate": 0.0,
       "n": 44,
@@ -497,8 +497,8 @@
         ]
       },
       "finding_recall": 0.5667,
-      "latency_ms_p50": 0.078,
-      "latency_ms_p95": 0.112,
+      "latency_ms_p50": 0.075,
+      "latency_ms_p95": 0.11,
       "missed_serious": 0,
       "missed_serious_rate": 0.0,
       "n": 44,
@@ -1005,8 +1005,8 @@
         ]
       },
       "finding_recall": 0.5667,
-      "latency_ms_p50": 0.079,
-      "latency_ms_p95": 0.104,
+      "latency_ms_p50": 0.075,
+      "latency_ms_p95": 0.109,
       "missed_serious": 0,
       "missed_serious_rate": 0.0,
       "n": 44,
@@ -1307,8 +1307,8 @@
         ]
       },
       "finding_recall": 0.5667,
-      "latency_ms_p50": 0.079,
-      "latency_ms_p95": 0.104,
+      "latency_ms_p50": 0.075,
+      "latency_ms_p95": 0.109,
       "missed_serious": 0,
       "missed_serious_rate": 0.0,
       "n": 44,
@@ -1732,5 +1732,5 @@
     "test_split_n": 44,
     "within_review_target_15pct": []
   },
-  "run": "eval/runs/20260911T163434Z-E-D-calibration-operating-point-b8055f"
+  "run": "eval/runs/20260911T174113Z-E-D-calibration-operating-point-cbda27"
 }

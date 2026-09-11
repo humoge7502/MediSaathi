@@ -496,8 +496,8 @@
           ]
         },
         "finding_recall": 0.5667,
-        "latency_ms_p50": 0.076,
-        "latency_ms_p95": 0.117,
+        "latency_ms_p50": 0.078,
+        "latency_ms_p95": 0.115,
         "missed_serious": 0,
         "missed_serious_rate": 0.0,
         "n": 44,
@@ -754,8 +754,8 @@
           ]
         },
         "finding_recall": 0.0,
-        "latency_ms_p50": 0.054,
-        "latency_ms_p95": 0.081,
+        "latency_ms_p50": 0.056,
+        "latency_ms_p95": 0.086,
         "missed_serious": 21,
         "missed_serious_rate": 0.4773,
         "n": 44,
@@ -1012,8 +1012,8 @@
           ]
         },
         "finding_recall": 0.5667,
-        "latency_ms_p50": 0.071,
-        "latency_ms_p95": 0.113,
+        "latency_ms_p50": 0.072,
+        "latency_ms_p95": 0.106,
         "missed_serious": 0,
         "missed_serious_rate": 0.0,
         "n": 44,
@@ -1270,8 +1270,8 @@
           ]
         },
         "finding_recall": 0.5667,
-        "latency_ms_p50": 0.073,
-        "latency_ms_p95": 0.115,
+        "latency_ms_p50": 0.075,
+        "latency_ms_p95": 0.118,
         "missed_serious": 0,
         "missed_serious_rate": 0.0,
         "n": 44,
@@ -1531,8 +1531,8 @@
             ]
           },
           "finding_recall": 0.5714,
-          "latency_ms_p50": 0.081,
-          "latency_ms_p95": 0.125,
+          "latency_ms_p50": 0.078,
+          "latency_ms_p95": 0.119,
           "missed_serious": 0,
           "missed_serious_rate": 0.0,
           "n": 300,
@@ -1789,8 +1789,8 @@
             ]
           },
           "finding_recall": 0.5714,
-          "latency_ms_p50": 0.072,
-          "latency_ms_p95": 0.116,
+          "latency_ms_p50": 0.075,
+          "latency_ms_p95": 0.113,
           "missed_serious": 0,
           "missed_serious_rate": 0.0,
           "n": 300,
@@ -1815,5 +1815,5 @@
     "n": 44,
     "split": "test"
   },
-  "run": "eval/runs/20260911T163434Z-E-A-baseline-ladder-946e37"
+  "run": "eval/runs/20260911T174112Z-E-A-baseline-ladder-830e89"
 }

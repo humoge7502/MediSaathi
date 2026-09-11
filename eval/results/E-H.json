@@ -1,0 +1,69 @@
+{
+  "metrics": {
+    "arms": {
+      "regimen": {
+        "arm": "regimen",
+        "cross_prescription_catch_rate": 0.9487,
+        "harmful_caught_rate": 1.0,
+        "mean_fragility": 0.0,
+        "n": 113,
+        "n_cross_prescription": 78,
+        "queue_rate": 0.0,
+        "serious_caught_rate": 0.8315,
+        "unsafe_pass": 0,
+        "unsafe_pass_rate": 0.0,
+        "verdict_agreement": 0.9469
+      },
+      "regimen+propagation": {
+        "arm": "regimen+propagation",
+        "cross_prescription_catch_rate": 1.0,
+        "harmful_caught_rate": 1.0,
+        "mean_fragility": 0.0448,
+        "n": 113,
+        "n_cross_prescription": 78,
+        "queue_rate": 0.0354,
+        "serious_caught_rate": 0.8315,
+        "unsafe_pass": 0,
+        "unsafe_pass_rate": 0.0,
+        "verdict_agreement": 0.9823
+      },
+      "single_rx": {
+        "arm": "single_rx",
+        "cross_prescription_catch_rate": 0.0,
+        "harmful_caught_rate": 0.1685,
+        "mean_fragility": 0.0,
+        "n": 113,
+        "n_cross_prescription": 78,
+        "queue_rate": 0.0,
+        "serious_caught_rate": 0.1685,
+        "unsafe_pass": 74,
+        "unsafe_pass_rate": 0.8315,
+        "verdict_agreement": 0.3097
+      }
+    },
+    "cross_prescription_cases": 78,
+    "marginal_effect": {
+      "cross_catch_regimen": 0.9487,
+      "cross_catch_regimen_propagation": 1.0,
+      "cross_catch_single_rx": 0.0,
+      "fragile_cases": 4,
+      "queue_cost_of_mechanism_A": 0.0,
+      "queue_cost_of_mechanism_B": 0.0354,
+      "unsafe_pass_regimen": 0.0,
+      "unsafe_pass_regimen_propagation": 0.0,
+      "unsafe_pass_single_rx": 0.8315
+    },
+    "n": 113,
+    "strata": {
+      "clean_continuation": 20,
+      "cross_bleeding": 12,
+      "cross_combination": 20,
+      "cross_duplicate": 15,
+      "cross_qt": 15,
+      "cross_serotonin": 12,
+      "fragile_confusable": 4,
+      "incoming_harm": 15
+    }
+  },
+  "run": "eval/runs/20260911T174134Z-E-H-regimen-longitudinal-48b096"
+}

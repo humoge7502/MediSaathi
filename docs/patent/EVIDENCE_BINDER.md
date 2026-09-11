@@ -8,13 +8,13 @@ that reads as a legal conclusion requires review by a registered patent professi
 
 ## 0. Provenance of this binder
 
-- engine git SHA: `a349342-dirty`
-- dataset snapshot id: `9b55abc2339e8265`
+- engine git SHA: `38f69fb-dirty`
+- dataset snapshot id: `86bce3e0d7c3b1e9`
 - cross-engine parity corpus `eval/parity/golden.json` sha256: `8ebb4f6e4b2ab6dce20adfd309424a446298539e83edd8737d513eb0d3692fd1`
-- generated: 2026-09-11T16:35:14+00:00
-- archived runs referenced: 7
+- generated: 2026-09-11T17:43:38+00:00
+- archived runs referenced: 8
 
-All seven experiments have an archived run; no gaps.
+All eight experiments have an archived run; no gaps.
 
 ## 1. Dataset provenance (sha256 per file)
 
@@ -26,6 +26,7 @@ All seven experiments have an archived run; no gaps.
 | `data/corpus/adversarial.jsonl` | `f3d1a07952f2c8f55840ade0d1688305c506014be13a9caaf0618c228a6c2280` |
 | `data/corpus/cases.jsonl` | `ab30dbdf003c2c76128c86a94ee4bb4c33510add5261f1e5928ad5cc5ed47f85` |
 | `data/corpus/codebook.json` | `51cb5806e907199c76d8aeeaa21a94b9dac62d26288064e0b2d7c9ad44a8ecea` |
+| `data/corpus/regimen.jsonl` | `fa38b9bc67c7e70cd759452a35aa446c333935a4d52f8ec441d374dd47eea5d7` |
 | `data/corpus/splits.json` | `8ec31186e3ff81f82a28d7103391e519bc21d75c6444410b795c53ca47a415ab` |
 | `data/eval_labels.csv` | `36a6b977fe50fb9155d1f483847e1fb810e7874039790f8234d63b14431e97cc` |
 | `data/interactions.csv` | `7a060917e768f1b06ecb28b166e6412691cdc3f03152b6ea5f8518a34f48ecc7` |
@@ -147,7 +148,7 @@ data were missing from the TS dataset. After the fix both engines agree on every
 
 ## 7. E-F — Latency, availability and offline determinism
 
-- deterministic plane over 300 cases: p50 0.075 ms, p95 0.106 ms
+- deterministic plane over 300 cases: p50 0.073 ms, p95 0.112 ms
 - within the p50 < 10 ms / p95 < 25 ms budget: **True**
 - offline verdict delta: 0 (apps/api/tests/test_egress.py asserts zero outbound calls with a poisoned socket and invariant verdicts)
 
@@ -170,19 +171,51 @@ knob, not a human-subjects panel. `ml/hitl.py --reviewers-file` accepts a real p
 accuracy and timing and produces the same table; until that panel runs, this is a sensitivity
 analysis, not a human-factors result.
 
-## 9. Run index (every number above has one of these behind it)
+## 9. E-H — Longitudinal regimen plane (mechanisms A+B)
+
+The 300-case corpus is single-prescription by construction, so it cannot contain a harm
+that exists only because two prescriptions were composed. This experiment holds the
+patient's active regimen fixed and varies the arriving prescription, comparing the
+incumbent single-prescription law against (A) regimen composition and (A+B) regimen
+composition with read-uncertainty propagation.
+
+Corpus `data/corpus/regimen.jsonl`, n = 113 (78 cross-prescription).
+
+| arm | unsafe pass on harm | cross-prescription caught | queue rate | agreement |
+|---|---|---|---|---|
+| regimen | 0.000 | 0.949 | 0.000 | 0.947 |
+| regimen+propagation | 0.000 | 1.000 | 0.035 | 0.982 |
+| single_rx | 0.832 | 0.000 | 0.000 | 0.310 |
+
+**Reading.** The incumbent law cannot express a cross-prescription harm at all: it returns
+a bare `pass` on 0.832 of the harmful cases here and catches
+0.000 of the cross-prescription harms. Composing the active
+regimen (mechanism A) closes almost all of that gap; read-uncertainty propagation
+(mechanism B) closes the remainder by routing a read whose confusion neighbourhood could
+hide a harm to the confirm queue, and removes the last unsafe auto-confirmations. The
+marginal queue cost of mechanism B is small and bounded, because the coupling fires only
+when uncertainty could *hide* harm, not whenever the read is uncertain.
+
+**Limitation stated plainly.** The confusion neighbourhood is derived from brand-core string
+similarity against this 96-brand formulary, so the fragile stratum is small (the number of
+truly look-alike pairs the data contains). The mechanism is general; the size of its
+demonstration here is bounded by the demo formulary, and a licensed DDInter/RxNorm snapshot
+would widen it.
+
+## 10. Run index (every number above has one of these behind it)
 
 | run id | experiment | engine SHA | dataset snapshot |
 |---|---|---|---|
-| `20260911T163434Z-E-A-baseline-ladder-946e37` | E-A-baseline-ladder | `a349342` | `9b55abc2339e8265` |
-| `20260911T163434Z-E-B-ablations-eb06d2` | E-B-ablations | `a349342` | `9b55abc2339e8265` |
-| `20260911T163434Z-E-C-robustness-4e5671` | E-C-robustness | `a349342` | `9b55abc2339e8265` |
-| `20260911T163434Z-E-D-calibration-operating-point-b8055f` | E-D-calibration-operating-point | `a349342` | `9b55abc2339e8265` |
-| `20260911T163435Z-E-E-cross-engine-parity-3a0394` | E-E-cross-engine-parity | `a349342` | `9b55abc2339e8265` |
-| `20260911T163454Z-E-F-latency-availability-40138a` | E-F-latency-availability | `a349342` | `9b55abc2339e8265` |
-| `20260911T163454Z-E-G-human-in-the-loop-f1b732` | E-G-human-in-the-loop | `a349342` | `9b55abc2339e8265` |
+| `20260911T174112Z-E-A-baseline-ladder-830e89` | E-A-baseline-ladder | `38f69fb` | `86bce3e0d7c3b1e9` |
+| `20260911T174112Z-E-B-ablations-87f07b` | E-B-ablations | `38f69fb` | `86bce3e0d7c3b1e9` |
+| `20260911T174113Z-E-C-robustness-782338` | E-C-robustness | `38f69fb` | `86bce3e0d7c3b1e9` |
+| `20260911T174113Z-E-D-calibration-operating-point-cbda27` | E-D-calibration-operating-point | `38f69fb` | `86bce3e0d7c3b1e9` |
+| `20260911T174113Z-E-E-cross-engine-parity-b730b8` | E-E-cross-engine-parity | `38f69fb` | `86bce3e0d7c3b1e9` |
+| `20260911T174134Z-E-F-latency-availability-aaaef0` | E-F-latency-availability | `38f69fb` | `86bce3e0d7c3b1e9` |
+| `20260911T174134Z-E-G-human-in-the-loop-b3b5f0` | E-G-human-in-the-loop | `38f69fb` | `86bce3e0d7c3b1e9` |
+| `20260911T174134Z-E-H-regimen-longitudinal-48b096` | E-H-regimen-longitudinal | `38f69fb` | `86bce3e0d7c3b1e9` |
 
-## 10. Cross-references
+## 11. Cross-references
 
 - Mechanism, embodiments and fallback ladder: `docs/patent/INVENTION_DISCLOSURE.md`
 - Normative pseudocode of the gate/fusion/precedence/queue laws: `docs/patent/PSEUDOCODE.md`
