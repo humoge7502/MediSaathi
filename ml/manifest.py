@@ -118,15 +118,29 @@ def verify_manifest(path: str = MANIFEST_PATH) -> tuple[bool, list[str]]:
 def git_sha(short: bool = True) -> str:
     """Current engine commit, short by default. Falls back to 'unknown'.
 
-    NOTE: the `--short` flag and the rev must BOTH be present; passing only
-    `--short` makes `git rev-parse` print usage and yield an empty string, which
-    silently poisoned every run manifest with `engine_git_sha: "unknown"`.
+    Two honesty details, both learned the hard way:
+
+    * the `--short` flag and the rev must BOTH be present; passing only
+      `--short` makes `git rev-parse` print usage and yield an empty string,
+      which silently poisoned every run manifest with
+      `engine_git_sha: "unknown"`;
+    * when TRACKED files are modified, the commit alone does not identify the
+      code that produced a run. Such a revision is reported as `<sha>-dirty`
+      so a manifest can never claim a clean-tree provenance it does not have.
+      Untracked files are ignored on purpose: the evidence artefacts (new run
+      directories) are untracked by nature and are not engine code.
     """
     args = ["git", "rev-parse", "--short", "HEAD"] if short else ["git", "rev-parse", "HEAD"]
     try:
         out = subprocess.run(
             args, cwd=ROOT, capture_output=True, text=True, timeout=5, check=False)
-        return out.stdout.strip() or "unknown"
+        sha = out.stdout.strip() or "unknown"
+        if sha == "unknown":
+            return sha
+        dirty = subprocess.run(
+            ["git", "status", "--porcelain", "--untracked-files=no"], cwd=ROOT,
+            capture_output=True, text=True, timeout=5, check=False)
+        return f"{sha}-dirty" if dirty.stdout.strip() else sha
     except Exception:  # pragma: no cover - only in odd environments
         return "unknown"
 
