@@ -204,8 +204,8 @@ Full model: [docs/security/SECURITY_AUDIT.md](docs/security/SECURITY_AUDIT.md) a
 make test          # API suite: 112 tests (safety, golden paths, perception, red-team, parity, body-cap)
 make eval          # API benchmark table
 make ablation      # A1-vs-A4 counterfactual
-make demo-check    # full offline API demo gate
-make parity        # cross-engine parity gate: both planes agree 25/25
+make demo-check    # full offline API demo gate (sealed cases + tests + eval + python parity)
+make parity        # cross-engine parity gate: both planes agree 25/25 (needs bun; parity-py = python side only)
 make web-check     # web gate: lint + typecheck + selftest + parity + integration tests + build
 make web-e2e       # browser E2E: build + standalone server + 12 Playwright journeys
 cd apps/web && bun run selftest   # the deterministic suite, in seconds

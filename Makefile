@@ -10,7 +10,7 @@ PY ?= python3
 API_DIR := apps/api
 WEB_DIR := apps/web
 
-.PHONY: setup test eval ablation audit demo-check bake-judge run parity web web-build web-typecheck web-selftest web-test web-check web-e2e db-push docker clean
+.PHONY: setup test eval ablation audit demo-check bake-judge run parity parity-py web web-build web-typecheck web-selftest web-test web-check web-e2e db-push docker clean
 
 setup:            ## install contracts + api (editable) and dev deps
 	cd packages/contracts && $(PY) -m pip install -e . -q
@@ -31,16 +31,19 @@ audit:            ## static sanity: contracts importable, eval harness runs
 	$(PY) -c "import medisaathi_contracts as m; print('contracts', m.__version__)"
 	$(PY) eval/eval.py --json > /dev/null && echo "eval harness OK"
 
-parity:           ## cross-engine parity gate (ADR-0012): both planes must agree 25/25
-	$(PY) eval/parity/parity.py
+parity:           ## cross-engine parity gate (ADR-0012): both planes must agree 25/25 (needs bun)
+	$(MAKE) -s parity-py
 	cd $(WEB_DIR) && bun run parity
 
-demo-check:       ## FULL offline demo gate - API tier (sealed cases + tests + eval + parity)
+parity-py:        ## Python-side parity gate (25/25) — the API tier's engine-only check
+	$(PY) eval/parity/parity.py
+
+demo-check:       ## FULL offline demo gate - API tier (sealed cases + tests + eval + python parity)
 	@echo "== demo-check: offline pipeline through sealed cases =="
 	$(PY) tools/demo_check.py
 	$(MAKE) -s test
 	$(MAKE) -s eval
-	$(MAKE) -s parity
+	$(MAKE) -s parity-py
 
 bake-judge:       ## re-bake the zero-network judge cache from the live pipeline
 	$(PY) tools/bake_judge_cache.py
