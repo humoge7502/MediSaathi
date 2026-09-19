@@ -11,7 +11,7 @@ table, and writes a review report. It **never mutates the live data unless
 
 Schema (must match data/*.csv exactly):
 
-    brands.csv            brand,molecule,form,atc,aware,jas_price_inr,source
+    brands.csv            brand,molecule,form,atc,aware_class,jas_price_inr,source
     interactions.csv      molecule_a,molecule_b,severity,mechanism,source
     contraindications.csv molecule,condition_code,severity,note
 
@@ -32,7 +32,7 @@ DATA_DIR = os.path.join(ROOT, "data")
 SNAPSHOT_DIR = os.path.join(DATA_DIR, "snapshots")
 
 SCHEMAS: dict[str, tuple[str, ...]] = {
-    "brands": ("brand", "molecule", "form", "atc", "aware", "jas_price_inr", "source"),
+    "brands": ("brand", "molecule", "form", "atc", "aware_class", "jas_price_inr", "source"),
     "interactions": ("molecule_a", "molecule_b", "severity", "mechanism", "source"),
     "contraindications": ("molecule", "condition_code", "severity", "note"),
 }
@@ -60,9 +60,16 @@ def _read_csv(path: str) -> tuple[list[str], list[dict]]:
 def validate(kind: str, header: list[str], rows: list[dict]) -> list[str]:
     problems: list[str] = []
     expected = SCHEMAS[kind]
-    if tuple(header) != expected:
+    # Backward compat: dataset package shipped brands with `aware`; canonical is `aware_class`.
+    norm_header = ["aware_class" if (kind == "brands" and h == "aware") else h for h in header]
+    if tuple(norm_header) != expected:
         problems.append(f"header mismatch: expected {list(expected)}, got {header}")
         return problems
+    # Normalize alias so downstream checks work on either header.
+    if kind == "brands" and "aware" in (rows[0].keys() if rows else []):
+        for row in rows:
+            if "aware_class" not in row or not (row.get("aware_class") or "").strip():
+                row["aware_class"] = row.get("aware", "")
     for i, row in enumerate(rows, start=2):
         if not any((v or "").strip() for v in row.values()):
             problems.append(f"line {i}: empty row")
@@ -78,8 +85,8 @@ def validate(kind: str, header: list[str], rows: list[dict]) -> list[str]:
                         problems.append(f"line {i}: negative price")
                 except ValueError:
                     problems.append(f"line {i}: non-numeric jas_price_inr {price!r}")
-            if (row.get("aware") or "").strip() not in AWARE:
-                problems.append(f"line {i}: aware must be one of {sorted(AWARE)}")
+            if (row.get("aware_class") or row.get("aware") or "").strip() not in AWARE:
+                problems.append(f"line {i}: aware_class must be one of {sorted(AWARE)}")
         if kind in ("interactions", "contraindications"):
             sev = (row.get("severity") or "").strip().lower()
             if sev not in SEVERITIES:

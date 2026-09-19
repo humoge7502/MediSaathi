@@ -3,10 +3,10 @@
   "benchmark": "medisaathi-fixture-v0",
   "brand_recall": 1.0,
   "build_tag": "dev",
-  "frequency_recall": 0.9444,
+  "frequency_recall": 0.9938,
   "latency_ms_max": 0,
   "latency_ms_p50": 0,
-  "n": 12,
+  "n": 111,
   "refusal_precision": 1.0,
   "verdict_agreement": 1.0
 }

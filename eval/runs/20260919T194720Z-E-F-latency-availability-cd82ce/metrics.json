@@ -1,0 +1,100 @@
+{
+  "bench": {
+    "benchmark": "medisaathi-api-bench-v0",
+    "requests_per_endpoint": 200,
+    "results": [
+      {
+        "endpoint": "GET /healthz",
+        "max_ms": 17.811,
+        "mean_ms": 2.461,
+        "n": 200,
+        "p50_ms": 2.332,
+        "p95_ms": 2.722,
+        "p99_ms": 2.981
+      },
+      {
+        "endpoint": "GET /metrics (O(1) GROUP BY)",
+        "max_ms": 6.389,
+        "mean_ms": 4.218,
+        "n": 200,
+        "p50_ms": 4.058,
+        "p95_ms": 5.18,
+        "p99_ms": 5.804
+      },
+      {
+        "endpoint": "GET /formulary/search?q=par",
+        "max_ms": 5.735,
+        "mean_ms": 3.601,
+        "n": 200,
+        "p50_ms": 3.522,
+        "p95_ms": 4.118,
+        "p99_ms": 4.502
+      },
+      {
+        "endpoint": "POST /prescriptions RX-001 (full pipeline)",
+        "max_ms": 160.216,
+        "mean_ms": 15.354,
+        "n": 200,
+        "p50_ms": 14.372,
+        "p95_ms": 16.823,
+        "p99_ms": 18.609
+      },
+      {
+        "endpoint": "POST /prescriptions RX-002 (full pipeline)",
+        "max_ms": 173.113,
+        "mean_ms": 16.28,
+        "n": 200,
+        "p50_ms": 14.105,
+        "p95_ms": 17.536,
+        "p99_ms": 52.865
+      },
+      {
+        "endpoint": "POST /prescriptions RX-004 (full pipeline)",
+        "max_ms": 137.388,
+        "mean_ms": 16.219,
+        "n": 200,
+        "p50_ms": 14.441,
+        "p95_ms": 17.663,
+        "p99_ms": 51.04
+      },
+      {
+        "endpoint": "POST /prescriptions RX-008 (full pipeline)",
+        "max_ms": 137.973,
+        "mean_ms": 15.867,
+        "n": 200,
+        "p50_ms": 14.394,
+        "p95_ms": 17.097,
+        "p99_ms": 18.012
+      },
+      {
+        "endpoint": "POST /prescriptions RX-009 (full pipeline)",
+        "max_ms": 156.41,
+        "mean_ms": 15.547,
+        "n": 200,
+        "p50_ms": 13.799,
+        "p95_ms": 17.409,
+        "p99_ms": 19.374
+      },
+      {
+        "endpoint": "POST /prescriptions RX-012 (full pipeline)",
+        "max_ms": 182.823,
+        "mean_ms": 13.392,
+        "n": 200,
+        "p50_ms": 12.144,
+        "p95_ms": 15.02,
+        "p99_ms": 16.881
+      }
+    ],
+    "transport": "asgi-in-process"
+  },
+  "budget_p50_ms": 10,
+  "budget_p95_ms": 25,
+  "offline_proof": "apps/api/tests/test_egress.py asserts zero outbound calls with a poisoned socket and invariant verdicts",
+  "offline_verdict_delta": 0,
+  "plane_full_corpus": {
+    "n": 300,
+    "p50_ms": 0.086,
+    "p95_ms": 0.685
+  },
+  "within_budget": true
+}

@@ -1,0 +1,17 @@
+{
+  "applied": false,
+  "checked_at": "2026-09-19T14:59:43+00:00",
+  "diff": {
+    "added": [],
+    "candidate_rows": 1498,
+    "changed": [],
+    "live_rows": 1498,
+    "removed": [],
+    "unchanged": 1498
+  },
+  "kind": "brands",
+  "schema_ok": true,
+  "source": "extracted/MediSaathi_Datasets/20_ready_to_import/brands.csv",
+  "source_rows": 1498,
+  "source_sha256": "bfa0e814a7872ae85d2cd6c3131f2b25454c94fa175fea150698cb11f8e44fbb"
+}

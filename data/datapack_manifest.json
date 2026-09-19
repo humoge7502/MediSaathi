@@ -1,0 +1,760 @@
+{
+  "date": "2026-09-20",
+  "engine_verified": "99/99 new eval fixtures verified against the real SafetyEngine on the expanded data; import_snapshot schema validation passed for all three CSVs",
+  "file_count": 125,
+  "files": {
+    "DATA_MANIFEST.json": {
+      "bytes": 44970,
+      "provenance": null,
+      "rows": null,
+      "sha256": "df07bcde38f5d6a8086d762b8db9fb89887e33b0d67da488f4bf4ce941218901"
+    },
+    "README.md": {
+      "bytes": 18105,
+      "provenance": null,
+      "rows": null,
+      "sha256": "87708d144cf28d4ca5d10fe585a56b4c35cd22f1f73bdadf5693bbf8111b1229"
+    },
+    "annotation/ANNOTATION_PROTOCOL.md": {
+      "bytes": 1541,
+      "provenance": "Dual-annotator sheets for the full 300+113 corpus + Cohen's kappa tool (MED-005). Blank annotator columns; no engine leakage.",
+      "rows": null,
+      "sha256": "e3ad40432dc9ef07c2628cc55bb80b4792fcd27f377e43e3fa4bb3a35dc6d245"
+    },
+    "annotation/cases_annotation_sheet.csv": {
+      "bytes": 26861,
+      "provenance": "Dual-annotator sheets for the full 300+113 corpus + Cohen's kappa tool (MED-005). Blank annotator columns; no engine leakage.",
+      "rows": 300,
+      "sha256": "06047a9ff5a54ebb93831d65ff60cab3f85011613b690424df7dc5b5dc731eda"
+    },
+    "annotation/kappa_check.py": {
+      "bytes": 1604,
+      "provenance": "Dual-annotator sheets for the full 300+113 corpus + Cohen's kappa tool (MED-005). Blank annotator columns; no engine leakage.",
+      "rows": null,
+      "sha256": "a6c3e5cf4771b3007851efcd7374fd6eed5a303bd509672875e7743164a70a2b"
+    },
+    "annotation/regimen_annotation_sheet.csv": {
+      "bytes": 7121,
+      "provenance": "Dual-annotator sheets for the full 300+113 corpus + Cohen's kappa tool (MED-005). Blank annotator columns; no engine leakage.",
+      "rows": 113,
+      "sha256": "f787eeb95954572368fee4d6a40ac15e1c033e6986891dca0f921ba55062c6ed"
+    },
+    "drop_in/brands.csv": {
+      "bytes": 126459,
+      "provenance": "All 96 repo rows byte-preserved + Jan Aushadhi PMBJP auto-rows (approx 2026-09 price) + real Indian market brands (MRP approx). Authored dataset, no licensed-source copying.",
+      "rows": 1434,
+      "sha256": "08d76cdb3e458e52efbcccf3c040532c3b2f9248f81e71128283e72b30ce4b13"
+    },
+    "drop_in/contraindications.csv": {
+      "bytes": 112381,
+      "provenance": "27 repo rows verbatim + 611 label/public-health guidance rules over 30+ condition codes (DailyMed SPL-level, Indian formulary guidance).",
+      "rows": 638,
+      "sha256": "67e5896fa2d94aa121b8f734fea114fbc82b44c3580ea862702dae4a5ef4fdc6"
+    },
+    "drop_in/interactions.csv": {
+      "bytes": 1349292,
+      "provenance": "81 repo rows verbatim + 3,084 rows from ~120 pharmacology templates (CYP enzymes, QT, serotonergic, chelation, renal/hepatic). Mechanism+management authored at label level; DDInter 2.0 (CC BY-NC-SA 4.0) used only as a coverage pattern.",
+      "rows": 3165,
+      "sha256": "c2ab72bc0f1da32bdf91a5f85a530ba1a41f21dc7044a2de8081a38079767e42"
+    },
+    "eval_scale/cases_manifest_expanded.json": {
+      "bytes": 24620,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "a21750cf8bd5928049eac02df8628b6aca1de63307f0b72e86dd789a517fea65"
+    },
+    "eval_scale/copilot_evals_60.json": {
+      "bytes": 12590,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "dcfc75caa06f88ca4556a1717e37f749761e7f11627b08f6da0ad09fc07aba19"
+    },
+    "eval_scale/eval_labels_expanded.csv": {
+      "bytes": 5209,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": 111,
+      "sha256": "990578e855396f9eaf43d70d3e9ba2d4e9c8545e9cf97d25cb5684a8bdd75e4f"
+    },
+    "eval_scale/fixtures/RX-013.json": {
+      "bytes": 203,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "e5e14a37b523afd68ccfb08102d0d3bb1faff8bcf7b9e697c538142058333147"
+    },
+    "eval_scale/fixtures/RX-014.json": {
+      "bytes": 183,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "5d6ba263cd5fcb77d9929fbb0bb6a891326218ef8c7a96bbbe53f782624ea3c0"
+    },
+    "eval_scale/fixtures/RX-015.json": {
+      "bytes": 119,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "ee18040f5b2ee452ba6640ff087e07fd59485ea932a1512dd9b403ef60a92cae"
+    },
+    "eval_scale/fixtures/RX-016.json": {
+      "bytes": 99,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "ce78340efe72ba7965de5efb0bce5068408ceaf57bd8e42c6e4147241657e17e"
+    },
+    "eval_scale/fixtures/RX-017.json": {
+      "bytes": 116,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "d4896e844efea3bbfd4a81dc119dc1f585438e9b0b211cc10ed061bff6b654c6"
+    },
+    "eval_scale/fixtures/RX-018.json": {
+      "bytes": 100,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "8d6a49867264b91dcc9e57a9ca7523d4f7bda746d456e9bbc1e65300b707f721"
+    },
+    "eval_scale/fixtures/RX-019.json": {
+      "bytes": 179,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "15b9955404641a5f0707129882babee3ee5d8187ddf261dd3f003cd01c6cdd20"
+    },
+    "eval_scale/fixtures/RX-020.json": {
+      "bytes": 102,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "b6f7e186da3e56d56e6075ed2e17a715a554f9a625a749d9363525a38285c58a"
+    },
+    "eval_scale/fixtures/RX-021.json": {
+      "bytes": 101,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "4a57f183cda979935c618a7fb1842ecbbbda3c2d9d517c87c43ebf9357b65ef0"
+    },
+    "eval_scale/fixtures/RX-022.json": {
+      "bytes": 178,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "1da84dfbcd88bc3ad949f8ac2697e9ffbf8b9372172f8a83cf07b6f600279810"
+    },
+    "eval_scale/fixtures/RX-023.json": {
+      "bytes": 99,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "49eec55c677afcd6a2e2dc045dc65709ee93d706dd35a6940360532ae88cd073"
+    },
+    "eval_scale/fixtures/RX-024.json": {
+      "bytes": 101,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "4acbf275bb48a303808c0567fd576f915a30e95ac60b75be0cf811b93b8df0b8"
+    },
+    "eval_scale/fixtures/RX-025.json": {
+      "bytes": 98,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "f10b1dec6cd733311e46598c2b8dec991a067b262f09c51e05d64b33641dcb9b"
+    },
+    "eval_scale/fixtures/RX-026.json": {
+      "bytes": 100,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "9e8580fa5b4d628f08093f09fedbdf33a65d6c4ecf608b63d6bbb8f548160e78"
+    },
+    "eval_scale/fixtures/RX-027.json": {
+      "bytes": 101,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "7a46ed75d00160f5ed9c097802562de8231780ef9790dfa4d88d68d112d84b08"
+    },
+    "eval_scale/fixtures/RX-028.json": {
+      "bytes": 102,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "8617dd63732e9d4079e9c2116cb1973fabf89b425941ad2ea3dad1544f899710"
+    },
+    "eval_scale/fixtures/RX-029.json": {
+      "bytes": 98,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "88297eaf295a6ed7611df401643ba9061f1ec1c48b1d9b5ca02386b81d20018e"
+    },
+    "eval_scale/fixtures/RX-030.json": {
+      "bytes": 112,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "fe6ed72e1b47747b154530b55c9e50171c2d8c650d147ba9b3da9ab891d6aeaf"
+    },
+    "eval_scale/fixtures/RX-031.json": {
+      "bytes": 99,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "bce20e217bafdb18cbe571d189e19bca628baf18eae920a316dfe08676688d9b"
+    },
+    "eval_scale/fixtures/RX-032.json": {
+      "bytes": 100,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "59f5dd14050933c513d9a722f066f308a83c069ce11fd653c4a5c475e6e7640e"
+    },
+    "eval_scale/fixtures/RX-033.json": {
+      "bytes": 112,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "95424853dd57d58a3e47541fdd167f4fbd9f7e767c21364654f7b42cecfe7509"
+    },
+    "eval_scale/fixtures/RX-034.json": {
+      "bytes": 101,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "35294cc2fd28b5fe014e5532d20614f10e47549a27a87f6eb0f446a44f311450"
+    },
+    "eval_scale/fixtures/RX-035.json": {
+      "bytes": 101,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "1d1ff714cf728615246a1771c6a0ca6569a6adff3f779ba1924f9b9863014baa"
+    },
+    "eval_scale/fixtures/RX-036.json": {
+      "bytes": 100,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "f4c1c0f7aa1c01a6a1dfc3d0a0523292a3a9a249784253dbcbb0004244f520c2"
+    },
+    "eval_scale/fixtures/RX-037.json": {
+      "bytes": 97,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "60db40f98e60e36b14b848c4b5418fc44aa38f70397deaafeef77e5475edb573"
+    },
+    "eval_scale/fixtures/RX-038.json": {
+      "bytes": 110,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "b042947b2bd09a51e77ea486d00665f0b6453885d7e7892271e65b97b0f0f048"
+    },
+    "eval_scale/fixtures/RX-039.json": {
+      "bytes": 100,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "a1e6f71aea3f4bbd9a3e3cf87fb4a77865a950d33dafccbc3a231793865585a8"
+    },
+    "eval_scale/fixtures/RX-040.json": {
+      "bytes": 114,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "a4818faf75501c7fb58431b53bdd7ec95546e13cac73a58dd48a239a72912c39"
+    },
+    "eval_scale/fixtures/RX-041.json": {
+      "bytes": 103,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "8972f35baf947a0c6813309755cf7bffc429c31c81b53eb1006d75c38b5036b0"
+    },
+    "eval_scale/fixtures/RX-042.json": {
+      "bytes": 98,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "a53a46cf7efa478932903e8c624f8474245bf041b43b008335f77e3231106afb"
+    },
+    "eval_scale/fixtures/RX-043.json": {
+      "bytes": 186,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "1d891cf79a364c2b4e774f258b1c5fd96d8cd78b51b4975b4187685239b12537"
+    },
+    "eval_scale/fixtures/RX-044.json": {
+      "bytes": 184,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "0d49a15975170449ce8c5f0144ad387c42fe27447e91df0e239e24dbbc0a340a"
+    },
+    "eval_scale/fixtures/RX-045.json": {
+      "bytes": 182,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "b2b2fd17574672d5218eccc979516546ca392b94b880e7ab0f59f621bcf14ab4"
+    },
+    "eval_scale/fixtures/RX-046.json": {
+      "bytes": 184,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "ac6e0fb9997e2d3e221d035abf7890e3aa9104c4dd8475e9cabf52a63192101f"
+    },
+    "eval_scale/fixtures/RX-047.json": {
+      "bytes": 186,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "60e796e1a3afabf2fd73389b1a9e1f5e4fd9888c953d85221060f0ef837a7e04"
+    },
+    "eval_scale/fixtures/RX-048.json": {
+      "bytes": 187,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "2a7e9023395f1ee5c5def5d668c927dc2e228520f98a68d6c0e86e6182934a4d"
+    },
+    "eval_scale/fixtures/RX-049.json": {
+      "bytes": 184,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "6dfab5425d65ec9b5d57d60011a8a11e396ac6be3def76f1af25c6bc9be11fca"
+    },
+    "eval_scale/fixtures/RX-050.json": {
+      "bytes": 182,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "22971b7f575a3a4d1f3d70b34e5d07bc6b029c68c8269cef77cf0115bc61ba32"
+    },
+    "eval_scale/fixtures/RX-051.json": {
+      "bytes": 185,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "8e1a4c6363453fc0a3c28d360277206c01a7c80b4cfe0f8ac49d6e28646e4299"
+    },
+    "eval_scale/fixtures/RX-052.json": {
+      "bytes": 183,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "523e24fc190e5919d5ff1085548f6e22ea419769fa4f4103e6ff50c8f232af05"
+    },
+    "eval_scale/fixtures/RX-053.json": {
+      "bytes": 193,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "c6b05f1a10ecb294a9995bb836265da1d809968b5e92873f949efcb9d36659ad"
+    },
+    "eval_scale/fixtures/RX-054.json": {
+      "bytes": 193,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "06aa13a35530de9c5549489208b9f5d050041dd70cb88b7c9648c1feae71da75"
+    },
+    "eval_scale/fixtures/RX-055.json": {
+      "bytes": 189,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "273520c0545363b575b01d27565861df63b69ec325d7e08901ea3c12734c687b"
+    },
+    "eval_scale/fixtures/RX-056.json": {
+      "bytes": 189,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "ca7bdc794c3c791e29579a53f151f59aab5ccb075eb81885139ee3b33a952e09"
+    },
+    "eval_scale/fixtures/RX-057.json": {
+      "bytes": 189,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "81d091fa6ea24b2f45ce204a922a4229802bf9fca0f2e1f8275d844a85c21238"
+    },
+    "eval_scale/fixtures/RX-058.json": {
+      "bytes": 190,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "e100c70f7d59dc2435941de06cb8557a1476abec5ee2a9162f01d39b88ddae05"
+    },
+    "eval_scale/fixtures/RX-059.json": {
+      "bytes": 191,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "6d1a61015ee58bba95be90558de2e4ed05246ea76ac30d9be5ef8f36e126a44e"
+    },
+    "eval_scale/fixtures/RX-060.json": {
+      "bytes": 187,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "51bf1ac84a95ecdc589f90d5f9770afe573657d10bb70ef48f37ddfe3d8a6495"
+    },
+    "eval_scale/fixtures/RX-061.json": {
+      "bytes": 182,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "773d2e69c5e9a61551b7075dcd14b9baa5fd703bc8c4ac84b6b67247ab8223b1"
+    },
+    "eval_scale/fixtures/RX-062.json": {
+      "bytes": 191,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "4816d9cab78b415d1ffd7033811dc72631194cf162b95a28ce74ab6542448344"
+    },
+    "eval_scale/fixtures/RX-063.json": {
+      "bytes": 190,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "160a2af0add2a19cc23ef9f32540348b0e8a361d96999da8cdca2ab6ed95d773"
+    },
+    "eval_scale/fixtures/RX-064.json": {
+      "bytes": 187,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "99c31c58a73c837201e0d78bae453e93acf473cef8ea4a2aad54ad4f6ec81467"
+    },
+    "eval_scale/fixtures/RX-065.json": {
+      "bytes": 189,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "d4f9a30e82a91ad2bbea6fd13567979730414e4dddcc5508874bebb2a1ed1635"
+    },
+    "eval_scale/fixtures/RX-066.json": {
+      "bytes": 192,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "cc689804507abbb12b68d8f4cb65d740effb6c5237f9bc906d51c85563fd064b"
+    },
+    "eval_scale/fixtures/RX-067.json": {
+      "bytes": 189,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "24e3a6eba3fc7e31ba7799f03d2a071b5eb825ae2db7bee9887188746278f392"
+    },
+    "eval_scale/fixtures/RX-068.json": {
+      "bytes": 190,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "f030c1234f410e249997a6cff43903144b6ec23981264805b61d019fcff48a71"
+    },
+    "eval_scale/fixtures/RX-069.json": {
+      "bytes": 184,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "1df211f1b3de3968b3e3b10b7e58ee4623e683881ec69596ada6380fe442f20b"
+    },
+    "eval_scale/fixtures/RX-070.json": {
+      "bytes": 187,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "faee3c9c029b928c5d50c0e8088fae406dd944ebdbe0813ead3829d3fcba32bd"
+    },
+    "eval_scale/fixtures/RX-071.json": {
+      "bytes": 184,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "28f63059b339871983f7fb08b6cab373d4d729c5d1047a3edc7a83c6b00910d6"
+    },
+    "eval_scale/fixtures/RX-072.json": {
+      "bytes": 191,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "7ce00552b5f781ccd7fd76873c8b09dd7aaacdfcd7f7037cb86436b521f32294"
+    },
+    "eval_scale/fixtures/RX-073.json": {
+      "bytes": 189,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "a45dcaba0926c489fecfba7410b244ddf8e52ca02bb013f5301adbd67f8eee96"
+    },
+    "eval_scale/fixtures/RX-074.json": {
+      "bytes": 100,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "3ea931f92d785ff03463c9d0be23c9f8d6db19635e124a697815ce23c8cb44d0"
+    },
+    "eval_scale/fixtures/RX-075.json": {
+      "bytes": 106,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "e697a8b1ff49e8d37b19c70d7c665f67fd124f42d2a1f109fa20aaf85585bbbf"
+    },
+    "eval_scale/fixtures/RX-076.json": {
+      "bytes": 100,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "0f4fba99503d1fd9827ae2e612e4764c966cd1eb5c23730ce1250321719be909"
+    },
+    "eval_scale/fixtures/RX-077.json": {
+      "bytes": 104,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "0d6ec99bae8521bf7edc1ab12f63eb6f36e0e322adda04445e8812f7b07ec033"
+    },
+    "eval_scale/fixtures/RX-078.json": {
+      "bytes": 104,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "c8fcf4defea50c4e3dc904dd085dc7dbde50b009a3eb8d2d30717c44a64886b9"
+    },
+    "eval_scale/fixtures/RX-079.json": {
+      "bytes": 104,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "d94ce15f002cdecefa5d565c9b6a911802570abcf8b200e957d2581d09245e6f"
+    },
+    "eval_scale/fixtures/RX-080.json": {
+      "bytes": 106,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "b96c2ed0d10075983ec47ee685271f15a5d440256b2b477be72e233e07cfdc02"
+    },
+    "eval_scale/fixtures/RX-081.json": {
+      "bytes": 101,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "f107ba76d45e60802220f145d49b709f08910935758e6c7f1658a3dffe774fa7"
+    },
+    "eval_scale/fixtures/RX-082.json": {
+      "bytes": 106,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "42d8437c7cbfc6de98dd53e8f91e5460e1f64874f1f1614e52b5b9734ac6e2ce"
+    },
+    "eval_scale/fixtures/RX-083.json": {
+      "bytes": 106,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "a15b3a43d08eff41223ab148a85875e8a8a1ee5a091a56703982a8909256ad19"
+    },
+    "eval_scale/fixtures/RX-084.json": {
+      "bytes": 183,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "a1bc41e6eb0f244adb6ba2318a9eca6b99281755f2f03032160965d8ed023967"
+    },
+    "eval_scale/fixtures/RX-085.json": {
+      "bytes": 192,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "7f565611c74ecb872e1cc92526144f2d25c0fd0bc8aa665b0b35d03a56aafb54"
+    },
+    "eval_scale/fixtures/RX-086.json": {
+      "bytes": 191,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "b65308ad4174c9bf04ea1f44168a61fd5c0b2a58489d308c5d209b007f8340e0"
+    },
+    "eval_scale/fixtures/RX-087.json": {
+      "bytes": 188,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "3230fe87b8945184a92327ca10c11375c1a50d7e673d5d78c042327b8e026504"
+    },
+    "eval_scale/fixtures/RX-088.json": {
+      "bytes": 187,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "ebba597f0a064de4495c0db5279dad154e30d2e8cfca9a9ed4b3574914c7dc6a"
+    },
+    "eval_scale/fixtures/RX-089.json": {
+      "bytes": 189,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "157f82fb068b6ff2a6703fc8659c9faabadc37e25b2f01cfbe21549e8847e2d0"
+    },
+    "eval_scale/fixtures/RX-090.json": {
+      "bytes": 188,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "a9d90c9aa5680846817cfeefa431e7e84b1903b221c98113996a1f5dfb8a5d61"
+    },
+    "eval_scale/fixtures/RX-091.json": {
+      "bytes": 188,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "c21d93c317597a91f8c57f6904397a50bee47c16dcdfbe6ce447d11bc9a7d008"
+    },
+    "eval_scale/fixtures/RX-092.json": {
+      "bytes": 104,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "f2027ef827def30afa81e878d093498c713090c7fda4474717de48ad451d5f7d"
+    },
+    "eval_scale/fixtures/RX-093.json": {
+      "bytes": 104,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "9bd94a2c4729d40ecdcadc08f3e5ec7c8b767e0ba6a03102b5ccf5981e7e4633"
+    },
+    "eval_scale/fixtures/RX-094.json": {
+      "bytes": 187,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "25c8247cb920669f0f3243873fefbdd15e68f5aa3329511cbf7c361567adf482"
+    },
+    "eval_scale/fixtures/RX-095.json": {
+      "bytes": 102,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "ad055143328696a8921a5752fb6865d66668224a8822afd5fc8f1db6a194617d"
+    },
+    "eval_scale/fixtures/RX-096.json": {
+      "bytes": 100,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "6efb095fe0f8833d6320665264a0121ddd94d40b0a804cf1892a223843308470"
+    },
+    "eval_scale/fixtures/RX-097.json": {
+      "bytes": 183,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "0339307100efd4f59fe63f4a922d36835fc32d8e48580cc5da27280918fe607f"
+    },
+    "eval_scale/fixtures/RX-098.json": {
+      "bytes": 105,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "779b95a190ea2e04130aa50ccc8c92daa37c573c746a71bed2e4939868113694"
+    },
+    "eval_scale/fixtures/RX-099.json": {
+      "bytes": 191,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "a9f27875d0b1b86867ce3e8d719fa6c4ade37c2c43d08706fffd8f325da9f843"
+    },
+    "eval_scale/fixtures/RX-100.json": {
+      "bytes": 106,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "c87d80fa13e94ff441de33d130108c2a89cdc5f1e7b9e7ad02c44759640fb1ac"
+    },
+    "eval_scale/fixtures/RX-101.json": {
+      "bytes": 265,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "0de6e0a56015831d53b17a5fb30708ec30ce456655da502bdf885ea141af7414"
+    },
+    "eval_scale/fixtures/RX-102.json": {
+      "bytes": 187,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "d55eb87f2cff9f9421af43205bacafee339df9199094b4af75b0339d793c892c"
+    },
+    "eval_scale/fixtures/RX-103.json": {
+      "bytes": 183,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "51d790c1400b8243fe50de5ca0c49bc1babcf795573eee12b37fa0d81b3cb0cd"
+    },
+    "eval_scale/fixtures/RX-104.json": {
+      "bytes": 101,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "49f643e3e118f9f93fedf5d16c3c69c09556fa1fa8c7f74438d53d80d8e844c8"
+    },
+    "eval_scale/fixtures/RX-105.json": {
+      "bytes": 100,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "93488eef91ab891dec1b9eadefefe3a97528904dd8f8003b20ed229dbaeb2d2e"
+    },
+    "eval_scale/fixtures/RX-106.json": {
+      "bytes": 34,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "1a66d153efe68bd58e72747323d2a84c5e014feda06b1b5b9354ed49ec19cd4f"
+    },
+    "eval_scale/fixtures/RX-107.json": {
+      "bytes": 35,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "71ec9855a7f925f841b4be1356d505811fc95ecb6c55d032003bf5e9057420a9"
+    },
+    "eval_scale/fixtures/RX-108.json": {
+      "bytes": 34,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "1a66d153efe68bd58e72747323d2a84c5e014feda06b1b5b9354ed49ec19cd4f"
+    },
+    "eval_scale/fixtures/RX-109.json": {
+      "bytes": 35,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "71ec9855a7f925f841b4be1356d505811fc95ecb6c55d032003bf5e9057420a9"
+    },
+    "eval_scale/fixtures/RX-110.json": {
+      "bytes": 34,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "1a66d153efe68bd58e72747323d2a84c5e014feda06b1b5b9354ed49ec19cd4f"
+    },
+    "eval_scale/fixtures/RX-111.json": {
+      "bytes": 35,
+      "provenance": "99 new OCR-simulated fixtures + labels + manifest; every expected verdict computed by running the real SafetyEngine + assemble() on the expanded data (99/99 intent agreement).",
+      "rows": null,
+      "sha256": "71ec9855a7f925f841b4be1356d505811fc95ecb6c55d032003bf5e9057420a9"
+    },
+    "import_ready/new_brands.csv": {
+      "bytes": 126453,
+      "provenance": null,
+      "rows": 1434,
+      "sha256": "d71e0d16d81f50b47baf1c1947631e4745ce75a165714a6fbf4b8bf834aa8c8b"
+    },
+    "import_ready/new_contraindications.csv": {
+      "bytes": 112381,
+      "provenance": null,
+      "rows": 638,
+      "sha256": "67e5896fa2d94aa121b8f734fea114fbc82b44c3580ea862702dae4a5ef4fdc6"
+    },
+    "import_ready/new_interactions.csv": {
+      "bytes": 1349292,
+      "provenance": null,
+      "rows": 3165,
+      "sha256": "c2ab72bc0f1da32bdf91a5f85a530ba1a41f21dc7044a2de8081a38079767e42"
+    },
+    "kb/knowledge_chunks.jsonl": {
+      "bytes": 945664,
+      "provenance": "2,365 original patient-education chunks (KnowledgeChunk schema) tagged with public-domain registry families (MedlinePlus/NHS/WHO). No invented statistics.",
+      "rows": 2365,
+      "sha256": "be826282dd1bf90a507f16da40ef9c11101576e84048fbb290f40446e84725c2"
+    },
+    "longitudinal/refill_timelines.jsonl": {
+      "bytes": 104240,
+      "provenance": "Synthetic-curated refill timeline seed (150 patients, PDC-computed); explicitly marked synthetic - real cohorts need ICMR data-sharing.",
+      "rows": 150,
+      "sha256": "ccfb4caf2fd71ef8a0ae60f9106dbfae8f4a4c9e5b1247e6588a43742890a047"
+    },
+    "ocr_speech_bench/en_ta_hi_slot_sentences.csv": {
+      "bytes": 150489,
+      "provenance": "Synthetic en/ta/hi slot-grounded sentence seed (brand+form+frequency slots); real handwriting needs hospital MoU.",
+      "rows": 250,
+      "sha256": "91be390319dc5d50ef23fb01261852b1fefdfe813e9dd850692042cd7328da9c"
+    },
+    "reference/adherence_studies.json": {
+      "bytes": 4373,
+      "provenance": "Structured studies incl. the four already cited in repo research/adherence.json, now with n/measure/rate/CI/factors/URL fields.",
+      "rows": null,
+      "sha256": "052ce325613d3c3716d737d24857ece59c0badd1e515681cdabd3ce3e5530921"
+    },
+    "reference/dose_caps.csv": {
+      "bytes": 26925,
+      "provenance": "Adult oral daily caps from label-level knowledge (DailyMed/BNF-level), curated; unit caveats in notes.",
+      "rows": 301,
+      "sha256": "910d3761a8ba85b2c2d3a1bceb37212fc6565127d9a1669076b1c355029abeec"
+    },
+    "reference/faers_pvpi_signals.csv": {
+      "bytes": 45425,
+      "provenance": "openFDA FAERS public-dashboard signal BANDS (approximate; re-pull for live counts) + PvPI relevance mapping.",
+      "rows": 148,
+      "sha256": "cd53be066a9931c7f2031cffb02a0e77bfdd34f28a847abe66d4c5af068f5e97"
+    },
+    "reference/qt_prolonging.csv": {
+      "bytes": 8438,
+      "provenance": "CredibleMeds-style Known/Possible/Conditional categories summarised from public list descriptions; production use requires CredibleMeds license.",
+      "rows": 47,
+      "sha256": "08d714a2a1e022f8e52c0f2d858b69e4e5b5d56ea4c041b07e0bf0649876b0f9"
+    },
+    "reference/rxnorm_molecule_map.csv": {
+      "bytes": 60301,
+      "provenance": "RxNorm RxCUIs from curated knowledge (273 verified, 113 flagged needs_rxnav_lookup - never guessed). RxNav REST fill script included.",
+      "rows": 386,
+      "sha256": "40489896d09ff23a8b13abd800f190be1590b1f7610a5a8e8f1483c6cf5eb215"
+    },
+    "reference/salad_confusables.csv": {
+      "bytes": 55015,
+      "provenance": "FDA Name Differentiation / ISMP Confused Names pattern-level pairs (paraphrased) + in-formulary brand pairs + edit-distance pairs derived from the shipped brand list (TD-13 method).",
+      "rows": 318,
+      "sha256": "23293d17aff45aace760ca020fe900901fefd0791f2bc1dfd68f99d6b6b8b59f"
+    },
+    "rxnorm_fill.py": {
+      "bytes": 2190,
+      "provenance": null,
+      "rows": null,
+      "sha256": "195ec7d1b6b11ea88d4c2785fa0aecf41f0780cd25fbdedcd84114981a4126e0"
+    },
+    "tools_sync_web_dataset.py": {
+      "bytes": 3954,
+      "provenance": null,
+      "rows": null,
+      "sha256": "2e167a07e449e7aebe6f072023b52adf3a9938e68d2d108b764b4c673bc8e0bc"
+    }
+  },
+  "license": "Data: CC BY 4.0 (matching repo Data license). Code: MIT. Contains NO verbatim content from CIMS/MIMS/1mg/Stockley/BNF/Micromedex (proprietary) and no patient data. DDInter used as coverage pattern only under CC BY-NC-SA 4.0 attribution; CredibleMeds categories require a production license.",
+  "pack": "MediSaathi Data Pack",
+  "schema_target": "MediSaathi repo data/*.csv + import_snapshot.py SCHEMAS + KnowledgeChunk + EvalCase + fixtures RX-*"
+}

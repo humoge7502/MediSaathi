@@ -41,6 +41,7 @@ Method: start the production standalone server, fetch `/`, extract every
 |---|---|---|
 | `apps/web` (product app), pre-prune | 615 kB | measured before the dependency prune |
 | `apps/web` (product app), post-prune | **639 kB** | same method; framework patch drift (regenerated lockfile pulls newer Next/React patches). The prune removed only never-imported packages, so client JS is unchanged within noise; the win is install size (827 → 170 packages) and audit surface, not bundle bytes |
+| `apps/web`, post nonce-CSP + regimen escalation (measured 2026-09-12) | **654.8 kB / 9 chunks** | same method. The regimen plane is server-side only (zero client bytes); the delta is framework patch drift + the axe-driven a11y fixes. Dynamic rendering (required by the nonce CSP) changes *when* the HTML is built, not how much JS the browser downloads |
 
 Re-measurement note (honesty): the dependency prune did NOT shrink the client
 bundle, because everything removed was dead — never imported by any module.

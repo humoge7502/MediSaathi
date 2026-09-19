@@ -23,6 +23,17 @@ if (!process.env.DATABASE_URL) {
   if (!existsSync(dirname(dbPath))) mkdirSync(dirname(dbPath), { recursive: true });
   process.env.DATABASE_URL = `file:${dbPath}`;
   console.log(`[start] DATABASE_URL -> ${process.env.DATABASE_URL}`);
+} else if (process.env.DATABASE_URL.startsWith("file:")) {
+  // A RELATIVE file: URL (the schema's convention is relative to prisma/)
+  // cannot be resolved inside the standalone bundle — anchor it to the same
+  // prisma-relative location the schema and db:push use.
+  const rel = process.env.DATABASE_URL.slice("file:".length);
+  if (rel && !rel.startsWith("/")) {
+    const anchored = resolve(join(appRoot, "prisma"), rel);
+    if (!existsSync(dirname(anchored))) mkdirSync(dirname(anchored), { recursive: true });
+    process.env.DATABASE_URL = `file:${anchored}`;
+    console.log(`[start] DATABASE_URL anchored -> ${process.env.DATABASE_URL}`);
+  }
 }
 
 const server = join(appRoot, ".next", "standalone", "server.js");

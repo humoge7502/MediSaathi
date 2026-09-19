@@ -1,0 +1,17 @@
+{
+  "applied": false,
+  "checked_at": "2026-09-19T15:30:55+00:00",
+  "diff": {
+    "added": [],
+    "candidate_rows": 6971,
+    "changed": [],
+    "live_rows": 6971,
+    "removed": [],
+    "unchanged": 6971
+  },
+  "kind": "interactions",
+  "schema_ok": true,
+  "source": "data/interactions.csv",
+  "source_rows": 6971,
+  "source_sha256": "6b21f1550bf3cdfde552e98cd48ab0035b89c002959dccee8ee7b0e1112f7219"
+}

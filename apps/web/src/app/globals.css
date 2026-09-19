@@ -51,16 +51,30 @@
 
 :root {
   --radius: 0.75rem;
+  /* Motion tokens — one language, defined once (design-system ADR). */
+  --vy-duration-fast: 150ms;
+  --vy-duration-normal: 300ms;
+  --vy-duration-slow: 500ms;
+  --vy-ease-out: cubic-bezier(0.22, 1, 0.36, 1); /* decelerating entrances */
   /* Vaidya "Clinical Editorial" palette — warm paper, pine green, clay accent */
   --vy-pine: oklch(0.45 0.08 175);        /* deep pine — primary brand */
   --vy-pine-ink: oklch(0.32 0.06 175);
-  --vy-clay: oklch(0.62 0.13 55);         /* warm clay — accent CTA */
+  --vy-clay: oklch(0.55 0.13 55);         /* warm clay — accent CTA (white text >= 4.5:1) */
   --vy-severe: oklch(0.5 0.17 25);        /* rose — severe findings */
   --vy-warn: oklch(0.68 0.13 75);         /* amber — moderate findings */
   --vy-safe: oklch(0.55 0.11 155);        /* green — pass */
   --vy-paper: oklch(0.975 0.004 90);      /* warm paper background */
   --vy-ink: oklch(0.22 0.01 160);
   --vy-hairline: oklch(0.9 0.005 90);
+  /* Dark-band tokens (the law section): named colors instead of inline oklch
+     literals scattered through components (hallmark gate 48). Values match the
+     audited dark-band palette; the axe contrast gate covers them. */
+  --vy-mint: oklch(0.8 0.09 175);         /* mint — eyebrows/numbers on dark */
+  --vy-dark-ink: oklch(0.96 0.005 90);    /* primary text on dark */
+  --vy-dark-ink-soft: oklch(0.85 0.01 90); /* body text on dark */
+  --vy-panel: oklch(0.27 0.02 170);       /* diagram panel surface */
+  --vy-panel-border: oklch(0.4 0.03 175); /* panel hairline */
+  --vy-clay-bright: oklch(0.78 0.13 75);  /* gate line on dark (>= 4.5:1) */
 
   --background: var(--vy-paper);
   --foreground: var(--vy-ink);
@@ -180,7 +194,9 @@
   font-size: 0.6875rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--vy-pine);
+  /* pine-ink, not pine: 11px uppercase type needs >= 4.5:1 on paper
+     (axe color-contrast, TD-4 gate). Dark sections override inline. */
+  color: var(--vy-pine-ink);
   font-weight: 600;
 }
 
@@ -210,6 +226,58 @@
   border: 1px solid color-mix(in oklch, var(--vy-pine) 25%, transparent);
 }
 
+/* ---------- Editorial display utilities ---------- */
+
+/* Oversized display type for the hero: fluid clamp() scale, tight leading,
+   optical tracking. Used exactly once — scale is hierarchy, not decoration. */
+.vy-display {
+  font-size: clamp(2.75rem, 6.5vw, 5.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+/* Section number: small monospace index (01, 02…) anchoring each editorial
+   band — metadata that reinforces the narrative order without decoration. */.vy-section-num {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  color: var(--vy-pine);
+}
+
+/* Nav link underline: a hairline that grows from the left on hover —
+   communicates affordance without color change alone (WCAG 1.4.1). */
+.vy-nav-link {
+  position: relative;
+}
+.vy-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--vy-duration-fast) var(--vy-ease-out);
+}
+.vy-nav-link:hover::after,
+.vy-nav-link:focus-visible::after {
+  transform: scaleX(1);
+}
+/* Active section (header nav, driven by IntersectionObserver): the underline
+   stays and the link is marked aria-current for screen readers. */
+.vy-nav-link[data-active="true"]::after {
+  transform: scaleX(1);
+}
+
+/* Sticky-header-aware anchor scrolling: smooth where allowed, offset so
+   section headings never hide under the bar. */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
+}
+
 /* thin scrollbars for long lists */
 .vy-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
 .vy-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
@@ -227,17 +295,28 @@
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.vy-fade-up { animation: vy-fade-up 0.5s ease both; }
+/* Enter motion uses a decelerating ease-out curve (emil kowalski's rule:
+   things arriving on screen should decelerate into place, never accelerate
+   out of it). One motion, one curve — hierarchy comes from stagger, below. */
+.vy-fade-up { animation: vy-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
 /* Staggered entrance for landing sections: one motion, three delays —
    hierarchy communicated by rhythm, not by different animations. */
-.vy-fade-up-d1 { animation: vy-fade-up 0.5s ease 0.08s both; }
-.vy-fade-up-d2 { animation: vy-fade-up 0.5s ease 0.16s both; }
-.vy-fade-up-d3 { animation: vy-fade-up 0.5s ease 0.24s both; }
+.vy-fade-up-d1 { animation: vy-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both; }
+.vy-fade-up-d2 { animation: vy-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.16s both; }
+.vy-fade-up-d3 { animation: vy-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.24s both; }
 
-/* WCAG 2.3.3 / prefers-reduced-motion: every entrance animation above is
-   disabled; content simply appears. No animation ever blocks a task. */
+/* WCAG 2.3.3 / prefers-reduced-motion: every entrance animation and hover
+   transition collapses to ~zero; content simply appears and stays. The
+   universal guard replaces per-class escaped selectors so any future
+   hover/entrance effect is covered without touching this file. */
 @media (prefers-reduced-motion: reduce) {
   .vy-fade-up, .vy-fade-up-d1, .vy-fade-up-d2, .vy-fade-up-d3 { animation: none; }
-  .hover\:scale-\[1\.02\]:hover, .hover\:scale-\[1\.01\]:hover { transform: none; }
+  .vy-nav-link::after { transition: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

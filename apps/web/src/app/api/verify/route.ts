@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { ok, fail, bumpMetric, audit } from "@/lib/api-helpers";
 import { runSafetyPlane, overallConfidence } from "@/lib/safety/engine";
 import { DEFAULT_THRESHOLD_SET_ID } from "@/lib/safety/gate";
+import { applyRegimenEscalation } from "@/lib/regimen-state";
 import { syncQueue } from "@/lib/queue";
 import { extractPrescriptionLines } from "@/lib/ai/extraction";
 
@@ -92,11 +93,18 @@ export async function POST(req: NextRequest) {
     extraction.lines.map((l) => l.confidence)
   );
 
-  // 3. Persist with provenance
+  // 3. Longitudinal regimen escalation (mechanisms A+B) — the law lives in
+  // ONE place (applyRegimenEscalation) so verify and the queue-resolve path
+  // apply it identically. Composed harms escalate the verdict; read
+  // uncertainty that could hide harm queues; refills pass.
+  const { regimen, finalVerdict, finalHeadline, confirmQueue, escalated: regimenEscalated } =
+    await applyRegimenEscalation(report, extraction, contexts, DEFAULT_THRESHOLD_SET_ID);
+
+  // 4. Persist with provenance
   const prescription = await db.prescription.create({
     data: {
         rawText: text,
-        verdict: report.verdict,
+        verdict: finalVerdict,
         confidence: confidence,
       extractionJson: JSON.stringify({ lines: extraction.lines, engine: extraction.engine, note: extraction.note ?? null }),
       findingsJson: JSON.stringify(report.findings),
@@ -105,27 +113,32 @@ export async function POST(req: NextRequest) {
       // Gate-law provenance (MED-003): threshold set + fused score per verdict.
       thresholdSetId: report.gate?.thresholdSetId ?? DEFAULT_THRESHOLD_SET_ID,
       prescriptionFused: report.gate?.prescriptionFused ?? confidence,
+      // Regimen escalation provenance (TD-12): nominal/worst verdicts,
+      // fragility, verdict mass, crossing findings.
+      regimenJson: JSON.stringify(regimen),
     },
   });
 
   // Persist the human-confirmation band as a state machine (MED-002). The plan
-  // endpoint blocks while any of these rows is pending.
-  await syncQueue(prescription.id, report.confirmQueue);
+  // endpoint blocks while any of these rows is pending; the regimen escalation
+  // rides the same machine (fieldIndex 0).
+  await syncQueue(prescription.id, confirmQueue);
 
   await Promise.all([
     bumpMetric("verifications"),
-    ...(report.verdict === "refused" ? [bumpMetric("refusals")] : []),
+    ...(finalVerdict === "refused" ? [bumpMetric("refusals")] : []),
     ...(report.findings.length > 0 ? [bumpMetric("findings_raised", report.findings.length)] : []),
-    audit("verify.run", { verdict: report.verdict, engine: extraction.engine, findings: report.findings.length, engineMs: report.engineMs }),
+    ...(regimenEscalated ? [bumpMetric("regimen_escalations")] : []),
+    audit("verify.run", { verdict: finalVerdict, engine: extraction.engine, findings: report.findings.length, engineMs: report.engineMs, regimenEscalated }),
   ]);
 
   return ok({
     prescriptionId: prescription.id,
-    verdict: report.verdict,
-    headline: report.headline,
+    verdict: finalVerdict,
+    headline: finalHeadline,
     findings: report.findings,
     confirmed: report.confirmed,
-    confirmQueue: report.confirmQueue,
+    confirmQueue,
     aggregateDailyMg: report.aggregateDailyMg,
     extractionEngine: extraction.engine,
     extractionNote: extraction.note,
@@ -138,5 +151,18 @@ export async function POST(req: NextRequest) {
     prescriptionFused: report.gate?.prescriptionFused ?? confidence,
     prescriptionBand: report.gate?.prescriptionBand ?? null,
     gateDecisions: report.gate?.decisions ?? [],
+    // Longitudinal regimen screen (TD-12): shown in the UI when present.
+    regimen: regimen
+      ? {
+          verdict: regimen.verdict,
+          nominalVerdict: regimen.nominalVerdict,
+          worstVerdict: regimen.worstVerdict,
+          fragility: regimen.fragility,
+          queued: regimen.queued,
+          findings: regimen.findings,
+          worlds: regimen.worlds,
+          activeCount: regimen.provenance.activeCount as number,
+        }
+      : null,
   });
 }

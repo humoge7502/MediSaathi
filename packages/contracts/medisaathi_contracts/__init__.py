@@ -35,18 +35,56 @@ __version__ = "0.3.0"
 
 # Patient-context codes the deterministic contraindication engine understands.
 # The product contract: context is DECLARED by the user, never inferred by a model.
+# Expanded 2026-09-18 from the FDA-label-derived snapshot (728 rules): every
+# condition_code present in data/contraindications.csv must be declarable,
+# otherwise validate_context() would silently drop the rule.
+# Union-merged 2026-09-20 with MediSaathi_DataPack (2836 brands / 9673 pairs /
+# 1272 rules, 43 condition codes): pack-only codes activated so the new rules
+# fire instead of staying dormant. Aliases kept (g6pd_deficiency +
+# glucose_6_pd_deficiency, long_qt_history + qt_prolongation_history,
+# alcohol + alcohol_use_disorder) because rules use exact codes.
 CONTEXT_CODES = (
     "pregnancy",
     "active_bleeding",
+    "age_under_2",
+    "age_under_4",
     "age_under_12",
     "age_under_16",
     "age_under_18",
+    "age_over_65",
     "peptic_ulcer",
     "asthma_aspirin_sensitive",
     "renal_severe",
+    "renal_moderate",
     "hepatic_severe",
+    "hepatic_moderate",
     "hyperkalemia",
+    "hypokalemia",
     "hypoglycemia_unaware",
     "iodinated_contrast_48h",
     "myasthenia_gravis",
+    "heart_failure",
+    "hf_refduced",
+    "heart_block",
+    "epilepsy",
+    "hypersensitivity",
+    "lactation",
+    "qt_prolongation_history",
+    "long_qt_history",
+    "alcohol",
+    "alcohol_use_disorder",
+    "grapefruit",
+    "hypothyroid_uncontrolled",
+    "thyroid_disease",
+    "glucose_6_pd_deficiency",
+    "g6pd_deficiency",
+    "diabetes_insipidus",
+    "diabetes",
+    "pheochromocytoma",
+    "porphyria",
+    "glaucoma",
+    "bph",
+    "bradycardia",
+    "gout",
+    "osteoporosis",
 )

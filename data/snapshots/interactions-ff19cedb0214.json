@@ -1,0 +1,17 @@
+{
+  "applied": false,
+  "checked_at": "2026-09-19T14:59:43+00:00",
+  "diff": {
+    "added": [],
+    "candidate_rows": 6971,
+    "changed": [],
+    "live_rows": 6971,
+    "removed": [],
+    "unchanged": 6971
+  },
+  "kind": "interactions",
+  "schema_ok": true,
+  "source": "extracted/MediSaathi_Datasets/20_ready_to_import/interactions.csv",
+  "source_rows": 6971,
+  "source_sha256": "ff19cedb0214199e7130bb9aa4e0fdde331e938ff07fbaf5d39511d70ab03f31"
+}

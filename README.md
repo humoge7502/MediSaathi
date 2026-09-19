@@ -108,22 +108,23 @@ double.
 | Web engine self-test suite | **18/18 verdicts correct (100%)**, suite ~5–7 ms | Deterministic, reproducible, runs live in the Evidence tab |
 | Web copilot refusal gates | emergency + scope refusals fire in ~0 ms, before any generation | Deterministic (pure regex + retrieval floor) |
 | Web live degraded-tier verify | warfarin+aspirin → interaction; triple whammy → combination rule; child+doxy → contraindication; garbage → confirm queue — all **without any model** | Measured via HTTP smoke (see docs/TESTING.md) |
-| Web E2E (Playwright) | **14/14 browser journeys** on the deterministic tier: landing → verify (interaction/combination/queue/injection-inert) → pharmacist review console (queue blocks the plan, human resolves) → copilot gates → evidence (+ archived experiments) → today + dose guardrail | `make web-e2e` |
+| Web E2E (Playwright) | **17/17 browser journeys** on the deterministic tier: landing → verify (interaction/combination/queue/injection-inert) → pharmacist review console (queue blocks the plan, human resolves) → copilot gates → evidence (+ archived experiments) → today + dose guardrail — **plus an axe-core accessibility gate** (landing, workspace, evidence: zero serious/critical WCAG violations) | `make web-e2e` |
 | API suite | **191 tests passing** (safety properties, golden paths, perception, red-team, parity gate, property-based invariants, observability, egress proof, FHIR export, consent stub, NLG coverage, longitudinal regimen plane) | `make test` |
-| API fixture benchmark | brand recall 1.00 · frequency recall 0.94 · verdict agreement 1.00 · refusal precision 1.00 (n=12) | `make eval` |
+| API fixture benchmark | brand recall 1.00 · frequency recall 0.9938 · verdict agreement 1.00 · refusal precision 1.00 (n=111) | `make eval` |
 | API latency | p50 11.3–12.4 ms, p95 13.4–15.4 ms (in-process ASGI, 100-request bench) | `python3 tools/bench.py` |
-| Web route integration tests | **68 passing** — verify → plan → dose guardrail → family → confirm-queue state machine → gate law → circuit breaker, plus middleware security contracts and the copilot gates, over an isolated SQLite, perception layer sealed (no model keys needed) | `cd apps/web && bun run test` |
+| Web route integration tests | **90 passing** — verify → plan → dose guardrail → family → confirm-queue state machine → gate law → circuit breaker, plus the **longitudinal regimen escalation** (composed harms, fragile reads, refill exemption, human-resolution release), middleware security contracts and the copilot gates, over an isolated SQLite, perception layer sealed (no model keys needed) | `cd apps/web && bun run test` |
+| Longitudinal regimen escalation (product tier) | triple whammy assembled across two visits escalates the published verdict in the live product; the E-H fragile-read scenario (gemfibrozil active, "Ecosprin 75" read) queues instead of passing; same-brand refills pass; a human acceptance releases the plan (E-G reviewed arm) | `tests/regimen-route.test.ts` + E2E |
 | Cross-engine parity (ADR-0012/MED-015) | **110/110 golden cases agree** between the TypeScript and Python safety planes, from one shared versioned corpus | `make parity` |
 | A1/A4 ablation | verdict agreement **1.00 → 0.17** without the gate/formulary | `make ablation` — the safety plane, not the reading, is the product |
 | **Baseline ladder E-A** (300-case corpus, frozen test split n=44) | A0 agreement 0.23 / unsafe 0.77 · A1 0.71 / 0.30 · **A4 1.00 / 0.000** | `python tools/run_experiments.py --experiments E-A` |
 | **Ablations E-B** (Δ vs A4) | removing the gate **−0.295 agreement / +0.295 unsafe**; removing the formulary fusion or queue blocking **−0.250 / +0.250** | `python tools/run_experiments.py --experiments E-B` |
-| **Calibration E-D** | frozen operating point `v1-2026-09` on the held-out split: agreement 1.000 · unsafe 0.000 · ECE(safety) 0.148 | `python tools/run_experiments.py --experiments E-D` |
+| **Calibration E-D** | frozen operating point `v1-2026-09` on the held-out split: agreement 1.000 · unsafe 0.000 · ECE(safety) 0.145 | `python tools/run_experiments.py --experiments E-D` |
 | **Robustness E-C** | zero unsafe auto-confirms across 6 corruption levels (256 cases); invented brands never auto-confirm; queue replays refused | `python tools/run_experiments.py --experiments E-C` |
 | **Deterministic plane E-F** | p50 ≈ 0.07 ms / p95 ≈ 0.11 ms per verification over the whole corpus; offline verdict delta 0 | `python tools/run_experiments.py --experiments E-F` |
 | **Human-in-the-loop E-G** | queue arm matches blanket-refusal accuracy (1.000) at ~4.5× less review time, and beats blind automation (0.705) | `python tools/run_experiments.py --experiments E-G` |
-| **Longitudinal regimen E-H** (n=113, 66 cross-prescription) | incumbent single-prescription law catches **0.000** of cross-prescription harms; **regimen composition 0.949**; **+ uncertainty propagation 1.000** at a 3.5% marginal queue cost | `python tools/run_experiments.py --experiments E-H` |
+| **Longitudinal regimen E-H** (n=119, 84 cross-prescription) | incumbent single-prescription law catches **0.000** of cross-prescription harms; **regimen composition 0.905**; **+ uncertainty propagation 1.000** at an 8.4% marginal queue cost | `python tools/run_experiments.py --experiments E-H` |
 | API property tests | **5 safety invariants hold across ~900 generated prescriptions** (totality, gate integrity, pair symmetry, dose caps, gate monotonicity) — hypothesis finds no counterexample | `pytest apps/api/tests/test_properties.py` |
-| Copilot eval (10 labeled cases) | 100% type accuracy, groundedness 1.00, safety 1.00 (single run, automated rubric judge) | Engineering telemetry, **not** clinical validation |
+| Copilot eval (70-case harness: 10 original + 60 with adversarial/injection/Tamil/Hindi) | harness runs offline for type-routing; last model-measured run on the original 10: 100% type accuracy, groundedness 1.00, safety 1.00 (single run, automated rubric judge) | Engineering telemetry, **not** clinical validation |
 
 Honesty rules embedded in the product: dataset provenance (DDInter / Stockley /
 FDA / CredibleMeds / BMJ / WHO / NHS / MedlinePlus) is displayed wherever data
@@ -155,7 +156,8 @@ plane; the TypeScript mirror is the filed next step (see `docs/TECH_DEBT.md`).
   (ECE / Brier / reliability / threshold sweep), corruption + injection suite, and
   the human-in-the-loop simulation. Deterministic and offline.
 - **`data/corpus/`** — a 300-case labeled corpus with a 70/15/15 stratified
-  split, an annotation codebook, and sha256 manifests (`data/manifest.json`).
+  split, a 119-case longitudinal regimen corpus (fragile confusable stratum:
+  10 cases), an annotation codebook, and sha256 manifests (`data/manifest.json`).
 - **`eval/runs/`** — one archived manifest per experiment run: config, dataset
   SHAs, engine commit, environment, metrics, per-case outcomes.
 - **`docs/patent/`** — invention disclosure, claim concepts + strength matrix,
@@ -163,7 +165,9 @@ plane; the TypeScript mirror is the filed next step (see `docs/TECH_DEBT.md`).
   evidence binder.
 
 **Honest limits of this evidence** (stated here, not buried): the corpus is
-synthetic-curated and dual human annotation with a kappa is still outstanding;
+synthetic-curated and dual human annotation with a kappa is still outstanding
+(the dual-annotator sheets + protocol + kappa tool are shipped under
+`data/annotation/` ready for two pharmacists — MED-005);
 perception accuracy on real images is a separate open experiment; the E-G
 reviewer is a simulated policy, not a human panel; and the 15% review-burden
 target is reported as unmet rather than redefined. Full detail in
@@ -258,7 +262,9 @@ honestly, visibly, and safely*.
   (`/metrics.prometheus`) — zero new dependencies, pinned by tests.
 - **Web tier** — the same contract in Next.js middleware: request-ID
   correlation + per-client sliding-window limits + bounded-memory eviction on
-  `/api/*`; CSP, frame-deny and permissions-policy headers on every route;
+  `/api/*`; a **nonce-based CSP** (`script-src 'nonce-…' 'strict-dynamic'` —
+  no `'unsafe-inline'` for scripts), frame-deny and permissions-policy headers
+  on every route;
   caregiver join codes from a CSPRNG (`crypto.getRandomValues`), never `Math.random()`.
 - **Privacy by design** — no PII; single demo identity; data stays local
   (SQLite); no third-party transmission beyond the optional model prompt.
@@ -279,9 +285,10 @@ make experiments-quick # fast smoke of the experiment spine
 make evidence          # compile the run archive into the Evidence-tab artifact
 make binder            # build the patent evidence binder from the run archive
 make web-check         # web gate: lint + typecheck + selftest + parity + integration tests + build
-make web-e2e           # browser E2E: build + standalone server + 14 Playwright journeys
+make web-e2e           # browser E2E: build + standalone server + 14 Playwright journeys + 3 axe a11y scans
+cd apps/web && bun run test       # route-handler integration tests (isolated SQLite) — now incl. the regimen escalation
+
 cd apps/web && bun run selftest   # the deterministic suite, in seconds
-cd apps/web && bun run test       # route-handler integration tests (isolated SQLite)
 ```
 
 CI (`.github/workflows/ci.yml`) runs all three tiers on every push/PR — API,
@@ -315,11 +322,22 @@ least-privilege (`contents: read`).
   packages and an editor/carousel/DnD stack; a grep-driven prune kept only what
   is imported (Prisma, Next, the toast/button primitives, the model SDK) —
   827 → 170 packages. Unused dependencies are attack surface and install-time
-  friction dressed up as features.
-- **Why CSS animations instead of framer-motion?** The motion budget is a few
-  fade/stagger entrances and hover transitions; CSS handles that with zero
+  friction dressed up as features.- **Why CSS animations instead of framer-motion?** The motion budget is a
+  few fade/stagger entrances and hover transitions; CSS handles that with zero
   runtime cost, and `prefers-reduced-motion` is honored in the same file that
   defines the animation. A JS animation library would earn nothing here.
+- **Why does the regimen escalation only ever escalate from a `pass`?** The
+  single-prescription law already routes every harmful verdict through the
+  finding/queue state machine; the regimen layer exists to catch what that law
+  structurally cannot see — harms composed across prescriptions and read
+  uncertainty that could hide them. Layering the escalations (instead of
+  merging the planes) keeps the shipped law bit-for-bit and the ablation
+  evidence valid. Refills (the same brand re-verified) are exempt: composing
+  a plan with itself is a refill, not a harm.
+- **Why a nonce CSP now?** `'unsafe-inline'` for scripts was the one
+  defense-in-depth gap the middleware left. A per-request nonce +
+  `'strict-dynamic'` closes it; the cost is dynamic rendering of document
+  routes (the landing page is tiny and engine-free, so the trade was easy).
 - **What I would scale next?** Postgres, Redis limiter, OTP + ABDM-style
   consent, a labeled 300-case corpus with versioned DDInter/RxNorm snapshots,
   and a pharmacist review console over the (already persisted) confirm queue.
@@ -349,7 +367,7 @@ least-privilege (`contents: read`).
 ```
 apps/api            FastAPI verification service (pipeline, verdicts, plan, price, ADR, judge, upload)
 apps/web            Next.js 16 fullstack product app (verify·today·insights·copilot·family·evidence)
-  └ src/lib/safety  deterministic TS safety plane (dataset, engine, adherence, selftest)
+  └ src/lib/safety  deterministic TS safety plane (dataset, engine, adherence, regimen, selftest)
   └ src/lib/ai      gated AI layer (extraction, retrieval, copilot, evals)
   └ prisma/         longitudinal schema (9 models, provenance-preserving)
 packages/contracts  Pydantic v2 contracts — the API tier's single source of truth

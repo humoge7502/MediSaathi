@@ -1,7 +1,20 @@
 {
-  "brands": "Jan Aushadhi product price lists + published Indian formularies; snapshot September 2026",
-  "interactions": "DDInter open interaction database (versioned snapshot); severity remapped to none/mild/moderate/severe",
-  "contraindications": "Public formularies and label contraindications; curated rule set with severity + notes",
-  "aware": "WHO AWaRe antibiotic book 2023",
-  "note": "All data synthetic-curated for demo scope; replace with versioned snapshots in production roadmap"
+  "adherence": "research/adherence.json + DataPack reference/adherence_studies.json (8 structured studies with n/measure/rate/CI/factors/URL)",
+  "annotation": "DataPack data/annotation/ (300+113 dual-annotator sheets + protocol + kappa_check.py, target kappa>=0.70) - MED-005 human-bound step, still requires 2 pharmacists",
+  "aware": "WHO AWaRe antibiotic book 2023 (ISBN 978-92-4-006238-2, CC-BY-NC-SA 3.0 IGO) + who_aware_classification.csv (67 antibiotics)",
+  "brands": "Jan Aushadhi PMBJP official catalog API (janaushadhi.gov.in) 2026-09-18 snapshot (1498 rows) UNION DataPack 2026-09-20 Indian market brands (+1338) = 2836 rows / 625 molecules; RxNorm-resolved; dedupe by brand, repo wins on conflict",
+  "contraindications": "FDA SPL (DailyMed/openFDA) + EMC SPC 2026-09-18 snapshot (728 rules, verbatim snippet) UNION DataPack 2026-09-20 label-guidance rules (+544 net new over 19 new condition codes) = 1272 rules over 43 condition codes; repo note wins on overlap",
+  "copilot_evals": "10-case harness + DataPack 2026-09-20 60 cases (28 grounded/17 scope/9 low-conf/6 emergency + injection + Tamil/Hindi) = 70 cases in apps/web/src/lib/ai/evals.ts; source data/eval_scale/copilot_evals_60.json",
+  "copilot_kb": "30 curated chunks (MedlinePlus/NHS/WHO, real source text) + DataPack 2026-09-20 2365 source-tagged chunks (KnowledgeChunk schema, original paraphrases, no invented stats) = 2395 chunks; curated kept verbatim, pack appended; provenance data/kb/knowledge_chunks.jsonl",
+  "datapack": "MediSaathi_DataPack_2026-09-20 (union-merged, no regression: repo snapshots kept as truth, pack wins only on interaction mechanisms); manifest data/datapack_manifest.json",
+  "dose_caps": "FDA labels / SPC maxima; 79 molecules in-plane + DataPack reference/dose_caps.csv (301 molecules, repo wins on conflict e.g. ibuprofen 1200 OTC) = 306 caps in-plane (apps/api/app/safety/dosing.py + apps/web dataset.ts DAILY_CAPS_MG)",
+  "eval_fixtures": "12 fixtures + DataPack 2026-09-20 99 engine-verified fixtures (RX-013..RX-111) = 111 fixtures in apps/api/app/data/fixtures/; labels data/eval_labels.csv; manifest data/cases_manifest.json",
+  "faers": "openFDA FAERS 820-row pointer + DataPack reference/faers_pvpi_signals.csv (148 banded signal pointers + PvPI mapping + re-pull recipe)",
+  "interactions": "DDInter 2.0 (ddinter2.scbdd.com, CC-BY-NC-SA 4.0, 220607 raw rows) 2026-09-18 snapshot (6971 pairs) UNION DataPack 2026-09-20 pharmacology-templated pairs (+2702 net new, pack wins on overlap for richer mechanism+management) = 9673 pairs; severity Minor->mild/Moderate->moderate/Major->severe",
+  "longitudinal": "DataPack data/longitudinal/refill_timelines.jsonl (150 synthetic patients, PDC + flags; explicitly synthetic - real cohorts need ICMR data-sharing)",
+  "note": "Union snapshot 2026-09-20: 2836 brands / 9673 pairs / 1272 rules / 2395 KB chunks / 111 fixtures / 70 copilot evals. DDInter used as coverage pattern (CC BY-NC-SA 4.0, non-commercial); CredibleMeds categories need production license; no CIMS/MIMS/Stockley/BNF verbatim; no patient data.",
+  "qt": "CredibleMeds-category equivalent 2026-09-18 (22 in-plane) + DataPack reference/qt_prolonging.csv Known-risk +5 (sotalol/erythromycin/chloroquine/quinine/haloperidol) = 27 in-plane; Possible/Conditional stay reference-only; verify at crediblemeds.org before clinical claim",
+  "rxnorm": "RxNorm via RxNav REST (nih.gov); 409 molecules resolved + DataPack reference/rxnorm_molecule_map.csv (386 molecules, 273 RxCUI pre-filled, 113 needs_rxnav_lookup) + rxnorm_fill.py recipe",
+  "salad": "FDA/ISMP 41 + edit-distance 71 = 112 pairs + DataPack reference/salad_confusables.csv (318 pairs, FDA/ISMP-pattern + in-formulary + edit-distance, TD-13 method) archived as reference; fragile stratum regrows on corpus rebuild",
+  "speech_bench": "DataPack data/speech_bench/en_ta_hi_slot_sentences.csv (250 en/ta/hi slot-grounded sentences; synthetic seed, real capture needs hospital MoU)"
 }

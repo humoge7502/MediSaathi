@@ -48,7 +48,7 @@ The event build has useful defense-in-depth for a synthetic, unauthenticated dem
 - **Affected component:** `apps/web/next.config.ts` and theme initialization.
 - **Impact:** weaker XSS containment if a future injection bug is introduced.
 - **Remediation:** migrate to a nonce-based dynamic CSP or a carefully reviewed hash/SRI strategy. Next.js documentation notes the nonce approach requires dynamic rendering, so the performance/cache trade-off must be accepted first.
-- **Status:** Open P2.
+- **Status:** **RESOLVED 2026-09-12.** Middleware (`src/middleware.ts`) now mints a per-request nonce and serves `script-src 'self' 'nonce-…' 'strict-dynamic'` on document routes; `layout.tsx` opts into dynamic rendering (`connection()`) so Next stamps every runtime script with the nonce (verified live: 11/11 script tags nonced in the served HTML; the landing page left the prerender set). Styles keep `'unsafe-inline'` (Next inline styles; no untrusted HTML is rendered anywhere). Pinned by 4 middleware contract tests. Residual trade-off, accepted: document routes are SSR per request (first-load JS unchanged at ~655 kB; see docs/PERFORMANCE.md).
 
 ### SEC-004 — No malware scanning or image re-encoding
 

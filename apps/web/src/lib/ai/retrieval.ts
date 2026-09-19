@@ -49,6 +49,25 @@ export function retrieve(query: string, topK = 3, extraBoostMolecules: string[] 
   const qTokens = tokenize(query);
   const boost = new Set(extraBoostMolecules.map((m) => m.toLowerCase()));
 
+  // Native-script queries (Tamil/Hindi) leave zero latin tokens after
+  // tokenize(), so BM25 scores 0 and only the +1.5 med-boost remains — below
+  // the copilot's retrieval floor (2.2). When the question carries no latin
+  // signal but the caller attached verified plan molecules, return those
+  // molecules' own chunks directly at a fixed above-floor score instead of
+  // forcing a refusal: the molecules are verified context, not a guess, and
+  // the model still generates strictly from the returned chunks. Queries with
+  // no boost (e.g. the capital-of-France probe) keep the refusal path.
+  if (qTokens.length === 0 && boost.size > 0) {
+    const out: Retrieved[] = [];
+    for (const doc of index) {
+      if (doc.chunk.molecules.some((m) => boost.has(m.toLowerCase()))) {
+        out.push({ chunk: doc.chunk, score: 3.0 });
+        if (out.length >= topK) break;
+      }
+    }
+    return out;
+  }
+
   const N = index.length;
   const scored: Retrieved[] = index.map((doc) => {
     let score = 0;

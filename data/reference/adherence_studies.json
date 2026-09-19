@@ -1,0 +1,129 @@
+{
+  "description": "Structured replacement for research/adherence.json (single meta-analysis -> cohort/study table)",
+  "studies": [
+    {
+      "study": "WHO (Sabat\u00e9) - Adherence to Long-Term Therapies",
+      "year": 2003,
+      "n_population": "global review",
+      "condition": "chronic disease (general)",
+      "measure": "adherence in developed countries",
+      "pooled_rate": "50%",
+      "ci": null,
+      "factors": [
+        "polypharmacy",
+        "asymptomatic disease",
+        "cost",
+        "health literacy"
+      ],
+      "source_url": "https://www.who.int/publications/i/item/9241545992",
+      "note": "The canonical 'about 50%' anchor citation"
+    },
+    {
+      "study": "Tolley et al. - Factors influencing adherence to NCD medication",
+      "year": 2023,
+      "n_population": 2840,
+      "condition": "NCD multimorbidity",
+      "measure": "average adherence (MMAS-style)",
+      "pooled_rate": "51%",
+      "ci": null,
+      "factors": [
+        "multimorbidity",
+        "regimen complexity"
+      ],
+      "source_url": "https://pmc.ncbi.nlm.nih.gov",
+      "note": "Previously cited in repo research/adherence.json"
+    },
+    {
+      "study": "Patel et al. - Understanding Treatment Adherence in Chronic Diseases",
+      "year": 2025,
+      "n_population": "meta-analysis",
+      "condition": "multiple chronic conditions",
+      "measure": "adherence range",
+      "pooled_rate": "44-77%",
+      "ci": null,
+      "factors": [
+        "electronic vs self-report measurement gap"
+      ],
+      "source_url": "https://www.mdpi.com",
+      "note": "Previously cited in repo research/adherence.json"
+    },
+    {
+      "study": "Jyotsana et al. (Cureus) - Medication adherence determinants among older adults",
+      "year": 2026,
+      "n_population": 380,
+      "condition": "older adults with chronic disease",
+      "measure": "high adherence 51.1% / low 41.0%",
+      "pooled_rate": "51.1% high adherence",
+      "ci": null,
+      "factors": [
+        "age",
+        "polypharmacy",
+        "depression"
+      ],
+      "source_url": "https://www.cureus.com",
+      "note": "Previously cited in repo research/adherence.json"
+    },
+    {
+      "study": "Wiley meta-analysis - Medication adherence predictors in multimorbidity",
+      "year": 2026,
+      "n_population": "random-effects meta-analysis",
+      "condition": "multimorbidity",
+      "measure": "pooled poor adherence",
+      "pooled_rate": "48%",
+      "ci": "18-79%",
+      "factors": [
+        "high heterogeneity",
+        "measurement inconsistency"
+      ],
+      "source_url": "https://onlinelibrary.wiley.com",
+      "note": "Previously cited in repo research/adherence.json"
+    },
+    {
+      "study": "Osterberg & Blaschke (NEJM) - Adherence to medication",
+      "year": 2005,
+      "n_population": "review",
+      "condition": "chronic disease",
+      "measure": "adherence synthesis",
+      "pooled_rate": "~50% typical",
+      "ci": null,
+      "factors": [
+        "cost",
+        "side effects",
+        "forgetfulness",
+        "regimen complexity"
+      ],
+      "source_url": "https://www.nejm.org/doi/full/10.1056/NEJMra050100",
+      "note": "Classic mechanistic review"
+    },
+    {
+      "study": "Brown & Bussell (Mayo Clin Proc) - Medication adherence: WHO cares?",
+      "year": 2011,
+      "n_population": "review",
+      "condition": "chronic disease",
+      "measure": "adherence synthesis",
+      "pooled_rate": "~50% (developed), lower in LMIC",
+      "ci": null,
+      "factors": [
+        "WHO five dimensions: socioeconomic, provider, therapy, condition, patient"
+      ],
+      "source_url": "https://www.mayoclinicproceedings.org",
+      "note": "WHO-dimensions framing"
+    },
+    {
+      "study": "Indian Council of Medical Research NCD cohort reporting (indicative)",
+      "year": 2024,
+      "n_population": "varied Indian cohorts",
+      "condition": "hypertension/diabetes",
+      "measure": "self-reported + pill count adherence",
+      "pooled_rate": "30-60% (study-dependent)",
+      "ci": null,
+      "factors": [
+        "out-of-pocket cost",
+        "ASHA follow-up",
+        "refill distance"
+      ],
+      "source_url": "https://www.icmr.gov.in",
+      "note": "Placeholder pointer: pull real Indian longitudinal cohorts via ICMR data-sharing - this is the audit's ask to replace the single meta-analysis"
+    }
+  ]
+}

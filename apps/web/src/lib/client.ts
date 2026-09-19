@@ -37,6 +37,26 @@ export interface ConfirmedMed {
   durationDays: number | null;
 }
 
+/** Cross-prescription regimen screen summary (TD-12), when an active plan existed. */
+export interface RegimenSummary {
+  verdict: string;
+  nominalVerdict: string;
+  worstVerdict: string;
+  fragility: number;
+  queued: boolean;
+  findings: {
+    kind: string;
+    severity: string;
+    mechanism: string;
+    source: string;
+    crossing: boolean;
+    mass: number;
+    molecules: string[];
+  }[];
+  worlds: number;
+  activeCount: number;
+}
+
 export interface VerifyResult {
   prescriptionId: string | null;
   verdict: VerdictKind;
@@ -51,6 +71,7 @@ export interface VerifyResult {
   snapshot?: string;
   engineMs?: number;
   pipelineMs?: number;
+  regimen?: RegimenSummary | null;
 }
 
 export interface TodayDose {

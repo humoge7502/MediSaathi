@@ -1,0 +1,319 @@
+name_a,name_b,type,note,source
+hydrALAZINE,hydroXYZINE,fda_ismp_curated,Vasodilator vs sedating antihistamine; classic ISMP pair,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+predniSONE,predniSOLONE,fda_ismp_curated,Different potencies and durations,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+chlorproMAZINE,chlorproPAMIDE,fda_ismp_curated,Antipsychotic vs sulfonylurea - hypoglycemia risk,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+cefTRIAXone,cefTAZidime,fda_ismp_curated,Third-generation cephalosporins with different spectra,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+glyBURIDE,glipiZIDE,fda_ismp_curated,Sulfonylureas; dose errors shift hypoglycemia risk,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+DAUNOrubicin,DOXOrubicin,fda_ismp_curated,Cytotoxics with distinct cumulative cardiotoxic limits,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+hydroCHLOROthiazide,hydroCHLOROquine,fda_ismp_curated,Diuretic vs antimalarial/DMARD,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+citalopram,celecoxib,fda_ismp_curated,SSRI vs NSAID; look-alike/sound-alike concern (Celexa/Celebrex),FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+Celebrex,Celexa,fda_ismp_curated,Brand pair; NSAID vs SSRI,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+Zantac,Zyrtec,fda_ismp_curated,Brand pair; H2RA vs antihistamine,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+Zyprexa,Zyrtec,fda_ismp_curated,Brand pair; antipsychotic vs antihistamine,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+Prozac,Prograf,fda_ismp_curated,Brand pair; SSRI vs calcineurin inhibitor,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+Prilosec,Prozac,fda_ismp_curated,Brand pair; PPI vs SSRI,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+Lamictal,Lamisil,fda_ismp_curated,Brand pair; antiepileptic vs antifungal,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+Serzone,Seroquel,fda_ismp_curated,Brand pair; antidepressant vs antipsychotic,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+Avinza,Elavil,fda_ismp_curated,Brand pair; morphine ER vs amitriptyline,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+Oxycontin,Oxycodone,fda_ismp_curated,Brand vs immediate-release opioid - dose-form confusion,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+Reglan,Relafen,fda_ismp_curated,Brand pair; prokinetic vs NSAID,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+Dilacor,Dilaudid,fda_ismp_curated,Brand pair; diltiazem ER vs hydromorphone,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+Toradol,Torsemide,fda_ismp_curated,Brand pair; NSAID vs loop diuretic,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+Lantus,Latuda,fda_ismp_curated,Brand pair; insulin glargine vs antipsychotic,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+Humalog,Humulin,fda_ismp_curated,Brand pair; rapid vs intermediate insulin,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+K-Dur,Klor-Con,fda_ismp_curated,Potassium brand pair,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+Metadate,Methadone,fda_ismp_curated,Brand pair; ADHD vs opioid,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+Ephedrine,epinephrine,fda_ismp_curated,Sympathomimetics with opposite clinical stakes,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+Dopamine,Dobutamine,fda_ismp_curated,Inotropes; classic injectable confusion,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+artemether,artemisinin,fda_ismp_curated,Antimalarial ingredient-name overlap,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+insulin glargine,insulin glulisine,fda_ismp_curated,Basal vs rapid analog,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+vinCRIStine,vinBLAStine,fda_ismp_curated,Cytotoxics; fatal if swapped (NEJM-警 famous case),FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+cefaCLOR,cefaLEXIN,fda_ismp_curated,Oral cephalosporins,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+rifAMPIN,rifaBUTIN,fda_ismp_curated,Anti-TB drugs with different interaction profiles,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+metFORMIN,metrONIDAZOLE,fda_ismp_curated,Common oral pair confusion in transcription,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+Lantus,Lentard,fda_ismp_curated,Insulin brands,FDA Name Differentiation / ISMP Confused Drug Names (pattern-level; paraphrased)
+alprazolam,lorazepam,generic_level,Benzodiazepines; dose equivalence errors,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+amlodipine,ampicillin,generic_level,Handwritten confusion,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+atorvastatin,amlodipine,generic_level,Statin vs CCB combination-product errors,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+benazepril,bendamustine,generic_level,ACEi vs cytotoxic,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+bupropion,buspirone,generic_level,Antidepressant vs anxiolytic,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+carbamazepine,carisoprodol,generic_level,Antiepileptic vs muscle relaxant,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+cefixime,cefaclor,generic_level,Oral cephalosporins,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+clonazepam,clofazimine,generic_level,Antiepileptic vs anti-leprosy,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+clonidine,clonazepam,generic_level,Alpha-agonist vs benzodiazepine,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+diazepam,diltiazem,generic_level,Benzodiazepine vs CCB,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+digoxin,digoxin immune fab,generic_level,Antidote pair - dose-form clarity needed,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+diltiazem,dobutamine,generic_level,Oral CCB vs injectable inotrope,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+escitalopram,esomeprazole,generic_level,SSRI vs PPI,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+fluconazole,fluoxetine,generic_level,Azole vs SSRI,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+furosemide,finasteride,generic_level,Loop diuretic vs 5-ARI,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+gabapentin,gemfibrozil,generic_level,Neuropathic vs lipid agent,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+glibenclamide,glimepiride,generic_level,Sulfonylurea dose-shape confusion,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+glimepiride,glipizide,generic_level,Sulfonylurea confusion,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+hydrochlorothiazide,hydralazine,generic_level,Diuretic vs vasodilator,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+insulin regular,insulin isophane,generic_level,Rapid vs intermediate insulin,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+isotretinoin,itraconazole,generic_level,Retinoid vs azole,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+levothyroxine,levalbuterol,generic_level,Thyroid vs bronchodilator,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+levetiracetam,lamotrigine,generic_level,Antiepileptics with different titrations,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+lisinopril,labetalol,generic_level,ACEi vs beta-blocker,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+losartan,lovastatin,generic_level,ARB vs statin,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+metoprolol,metformin,generic_level,Beta-blocker vs biguanide,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+mirtazapine,metoprolol,generic_level,Antidepressant vs beta-blocker,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+nicardipine,nitrendipine,generic_level,DHP CCBs,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+nifedipine,nitrofurantoin,generic_level,CCB vs antibiotic,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+olanzapine,olmesartan,generic_level,Antipsychotic vs ARB,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+ondansetron,omeprazole,generic_level,Antiemetic vs PPI,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+pantoprazole,paroxetine,generic_level,PPI vs SSRI,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+pioglitazone,phenytoin,generic_level,TZD vs antiepileptic,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+quetiapine,quinapril,generic_level,Antipsychotic vs ACEi,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+ranitidine,rivaroxaban,generic_level,H2RA vs DOAC,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+risperidone,ropinirole,generic_level,Antipsychotic vs dopamine agonist,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+rosuvastatin,raloxifene,generic_level,Statin vs SERM,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+sertraline,sildenafil,generic_level,SSRI vs PDE5,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+sodium valproate,sotalol,generic_level,Antiepileptic vs antiarrhythmic,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+telmisartan,tamsulosin,generic_level,ARB vs alpha-blocker,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+valsartan,vardenafil,generic_level,ARB vs PDE5,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+warfarin,Toprol-XL,generic_level,Brand-name beta-blocker vs anticoagulant,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+zidovudine,zolpidem,generic_level,ARV vs hypnotic,"Generic-name confusion pairs (ISMP pattern-level, paraphrased)"
+Dolo 650,Drotin 650,in_formulary,Sound-alike; both fever/pain context makes it plausible,Curated from the shipped brand list (both names in data/brands.csv)
+Crocin Advance,Cracin typo family,in_formulary,Misspelling magnet - see adversarial corpus,Curated from the shipped brand list (both names in data/brands.csv)
+Calpol,Calcort,in_formulary,Sedative/hypnotic vs pediatric antipyretic,Curated from the shipped brand list (both names in data/brands.csv)
+Brufen,Brafen,in_formulary,Misspelling magnet,Curated from the shipped brand list (both names in data/brands.csv)
+Voveran,Voren,in_formulary,Two marketed diclofenac brands,Curated from the shipped brand list (both names in data/brands.csv)
+Azithral,Azee,in_formulary,Two azithromycin brands - strength swap risk,Curated from the shipped brand list (both names in data/brands.csv)
+Ciplox,Cifran,in_formulary,Two ciprofloxacin brands - strength swap risk,Curated from the shipped brand list (both names in data/brands.csv)
+Levoflox,Levotas,in_formulary,Two levofloxacin brands,Curated from the shipped brand list (both names in data/brands.csv)
+Taxim-O,Taxim,in_formulary,Cefixime vs cefotaxime brand family,Curated from the shipped brand list (both names in data/brands.csv)
+Pan 40,Pantocid 40,in_formulary,Both pantoprazole 40 brands,Curated from the shipped brand list (both names in data/brands.csv)
+Omez 20,Omez? variants,in_formulary,Same-family strength swaps,Curated from the shipped brand list (both names in data/brands.csv)
+Rantac 150,Aciloc 150,in_formulary,Both ranitidine 150,Curated from the shipped brand list (both names in data/brands.csv)
+Glycomet 500,Glyciphage 500,in_formulary,Both metformin 500,Curated from the shipped brand list (both names in data/brands.csv)
+Amaryl 2,Glimy 2,in_formulary,Both glimepiride 2,Curated from the shipped brand list (both names in data/brands.csv)
+Telma 40,Telsartan 40,in_formulary,Both telmisartan 40,Curated from the shipped brand list (both names in data/brands.csv)
+Losar 50,Repace 50,in_formulary,Both losartan 50,Curated from the shipped brand list (both names in data/brands.csv)
+Amlong 5,Amlopres 5,in_formulary,Both amlodipine 5,Curated from the shipped brand list (both names in data/brands.csv)
+Metolar 50,Betaloc 50,in_formulary,Both metoprolol 50,Curated from the shipped brand list (both names in data/brands.csv)
+Atorva 10,Tonact 10,in_formulary,Both atorvastatin 10,Curated from the shipped brand list (both names in data/brands.csv)
+Rosuvas 10,Rozavel 10,in_formulary,Both rosuvastatin 10,Curated from the shipped brand list (both names in data/brands.csv)
+Ecosprin 75,Loprin 75,in_formulary,Both aspirin 75,Curated from the shipped brand list (both names in data/brands.csv)
+Clopilet 75,Deplatt 75,in_formulary,Both clopidogrel 75,Curated from the shipped brand list (both names in data/brands.csv)
+Warf 5,Uniwarfin 5,in_formulary,Both warfarin 5,Curated from the shipped brand list (both names in data/brands.csv)
+Thyronorm 50,Eltroxin 50,in_formulary,Both levothyroxine 50 - never swap brands casually,Curated from the shipped brand list (both names in data/brands.csv)
+Shelcal 500,Gemcal,in_formulary,Calcium brands,Curated from the shipped brand list (both names in data/brands.csv)
+Zincovit,Zifi,in_formulary,Vitamin vs antibiotic,Curated from the shipped brand list (both names in data/brands.csv)
+AKT-4 E,AKT-4 I,edit_distance,"Brand-name edit distance 1 after strength-stripping ('akt-4 e' vs 'akt-4 i') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+AKT-4 E,AKT-4 Z,edit_distance,"Brand-name edit distance 1 after strength-stripping ('akt-4 e' vs 'akt-4 z') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+AKT-4 I,AKT-4 Z,edit_distance,"Brand-name edit distance 1 after strength-stripping ('akt-4 i' vs 'akt-4 z') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Albendazole 400,Mebendazole 100,edit_distance,"Brand-name edit distance 2 after strength-stripping ('albendazole' vs 'mebendazole') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Amikacin 100,Mikacin 500,edit_distance,"Brand-name edit distance 1 after strength-stripping ('amikacin' vs 'mikacin') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Apixaban 5,Apixabid 5,edit_distance,"Brand-name edit distance 2 after strength-stripping ('apixaban' vs 'apixabid') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Betamethasone 0.5,Dexamethasone 0.5,edit_distance,"Brand-name edit distance 2 after strength-stripping ('betamethasone 0.' vs 'dexamethasone 0.') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Canagliflozin 100,Dapagliflozin 5,edit_distance,"Brand-name edit distance 2 after strength-stripping ('canagliflozin' vs 'dapagliflozin') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Captopril 25,Captoril 25,edit_distance,"Brand-name edit distance 1 after strength-stripping ('captopril' vs 'captoril') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Carvedilol 12.5,Carvedilol 3.125,edit_distance,"Brand-name edit distance 2 after strength-stripping ('carvedilol 12.' vs 'carvedilol 3.') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Carvedilol 12.5,Carvedilol 6.25,edit_distance,"Brand-name edit distance 2 after strength-stripping ('carvedilol 12.' vs 'carvedilol 6.') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Carvedilol 3.125,Carvedilol 6.25,edit_distance,"Brand-name edit distance 1 after strength-stripping ('carvedilol 3.' vs 'carvedilol 6.') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Cetzine 10,Teczine 5,edit_distance,"Brand-name edit distance 2 after strength-stripping ('cetzine' vs 'teczine') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Chlorthalidone 12.5,Chlorthalidone 6.25,edit_distance,"Brand-name edit distance 2 after strength-stripping ('chlorthalidone 12.' vs 'chlorthalidone 6.') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Clavix 75,Plavix 75,edit_distance,"Brand-name edit distance 1 after strength-stripping ('clavix' vs 'plavix') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Clonazepam 1,Lorazepam 1,edit_distance,"Brand-name edit distance 2 after strength-stripping ('clonazepam' vs 'lorazepam') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Colistim,Colistin 1MIU,edit_distance,"Brand-name edit distance 1 after strength-stripping ('colistim' vs 'colistin') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Covance 25,Olvance 20,edit_distance,"Brand-name edit distance 2 after strength-stripping ('covance' vs 'olvance') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Coveram 5,Voveran 50,edit_distance,"Brand-name edit distance 2 after strength-stripping ('coveram' vs 'voveran') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Dapagliflozin 5,Empagliflozin 10,edit_distance,"Brand-name edit distance 2 after strength-stripping ('dapagliflozin' vs 'empagliflozin') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Dilcard 60,Simcard 10,edit_distance,"Brand-name edit distance 2 after strength-stripping ('dilcard' vs 'simcard') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Disprin 325,Diurin 5,edit_distance,"Brand-name edit distance 2 after strength-stripping ('disprin' vs 'diurin') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Dulaglutide 0.75mg,Dulaglutide 1.5mg,edit_distance,"Brand-name edit distance 1 after strength-stripping ('dulaglutide 0.' vs 'dulaglutide 1.') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Entavir 1,Heptavir 100,edit_distance,"Brand-name edit distance 2 after strength-stripping ('entavir' vs 'heptavir') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Etizola 0.5,Etizolam 0.25,edit_distance,"Brand-name edit distance 1 after strength-stripping ('etizola 0.' vs 'etizolam 0.') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Famocid 20,Famotin 40,edit_distance,"Brand-name edit distance 2 after strength-stripping ('famocid' vs 'famotin') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Fondaparinux 2.5mg,Fondaparinux 7.5mg,edit_distance,"Brand-name edit distance 1 after strength-stripping ('fondaparinux 2.' vs 'fondaparinux 7.') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Frusemide 40,Furosemide 20,edit_distance,"Brand-name edit distance 2 after strength-stripping ('frusemide' vs 'furosemide') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Gabantin 300,Gabapin 300,edit_distance,"Brand-name edit distance 2 after strength-stripping ('gabantin' vs 'gabapin') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Glucophage 500,Glyciphage 500,edit_distance,"Brand-name edit distance 2 after strength-stripping ('glucophage' vs 'glyciphage') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Haloperidol 0.5,Haloperidol 1.5,edit_distance,"Brand-name edit distance 1 after strength-stripping ('haloperidol 0.' vs 'haloperidol 1.') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Hepcvir 400,Heptavir 100,edit_distance,"Brand-name edit distance 2 after strength-stripping ('hepcvir' vs 'heptavir') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Imigran 50,Imuran 50,edit_distance,"Brand-name edit distance 2 after strength-stripping ('imigran' vs 'imuran') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Indapamide 1.5,Indapamide 2.5,edit_distance,"Brand-name edit distance 1 after strength-stripping ('indapamide 1.' vs 'indapamide 2.') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Ipsavel 2,Istavel 50,edit_distance,"Brand-name edit distance 2 after strength-stripping ('ipsavel' vs 'istavel') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Ivermectin 6,Ivermectol 12,edit_distance,"Brand-name edit distance 2 after strength-stripping ('ivermectin' vs 'ivermectol') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Lamitor 50,Lamivir 150,edit_distance,"Brand-name edit distance 2 after strength-stripping ('lamitor' vs 'lamivir') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Lamitor 50,Lipitor 10,edit_distance,"Brand-name edit distance 2 after strength-stripping ('lamitor' vs 'lipitor') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Lanfast 15,Lorfast 10,edit_distance,"Brand-name edit distance 2 after strength-stripping ('lanfast' vs 'lorfast') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Lanfast 15,Linafast 5,edit_distance,"Brand-name edit distance 2 after strength-stripping ('lanfast' vs 'linafast') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Lansoprazole 15,Pantoprazole 20,edit_distance,"Brand-name edit distance 2 after strength-stripping ('lansoprazole' vs 'pantoprazole') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Linagliptin 5,Sitagliptin 25,edit_distance,"Brand-name edit distance 2 after strength-stripping ('linagliptin' vs 'sitagliptin') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Lipitor 10,Lupisor 40,edit_distance,"Brand-name edit distance 2 after strength-stripping ('lipitor' vs 'lupisor') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Listril 5,Zestril 5,edit_distance,"Brand-name edit distance 2 after strength-stripping ('listril' vs 'zestril') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Listril 5,Vistaril 10,edit_distance,"Brand-name edit distance 2 after strength-stripping ('listril' vs 'vistaril') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Luminal 30,Suminat 50,edit_distance,"Brand-name edit distance 2 after strength-stripping ('luminal' vs 'suminat') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Meronem 1g,Merotec 1g,edit_distance,"Brand-name edit distance 2 after strength-stripping ('meronem' vs 'merotec') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Metacin 500,Mikacin 500,edit_distance,"Brand-name edit distance 2 after strength-stripping ('metacin' vs 'mikacin') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Methotrexate 2.5,Methotrexate 7.5,edit_distance,"Brand-name edit distance 1 after strength-stripping ('methotrexate 2.' vs 'methotrexate 7.') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Mikacin 500,Minocin 100,edit_distance,"Brand-name edit distance 2 after strength-stripping ('mikacin' vs 'minocin') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Minocin 100,Zanocin 200,edit_distance,"Brand-name edit distance 2 after strength-stripping ('minocin' vs 'zanocin') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Naprosyn,Naproxen 250,edit_distance,"Brand-name edit distance 2 after strength-stripping ('naprosyn' vs 'naproxen') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Neo-Mercazole 5,Neomercazole 5,edit_distance,"Brand-name edit distance 1 after strength-stripping ('neo-mercazole' vs 'neomercazole') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Nitroglycerin 0.5,Nitroglycerin 2.6,edit_distance,"Brand-name edit distance 1 after strength-stripping ('nitroglycerin 0.' vs 'nitroglycerin 2.') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Piperacillin+tazobactam 2.25g,Piperacillin+tazobactam 4.5g,edit_distance,"Brand-name edit distance 1 after strength-stripping ('piperacillin+tazobactam 2.' vs 'piperacillin+tazobactam 4.') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Pitavastatin 1,Pravastatin 10,edit_distance,"Brand-name edit distance 2 after strength-stripping ('pitavastatin' vs 'pravastatin') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Relgin 1,Selgin 5,edit_distance,"Brand-name edit distance 1 after strength-stripping ('relgin' vs 'selgin') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Ribavin 200,Ribavir 200,edit_distance,"Brand-name edit distance 1 after strength-stripping ('ribavin' vs 'ribavir') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Ribavir 200,Ricovir 300,edit_distance,"Brand-name edit distance 2 after strength-stripping ('ribavir' vs 'ricovir') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Ricovir 300,Zidovir 300,edit_distance,"Brand-name edit distance 2 after strength-stripping ('ricovir' vs 'zidovir') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Rivastigmine 1.5,Rivastigmine 4.5,edit_distance,"Brand-name edit distance 1 after strength-stripping ('rivastigmine 1.' vs 'rivastigmine 4.') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Sizodon 2,Sizopin 25,edit_distance,"Brand-name edit distance 2 after strength-stripping ('sizodon' vs 'sizopin') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Storvas 20,Torvas 10,edit_distance,"Brand-name edit distance 1 after strength-stripping ('storvas' vs 'torvas') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Tegretol 400,Tegrital 200,edit_distance,"Brand-name edit distance 2 after strength-stripping ('tegretol' vs 'tegrital') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Telsartan 40,Valsartan 40,edit_distance,"Brand-name edit distance 2 after strength-stripping ('telsartan' vs 'valsartan') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Trental 400,Zental,edit_distance,"Brand-name edit distance 2 after strength-stripping ('trental' vs 'zental') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Vitamin e 200,Vitamin k1 5,edit_distance,"Brand-name edit distance 2 after strength-stripping ('vitamin e' vs 'vitamin k1') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Zental,Zentel 400,edit_distance,"Brand-name edit distance 1 after strength-stripping ('zental' vs 'zentel') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Zinconia 50,Zincovit,edit_distance,"Brand-name edit distance 2 after strength-stripping ('zinconia' vs 'zincovit') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Zocon 150,Zocor 10,edit_distance,"Brand-name edit distance 1 after strength-stripping ('zocon' vs 'zocor') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Zopiclon 7.5,Zopiclone 3.75,edit_distance,"Brand-name edit distance 2 after strength-stripping ('zopiclon 7.' vs 'zopiclone 3.') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Zopiclon 7.5,Zopiclone 7.5,edit_distance,"Brand-name edit distance 1 after strength-stripping ('zopiclon 7.' vs 'zopiclone 7.') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Zopiclone 3.75,Zopiclone 7.5,edit_distance,"Brand-name edit distance 1 after strength-stripping ('zopiclone 3.' vs 'zopiclone 7.') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+hydroxyzine,hydrOXYzine family,fda_ismp_curated,Sedating antihistamine self-confusion with hydralazine,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+ceftriaxone,cefazolin,fda_ismp_curated,Spectrum difference; IV vs periop choice,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+cefuroxime,cefuroxime axetil,fda_ismp_curated,Salt/prodrug distinction on prescriptions,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+glyburide,glimepiride,fda_ismp_curated,Sulfonylurea; dosing differs by strength,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+diphenhydramine,dimenhydrinate,fda_ismp_curated,Sedating antihistamines; dosing confusion,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+Lopressor,Lopid,fda_ismp_curated,Beta-blocker vs fibrate (classic brand pair),"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+Lanoxin,Lantus,fda_ismp_curated,Digoxin vs insulin glargine (classic brand pair),"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+Epival,Elavil,fda_ismp_curated,Divalproex vs amitriptyline brand pattern,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+Paxil,Taxol,fda_ismp_curated,SSRI vs cytotoxic (classic),"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+Taxotere,Taxol,fda_ismp_curated,Two cytotoxics; distinct regimens,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+Zyban,Zyrtec,fda_ismp_curated,Bupropion vs cetirizine brand pattern,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+Lipitor,lisinopril,fda_ismp_curated,Brand statin vs generic ACEi,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+Norvasc,Novasc,fda_ismp_curated,Amlodipine brand family,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+Cardizem,Cordarone,fda_ismp_curated,Diltiazem vs amiodarone brand pattern,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+Calan,Capoten,fda_ismp_curated,Verapamil vs captopril brand pattern,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+Isordil,Insulin,fda_ismp_curated,Nitrate vs insulin (ISMP classic),"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+U-500 insulin,U-100 insulin,fda_ismp_curated,Concentration error - fatal class,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+Humulin N,Humulin R,fda_ismp_curated,Intermediate vs regular insulin,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+NovoLog,NovoLog Mix,fda_ismp_curated,Rapid vs mixed insulin,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+Lamivudine,lamotrigine,fda_ismp_curated,Antiviral vs antiepileptic,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+lamivudine,lamivudine/zidovudine,fda_ismp_curated,Single vs combination ARV,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+efavirenz,etravirine,fda_ismp_curated,NNRTI family confusion,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+emtricitabine,lamivudine,fda_ismp_curated,Cytosine analogs; interchangeable-looking,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+tenofovir,entecavir,fda_ismp_curated,HBV agents with different monitoring,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+sofosbuvir,simeprevir,fda_ismp_curated,HCV agents; class confusion,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+oseltamivir,zanamivir,fda_ismp_curated,Neuraminidase inhibitors,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+praziquantel,pyrazinamide,fda_ismp_curated,Anthelmintic vs anti-TB,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+albendazole,mebendazole,fda_ismp_curated,Benzimidazoles; dosing differs,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+ivermectin,itraconazole,fda_ismp_curated,Anthelmintic vs azole,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+chloroquine,chlorpromazine,fda_ismp_curated,Antimalarial vs antipsychotic,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+mefloquine,chloroquine,fda_ismp_curated,Antimalarial dosing confusion,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+primaquine,proguanil,fda_ismp_curated,Antimalarials,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+atovaquone,azithromycin,fda_ismp_curated,Prophylaxis partners but distinct drugs,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+leucovorin,folic acid,fda_ismp_curated,Rescue vs supplement - MTX safety critical,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+folic acid,folinic acid,fda_ismp_curated,Same; MTX interaction difference,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+methotrexate,metolazone,fda_ismp_curated,MTX vs diuretic - transcription risk,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+cyclophosphamide,cyclosporine,fda_ismp_curated,Cytotoxic vs immunosuppressant,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+cyclosporine,cyclobenzaprine,fda_ismp_curated,Immunosuppressant vs muscle relaxant,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+tacrolimus,tadalafil,fda_ismp_curated,Immunosuppressant vs PDE5,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+sirolimus,tacrolimus,fda_ismp_curated,mTOR vs calcineurin class,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+mycophenolate,metformin,fda_ismp_curated,Immunosuppressant vs biguanide,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+azathioprine,alprazolam,fda_ismp_curated,Immunosuppressant vs benzodiazepine,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+tamoxifen,tamsulosin,fda_ismp_curated,Oncology vs urology,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+letrozole,levothyroxine,fda_ismp_curated,Aromatase inhibitor vs thyroid,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+goserelin,granisetron,fda_ismp_curated,Endocrine vs antiemetic,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+sunitinib,sumatriptan,fda_ismp_curated,Oncology vs triptan,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+lapatinib,lamivudine,fda_ismp_curated,Oncology vs ARV,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+erlotinib,eltrombopag,fda_ismp_curated,Oncology vs thrombopoietin agonist,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+carbamazepine,carbidopa,fda_ismp_curated,Antiepileptic vs dopa-decarboxylase inhibitor,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+levetiracetam,lacosamide,fda_ismp_curated,Newer AEs; titration confusion,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+topiramate,tiagabine,fda_ismp_curated,AEs,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+lacosamide,lamotrigine,fda_ismp_curated,AE titration confusion,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+eslicarbazepine,carbamazepine,fda_ismp_curated,Structural sibling; dosing differs,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+pregabalin,propranolol,fda_ismp_curated,Neuropathic vs beta-blocker,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+duloxetine,dexamethasone,fda_ismp_curated,SNRI vs steroid,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+venlafaxine,valsartan,fda_ismp_curated,SNRI vs ARB,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+desvenlafaxine,venlafaxine,fda_ismp_curated,SNRIs; dose forms differ,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+mirtazapine,metformin,fda_ismp_curated,Antidepressant vs metformin,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+trazodone,torasemide,fda_ismp_curated,Antidepressant vs diuretic,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+aripiprazole,apixaban,fda_ismp_curated,Antipsychotic vs DOAC,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+quetiapine,quinine,fda_ismp_curated,Antipsychotic vs antimalarial,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+haloperidol,hydroxyzine,fda_ismp_curated,Antipsychotic vs antihistamine,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+risperidone,ramipril,fda_ismp_curated,Antipsychotic vs ACEi,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+clozapine,clonazepam,fda_ismp_curated,Antipsychotic vs benzodiazepine,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+lurasidone,losartan,fda_ismp_curated,Antipsychotic vs ARB,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+asenapine,amlodipine,fda_ismp_curated,Antipsychotic vs CCB,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+iloperidone,ibuprofen,fda_ismp_curated,Antipsychotic vs NSAID,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+ziprasidone,zidovudine,fda_ismp_curated,Antipsychotic vs ARV,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+tolterodine,tamsulosin,fda_ismp_curated,OAB agents,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+fesoterodine,furosemide,fda_ismp_curated,OAB vs diuretic,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+propantheline,propranolol,fda_ismp_curated,Anticholinergic vs beta-blocker,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+glycopyrrolate,glimepiride,fda_ismp_curated,Anticholinergic vs sulfonylurea,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+salmeterol,sildenafil,fda_ismp_curated,Bronchodilator vs PDE5,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+formoterol,famotidine,fda_ismp_curated,LABA vs H2RA,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+fluticasone,fluoxetine,fda_ismp_curated,ICS vs SSRI,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+beclomethasone,betamethasone,fda_ismp_curated,Corticosteroid family,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+tiotropium,topiramate,fda_ismp_curated,LAMA vs AE,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+ipratropium,indapamide,fda_ismp_curated,Anticholinergic bronchodilator vs diuretic,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+theophylline,thioridazine,fda_ismp_curated,Bronchodilator vs antipsychotic,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+doxofylline,doxycycline,fda_ismp_curated,Xanthine vs tetracycline,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+ambroxol,albendazole,fda_ismp_curated,Mucolytic vs anthelmintic,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+guaifenesin,gemfibrozil,fda_ismp_curated,Expectorant vs fibrate,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+dextromethorphan,diazepam,fda_ismp_curated,Antitussive vs benzodiazepine,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+azelastine,alprazolam,fda_ismp_curated,Nasal antihistamine vs benzodiazepine,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+epinastine,epinephrine,fda_ismp_curated,Antihistamine vs catecholamine,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+timolol,tamsulosin,fda_ismp_curated,Beta-blocker vs alpha-blocker,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+tobramycin,topiramate,fda_ismp_curated,Aminoglycoside vs AE,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+ofloxacin,omeprazole,fda_ismp_curated,FQ vs PPI,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+moxifloxacin,montelukast,fda_ismp_curated,FQ vs LTRA,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+gemifloxacin,gemfibrozil,fda_ismp_curated,FQ vs fibrate,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+norfloxacin,nifedipine,fda_ismp_curated,FQ vs CCB,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+fosfomycin,famotidine,fda_ismp_curated,Antibiotic vs H2RA,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+piperacillin,prednisone,fda_ismp_curated,Antibiotic vs steroid,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+tazobactam,tramadol,fda_ismp_curated,Beta-lactamase inhibitor vs opioid,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+sulbactam,salbutamol,fda_ismp_curated,Beta-lactamase inhibitor vs SABA,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+ticarcillin,tetracycline,fda_ismp_curated,Penicillin vs tetracycline,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+clavulanic acid,clarithromycin,fda_ismp_curated,Beta-lactamase inhibitor vs macrolide,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+penicillin v,penicillin g,fda_ismp_curated,Oral vs parenteral route,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+procaine penicillin,benzathine penicillin,fda_ismp_curated,Long vs short acting injectable,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+daptomycin,domperidone,fda_ismp_curated,Lipopeptide vs prokinetic,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+tigecycline,topiramate,fda_ismp_curated,Glycylcycline vs AE,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+tedizolid,tramadol,fda_ismp_curated,Oxazolidinone vs opioid,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+linezolid,lansoprazole,fda_ismp_curated,Oxazolidinone vs PPI,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+cefepime,cefixime,fda_ismp_curated,4th vs 3rd generation,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+cefotetan,cefotaxime,fda_ismp_curated,Cephamycin vs 3rd gen,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+ceftaroline,ceftriaxone,fda_ismp_curated,5th vs 3rd gen,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+aztreonam,amoxicillin,fda_ismp_curated,Monobactam vs penicillin,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+ertapenem,imipenem,fda_ismp_curated,Carbapenems; spectrum differs,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+metronidazole,misoprostol,fda_ismp_curated,Anaerobe vs prostaglandin,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+teicoplanin,terbinafine,fda_ismp_curated,Glycopeptide vs allylamine,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+daptomycin,doxycycline,fda_ismp_curated,Gram-positive agents,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+amphotericin,ampicillin,fda_ismp_curated,Polyene vs penicillin,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+posaconazole,prednisolone,fda_ismp_curated,Azole vs steroid (CYP3A4 stack),"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+isavuconazole,isoniazid,fda_ismp_curated,Azole vs anti-TB,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+caspofungin,carbamazepine,fda_ismp_curated,Echinocandin vs AE,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+micafungin,metformin,fda_ismp_curated,Echinocandin vs biguanide,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+terbinafine,tolterodine,fda_ismp_curated,Antifungal vs OAB,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+nystatin,nitrofurantoin,fda_ismp_curated,Polyene vs urinary antibiotic,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+ciclopirox,ciprofloxacin,fda_ismp_curated,Topical antifungal vs FQ,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+butenafine,buspirone,fda_ismp_curated,Topical antifungal vs anxiolytic,"FDA Name Differentiation / ISMP Confused Drug Names (pattern-level, paraphrased)"
+Acivir 400,Lamivir 150,edit_distance,"Brand-name edit distance 2 after strength-stripping ('acivir' vs 'lamivir') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Ativan 1,Tizan 2,edit_distance,"Brand-name edit distance 2 after strength-stripping ('ativan' vs 'tizan') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Cifran 500,Niftran 100,edit_distance,"Brand-name edit distance 2 after strength-stripping ('cifran' vs 'niftran') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Ciplar 10,Ciplox 500,edit_distance,"Brand-name edit distance 2 after strength-stripping ('ciplar' vs 'ciplox') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Clavam 625,Clavix 75,edit_distance,"Brand-name edit distance 2 after strength-stripping ('clavam' vs 'clavix') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Clavix 75,Lasix 40,edit_distance,"Brand-name edit distance 2 after strength-stripping ('clavix' vs 'lasix') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Clomid 50,Lopid 600,edit_distance,"Brand-name edit distance 2 after strength-stripping ('clomid' vs 'lopid') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Clomid 50,Floxid 400,edit_distance,"Brand-name edit distance 2 after strength-stripping ('clomid' vs 'floxid') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Concor 5,Zocor 10,edit_distance,"Brand-name edit distance 2 after strength-stripping ('concor' vs 'zocor') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Diovan 40,Tiova 9,edit_distance,"Brand-name edit distance 2 after strength-stripping ('diovan' vs 'tiova') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Drotin 40,Duolin,edit_distance,"Brand-name edit distance 2 after strength-stripping ('drotin' vs 'duolin') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Erycin 500,R-Cin 450,edit_distance,"Brand-name edit distance 2 after strength-stripping ('erycin' vs 'r-cin') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Floxid 400,Lopid 600,edit_distance,"Brand-name edit distance 2 after strength-stripping ('floxid' vs 'lopid') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Floxid 400,Roxid 150,edit_distance,"Brand-name edit distance 2 after strength-stripping ('floxid' vs 'roxid') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Forteo,Fortum 1g,edit_distance,"Brand-name edit distance 2 after strength-stripping ('forteo' vs 'fortum') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Gliben 5,Glimep 2,edit_distance,"Brand-name edit distance 2 after strength-stripping ('gliben' vs 'glimep') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Glimep 2,Glimy 2,edit_distance,"Brand-name edit distance 2 after strength-stripping ('glimep' vs 'glimy') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Hopace 5,Repace 50,edit_distance,"Brand-name edit distance 2 after strength-stripping ('hopace' vs 'repace') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Meftal 500,Zental,edit_distance,"Brand-name edit distance 2 after strength-stripping ('meftal' vs 'zental') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Nexito 10,Nexpro 40,edit_distance,"Brand-name edit distance 2 after strength-stripping ('nexito' vs 'nexpro') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Oxetol 300,Oxitrol 5,edit_distance,"Brand-name edit distance 2 after strength-stripping ('oxetol' vs 'oxitrol') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Tadact 10,Tonact 10,edit_distance,"Brand-name edit distance 2 after strength-stripping ('tadact' vs 'tonact') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage
+Telvas 40,Torvas 10,edit_distance,"Brand-name edit distance 2 after strength-stripping ('telvas' vs 'torvas') - human triage required, not a claim",Derived from in-repo brand list (TD-13 method); flagged for pharmacist triage

@@ -130,7 +130,16 @@ export function VerifyPanel({ onPlanStarted }: { onPlanStarted: () => void }) {
       <div className="space-y-4" aria-live="polite">
         {!result && !busy && (
           <div className="vy-hairline-card flex h-full min-h-72 flex-col items-center justify-center p-10 text-center">
-            <div className="vy-serif text-5xl italic" style={{ color: "var(--vy-hairline)" }}>Rx</div>
+            {/* Decorative watermark: aria-hidden (not content for screen
+                readers) and tinted deep enough to clear the 3:1 large-text
+                contrast floor — the axe gate (TD-4) scans it as visible text. */}
+            <div
+              aria-hidden="true"
+              className="vy-serif text-5xl italic"
+              style={{ color: "color-mix(in oklch, var(--vy-pine) 75%, var(--card))" }}
+            >
+              Rx
+            </div>
             <p className="mt-4 max-w-xs text-sm text-muted-foreground">
               Run a verification. The verdict, every finding, the confidence gate and the plan button all appear here.
             </p>
@@ -208,6 +217,41 @@ export function VerifyPanel({ onPlanStarted }: { onPlanStarted: () => void }) {
                     </div>
                   );
                 })}
+              </div>
+            )}
+
+            {result.regimen && result.regimen.activeCount > 0 && (
+              <div className={`vy-hairline-card p-5 ${result.regimen.queued ? "vy-banner-moderate" : "vy-banner-neutral"}`}>
+                <p className="vy-eyebrow">Regimen screen (cross-prescription)</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Screened against {result.regimen.activeCount} active medicine
+                  {result.regimen.activeCount === 1 ? "" : "s"} from the current plan — harms that only
+                  exist because prescriptions compose are caught here, and read uncertainty that could
+                  hide a harm queues instead of passing.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs vy-numeral text-muted-foreground">
+                  <span>composed verdict: {result.regimen.verdict}</span>
+                  <span>nominal: {result.regimen.nominalVerdict}</span>
+                  <span>worst reachable: {result.regimen.worstVerdict}</span>
+                  <span>fragility: {result.regimen.fragility.toFixed(2)}</span>
+                  <span>worlds enumerated: {result.regimen.worlds}</span>
+                </div>
+                {result.regimen.findings.filter((f) => f.crossing).length > 0 && (
+                  <ul className="mt-3 space-y-2">
+                    {result.regimen.findings.filter((f) => f.crossing).map((f, i) => (
+                      <li key={`rx-${i}`} className="rounded-lg border bg-background/50 px-3 py-2 text-sm">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="font-medium">{f.molecules.join(" + ")}</p>
+                          <span className="text-xs font-semibold text-muted-foreground">{f.kind}</span>
+                        </div>
+                        <p className="mt-1 text-xs text-muted-foreground">{f.mechanism}</p>
+                        <p className="mt-1 text-[11px] text-muted-foreground/70 vy-numeral">
+                          source: {f.source} · reaches {Math.round(f.mass * 100)}% of reads
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             )}
 

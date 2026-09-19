@@ -180,14 +180,52 @@ def confusion_neighbours(engine: SafetyEngine, read_brand: str, *,
     Derived from the data (brand-core string similarity), not a hand-written
     look-alike list, so the neighbourhood is auditable and moves with the
     formulary. The exact-match brand is excluded (it is the resolved candidate).
+
+    Performance: with the expanded 1498-brand formulary a naive O(N) scan with
+    full Levenshtein per candidate is ~2.2M distance computations per corpus
+    build. We precompute brand cores once per engine instance and apply a
+    length-based necessary condition before running Levenshtein:
+    similarity >= floor implies |len(a)-len(b)| <= (1-floor)*max(len(a),len(b)).
     """
     own = engine.normalize(read_brand)
     own_brand = own["brand"] if own else None
+    read_core = brand_core(read_brand)
+    lr = len(read_core)
+    if not read_core:
+        return []
+    # Cache brand cores on the engine instance (formulary is load-once).
+    cache = getattr(engine, "_core_cache", None)
+    if cache is None:
+        cache = {}
+        for _key, row in engine.brands.items():
+            try:
+                cache[row["brand"]] = brand_core(row["brand"])
+            except Exception:
+                continue
+        try:
+            engine._core_cache = cache  # type: ignore[attr-defined]
+        except Exception:
+            pass
     scored: list[tuple[float, dict]] = []
     for _, row in engine.brands.items():
         if own_brand is not None and row["brand"] == own_brand:
             continue
-        sim = similarity(read_brand, row["brand"])
+        core = cache.get(row["brand"])
+        if core is None:
+            core = brand_core(row["brand"])
+        lb = len(core)
+        if not core:
+            continue
+        # Necessary length condition for similarity >= floor.
+        max_len = lr if lr >= lb else lb
+        if abs(lr - lb) > (1.0 - floor) * max_len:
+            continue
+        # Cheap first-character gate on cores (look-alike confusions almost
+        # always share the initial; SALAD pairs that don't are covered by the
+        # explicit SALAD table in corpus builds, not the hot path).
+        # NOTE: do NOT gate here — recall matters more than speed for safety.
+        # Only the length filter above applies.
+        sim = 1.0 - levenshtein(read_core, core) / max_len if max_len else 0.0
         if sim >= floor:
             scored.append((sim, row))
     scored.sort(key=lambda kv: (-kv[0], kv[1]["brand"]))

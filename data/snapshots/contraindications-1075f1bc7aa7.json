@@ -1,0 +1,17 @@
+{
+  "applied": false,
+  "checked_at": "2026-09-19T14:59:43+00:00",
+  "diff": {
+    "added": [],
+    "candidate_rows": 728,
+    "changed": [],
+    "live_rows": 728,
+    "removed": [],
+    "unchanged": 728
+  },
+  "kind": "contraindications",
+  "schema_ok": true,
+  "source": "extracted/MediSaathi_Datasets/20_ready_to_import/contraindications.csv",
+  "source_rows": 728,
+  "source_sha256": "1075f1bc7aa79507ee0b349662b286ae1a64702f1aaf05e77aef72b599cb8897"
+}

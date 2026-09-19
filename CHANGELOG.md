@@ -3,6 +3,110 @@
 All notable changes. Format based on Keep a Changelog; versions here map to
 the event build blocks.
 
+## [Unreleased] - frontend transformation pass
+
+### Added
+- SEO layer: canonical, Open Graph + generated 1200×630 card
+  (`opengraph-image`), twitter card, `robots.txt`, `sitemap.xml`, PWA
+  `manifest`, file-convention icon, theme-color viewport.
+- Editorial landing: numbered sections (01–04), asymmetric 5/7 gap grid,
+  loop-as-index rows, new "The proof" evidence band, three-column footer
+  with engine metadata.
+- Header extracted to `site-header.tsx` with IntersectionObserver
+  active-section nav and underline micro-interaction (`aria-current` for AT).
+- Scroll-reveal (`scroll-reveal.tsx` + `html.js .vy-reveal`): below-fold
+  sections animate when seen; visible by default without JS; collapsed under
+  `prefers-reduced-motion`.
+- Branded `error.tsx` (retry + digest) and `not-found.tsx`.
+- Motion tokens (`--vy-duration-*`, `--vy-ease-out`) and display-scale utility
+  (`vy-display`), fluid via `clamp()`.
+
+### Changed
+- A11y gate stabilized: scans run under `reducedMotion: "reduce"` (axe
+  snapshots mid-fade elements; the reduced-motion experience is the scan
+  target). One strict-mode assertion updated for the footer's positioning
+  line (`.first()`, existing suite pattern).
+- Bundle: first-load JS 655.6 kB / 12 chunks (+0.8 kB vs 654.8 kB baseline);
+  zero new dependencies.
+
+### Design audit pass (hallmark disciplines, all verified by gates)
+- **One orchestrated entrance, not scroll-reveals everywhere.** The
+  below-fold scroll-reveal wrapper (`scroll-reveal.tsx` + `html.js .vy-reveal`)
+  was removed — "every section fades in on intersection; the page never
+  settles" is a named AI-design tell. The hero keeps its staggered fade-up;
+  everything below is simply present. The `html.js` bootstrap and
+  `suppressHydrationWarning` left `layout.tsx` with it. Reduced-motion CSS
+  guard unchanged.
+- **Roman display type** (gate 38a): the italic emphasis words in the hero
+  h1 and the italic loop-step numerals are gone; emphasis carries through
+  weight and the clay accent instead.
+- **Vertical section heads** (gate 54): the tag-left/header-right
+  two-column head (number beside the heading) is replaced by a one-column
+  stack — number → eyebrow → heading.
+- **Dark-band token discipline** (gate 48): the inline `oklch(...)` literals
+  in the law section moved into named tokens (`--vy-mint`, `--vy-dark-ink`,
+  `--vy-dark-ink-soft`, `--vy-panel`, `--vy-panel-border`,
+  `--vy-clay-bright`); the axe contrast gate covers the same values.
+- **Landing metrics fetched once**: the page shell owns the single
+  `/api/metrics` request and passes it to the landing; the duplicate fetch
+  inside the landing component is gone.
+- Verified after the pass: eslint + tsc clean, 18/18 selftest, 94/94
+  integration tests, production build, **17/17 Playwright journeys incl. 3
+  axe scans**; chunk total unchanged (812 kB, within measurement noise).
+
+## [0.8.0] - 2026-09-12 - regimen escalation ships in the product tier + strict CSP + a11y gate
+
+The E-H/E-G research mechanisms become product behavior, and two P2 debt
+items close with evidence.
+
+### Added
+- **Longitudinal regimen escalation (product tier, TD-12/14).**
+  `apps/web/src/lib/safety/regimen.ts` ports the Python regimen plane 1:1:
+  identity distributions over formulary confusion neighbourhoods, pruned
+  world enumeration, verdict-mass + fragility, and the could-hide-harm guard.
+  `src/lib/regimen-state.ts` composes the ACTIVE `TherapyPlan` rows
+  server-side (never caller-supplied). Verify and queue-resolve apply the
+  escalation through one shared function; a composed harm (e.g. a triple
+  whammy assembled across two visits) escalates the published verdict, a
+  fragile read queues (fieldIndex 0 in the persisted confirm queue), a
+  same-brand refill passes, and a human acceptance releases the plan (the
+  E-G reviewed arm). The verify UI renders the regimen screen (composed
+  verdict, nominal/worst, fragility, worlds, crossing findings with
+  read-mass); the Review console presents the escalation row with
+  accept/residual-uncertainty semantics.
+- **Nonce-based CSP (TD-2).** Middleware mints a per-request nonce and serves
+  `script-src 'self' 'nonce-…' 'strict-dynamic'` on document routes — no more
+  `'unsafe-inline'` for scripts. `layout.tsx` opts into dynamic rendering so
+  Next stamps every runtime script (verified 11/11 in served HTML). The
+  standalone launcher anchors relative `file:` DATABASE_URLs (a live boot
+  path 500, found and fixed during verification).
+- **axe-core accessibility gate (TD-4).** `e2e/accessibility.spec.ts` scans
+  the landing page, workspace and Evidence tab (wcag2a/2aa/21a/21aa) inside
+  `make web-e2e`; serious/critical violations fail the build. First run
+  caught 3 real contrast violations + 1 non-focusable scroll region — all
+  fixed (eyebrow token darkened, clay CTA darkened to ≥4.5:1 with white
+  text, Rx watermark retinted + aria-hidden, evidence tables keyboard-
+  scrollable).
+- 22 new tests: 18 regimen unit tests + 4 route-level escalation tests;
+  4 middleware CSP contract tests. Web integration suite now 90 tests;
+  E2E suite now 17 journeys.
+
+### Changed
+- Enter animation curve is ease-out (`cubic-bezier(0.22,1,0.36,1)`);
+  `prefers-reduced-motion` now collapses ALL animation/transition durations
+  universally instead of per-class selectors.
+- `Prescription.regimenJson` persists the regimen screen provenance with
+  every verdict (schema pushed in place).
+- Landing "The law" section: the eyebrow color override actually applies
+  (inline `oklch` used Tailwind underscore syntax — invalid CSS in a style
+  attribute; found by the axe gate).
+
+### Fixed
+- Product E2E strict-mode collisions after the regimen panel repeated
+  finding/source text (`.first()` added).
+- Standalone launcher: relative `DATABASE_URL` now resolves against
+  `prisma/` as the schema intends.
+
 ## [0.7.0] - 2026-09-11 - longitudinal regimen plane (mechanisms A+B)
 
 Extends the two-plane law from one prescription to the patient's time-composed

@@ -8,11 +8,11 @@ that reads as a legal conclusion requires review by a registered patent professi
 
 ## 0. Provenance of this binder
 
-- engine git SHA: `38f69fb-dirty`
-- dataset snapshot id: `86bce3e0d7c3b1e9`
-- cross-engine parity corpus `eval/parity/golden.json` sha256: `8ebb4f6e4b2ab6dce20adfd309424a446298539e83edd8737d513eb0d3692fd1`
-- generated: 2026-09-11T17:43:38+00:00
-- archived runs referenced: 8
+- engine git SHA: `14226de-dirty`
+- dataset snapshot id: `fbbbec6c010476a3`
+- cross-engine parity corpus `eval/parity/golden.json` sha256: `347ab35ce6cc5d3164b04372388eb380ea86f499ba091e05ed47b32c51a73622`
+- generated: 2026-09-19T19:47:55+00:00
+- archived runs referenced: 41
 
 All eight experiments have an archived run; no gaps.
 
@@ -20,17 +20,17 @@ All eight experiments have an archived run; no gaps.
 
 | file | sha256 |
 |---|---|
-| `data/brands.csv` | `a9a018a9d6b3df41b2913247282484152f90dae6b44d37685409e6ae2cc0a595` |
-| `data/cases_manifest.json` | `c46e8384a1987b9b64db91ce8868e85ad63e6d8db7e5305a39f4ae6672004296` |
-| `data/contraindications.csv` | `811d6b3bcdd0312cce0191b5e0a06e019a35b472f7dde0b1a4aa6d8e21595cb6` |
-| `data/corpus/adversarial.jsonl` | `f3d1a07952f2c8f55840ade0d1688305c506014be13a9caaf0618c228a6c2280` |
-| `data/corpus/cases.jsonl` | `ab30dbdf003c2c76128c86a94ee4bb4c33510add5261f1e5928ad5cc5ed47f85` |
+| `data/brands.csv` | `f80a7fffc3a0b45c11c04dfcd9bd738063c1aadf0bb1e110491d2f1847f5b558` |
+| `data/cases_manifest.json` | `a21750cf8bd5928049eac02df8628b6aca1de63307f0b72e86dd789a517fea65` |
+| `data/contraindications.csv` | `4fa47481c3ee2440f22685b4f2438ed147212b9143f89e6dac0af03317cfffe2` |
+| `data/corpus/adversarial.jsonl` | `a2f5c110b99a52abd1185c81d8efbf5334c4776056f6b38d75bad42ab230f854` |
+| `data/corpus/cases.jsonl` | `f24dcaac92428f96a435fcf3fe5f0e4b21ae2591348d6a8e14721bab329022a7` |
 | `data/corpus/codebook.json` | `51cb5806e907199c76d8aeeaa21a94b9dac62d26288064e0b2d7c9ad44a8ecea` |
-| `data/corpus/regimen.jsonl` | `fa38b9bc67c7e70cd759452a35aa446c333935a4d52f8ec441d374dd47eea5d7` |
+| `data/corpus/regimen.jsonl` | `b95fa3af6f46688c712ff4233a7327f1ad91bd21063c0e0e7d30c5120176676e` |
 | `data/corpus/splits.json` | `8ec31186e3ff81f82a28d7103391e519bc21d75c6444410b795c53ca47a415ab` |
-| `data/eval_labels.csv` | `36a6b977fe50fb9155d1f483847e1fb810e7874039790f8234d63b14431e97cc` |
-| `data/interactions.csv` | `7a060917e768f1b06ecb28b166e6412691cdc3f03152b6ea5f8518a34f48ecc7` |
-| `data/sources.json` | `1938bd3d358c6b8cedcce8f9a9d3cdf24355fd97f3627d1cba4a3c7ffe39f059` |
+| `data/eval_labels.csv` | `990578e855396f9eaf43d70d3e9ba2d4e9c8545e9cf97d25cb5684a8bdd75e4f` |
+| `data/interactions.csv` | `176711b638925e5fe5f73b71be4bd83da0d2891157f4ad38fdde2fcf57bd2a55` |
+| `data/sources.json` | `c6d4c3784409cb61187961b8340d48e82be3f05a5c94bb365f21f9a50196f4e4` |
 
 ## 2. E-A — Baseline ladder (the technical-effect core)
 
@@ -39,10 +39,10 @@ Frozen test split, n = 44 (70/15/15 split; test read once).
 | arm | verdict agreement | macro F1 | unsafe auto-confirm rate | queue rate | refusal rate | ECE (safety) |
 |---|---|---|---|---|---|---|
 | A0 | 0.227 | 0.062 | 0.773 | 0.000 | 0.000 | 0.6727 |
-| A1 | 0.705 | 0.601 | 0.295 | 0.000 | 0.000 | 0.2304 |
-| A2 | 0.477 | 0.234 | 0.477 | 0.295 | 0.000 | 0.5918 |
+| A1 | 0.705 | 0.601 | 0.295 | 0.000 | 0.000 | 0.2343 |
+| A2 | 0.477 | 0.234 | 0.477 | 0.295 | 0.000 | 0.5888 |
 | A3 | 0.705 | 0.601 | 0.295 | 0.000 | 0.000 | 0.2955 |
-| A4 | 1.000 | 1.000 | 0.000 | 0.250 | 0.045 | 0.1482 |
+| A4 | 1.000 | 1.000 | 0.000 | 0.250 | 0.045 | 0.1452 |
 
 **Reading.** A0 (model proposes the verdict) and A1 (raw read, no gate) both emit unsafe
 auto-confirmations on this corpus; A4 eliminates them while keeping verdict agreement at 1.0
@@ -55,7 +55,7 @@ n = 44; each row removes exactly one stage of A4.
 
 | ablation | Δ verdict agreement | Δ unsafe rate | Δ queue rate |
 |---|---|---|---|
-| A4_minus_combination | -0.045 | +0.045 | +0.000 |
+| A4_minus_combination | -0.068 | +0.000 | +0.000 |
 | A4_minus_formulary_fusion | -0.250 | +0.250 | -0.250 |
 | A4_minus_gate | -0.295 | +0.295 | -0.250 |
 | A4_minus_queue_blocking | -0.250 | +0.250 | -0.250 |
@@ -83,10 +83,10 @@ Fusion-weight sensitivity (MED-023, `banding="fused"` embodiment, calibration sp
 
 | formulary/reading | unsafe rate | queue rate | agreement | ECE (safety) |
 |---|---|---|---|---|
-| 0.3/0.7 | 0.000 | 0.250 | 1.000 | 0.1268 |
-| 0.4/0.6 *(shipped)* | 0.000 | 0.250 | 1.000 | 0.1478 |
-| 0.5/0.5 | 0.000 | 0.250 | 1.000 | 0.1686 |
-| 0.6/0.4 | 0.000 | 0.250 | 1.000 | 0.1888 |
+| 0.3/0.7 | 0.000 | 0.250 | 1.000 | 0.1225 |
+| 0.4/0.6 *(shipped)* | 0.000 | 0.250 | 1.000 | 0.1436 |
+| 0.5/0.5 | 0.000 | 0.250 | 1.000 | 0.1663 |
+| 0.6/0.4 | 0.000 | 0.250 | 1.000 | 0.1870 |
 
 **Reading.** Safety and burden are invariant across the weight grid on this
 corpus, but ECE improves monotonically as the reading term dominates. The shipped
@@ -99,7 +99,7 @@ Frozen operating point measured once on the held-out test split:
 - verdict agreement 1.000
 - unsafe auto-confirm rate 0.000
 - queue rate 0.250, refusal rate 0.045
-- ECE (safety) 0.1482, Brier 0.0591
+- ECE (safety) 0.1452, Brier 0.0564
 
 **Negative result recorded.** The corpus contains a deliberate confirm-queue stratum
 (invented and confusable brands) that must queue at every threshold, so no grid point can
@@ -125,7 +125,7 @@ Held-in cases mutated: 256 (the frozen test split is never mutated).
 - corruption-strata invariants hold: **True**
 
 **Boundary sensitivity (diagnostic, not an invariant).** A ±0.01 perturbation of
-perception confidence moves 1 verdict(s) up, 1 of them into an unsafe auto-confirmation. This is the
+perception confidence moves 0 verdict(s) up, 0 of them into an unsafe auto-confirmation. This is the
 threshold rule behaving like a threshold rule at a band edge, and it is precisely why the
 operating point must be chosen from the calibration curve rather than asserted.
 threshold-rule boundary sensitivity, not an injection breach: these are cases within `delta` of a band edge (motivates E-D calibration and an operating point chosen with margin)
@@ -135,7 +135,7 @@ never reads it as an instruction.
 
 ## 6. E-E — Cross-engine parity (the same law, twice)
 
-- golden corpus: n=110 confirm_queue=15 contraindication=15 duplicate_atc=16 interaction=35 pass=20 refused=9
+- golden corpus: n=110 confirm_queue=15 contraindication=15 duplicate_atc=16 interaction=38 pass=17 refused=9
 - Python plane agrees: True
 - TypeScript plane agrees: True
 - both engines agree: **True**
@@ -148,7 +148,7 @@ data were missing from the TS dataset. After the fix both engines agree on every
 
 ## 7. E-F — Latency, availability and offline determinism
 
-- deterministic plane over 300 cases: p50 0.073 ms, p95 0.112 ms
+- deterministic plane over 300 cases: p50 0.086 ms, p95 0.685 ms
 - within the p50 < 10 ms / p95 < 25 ms budget: **True**
 - offline verdict delta: 0 (apps/api/tests/test_egress.py asserts zero outbound calls with a poisoned socket and invariant verdicts)
 
@@ -179,13 +179,13 @@ patient's active regimen fixed and varies the arriving prescription, comparing t
 incumbent single-prescription law against (A) regimen composition and (A+B) regimen
 composition with read-uncertainty propagation.
 
-Corpus `data/corpus/regimen.jsonl`, n = 113 (78 cross-prescription).
+Corpus `data/corpus/regimen.jsonl`, n = 119 (84 cross-prescription).
 
 | arm | unsafe pass on harm | cross-prescription caught | queue rate | agreement |
 |---|---|---|---|---|
-| regimen | 0.000 | 0.949 | 0.000 | 0.947 |
-| regimen+propagation | 0.000 | 1.000 | 0.035 | 0.982 |
-| single_rx | 0.832 | 0.000 | 0.000 | 0.310 |
+| regimen | 0.000 | 0.905 | 0.000 | 0.891 |
+| regimen+propagation | 0.000 | 1.000 | 0.084 | 0.975 |
+| single_rx | 0.832 | 0.000 | 0.000 | 0.294 |
 
 **Reading.** The incumbent law cannot express a cross-prescription harm at all: it returns
 a bare `pass` on 0.832 of the harmful cases here and catches
@@ -214,6 +214,39 @@ would widen it.
 | `20260911T174134Z-E-F-latency-availability-aaaef0` | E-F-latency-availability | `38f69fb` | `86bce3e0d7c3b1e9` |
 | `20260911T174134Z-E-G-human-in-the-loop-b3b5f0` | E-G-human-in-the-loop | `38f69fb` | `86bce3e0d7c3b1e9` |
 | `20260911T174134Z-E-H-regimen-longitudinal-48b096` | E-H-regimen-longitudinal | `38f69fb` | `86bce3e0d7c3b1e9` |
+| `20260919T152651Z-E-A-baseline-ladder-ca7293` | E-A-baseline-ladder | `14226de-dirty` | `79af3382595f76a4` |
+| `20260919T152651Z-E-B-ablations-b8fa2c` | E-B-ablations | `14226de-dirty` | `79af3382595f76a4` |
+| `20260919T152652Z-E-C-robustness-d1a4bc` | E-C-robustness | `14226de-dirty` | `79af3382595f76a4` |
+| `20260919T152652Z-E-D-calibration-operating-point-1aa45f` | E-D-calibration-operating-point | `14226de-dirty` | `79af3382595f76a4` |
+| `20260919T152652Z-E-E-cross-engine-parity-becbd8` | E-E-cross-engine-parity | `14226de-dirty` | `79af3382595f76a4` |
+| `20260919T152714Z-E-F-latency-availability-116c15` | E-F-latency-availability | `14226de-dirty` | `79af3382595f76a4` |
+| `20260919T152714Z-E-G-human-in-the-loop-ca1afd` | E-G-human-in-the-loop | `14226de-dirty` | `79af3382595f76a4` |
+| `20260919T152714Z-E-H-regimen-longitudinal-220d57` | E-H-regimen-longitudinal | `14226de-dirty` | `79af3382595f76a4` |
+| `20260919T153106Z-E-A-baseline-ladder-1c4b71` | E-A-baseline-ladder | `14226de-dirty` | `34b253da8cab70ea` |
+| `20260919T153106Z-E-B-ablations-8ecc19` | E-B-ablations | `14226de-dirty` | `34b253da8cab70ea` |
+| `20260919T153106Z-E-C-robustness-bc6092` | E-C-robustness | `14226de-dirty` | `34b253da8cab70ea` |
+| `20260919T153107Z-E-D-calibration-operating-point-2cca93` | E-D-calibration-operating-point | `14226de-dirty` | `34b253da8cab70ea` |
+| `20260919T153107Z-E-E-cross-engine-parity-4807d9` | E-E-cross-engine-parity | `14226de-dirty` | `34b253da8cab70ea` |
+| `20260919T153129Z-E-F-latency-availability-a327b8` | E-F-latency-availability | `14226de-dirty` | `34b253da8cab70ea` |
+| `20260919T153129Z-E-G-human-in-the-loop-a58747` | E-G-human-in-the-loop | `14226de-dirty` | `34b253da8cab70ea` |
+| `20260919T153129Z-E-H-regimen-longitudinal-a749bf` | E-H-regimen-longitudinal | `14226de-dirty` | `34b253da8cab70ea` |
+| `20260919T153418Z-E-A-baseline-ladder-4d0624` | E-A-baseline-ladder | `14226de-dirty` | `34b253da8cab70ea` |
+| `20260919T153418Z-E-B-ablations-eff486` | E-B-ablations | `14226de-dirty` | `34b253da8cab70ea` |
+| `20260919T153418Z-E-C-robustness-690e01` | E-C-robustness | `14226de-dirty` | `34b253da8cab70ea` |
+| `20260919T153419Z-E-D-calibration-operating-point-a9c77e` | E-D-calibration-operating-point | `14226de-dirty` | `34b253da8cab70ea` |
+| `20260919T153419Z-E-E-cross-engine-parity-27d983` | E-E-cross-engine-parity | `14226de-dirty` | `34b253da8cab70ea` |
+| `20260919T153442Z-E-F-latency-availability-ab9449` | E-F-latency-availability | `14226de-dirty` | `34b253da8cab70ea` |
+| `20260919T153443Z-E-G-human-in-the-loop-e41b7a` | E-G-human-in-the-loop | `14226de-dirty` | `34b253da8cab70ea` |
+| `20260919T153443Z-E-H-regimen-longitudinal-4a0a75` | E-H-regimen-longitudinal | `14226de-dirty` | `34b253da8cab70ea` |
+| `20260919T194657Z-E-A-baseline-ladder-e8fba1` | E-A-baseline-ladder | `14226de-dirty` | `fbbbec6c010476a3` |
+| `20260919T194657Z-E-B-ablations-236f87` | E-B-ablations | `14226de-dirty` | `fbbbec6c010476a3` |
+| `20260919T194658Z-E-C-robustness-b35ba0` | E-C-robustness | `14226de-dirty` | `fbbbec6c010476a3` |
+| `20260919T194658Z-E-D-calibration-operating-point-1ff25b` | E-D-calibration-operating-point | `14226de-dirty` | `fbbbec6c010476a3` |
+| `20260919T194659Z-E-E-cross-engine-parity-36f4b3` | E-E-cross-engine-parity | `14226de-dirty` | `fbbbec6c010476a3` |
+| `20260919T194720Z-E-F-latency-availability-cd82ce` | E-F-latency-availability | `14226de-dirty` | `fbbbec6c010476a3` |
+| `20260919T194720Z-E-G-human-in-the-loop-d4a23d` | E-G-human-in-the-loop | `14226de-dirty` | `fbbbec6c010476a3` |
+| `20260919T194741Z-E-H-regimen-longitudinal-a9b056` | E-H-regimen-longitudinal | `14226de-dirty` | `fbbbec6c010476a3` |
+| `20260919T194749Z-E-A-baseline-ladder-94801a` | E-A-baseline-ladder | `14226de-dirty` | `fbbbec6c010476a3` |
 
 ## 11. Cross-references
 

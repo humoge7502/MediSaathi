@@ -15,13 +15,13 @@
     "all_invariants_hold": true,
     "boundary_sensitivity": {
       "delta": 0.01,
-      "flip_rate_on_bump": 0.0039,
-      "flips_on_bump": 1,
+      "flip_rate_on_bump": 0.0,
+      "flips_on_bump": 0,
       "flips_on_drop": 0,
       "interpretation": "threshold-rule boundary sensitivity, not an injection breach: these are cases within `delta` of a band edge (motivates E-D calibration and an operating point chosen with margin)",
       "n": 256,
       "queued_on_bump": 0,
-      "unsafe_flips_on_bump": 1
+      "unsafe_flips_on_bump": 0
     },
     "corruption": {
       "L0_baseline": {
@@ -119,5 +119,5 @@
       "replay_refusals": 3
     }
   },
-  "run": "eval/runs/20260911T174113Z-E-C-robustness-782338"
+  "run": "eval/runs/20260919T194658Z-E-C-robustness-b35ba0"
 }

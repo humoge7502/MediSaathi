@@ -41,7 +41,7 @@ from __future__ import annotations
 import json
 import os
 
-PARITY_VERSION = "2"
+PARITY_VERSION = "3"
 
 GOLDEN_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "golden.json")
 

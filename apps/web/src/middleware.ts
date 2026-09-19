@@ -101,40 +101,80 @@ export function middleware(req: NextRequest) {
       ? (req.headers.get("x-request-id") as string)
       : crypto.randomUUID().replace(/-/g, "");
 
-  const isWrite = WRITE_METHODS.has(req.method);
+  const isApi = req.nextUrl.pathname.startsWith("/api");
 
-  // MS-10: reject cross-origin mutations before any handler runs.
-  if (isWrite && !originAllowed(req.headers.get("origin"), req.headers.get("host") ?? "")) {
-    const res = NextResponse.json(
-      { ok: false, error: "cross-origin mutation rejected" },
-      { status: 403 }
-    );
+  if (isApi) {
+    const isWrite = WRITE_METHODS.has(req.method);
+
+    // MS-10: reject cross-origin mutations before any handler runs.
+    if (isWrite && !originAllowed(req.headers.get("origin"), req.headers.get("host") ?? "")) {
+      const res = NextResponse.json(
+        { ok: false, error: "cross-origin mutation rejected" },
+        { status: 403 }
+      );
+      res.headers.set("x-request-id", requestId);
+      return res;
+    }
+
+    const limit = isWrite ? WRITE_LIMIT : READ_LIMIT;
+    const window = isWrite ? WRITE_WINDOW_MS : READ_WINDOW_MS;
+    // Separate window per (class, client) — mirroring the FastAPI tier's distinct
+    // _WRITES/_READS limiters. A single shared bucket would let read traffic
+    // consume the write budget (and vice versa): a read-heavy browser session
+    // would 429 its first POST after ~60 combined hits, which is wrong.
+    const key = `${isWrite ? "w" : "r"}:${clientKey(req.headers)}`;
+
+    if (!allow(key, limit, window, Date.now())) {
+      const res = NextResponse.json(
+        { ok: false, error: "rate limit exceeded; slow down and retry" },
+        { status: 429, headers: { "retry-after": String(Math.ceil(window / 1000)) } }
+      );
+      res.headers.set("x-request-id", requestId);
+      return res;
+    }
+
+    const res = NextResponse.next();
     res.headers.set("x-request-id", requestId);
     return res;
   }
 
-  const limit = isWrite ? WRITE_LIMIT : READ_LIMIT;
-  const window = isWrite ? WRITE_WINDOW_MS : READ_WINDOW_MS;
-  // Separate window per (class, client) — mirroring the FastAPI tier's distinct
-  // _WRITES/_READS limiters. A single shared bucket would let read traffic
-  // consume the write budget (and vice versa): a read-heavy browser session
-  // would 429 its first POST after ~60 combined hits, which is wrong.
-  const key = `${isWrite ? "w" : "r"}:${clientKey(req.headers)}`;
+  // ---------------------------------------------------------------- pages
+  // TD-2: nonce-based CSP (was 'unsafe-inline' for scripts). A per-request
+  // nonce is minted here; Next's renderer reads it from the request headers
+  // and stamps its inline bootstrap/flight scripts with it automatically.
+  // 'strict-dynamic' lets the nonced bootstrap load the static chunks. Using
+  // a nonce forces dynamic rendering of document routes (the landing page is
+  // SSR per request) — accepted: the route is engine-free and tiny.
+  // styles keep 'unsafe-inline' (Next inline styles; no untrusted HTML is
+  // rendered anywhere; the XSS that matters travels through scripts).
+  const nonce = btoa(crypto.randomUUID());
+  const csp = [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob:",
+    "media-src 'self' blob:",
+    "connect-src 'self'",
+    "font-src 'self' data:",
+    "object-src 'none'",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+  ].join("; ");
 
-  if (!allow(key, limit, window, Date.now())) {
-    const res = NextResponse.json(
-      { ok: false, error: "rate limit exceeded; slow down and retry" },
-      { status: 429, headers: { "retry-after": String(Math.ceil(window / 1000)) } }
-    );
-    res.headers.set("x-request-id", requestId);
-    return res;
-  }
-
-  const res = NextResponse.next();
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("x-nonce", nonce);
+  requestHeaders.set("content-security-policy", csp);
+  const res = NextResponse.next({ request: { headers: requestHeaders } });
+  res.headers.set("content-security-policy", csp);
   res.headers.set("x-request-id", requestId);
   return res;
 }
 
 export const config = {
-  matcher: ["/api/:path*"],
+  // Every document route (nonce + CSP) plus the full /api surface (limiter,
+  // request IDs, origin checks). Static assets are served directly.
+  matcher: [
+    "/api/:path*",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt|xml|webmanifest)$).*)",
+  ],
 };

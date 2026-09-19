@@ -62,7 +62,7 @@ corpus are therefore *engineering* evidence, not a clinical benchmark.
 | A1 | 0.705 | 0.601 | 0.295 | 0.000 | 0.230 |
 | A2 | 0.477 | 0.234 | 0.477 | 0.295 | 0.592 |
 | A3 | 0.705 | 0.601 | 0.295 | 0.000 | 0.296 |
-| **A4** | **1.000** | **1.000** | **0.000** | 0.250 | **0.148** |
+| **A4** | **1.000** | **1.000** | **0.000** | 0.250 | **0.145** |
 
 **Reading.** Removing the gate and the formulary screen (A1) collapses verdict
 agreement to 0.705 and reintroduces a 29.5% unsafe auto-confirm rate; the
@@ -89,7 +89,7 @@ aggregate.
 The threshold grid (refuse 0.60–0.90 × confirm 0.85–0.95) is swept on the
 calibration split; the frozen point is then evaluated **once** on the held-out
 test split. The shipped default `v1-2026-09` reproduced agreement 1.000,
-unsafe 0.000, queue 0.250 and ECE(safety) 0.148 on the test split.
+unsafe 0.000, queue 0.250 and ECE(safety) 0.145 on the test split.
 
 **Honest negative result.** No grid point reaches a 15% queue rate on this
 corpus, because the corpus contains a deliberate confirm-queue stratum
@@ -107,10 +107,10 @@ decision boundary rather than just the provenance score):
 
 | formulary / reading | unsafe rate | queue rate | agreement | ECE (safety) |
 |---|---|---|---|---|
-| 0.3 / 0.7 | 0.000 | 0.250 | 1.000 | 0.127 |
-| **0.4 / 0.6 (shipped)** | 0.000 | 0.250 | 1.000 | 0.148 |
-| 0.5 / 0.5 | 0.000 | 0.250 | 1.000 | 0.169 |
-| 0.6 / 0.4 | 0.000 | 0.250 | 1.000 | 0.189 |
+| 0.3 / 0.7 | 0.000 | 0.250 | 1.000 | 0.122 |
+| **0.4 / 0.6 (shipped)** | 0.000 | 0.250 | 1.000 | 0.145 |
+| 0.5 / 0.5 | 0.000 | 0.250 | 1.000 | 0.166 |
+| 0.6 / 0.4 | 0.000 | 0.250 | 1.000 | 0.187 |
 
 **Neutral result, recorded rather than tuned.** Safety and burden are invariant
 across the grid, but ECE improves monotonically as the reading term dominates —
@@ -177,11 +177,11 @@ a clean continuation, and an incoming-only control.
 
 | arm | unsafe pass on harm | cross-prescription caught | queue rate | agreement |
 |---|---|---|---|---|
-| `single_rx` (incumbent) | 0.832 | **0.000** | 0.000 | 0.310 |
-| `regimen` (A) | 0.000 | 0.949 | 0.000 | 0.947 |
-| `regimen+propagation` (A+B) | 0.000 | **1.000** | 0.035 | 0.982 |
+| `single_rx` (incumbent) | 0.832 | **0.000** | 0.000 | 0.294 |
+| `regimen` (A) | 0.000 | 0.905 | 0.000 | 0.891 |
+| `regimen+propagation` (A+B) | 0.000 | **1.000** | 0.084 | 0.975 |
 
-n = 113 (66 cross-prescription). Numbers are from the archived run; see the
+n = 119 (84 cross-prescription). Numbers are from the archived run; see the
 binder for the run id and SHAs.
 
 **Reading.** The incumbent law is structurally blind to harm assembled across
@@ -195,11 +195,11 @@ fragile reads that mechanism A would auto-confirm — at a marginal queue cost o
 whenever a read is merely uncertain.
 
 **Limitation stated plainly.** The confusion neighbourhood is derived from
-brand-core string similarity against the 96-brand demo formulary, so the fragile
-stratum is small (4 cases — the number of genuinely look-alike pairs the data
-contains). The mechanism is general; the size of its demonstration here is
-bounded by the demo formulary, and a licensed DDInter/RxNorm snapshot would
-widen it. The regimen corpus is synthetic-curated like the primary corpus.
+brand-core string similarity against the expanded formulary, so the fragile
+stratum is 10 cases (up from 4 after the 2026-09-20 union merge widened the
+formulary to 2836 brands). The mechanism is general; a licensed DDInter/RxNorm
+snapshot plus the shipped SALAD table (`data/reference/salad_confusables.csv`,
+318 pairs) would widen it further. The regimen corpus is synthetic-curated like the primary corpus.
 
 ## Reproducibility contract
 

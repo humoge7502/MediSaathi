@@ -38,7 +38,8 @@ async function openWorkspace(page: import("@playwright/test").Page) {
 test("landing page tells the story and loads live metrics", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Every medicine");
-  await expect(page.getByText("closed-loop medication guardian")).toBeVisible();
+  // .first(): the footer also carries the positioning line (brand voice)
+  await expect(page.getByText("closed-loop medication guardian").first()).toBeVisible();
   await expect(page.getByRole("button", { name: /Launch the live product/i })).toBeVisible();
   // live dataset metrics render from /api/metrics (interaction rules count)
   await expect(page.getByText(/interaction rules/).first()).toBeVisible();
@@ -57,7 +58,7 @@ test("verify: warfarin + aspirin → severe interaction with DDInter source", as
   await page.getByRole("button", { name: "Run verification" }).click();
   await expect(page.getByText("Interaction found")).toBeVisible();
   await expect(page.getByText(/warfarin × aspirin/i)).toBeVisible();
-  await expect(page.getByText(/source: DDInter/i)).toBeVisible();
+  await expect(page.getByText(/source: DDInter/i).first()).toBeVisible(); // .first(): the regimen panel repeats the source line
   await expect(page.getByRole("button", { name: /Start therapy plan/i })).toBeVisible();
 });
 
@@ -66,7 +67,7 @@ test("verify: triple whammy flags the AKI combination rule", async ({ page }) =>
   await page.getByRole("button", { name: "Triple whammy (AKI risk)" }).click();
   await page.getByRole("button", { name: "Run verification" }).click();
   await expect(page.getByText(/triple whammy/i)).toBeVisible();
-  await expect(page.getByText(/acute kidney injury/i)).toBeVisible();
+  await expect(page.getByText(/acute kidney injury/i).first()).toBeVisible(); // .first(): single-Rx finding + regimen panel echo
 });
 
 test("verify: unreadable input lands in the confirm queue, never a verdict", async ({ page }) => {

@@ -11,3 +11,102 @@ RX-009,1-0-1,100 mg,pediatric context
 RX-010,0-1-0|1-0-1,5 mg|500 mg,warfarin note
 RX-011,1-0-0|1-0-0,25 mg|5 mg,handwritten legible
 RX-012,,,non-rx receipt
+RX-013,1-0-1|1-0-0,650 mg|40 mg,clean prescription
+RX-014,0-1-0|1-0-1,5 mg|500 mg,clean prescription
+RX-015,1-0-0,50 mg,clean prescription
+RX-016,1-0-0,40 mg,clean prescription
+RX-017,1-0-1,500 mg,clean prescription
+RX-018,0-0-1,10 mg,clean prescription
+RX-019,1-0-0|1-0-0,5 mg|40 mg,clean prescription
+RX-020,1-0-0,50 mg,clean prescription
+RX-021,0-0-1,10 mg,clean prescription
+RX-022,1-0-0|SOS,50 mg|650 mg,clean prescription
+RX-023,1-0-0,,clean prescription
+RX-024,1-0-0,10 mg,clean prescription
+RX-025,1-0-1,200 mg,clean prescription
+RX-026,0-0-1,10 mg,clean prescription
+RX-027,1-0-0,0.4 mg,clean prescription
+RX-028,1-0-0,300 mg,clean prescription
+RX-029,1-0-1,4 mg,clean prescription
+RX-030,1-0-0,20 mg,clean prescription
+RX-031,1-0-0,40 mg,clean prescription
+RX-032,1-0-0,10 mg,clean prescription
+RX-033,1-0-1,,clean prescription
+RX-034,0-0-1,10 mg,clean prescription
+RX-035,1-0-0,50 mg,clean prescription
+RX-036,1-0-0,75 mg,clean prescription
+RX-037,1-0-1,,clean prescription
+RX-038,0-0-1,60 mg,clean prescription
+RX-039,1-0-0,30 mg,clean prescription
+RX-040,1-0-1,100 mg,clean prescription
+RX-041,1-0-1,10 mg,clean prescription
+RX-042,1-0-0,5 mg,clean prescription
+RX-043,1-0-0|1-0-1,5 mg|400 mg,severe interaction
+RX-044,1-0-0|1-0-1,5 mg|50 mg,severe interaction
+RX-045,1-0-0|1-0-1,5 mg|500 mg,moderate interaction
+RX-046,1-0-0|1-0-1,5 mg|150 mg,severe interaction
+RX-047,1-0-0|1-0-1,5 mg|400 mg,severe interaction
+RX-048,1-0-0|1-0-1,5 mg|200 mg,severe interaction
+RX-049,1-0-0|1-0-1,5 mg,severe interaction
+RX-050,1-0-0|1-0-1,5 mg,severe interaction
+RX-051,1-0-0|1-0-1,75 mg|5 mg,severe interaction
+RX-052,1-0-0|1-0-1,75 mg|5 mg,severe interaction
+RX-053,1-0-0|1-0-1,200 mg|0.25 mg,severe interaction
+RX-054,1-0-0|1-0-1,10 mg|300 mg,severe interaction
+RX-055,1-0-0|1-0-1,20 mg|50 mg,severe interaction
+RX-056,1-0-0|1-0-1,5 mg|400 mg,severe interaction
+RX-057,1-0-0|1-0-1,100 mg|10 mg,moderate interaction
+RX-058,1-0-0|1-0-1,0.5 mg|50 mg,severe interaction
+RX-059,1-0-0|1-0-1,500 mg|0.5 mg,severe interaction
+RX-060,1-0-0|1-0-1,5 mg|25 mg,severe interaction
+RX-061,1-0-0|1-0-1,5 mg|200 mg,moderate interaction
+RX-062,1-0-0|1-0-1,75 mg|400 mg,moderate interaction
+RX-063,1-0-0|1-0-1,50 mg|400 mg,moderate interaction
+RX-064,1-0-0|1-0-1,40 mg|50 mg,moderate interaction
+RX-065,1-0-0|1-0-1,10 mg|500 mg,severe interaction
+RX-066,1-0-0|1-0-1,50 mg|500 mg,moderate interaction
+RX-067,1-0-0|1-0-1,50 mg|50 mg,severe interaction
+RX-068,1-0-0|1-0-1,10 mg|50 mg,severe interaction
+RX-069,1-0-0|1-0-1,40 mg|10 mg,moderate interaction
+RX-070,1-0-0|1-0-1,50 mg,moderate interaction
+RX-071,1-0-0|1-0-1,75 mg|20 mg,moderate interaction
+RX-072,1-0-0|1-0-1,10 mg|200 mg,moderate interaction
+RX-073,1-0-0|1-0-1,500 mg|200 mg,severe interaction
+RX-074,1-0-0,5 mg,context contraindication pregnancy
+RX-075,1-0-0,400 mg,context contraindication active_bleeding
+RX-076,1-0-0,1 mg,context contraindication age_under_12
+RX-077,1-0-0,75 mg,context contraindication age_under_16
+RX-078,1-0-0,500 mg,context contraindication age_under_18
+RX-079,1-0-0,50 mg,context contraindication peptic_ulcer
+RX-080,1-0-0,500 mg,context contraindication renal_severe
+RX-081,1-0-0,5 mg,context contraindication hyperkalemia
+RX-082,1-0-0,25 mg,context contraindication hyperkalemia
+RX-083,1-0-0,500 mg,context contraindication myasthenia_gravis
+RX-084,1-0-1|1-0-2,650 mg,duplicate ATC class
+RX-085,1-0-1|1-0-2,650 mg|650 mg,duplicate ATC class
+RX-086,1-0-1|1-0-2,75 mg|325 mg,duplicate ATC class
+RX-087,1-0-1|1-0-2,10 mg|10 mg,duplicate ATC class
+RX-088,1-0-1|1-0-2,5 mg|5 mg,duplicate ATC class
+RX-089,1-0-1|1-0-2,40 mg|40 mg,duplicate ATC class
+RX-090,1-0-1|1-0-2,75 mg|75 mg,duplicate ATC class
+RX-091,1-0-1|1-0-2,200 mg|200 mg,duplicate ATC class
+RX-092,1-0-1,100 mg,confirm-queue case
+RX-093,BD,100 mg,confirm-queue case
+RX-094,1-0-1|1-0-0,650 mg|50 mg,confirm-queue case
+RX-095,0-1-0,5 mg,confirm-queue case
+RX-096,OD,150 mg,confirm-queue case
+RX-097,1-0-0|1-1-1,40 mg,confirm-queue case
+RX-098,1-0-0,20 mg,confirm-queue case
+RX-099,1-0-1|0-0-1,500 mg|250 mg,confirm-queue case
+RX-100,1-0-0,25 mg,confirm-queue case
+RX-101,1-0-1|1-0-1|1-0-0,200 mg|500 mg|30 mg,confirm-queue case
+RX-102,1-0-1|1-0-0,50 mg|40 mg,confirm-queue case
+RX-103,OD|BD,1g|500 mg,confirm-queue case
+RX-104,0-1-0,5 mg,refusal (blank/non-rx/low confidence)
+RX-105,OD,150 mg,refusal (blank/non-rx/low confidence)
+RX-106,,,blank scan
+RX-107,,,non-rx document
+RX-108,,,blank scan
+RX-109,,,non-rx document
+RX-110,,,blank scan
+RX-111,,,non-rx document

@@ -275,25 +275,103 @@ def build_fragile(engine, rng, want):
     (read, neighbour) with different molecules, look for a single already-active
     medicine that the *neighbour* harms but the read does not. The incumbent
     auto-confirms such a read; propagation must queue it.
+
+    Bounded for the expanded 1498-brand formulary: only a sampled subset of
+    reads is scanned (full O(N^2) similarity is ~2s even with the length
+    prefilter, but the nested active-search is not), SALAD authoritative pairs
+    are tried first, and actives are capped. Returns whatever is found —
+    fewer than `want` is an honest signal (previous snapshot: 4), not a failure.
     """
     # linked pairs, derived exactly as the mechanism derives them
     from app.safety.regimen import confusion_neighbours
     pairs: list[tuple[dict, dict]] = []
-    for row in engine.brands.values():
+    # 1. SALAD authoritative pairs mapped into the formulary (fast, curated).
+    try:
+        import csv as _csv
+        import os as _os
+        salad_paths = [
+            _os.path.join(ROOT, "extracted", "MediSaathi_Datasets",
+                          "07_salad_confusables", "salad_confusables.csv"),
+            _os.path.join(ROOT, "data", "salad_confusables.csv"),
+        ]
+        brand_by_mol_name: dict[str, list[dict]] = {}
+        for _row in engine.brands.values():
+            for _m in _row["molecule"].lower().split("+"):
+                brand_by_mol_name.setdefault(_m.strip(), []).append(_row)
+        for _sp in salad_paths:
+            if not _os.path.exists(_sp):
+                continue
+            with open(_sp, encoding="utf-8") as _f:
+                for _r in _csv.DictReader(_f):
+                    _a, _b = (_r.get("name_a") or "").strip(), (_r.get("name_b") or "").strip()
+                    if not _a or not _b:
+                        continue
+                    _ra = engine.normalize(_a) or next(
+                        (x for x in engine.brands.values()
+                         if x["molecule"].lower() == _a.lower()), None)
+                    _rb = engine.normalize(_b) or next(
+                        (x for x in engine.brands.values()
+                         if x["molecule"].lower() == _b.lower()), None)
+                    # name_a/b are molecule-ish; resolve to representative brands
+                    if _ra is None:
+                        _pa = brand_by_mol_name.get(_a.lower(), [])
+                        _ra = _pa[0] if _pa else None
+                    if _rb is None:
+                        _pb = brand_by_mol_name.get(_b.lower(), [])
+                        _rb = _pb[0] if _pb else None
+                    if _ra and _rb and _ra["brand"] != _rb["brand"]:
+                        if set(_ra["molecule"].lower().split("+")) != set(
+                                _rb["molecule"].lower().split("+")):
+                            pairs.append((_ra, _rb))
+            if pairs:
+                break
+    except Exception:
+        pass
+    # 2. Similarity-sampled reads (bounded, not exhaustive over 1498 brands).
+    SAMPLE_READS = 150
+    _all_rows = list(engine.brands.values())
+    rng.shuffle(_all_rows)
+    for row in _all_rows[:SAMPLE_READS]:
+        if len(pairs) >= max(want * 5, 50):
+            break
         for _sim, nb in confusion_neighbours(engine, row["brand"]):
             if set(row["molecule"].lower().split("+")) != set(nb["molecule"].lower().split("+")):
                 pairs.append((row, nb))
+                break  # one neighbour per read is enough for the search
     rng.shuffle(pairs)
+    pairs = pairs[:max(want * 5, 50)]
 
     actives = list(engine.brands.values())
     rng.shuffle(actives)
+    actives = actives[:40]
+    # Index actives by molecule for targeted search: prefer actives that the
+    # neighbour harms but the read does not (otherwise verify almost always fails).
+    from app.safety.engine import _split_molecules as _split
     out = []
     for read, neighbour in pairs:
         if len(out) >= want:
             break
-        for cand in actives[:60]:
+        read_mols = set(_split(read["molecule"].lower()))
+        nb_mols = set(_split(neighbour["molecule"].lower()))
+        if read_mols == nb_mols:
+            continue
+        # Score actives: neighbour-harms-active AND read-does-not.
+        scored_actives = []
+        for cand in actives:
             if cand["brand"] in (read["brand"], neighbour["brand"]):
                 continue
+            cand_mols = set(_split(cand["molecule"].lower()))
+            nb_hit = any(engine.screen_pair(n, c) for n in nb_mols for c in cand_mols)
+            read_hit = any(engine.screen_pair(r, c) for r in read_mols for c in cand_mols)
+            # Combination-class harms (triple whammy etc.) also count; check cheaply
+            # via union screening only for promising pairs (defer full verify).
+            score = (1 if nb_hit and not read_hit else 0)
+            if score:
+                scored_actives.append(cand)
+        # Try promising actives first, then a couple of random ones as fallback.
+        trial_actives = scored_actives[:8] + [c for c in actives[:4]
+                                              if c not in scored_actives][:2]
+        for cand in trial_actives:
             case = make_case("__probe__", "fragile_confusable",
                              [active_entry(cand)],
                              incoming_lines(rng, [read], confidence_range=(0.92, 0.94)),

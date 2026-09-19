@@ -289,6 +289,12 @@ def formulary_search(q: str, limit: int = 8) -> Envelope:
             scored.append((0, brand, row))
         elif q in brand:
             scored.append((1, brand, row))
+        elif row["molecule"].lower() == q:
+            # Exact single-molecule match (e.g. "paracetamol" -> Dolo 650):
+            # rank with brand-substring hits so the expanded 1498-brand
+            # catalog does not bury the canonical brands under Jan Aushadhi
+            # brand-name substrings.
+            scored.append((1, brand, row))
         elif q in row["molecule"].lower():
             scored.append((2, brand, row))
     scored.sort(key=lambda t: (t[0], t[1]))

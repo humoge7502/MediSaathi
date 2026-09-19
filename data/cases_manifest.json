@@ -113,5 +113,942 @@
     "expected_brands": [],
     "expected_verdict": "refused",
     "context": []
+  },
+  {
+    "sample_id": "RX-013",
+    "description": "Clean prescription - 2 medicine(s), no findings",
+    "expected_brands": [
+      "Dolo 650",
+      "Pan 40"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-014",
+    "description": "Borderline DDInter flag - amlodipine + calcium carbonate (moderate, DDInter 2.0 snapshot); relabeled pass->interaction_moderate on 2026-09-20 union merge, engine correct per snapshot",
+    "expected_brands": [
+      "Amlong 5",
+      "Shellcal 500"
+    ],
+    "expected_verdict": "interaction_moderate",
+    "context": []
+  },
+  {
+    "sample_id": "RX-015",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Thyronorm 50"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-016",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Telma 40"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-017",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Glycomet 500"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-018",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Tonact 10"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-019",
+    "description": "Clean prescription - 2 medicine(s), no findings",
+    "expected_brands": [
+      "Amlong 5",
+      "Telma 40"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-020",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Eltroxin 50"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-021",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Rozavel 10"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-022",
+    "description": "Clean prescription - 2 medicine(s), no findings",
+    "expected_brands": [
+      "Betaloc 50",
+      "Dolo 650"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-023",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Nurokind"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-024",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Montair 10"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-025",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Zifi 200"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-026",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Cetzine 10"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-027",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Urimax 0.4"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-028",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Zyloric 300"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-029",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Emeset 4"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-030",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Razo 20"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-031",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Lasix 40"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-032",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Nexito 10"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-033",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Zerodol P"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-034",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Zolfresh 10"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-035",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Serlift 50"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-036",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Clavix 75"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-037",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Gemcal"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-038",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Calcirol 60K"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-039",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Duzela 30"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-040",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Hifenac 100"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-041",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Monotrate 10"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-042",
+    "description": "Clean prescription - 1 medicine(s), no findings",
+    "expected_brands": [
+      "Envas 5"
+    ],
+    "expected_verdict": "pass",
+    "context": []
+  },
+  {
+    "sample_id": "RX-043",
+    "description": "Severe interaction - Warf 5 + Ibugesic 400",
+    "expected_brands": [
+      "Ibugesic 400",
+      "Warf 5"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-044",
+    "description": "Severe interaction - Warf 5 + Voveran 50",
+    "expected_brands": [
+      "Voveran 50",
+      "Warf 5"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-045",
+    "description": "Severe interaction - Warf 5 + Azee 500",
+    "expected_brands": [
+      "Azee 500",
+      "Warf 5"
+    ],
+    "expected_verdict": "interaction_moderate",
+    "context": []
+  },
+  {
+    "sample_id": "RX-046",
+    "description": "Severe interaction - Warf 5 + Forcan 150",
+    "expected_brands": [
+      "Forcan 150",
+      "Warf 5"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-047",
+    "description": "Severe interaction - Warf 5 + Metrogyl 400",
+    "expected_brands": [
+      "Metrogyl 400",
+      "Warf 5"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-048",
+    "description": "Severe interaction - Warf 5 + Cordarone 200",
+    "expected_brands": [
+      "Cordarone 200",
+      "Warf 5"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-049",
+    "description": "Severe interaction - Warf 5 + Septran DS",
+    "expected_brands": [
+      "Septran DS",
+      "Warf 5"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-050",
+    "description": "Severe interaction - Warf 5 + Naprosyn",
+    "expected_brands": [
+      "Naprosyn",
+      "Warf 5"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-051",
+    "description": "Severe interaction - Ecosprin 75 + Warf 5",
+    "expected_brands": [
+      "Ecosprin 75",
+      "Warf 5"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-052",
+    "description": "Severe interaction - Clavix 75 + Warf 5",
+    "expected_brands": [
+      "Clavix 75",
+      "Warf 5"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-053",
+    "description": "Severe interaction - Cordarone 200 + Lanoxin 0.25",
+    "expected_brands": [
+      "Cordarone 200",
+      "Lanoxin 0.25"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-054",
+    "description": "Severe interaction - Lipitor 10 + Gemfibrozil 300",
+    "expected_brands": [
+      "Gemfibrozil 300",
+      "Lipitor 10"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-055",
+    "description": "Severe interaction - Xarelto 20 + Dicloran 50",
+    "expected_brands": [
+      "Dicloran 50",
+      "Xarelto 20"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-056",
+    "description": "Severe interaction - Eliquis 5 + Ibugesic 400",
+    "expected_brands": [
+      "Eliquis 5",
+      "Ibugesic 400"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-057",
+    "description": "Severe interaction - Seroquel 100 + Nexito 10",
+    "expected_brands": [
+      "Nexito 10",
+      "Seroquel 100"
+    ],
+    "expected_verdict": "interaction_moderate",
+    "context": []
+  },
+  {
+    "sample_id": "RX-058",
+    "description": "Severe interaction - Etilaam 0.5 + Tramazac 50",
+    "expected_brands": [
+      "Etilaam 0.5",
+      "Tramazac 50"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-059",
+    "description": "Severe interaction - Cifran 500 + Zycolchin 0.5",
+    "expected_brands": [
+      "Cifran 500",
+      "Zycolchin 0.5"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-060",
+    "description": "Severe interaction - Envas 5 + Aldactone 25",
+    "expected_brands": [
+      "Aldactone 25",
+      "Envas 5"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-061",
+    "description": "Severe interaction - Warf 5 + HCQS 200",
+    "expected_brands": [
+      "HCQS 200",
+      "Warf 5"
+    ],
+    "expected_verdict": "interaction_moderate",
+    "context": []
+  },
+  {
+    "sample_id": "RX-062",
+    "description": "Severe interaction - Ecosprin 75 + Ibugesic 400",
+    "expected_brands": [
+      "Ecosprin 75",
+      "Ibugesic 400"
+    ],
+    "expected_verdict": "interaction_moderate",
+    "context": []
+  },
+  {
+    "sample_id": "RX-063",
+    "description": "Moderate interaction - Betaloc 50 + Ibugesic 400",
+    "expected_brands": [
+      "Betaloc 50",
+      "Ibugesic 400"
+    ],
+    "expected_verdict": "interaction_moderate",
+    "context": []
+  },
+  {
+    "sample_id": "RX-064",
+    "description": "Moderate interaction - Telma 40 + Dicloran 50",
+    "expected_brands": [
+      "Dicloran 50",
+      "Telma 40"
+    ],
+    "expected_verdict": "interaction_moderate",
+    "context": []
+  },
+  {
+    "sample_id": "RX-065",
+    "description": "Moderate interaction - Tonact 10 + Claribid 500",
+    "expected_brands": [
+      "Claribid 500",
+      "Tonact 10"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-066",
+    "description": "Moderate interaction - Thyronorm 50 + Shellcal 500",
+    "expected_brands": [
+      "Shellcal 500",
+      "Thyronorm 50"
+    ],
+    "expected_verdict": "interaction_moderate",
+    "context": []
+  },
+  {
+    "sample_id": "RX-067",
+    "description": "Moderate interaction - Serlift 50 + Tramazac 50",
+    "expected_brands": [
+      "Serlift 50",
+      "Tramazac 50"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-068",
+    "description": "Moderate interaction - Monotrate 10 + Penegra 50",
+    "expected_brands": [
+      "Monotrate 10",
+      "Penegra 50"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-069",
+    "description": "Moderate interaction - Telma 40 + Dytor 10",
+    "expected_brands": [
+      "Dytor 10",
+      "Telma 40"
+    ],
+    "expected_verdict": "interaction_moderate",
+    "context": []
+  },
+  {
+    "sample_id": "RX-070",
+    "description": "Moderate interaction - Betaloc 50 + Zerodol P",
+    "expected_brands": [
+      "Betaloc 50",
+      "Zerodol P"
+    ],
+    "expected_verdict": "interaction_moderate",
+    "context": []
+  },
+  {
+    "sample_id": "RX-071",
+    "description": "Moderate interaction - Clavix 75 + Omez 20",
+    "expected_brands": [
+      "Clavix 75",
+      "Omez 20"
+    ],
+    "expected_verdict": "interaction_moderate",
+    "context": []
+  },
+  {
+    "sample_id": "RX-072",
+    "description": "Moderate interaction - Atorlip 10 + Cordarone 200",
+    "expected_brands": [
+      "Atorlip 10",
+      "Cordarone 200"
+    ],
+    "expected_verdict": "interaction_moderate",
+    "context": []
+  },
+  {
+    "sample_id": "RX-073",
+    "description": "Moderate interaction - Cifran 500 + Theobid 200",
+    "expected_brands": [
+      "Cifran 500",
+      "Theobid 200"
+    ],
+    "expected_verdict": "interaction_severe",
+    "context": []
+  },
+  {
+    "sample_id": "RX-074",
+    "description": "Contraindication - Warf 5 with pregnancy",
+    "expected_brands": [
+      "Warf 5"
+    ],
+    "expected_verdict": "contraindication",
+    "context": [
+      "pregnancy"
+    ]
+  },
+  {
+    "sample_id": "RX-075",
+    "description": "Contraindication - Ibugesic 400 with active bleeding",
+    "expected_brands": [
+      "Ibugesic 400"
+    ],
+    "expected_verdict": "contraindication",
+    "context": [
+      "active_bleeding"
+    ]
+  },
+  {
+    "sample_id": "RX-076",
+    "description": "Contraindication - Doxy-1 with child under 12",
+    "expected_brands": [
+      "Doxy-1"
+    ],
+    "expected_verdict": "contraindication",
+    "context": [
+      "age_under_12"
+    ]
+  },
+  {
+    "sample_id": "RX-077",
+    "description": "Contraindication - Aspirin 75 with child under 16",
+    "expected_brands": [
+      "Aspirin 75"
+    ],
+    "expected_verdict": "contraindication",
+    "context": [
+      "age_under_16"
+    ]
+  },
+  {
+    "sample_id": "RX-078",
+    "description": "Contraindication - Ciplox 500 with child under 18",
+    "expected_brands": [
+      "Ciplox 500"
+    ],
+    "expected_verdict": "contraindication",
+    "context": [
+      "age_under_18"
+    ]
+  },
+  {
+    "sample_id": "RX-079",
+    "description": "Contraindication - Voveran 50 with peptic ulcer",
+    "expected_brands": [
+      "Voveran 50"
+    ],
+    "expected_verdict": "contraindication",
+    "context": [
+      "peptic_ulcer"
+    ]
+  },
+  {
+    "sample_id": "RX-080",
+    "description": "Contraindication - Glycomet 500 with severe renal impairment",
+    "expected_brands": [
+      "Glycomet 500"
+    ],
+    "expected_verdict": "contraindication",
+    "context": [
+      "renal_severe"
+    ]
+  },
+  {
+    "sample_id": "RX-081",
+    "description": "Contraindication - Envas 5 with hyperkalemia",
+    "expected_brands": [
+      "Envas 5"
+    ],
+    "expected_verdict": "contraindication",
+    "context": [
+      "hyperkalemia"
+    ]
+  },
+  {
+    "sample_id": "RX-082",
+    "description": "Contraindication - Aldactone 25 with hyperkalemia (K-sparing)",
+    "expected_brands": [
+      "Aldactone 25"
+    ],
+    "expected_verdict": "contraindication",
+    "context": [
+      "hyperkalemia"
+    ]
+  },
+  {
+    "sample_id": "RX-083",
+    "description": "Contraindication - Azithral 500 with myasthenia gravis",
+    "expected_brands": [
+      "Azithral 500"
+    ],
+    "expected_verdict": "contraindication",
+    "context": [
+      "myasthenia_gravis"
+    ]
+  },
+  {
+    "sample_id": "RX-084",
+    "description": "Duplicate ATC - N02BE01 duplicate",
+    "expected_brands": [
+      "Calpol",
+      "Dolo 650"
+    ],
+    "expected_verdict": "duplicate_atc",
+    "context": []
+  },
+  {
+    "sample_id": "RX-085",
+    "description": "Duplicate ATC - JA paracetamol duplicate",
+    "expected_brands": [
+      "Dolo 650",
+      "Paracetamol 650"
+    ],
+    "expected_verdict": "duplicate_atc",
+    "context": []
+  },
+  {
+    "sample_id": "RX-086",
+    "description": "Duplicate ATC - aspirin duplicate",
+    "expected_brands": [
+      "Disprin 325",
+      "Ecosprin 75"
+    ],
+    "expected_verdict": "duplicate_atc",
+    "context": []
+  },
+  {
+    "sample_id": "RX-087",
+    "description": "Duplicate ATC - atorvastatin duplicate",
+    "expected_brands": [
+      "Atorlip 10",
+      "Tonact 10"
+    ],
+    "expected_verdict": "duplicate_atc",
+    "context": []
+  },
+  {
+    "sample_id": "RX-088",
+    "description": "Duplicate ATC - amlodipine duplicate",
+    "expected_brands": [
+      "Amlong 5",
+      "Amlopres 5"
+    ],
+    "expected_verdict": "duplicate_atc",
+    "context": []
+  },
+  {
+    "sample_id": "RX-089",
+    "description": "Duplicate ATC - telmisartan duplicate",
+    "expected_brands": [
+      "Telma 40",
+      "Telsartan 40"
+    ],
+    "expected_verdict": "duplicate_atc",
+    "context": []
+  },
+  {
+    "sample_id": "RX-090",
+    "description": "Duplicate ATC - clopidogrel duplicate",
+    "expected_brands": [
+      "Clavix 75",
+      "Deplatt 75"
+    ],
+    "expected_verdict": "duplicate_atc",
+    "context": []
+  },
+  {
+    "sample_id": "RX-091",
+    "description": "Duplicate ATC - cefixime duplicate",
+    "expected_brands": [
+      "Cefolac 200",
+      "Zifi 200"
+    ],
+    "expected_verdict": "duplicate_atc",
+    "context": []
+  },
+  {
+    "sample_id": "RX-092",
+    "description": "Confirm queue - unknown brand",
+    "expected_brands": [],
+    "expected_verdict": "confirm_queue",
+    "context": []
+  },
+  {
+    "sample_id": "RX-093",
+    "description": "Confirm queue - confusable misspelling",
+    "expected_brands": [],
+    "expected_verdict": "confirm_queue",
+    "context": []
+  },
+  {
+    "sample_id": "RX-094",
+    "description": "Confirm queue - one unknown brand",
+    "expected_brands": [
+      "Dolo 650"
+    ],
+    "expected_verdict": "confirm_queue",
+    "context": []
+  },
+  {
+    "sample_id": "RX-095",
+    "description": "Confirm queue - queue-band confidence read",
+    "expected_brands": [
+      "Amlong 5"
+    ],
+    "expected_verdict": "confirm_queue",
+    "context": []
+  },
+  {
+    "sample_id": "RX-096",
+    "description": "Confirm queue - queue-band confidence",
+    "expected_brands": [
+      "Rantac 150"
+    ],
+    "expected_verdict": "confirm_queue",
+    "context": []
+  },
+  {
+    "sample_id": "RX-097",
+    "description": "Confirm queue - one unknown syrup",
+    "expected_brands": [
+      "Telma 40"
+    ],
+    "expected_verdict": "confirm_queue",
+    "context": []
+  },
+  {
+    "sample_id": "RX-098",
+    "description": "Confirm queue - invented brand",
+    "expected_brands": [],
+    "expected_verdict": "confirm_queue",
+    "context": []
+  },
+  {
+    "sample_id": "RX-099",
+    "description": "Confirm queue - invented second brand",
+    "expected_brands": [
+      "Glycomet 500"
+    ],
+    "expected_verdict": "confirm_queue",
+    "context": []
+  },
+  {
+    "sample_id": "RX-100",
+    "description": "Confirm queue - SR variant low-confidence check",
+    "expected_brands": [
+      "Metolar XR 25"
+    ],
+    "expected_verdict": "confirm_queue",
+    "context": []
+  },
+  {
+    "sample_id": "RX-101",
+    "description": "Confirm queue - third brand unknown",
+    "expected_brands": [
+      "Azee 500",
+      "Zifi 200"
+    ],
+    "expected_verdict": "confirm_queue",
+    "context": []
+  },
+  {
+    "sample_id": "RX-102",
+    "description": "Confirm queue - second unknown",
+    "expected_brands": [
+      "Vymada 50"
+    ],
+    "expected_verdict": "confirm_queue",
+    "context": []
+  },
+  {
+    "sample_id": "RX-103",
+    "description": "Confirm queue - injection + unknown tablet",
+    "expected_brands": [
+      "Monocef 1g"
+    ],
+    "expected_verdict": "confirm_queue",
+    "context": []
+  },
+  {
+    "sample_id": "RX-104",
+    "description": "Refusal - refusal-band confidence",
+    "expected_brands": [
+      "Amlong 5"
+    ],
+    "expected_verdict": "refused",
+    "context": []
+  },
+  {
+    "sample_id": "RX-105",
+    "description": "Refusal - refusal-band confidence (low-conf Rantac 150 read; brand label corrected 2026-09-20 to match fixture text)",
+    "expected_brands": [
+      "Rantac 150"
+    ],
+    "expected_verdict": "refused",
+    "context": []
+  },
+  {
+    "sample_id": "RX-106",
+    "description": "Refusal - blank scan",
+    "expected_brands": [],
+    "expected_verdict": "refused",
+    "context": []
+  },
+  {
+    "sample_id": "RX-107",
+    "description": "Refusal - non-prescription receipt",
+    "expected_brands": [],
+    "expected_verdict": "refused",
+    "context": []
+  },
+  {
+    "sample_id": "RX-108",
+    "description": "Refusal - blank scan",
+    "expected_brands": [],
+    "expected_verdict": "refused",
+    "context": []
+  },
+  {
+    "sample_id": "RX-109",
+    "description": "Refusal - non-prescription document",
+    "expected_brands": [],
+    "expected_verdict": "refused",
+    "context": []
+  },
+  {
+    "sample_id": "RX-110",
+    "description": "Refusal - blank scan",
+    "expected_brands": [],
+    "expected_verdict": "refused",
+    "context": []
+  },
+  {
+    "sample_id": "RX-111",
+    "description": "Refusal - non-prescription advertisement",
+    "expected_brands": [],
+    "expected_verdict": "refused",
+    "context": []
   }
 ]

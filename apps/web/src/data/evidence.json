@@ -3,11 +3,11 @@
     "deltas": {
       "A4_minus_combination": {
         "delta_queue_rate": 0.0,
-        "delta_unsafe_rate": 0.0455,
-        "delta_verdict_agreement": -0.0455,
+        "delta_unsafe_rate": 0.0,
+        "delta_verdict_agreement": -0.0682,
         "queue_rate": 0.25,
-        "unsafe_auto_confirm_rate": 0.0455,
-        "verdict_agreement": 0.9545
+        "unsafe_auto_confirm_rate": 0.0,
+        "verdict_agreement": 0.9318
       },
       "A4_minus_formulary_fusion": {
         "delta_queue_rate": -0.25,
@@ -55,7 +55,7 @@
         "verdict_macro_f1": 0.0617
       },
       "A1": {
-        "ece_safety": 0.2304,
+        "ece_safety": 0.2343,
         "queue_rate": 0.0,
         "refusal_rate": 0.0,
         "unsafe_auto_confirm_rate": 0.2955,
@@ -63,7 +63,7 @@
         "verdict_macro_f1": 0.601
       },
       "A2": {
-        "ece_safety": 0.5918,
+        "ece_safety": 0.5888,
         "queue_rate": 0.2955,
         "refusal_rate": 0.0,
         "unsafe_auto_confirm_rate": 0.4773,
@@ -79,7 +79,7 @@
         "verdict_macro_f1": 0.601
       },
       "A4": {
-        "ece_safety": 0.1482,
+        "ece_safety": 0.1452,
         "queue_rate": 0.25,
         "refusal_rate": 0.0455,
         "unsafe_auto_confirm_rate": 0.0,
@@ -95,8 +95,8 @@
     "default_id": "v1-2026-09",
     "finding": "no fitted point beat the shipped default on burden without weakening safety; v1-2026-09 remains frozen",
     "frozen_on_test": {
-      "brier_safety": 0.0591,
-      "ece_safety": 0.1482,
+      "brier_safety": 0.0564,
+      "ece_safety": 0.1452,
       "queue_rate": 0.25,
       "refusal_rate": 0.0455,
       "reliability": [
@@ -129,18 +129,18 @@
           "n": 0
         },
         {
-          "accuracy": 1.0,
+          "accuracy": null,
           "hi": 0.5,
           "lo": 0.4,
-          "mean_confidence": 0.47,
-          "n": 1
+          "mean_confidence": null,
+          "n": 0
         },
         {
           "accuracy": 1.0,
           "hi": 0.6,
           "lo": 0.5,
-          "mean_confidence": 0.5625,
-          "n": 12
+          "mean_confidence": 0.5654,
+          "n": 13
         },
         {
           "accuracy": null,
@@ -180,9 +180,9 @@
     "test_split_n": 44,
     "within_review_target_15pct": []
   },
-  "dataset_snapshot": "86bce3e0d7c3b1e9",
-  "engine_git_sha": "38f69fb-dirty",
-  "generated_at": "2026-09-11T17:43:38+00:00",
+  "dataset_snapshot": "fbbbec6c010476a3",
+  "engine_git_sha": "14226de-dirty",
+  "generated_at": "2026-09-19T19:47:55+00:00",
   "hitl": {
     "acceptance": {
       "queue_automates_at_least_as_much_as_refusal": true,
@@ -234,59 +234,59 @@
     "bench": [
       {
         "endpoint": "GET /healthz",
-        "p50_ms": 1.913,
-        "p95_ms": 2.485
+        "p50_ms": 2.332,
+        "p95_ms": 2.722
       },
       {
         "endpoint": "GET /metrics (O(1) GROUP BY)",
-        "p50_ms": 4.086,
-        "p95_ms": 5.304
+        "p50_ms": 4.058,
+        "p95_ms": 5.18
       },
       {
         "endpoint": "GET /formulary/search?q=par",
-        "p50_ms": 2.621,
-        "p95_ms": 3.104
+        "p50_ms": 3.522,
+        "p95_ms": 4.118
       },
       {
         "endpoint": "POST /prescriptions RX-001 (full pipeline)",
-        "p50_ms": 13.186,
-        "p95_ms": 16.027
+        "p50_ms": 14.372,
+        "p95_ms": 16.823
       },
       {
         "endpoint": "POST /prescriptions RX-002 (full pipeline)",
-        "p50_ms": 14.17,
-        "p95_ms": 17.764
+        "p50_ms": 14.105,
+        "p95_ms": 17.536
       },
       {
         "endpoint": "POST /prescriptions RX-004 (full pipeline)",
-        "p50_ms": 13.794,
-        "p95_ms": 17.443
+        "p50_ms": 14.441,
+        "p95_ms": 17.663
       },
       {
         "endpoint": "POST /prescriptions RX-008 (full pipeline)",
-        "p50_ms": 14.385,
-        "p95_ms": 18.317
+        "p50_ms": 14.394,
+        "p95_ms": 17.097
       },
       {
         "endpoint": "POST /prescriptions RX-009 (full pipeline)",
-        "p50_ms": 14.144,
-        "p95_ms": 18.045
+        "p50_ms": 13.799,
+        "p95_ms": 17.409
       },
       {
         "endpoint": "POST /prescriptions RX-012 (full pipeline)",
-        "p50_ms": 13.924,
-        "p95_ms": 16.991
+        "p50_ms": 12.144,
+        "p95_ms": 15.02
       }
     ],
     "plane_n": 300,
-    "plane_p50_ms": 0.073,
-    "plane_p95_ms": 0.112,
+    "plane_p50_ms": 0.086,
+    "plane_p95_ms": 0.685,
     "within_budget": true
   },
   "missing_runs": [],
   "parity": {
     "both_engines_agree": true,
-    "corpus": "n=110 confirm_queue=15 contraindication=15 duplicate_atc=16 interaction=35 pass=20 refused=9",
+    "corpus": "n=110 confirm_queue=15 contraindication=15 duplicate_atc=16 interaction=38 pass=17 refused=9",
     "n": 110,
     "python_ok": true,
     "typescript_ok": true
@@ -294,37 +294,37 @@
   "regimen": {
     "arms": {
       "regimen": {
-        "cross_prescription_catch_rate": 0.9487,
+        "cross_prescription_catch_rate": 0.9048,
         "queue_rate": 0.0,
         "unsafe_pass_rate": 0.0,
-        "verdict_agreement": 0.9469
+        "verdict_agreement": 0.8908
       },
       "regimen+propagation": {
         "cross_prescription_catch_rate": 1.0,
-        "queue_rate": 0.0354,
+        "queue_rate": 0.084,
         "unsafe_pass_rate": 0.0,
-        "verdict_agreement": 0.9823
+        "verdict_agreement": 0.9748
       },
       "single_rx": {
         "cross_prescription_catch_rate": 0.0,
         "queue_rate": 0.0,
         "unsafe_pass_rate": 0.8315,
-        "verdict_agreement": 0.3097
+        "verdict_agreement": 0.2941
       }
     },
-    "cross_prescription_cases": 78,
+    "cross_prescription_cases": 84,
     "marginal_effect": {
-      "cross_catch_regimen": 0.9487,
+      "cross_catch_regimen": 0.9048,
       "cross_catch_regimen_propagation": 1.0,
       "cross_catch_single_rx": 0.0,
-      "fragile_cases": 4,
+      "fragile_cases": 10,
       "queue_cost_of_mechanism_A": 0.0,
-      "queue_cost_of_mechanism_B": 0.0354,
+      "queue_cost_of_mechanism_B": 0.084,
       "unsafe_pass_regimen": 0.0,
       "unsafe_pass_regimen_propagation": 0.0,
       "unsafe_pass_single_rx": 0.8315
     },
-    "n": 113,
+    "n": 119,
     "strata": {
       "clean_continuation": 20,
       "cross_bleeding": 12,
@@ -332,7 +332,7 @@
       "cross_duplicate": 15,
       "cross_qt": 15,
       "cross_serotonin": 12,
-      "fragile_confusable": 4,
+      "fragile_confusable": 10,
       "incoming_harm": 15
     }
   },
@@ -340,13 +340,13 @@
     "all_invariants_hold": true,
     "boundary_sensitivity": {
       "delta": 0.01,
-      "flip_rate_on_bump": 0.0039,
-      "flips_on_bump": 1,
+      "flip_rate_on_bump": 0.0,
+      "flips_on_bump": 0,
       "flips_on_drop": 0,
       "interpretation": "threshold-rule boundary sensitivity, not an injection breach: these are cases within `delta` of a band edge (motivates E-D calibration and an operating point chosen with margin)",
       "n": 256,
       "queued_on_bump": 0,
-      "unsafe_flips_on_bump": 1
+      "unsafe_flips_on_bump": 0
     },
     "corruption": {
       "L0_baseline": {
@@ -409,14 +409,14 @@
     "replay_refusal_rate": 0.75
   },
   "runs": {
-    "E-A": "eval/runs/20260911T174112Z-E-A-baseline-ladder-830e89",
-    "E-B": "eval/runs/20260911T174112Z-E-B-ablations-87f07b",
-    "E-C": "eval/runs/20260911T174113Z-E-C-robustness-782338",
-    "E-D": "eval/runs/20260911T174113Z-E-D-calibration-operating-point-cbda27",
-    "E-E": "eval/runs/20260911T174113Z-E-E-cross-engine-parity-b730b8",
-    "E-F": "eval/runs/20260911T174134Z-E-F-latency-availability-aaaef0",
-    "E-G": "eval/runs/20260911T174134Z-E-G-human-in-the-loop-b3b5f0",
-    "E-H": "eval/runs/20260911T174134Z-E-H-regimen-longitudinal-48b096"
+    "E-A": "eval/runs/20260919T194749Z-E-A-baseline-ladder-94801a",
+    "E-B": "eval/runs/20260919T194657Z-E-B-ablations-236f87",
+    "E-C": "eval/runs/20260919T194658Z-E-C-robustness-b35ba0",
+    "E-D": "eval/runs/20260919T194658Z-E-D-calibration-operating-point-1ff25b",
+    "E-E": "eval/runs/20260919T194659Z-E-E-cross-engine-parity-36f4b3",
+    "E-F": "eval/runs/20260919T194720Z-E-F-latency-availability-cd82ce",
+    "E-G": "eval/runs/20260919T194720Z-E-G-human-in-the-loop-d4a23d",
+    "E-H": "eval/runs/20260919T194741Z-E-H-regimen-longitudinal-a9b056"
   },
   "schema_version": 1
 }

@@ -198,11 +198,14 @@ export function ReviewConsole() {
         <div className="space-y-3">
           {open.map((item) => {
             const isActive = activeId === item.prescriptionId;
+            const isRegimenRow = item.fieldIndex === 0;
             return (
               <div key={item.id} className="vy-hairline-card p-5">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <p className="vy-eyebrow">Field {item.fieldIndex} · {item.prescription.verdict}</p>
+                    <p className="vy-eyebrow">
+                      {isRegimenRow ? "Regimen escalation" : `Field ${item.fieldIndex}`} · {item.prescription.verdict}
+                    </p>
                     <p className="mt-1 font-mono text-sm">{item.rawText || "(empty read)"}</p>
                     <p className="mt-1 text-xs vy-sev-moderate">{item.why}</p>
                   </div>
@@ -213,6 +216,7 @@ export function ReviewConsole() {
                 </div>
 
                 <div className="mt-4 flex flex-wrap items-center gap-2">
+                  {!isRegimenRow && (
                   <input
                     aria-label={`Corrected brand for field ${item.fieldIndex}`}
                     value={isActive ? brand : ""}
@@ -221,6 +225,7 @@ export function ReviewConsole() {
                     placeholder="corrected brand (optional)"
                     className="rounded-full border bg-background px-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-[color:var(--vy-pine)]"
                   />
+                  )}
                   <input
                     aria-label={`Resolution note for field ${item.fieldIndex}`}
                     value={isActive ? note : ""}
@@ -234,14 +239,14 @@ export function ReviewConsole() {
                     className="rounded-full px-4 py-1.5 text-xs font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-40"
                     style={{ background: "var(--vy-pine)" }}
                   >
-                    Confirm read
+                    {isRegimenRow ? "Accept residual uncertainty" : "Confirm read"}
                   </button>
                   <button
                     disabled={busy}
                     onClick={() => resolve(item, false)}
                     className="rounded-full border px-4 py-1.5 text-xs font-semibold transition-colors hover:bg-secondary disabled:opacity-40"
                   >
-                    Reject read
+                    {isRegimenRow ? "Reject prescription" : "Reject read"}
                   </button>
                   <button
                     onClick={() => loadDetail(item.prescriptionId)}

@@ -63,6 +63,9 @@ end-to-end without any model key — in a developer shell or in CI.
 | dose guardrail | first `taken` wins; replaying the action is inert (`already_acted`); unknown actions rejected |
 | family | join code matches the CSPRNG alphabet; malformed `eventId` rejected before lookup |
 | metrics | counters actually moved after the pipeline ran |
+| regimen escalation (`tests/regimen-route.test.ts`) | a triple whammy assembled across two visits escalates the published verdict (single-Rx law passed it); a same-brand refill keeps passing; a fragile read (0.93, auto band) queues at fieldIndex 0 and blocks the plan; human acceptance releases it; rejection leaves the prescription unverifiable |
+| regimen plane (`tests/regimen.test.ts`) | the TypeScript port of `regimen.py`: composition catches cross-visit harms, propagation queues fragile reads (ablation removes the queue), identity distributions normalise, verdict mass sums to 1, screens are deterministic |
+| nonce CSP (`tests/middleware.security.test.ts`) | document routes get a per-request nonce + `'strict-dynamic'` script CSP with no `'unsafe-inline'` in script-src; API routes keep the limiter contract and carry no page CSP |
 
 Run: `cd apps/web && bun run test` (a throwaway SQLite is created and pushed
 automatically; the developer database is never touched).

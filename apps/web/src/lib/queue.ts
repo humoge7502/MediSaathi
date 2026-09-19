@@ -59,9 +59,69 @@ export type QueueStatus = {
   }[];
 };
 
-/** Reconcile the DB queue with the fields the engine just queued. Idempotent. */
+/**
+ * Reconcile the DB queue with the fields the engine just queued. Idempotent.
+ *
+ * fieldIndex 0 is reserved for the cross-prescription regimen escalation
+ * (TD-12): real parsed lines are 1-based, so a 0 row can never collide with a
+ * human-confirmed field read. Its lifecycle is value-driven:
+ *
+ * - escalation fires  -> ensure a pending field-0 row exists (create or keep);
+ * - escalation clears -> delete a still-PENDING field-0 row (the uncertainty
+ *   it recorded no longer exists); a terminal (human-resolved) row is never
+ *   deleted — the recorded decision outlives the run that triggered it.
+ */
 export async function syncQueue(prescriptionId: string, items: QueueSyncItem[]): Promise<void> {
-  for (const item of items) {
+  const regimenEscalation = items.find((i) => i.line === 0);
+  const fieldItems = items.filter((i) => i.line !== 0);
+
+  const existingZero = await db.confirmQueueItem.findUnique({
+    where: { prescriptionId_fieldIndex: { prescriptionId, fieldIndex: 0 } },
+  });
+  if (regimenEscalation) {
+    if (!existingZero) {
+      await db.confirmQueueItem.create({
+        data: {
+          prescriptionId,
+          fieldIndex: 0,
+          rawText: regimenEscalation.rawText,
+          readingConfidence: 0,
+          fused: regimenEscalation.fused ?? 0,
+          band: regimenEscalation.band ?? "confirm",
+          why: regimenEscalation.why ?? regimenEscalation.reason ?? "",
+          state: "pending",
+        },
+      });
+      await db.queueTransition.create({
+        data: {
+          prescriptionId,
+          fieldIndex: 0,
+          fromState: "none",
+          toState: "pending",
+          actor: "system",
+          note: "regimen screen escalated this read to the human queue",
+        },
+      });
+    }
+    // pending row exists: keep it (metadata refresh is unnecessary — the why
+    // text is diagnostic only). Terminal row: stays, human decision recorded.
+  } else if (existingZero && existingZero.state === "pending") {
+    await db.$transaction([
+      db.confirmQueueItem.delete({ where: { id: existingZero.id } }),
+      db.queueTransition.create({
+        data: {
+          prescriptionId,
+          fieldIndex: 0,
+          fromState: "pending",
+          toState: "cleared",
+          actor: "system",
+          note: "re-run resolved the read uncertainty; escalation withdrawn",
+        },
+      }),
+    ]);
+  }
+
+  for (const item of fieldItems) {
     const existing = await db.confirmQueueItem.findUnique({
       where: { prescriptionId_fieldIndex: { prescriptionId, fieldIndex: item.line } },
     });
@@ -197,6 +257,13 @@ export async function blockedReason(prescriptionId: string): Promise<string | nu
 /**
  * Transactional plan gate. Call INSIDE the same `$transaction` that creates the
  * plan so the pending-count read and the plan write share one write lock.
+ *
+ * The regimen escalation (TD-12) is enforced through the SAME persisted queue:
+ * verify writes a pending row (fieldIndex 0) when the cross-prescription
+ * screen queues, so this count covers it with no separate mechanism. A
+ * terminal field-0 row is a recorded human acceptance of the residual
+ * uncertainty (the E-G reviewed arm) and lifts the block — re-screening here
+ * would deadlock that decision behind an unchanged fragility.
  */
 export async function assertPlanAllowed(
   tx: Prisma.TransactionClient,

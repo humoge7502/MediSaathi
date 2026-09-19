@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { ok, fail, audit, bumpMetric } from "@/lib/api-helpers";
 import { normalizeLine, runSafetyPlane, overallConfidence } from "@/lib/safety/engine";
 import { DEFAULT_THRESHOLD_SET_ID } from "@/lib/safety/gate";
+import { applyRegimenEscalation } from "@/lib/regimen-state";
 import {
   blockedReason,
   queueStatus,
@@ -115,29 +116,58 @@ export async function POST(req: Request) {
   }
 
   const lines = (extraction.lines ?? []).map((l) => ({ ...l }));
-  const target = lines[fieldIndex - 1];
-  if (!target) return fail("Queue row does not match a known line", 422);
+  if (fieldIndex !== 0) {
+    const target = lines[fieldIndex - 1];
+    if (!target) return fail("Queue row does not match a known line", 422);
 
-  if (accepted) {
-    // The human is the authority; their read is the highest confidence there is.
-    // But an invented brand is never confirmed: the correction must resolve
-    // against the formulary index before it can leave the queue.
-    target.raw = (body.brandText ?? target.raw).trim();
-    if (!normalizeLine(target.raw, fieldIndex).brand) {
-      return fail("Brand not in the formulary map — supply the corrected brand name", 422);
+    if (accepted) {
+      // The human is the authority; their read is the highest confidence there is.
+      // But an invented brand is never confirmed: the correction must resolve
+      // against the formulary index before it can leave the queue.
+      target.raw = (body.brandText ?? target.raw).trim();
+      if (!normalizeLine(target.raw, fieldIndex).brand) {
+        return fail("Brand not in the formulary map — supply the corrected brand name", 422);
+      }
+      target.confidence = 0.97;
+    } else {
+      // Rejected: the read is withdrawn and can never verify. The plan stays blocked.
+      target.confidence = 0;
     }
-    target.confidence = 0.97;
-  } else {
-    // Rejected: the read is withdrawn and can never verify. The plan stays blocked.
-    target.confidence = 0;
-  }
+  } // fieldIndex 0 = the synthetic regimen escalation row: there is no line to
+  // correct; acceptance records the reviewed-arm decision (E-G).
 
   const resolved = await resolveQueueField(prescriptionId, fieldIndex, accepted, {
-    resolvedBrand: accepted ? (body.brandText ?? target.raw) : null,
+    resolvedBrand:
+      accepted && fieldIndex !== 0 ? (body.brandText ?? lines[fieldIndex - 1]?.raw ?? null) : null,
     actor: body.actor ?? "pharmacist",
-    note: body.note ?? "resolved in the review console",
+    note:
+      fieldIndex === 0
+        ? accepted
+          ? "regimen escalation accepted (E-G reviewed arm)"
+          : "regimen escalation rejected"
+        : body.note ?? "resolved in the review console",
   });
   if (resolved.error) return fail(resolved.error, 404);
+
+  if (fieldIndex === 0 && !accepted) {
+    // Rejected escalation: the read is withdrawn — this prescription can
+    // never verify, so the published verdict stays confirm_queue.
+    await db.prescription.update({
+      where: { id: prescriptionId },
+      data: { verdict: "confirm_queue" },
+    });
+    await Promise.all([
+      bumpMetric("queue_resolved"),
+      audit("queue.resolve", { prescriptionId, fieldIndex, accepted, verdict: "confirm_queue" }),
+    ]);
+    return ok({
+      status: "resolved",
+      verdict: "confirm_queue",
+      confidence: prescription.confidence,
+      findings: [],
+      queue: await queueStatus(prescriptionId),
+    });
+  }
 
   // Re-screen on the SAME context the run started with (never an empty one).
   const report = runSafetyPlane({
@@ -152,27 +182,40 @@ export async function POST(req: Request) {
     lines.map((l) => l.confidence)
   );
 
+  // The regimen escalation applies to the re-screened verdict too (same law
+  // as verify). If the resolution happening right now is the escalation row
+  // itself (fieldIndex 0), the human's acceptance stands — the fragility
+  // queue must not immediately re-fire on the identical uncertainty.
+  const { finalVerdict, confirmQueue, escalated } = await applyRegimenEscalation(
+    report,
+    { ...extraction, lines },
+    contexts,
+    prescription.thresholdSetId || DEFAULT_THRESHOLD_SET_ID,
+    { zeroResolved: fieldIndex === 0 && accepted }
+  );
+
   await db.prescription.update({
     where: { id: prescriptionId },
     data: {
-      verdict: report.verdict,
+      verdict: finalVerdict,
       confidence,
       extractionJson: JSON.stringify({ ...extraction, lines }),
       findingsJson: JSON.stringify(report.findings),
       engineSnapshot: report.snapshot,
       thresholdSetId: report.gate?.thresholdSetId ?? prescription.thresholdSetId,
       prescriptionFused: report.gate?.prescriptionFused ?? confidence,
+      regimenJson: escalated ? prescription.regimenJson : "{}",
     },
   });
-  await syncQueue(prescriptionId, report.confirmQueue);
+  await syncQueue(prescriptionId, confirmQueue);
   await Promise.all([
     bumpMetric("queue_resolved"),
-    audit("queue.resolve", { prescriptionId, fieldIndex, accepted, verdict: report.verdict }),
+    audit("queue.resolve", { prescriptionId, fieldIndex, accepted, verdict: finalVerdict, regimenEscalated: escalated }),
   ]);
 
   return ok({
     status: "resolved",
-    verdict: report.verdict,
+    verdict: finalVerdict,
     confidence,
     findings: report.findings,
     queue: await queueStatus(prescriptionId),

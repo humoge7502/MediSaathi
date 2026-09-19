@@ -139,7 +139,9 @@ export function EvidencePanel() {
             <p className="vy-numeral text-xs text-muted-foreground">{data.engine.n} cases · {data.engine.suiteMs} ms total</p>
           </div>
         </div>
-        <div className="vy-scroll mt-4 max-h-80 overflow-y-auto rounded-lg border">
+        {/* tabIndex=0: keyboard users must be able to scroll a scrollable
+            region (axe scrollable-region-focusable, TD-4). */}
+        <div className="vy-scroll mt-4 max-h-80 overflow-y-auto rounded-lg border" tabIndex={0}>
           <table className="w-full text-left text-xs">
             <thead className="sticky top-0 bg-secondary text-muted-foreground">
               <tr>
@@ -204,7 +206,7 @@ export function EvidencePanel() {
               <EvalKPI label="Safety" value={score(evalOutcome.means.safety)} />
               <EvalKPI label="Avg latency" value={evalOutcome.means.latencyMs != null ? `${Math.round(evalOutcome.means.latencyMs)} ms` : "—"} />
             </div>
-            <div className="vy-scroll mt-4 max-h-80 overflow-y-auto rounded-lg border">
+            <div className="vy-scroll mt-4 max-h-80 overflow-y-auto rounded-lg border" tabIndex={0}>
               <table className="w-full text-left text-xs">
                 <thead className="sticky top-0 bg-secondary text-muted-foreground">
                   <tr>

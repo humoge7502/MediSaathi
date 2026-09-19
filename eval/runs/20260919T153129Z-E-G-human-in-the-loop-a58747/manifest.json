@@ -1,0 +1,33 @@
+{
+  "config": {
+    "n": 44,
+    "quick": false,
+    "reviewer_kind": "simulated policy (not human subjects)",
+    "split": "test"
+  },
+  "created_at": "2026-09-19T15:31:29+00:00",
+  "dataset": {
+    "files": {
+      "data/brands.csv": "6dce440ca4ea0242dc31170e46a81516a5d8a4fbee9719e26cbd14ff27598b95",
+      "data/cases_manifest.json": "c46e8384a1987b9b64db91ce8868e85ad63e6d8db7e5305a39f4ae6672004296",
+      "data/contraindications.csv": "1075f1bc7aa79507ee0b349662b286ae1a64702f1aaf05e77aef72b599cb8897",
+      "data/corpus/adversarial.jsonl": "16629d8b9c0f7c08c7a734eaf193c24416d9d8e28696c895230a1024e2f163ce",
+      "data/corpus/cases.jsonl": "7f1c41800b5c5b9d8ef73227e913a70e58576d2a4510641552a3a481f29d4833",
+      "data/corpus/codebook.json": "51cb5806e907199c76d8aeeaa21a94b9dac62d26288064e0b2d7c9ad44a8ecea",
+      "data/corpus/regimen.jsonl": "fa38b9bc67c7e70cd759452a35aa446c333935a4d52f8ec441d374dd47eea5d7",
+      "data/corpus/splits.json": "8ec31186e3ff81f82a28d7103391e519bc21d75c6444410b795c53ca47a415ab",
+      "data/eval_labels.csv": "36a6b977fe50fb9155d1f483847e1fb810e7874039790f8234d63b14431e97cc",
+      "data/interactions.csv": "6b21f1550bf3cdfde552e98cd48ab0035b89c002959dccee8ee7b0e1112f7219",
+      "data/sources.json": "824daddf81af4fe5da106ccc24cfed9407628d101671d6cd0308e2b9dbbfa32c"
+    },
+    "snapshot_id": "34b253da8cab70ea"
+  },
+  "engine_git_sha": "14226de-dirty",
+  "environment": {
+    "machine": "x86_64",
+    "platform": "Linux-6.17.0-1010-azure-x86_64-with-glibc2.39",
+    "python": "3.13.12"
+  },
+  "experiment": "E-G-human-in-the-loop",
+  "run_id": "20260919T153129Z-E-G-human-in-the-loop-a58747"
+}

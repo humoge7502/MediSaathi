@@ -42,6 +42,10 @@ model Prescription {
   // confidence). A verdict without its parameters cannot be re-derived.
   thresholdSetId      String  @default("v1-2026-09")
   prescriptionFused   Float   @default(0)
+  // Longitudinal regimen screen (TD-12): the regimen+propagation result the
+  // published verdict was escalated from — nominal/worst verdict, fragility,
+  // crossing findings. "{}" when no active regimen existed at verify time.
+  regimenJson    String   @default("{}")
   createdAt      DateTime @default(now())
   plans          TherapyPlan[]
   queueItems     ConfirmQueueItem[]

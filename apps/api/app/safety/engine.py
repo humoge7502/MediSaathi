@@ -64,12 +64,29 @@ CONTRA_SEV_MAP = {"absolute": "severe", "relative": "moderate"}
 # Molecule groups for the combination (graph) rules — ported 1:1 from the TS
 # safety plane (apps/web/src/lib/safety/dataset.ts, MOLECULE_GROUPS) under
 # ADR-0012 so both engines run the same law on the same corpus.
+#
+# qt_prolonging (snapshot 2026-09-18): CredibleMeds "Known risk" molecules that
+# are present in the expanded Indian formulary, plus ofloxacin (Conditional
+# risk, kept because the fluoroquinolone class carries a QT signal and the
+# pre-expansion plane already screened it — removing it would be a silent
+# safety regression). The 31 remaining Conditional-risk molecules ship as
+# reference data (05_qt_drugs/qt_prolonging_drugs.csv) and do NOT trigger the
+# severe >=3 stack rule: conditional risk manifests only under overdose,
+# hypokalemia or interacting co-meds, so auto-firing would cost specificity.
 MOLECULE_GROUPS: dict[str, tuple[str, ...]] = {
     "nsaid": ("ibuprofen", "diclofenac", "naproxen", "aceclofenac", "aspirin"),
     "raas_blocker": ("enalapril", "ramipril", "lisinopril", "losartan", "telmisartan"),
     "loop_or_thiazide": ("furosemide", "torasemide", "hydrochlorothiazide"),
-    "qt_prolonging": ("azithromycin", "ciprofloxacin", "levofloxacin", "ofloxacin",
-                      "ondansetron", "citalopram", "amiodarone", "hydroxychloroquine"),
+    "qt_prolonging": ("amiodarone", "amitriptyline", "azithromycin",
+                      "chlorpromazine", "ciprofloxacin", "citalopram",
+                      "clarithromycin", "chloroquine", "cotrimoxazole",
+                      "erythromycin", "fluoxetine",
+                      "gefitinib", "haloperidol", "hydroxychloroquine",
+                      "ivabradine", "levofloxacin", "moxifloxacin",
+                      "ofloxacin", "ondansetron", "quinine",
+                      "ranolazine", "risperidone", "sertraline",
+                      "sotalol", "tetrabenazine", "voriconazole",
+                      "ziprasidone"),
     "ssri": ("sertraline", "fluoxetine", "citalopram"),
     "serotonergic": ("tramadol", "sumatriptan", "amitriptyline"),
     "anticoagulant_or_antiplatelet": ("warfarin", "aspirin", "clopidogrel"),
@@ -96,7 +113,7 @@ class SafetyEngine:
         with open(os.path.join(data_dir, "brands.csv"), encoding="utf-8") as f:
             for row in csv.DictReader(f):
                 row["jas_price_inr"] = _f(row.get("jas_price_inr"))
-                eng.brands[row["brand"].strip().lower()] = row
+                eng.brands[_norm_key(row["brand"])] = row
                 for mol in _split_molecules(row["molecule"]):
                     eng.molecules.setdefault(mol, row)
         with open(os.path.join(data_dir, "interactions.csv"), encoding="utf-8") as f:
@@ -115,7 +132,7 @@ class SafetyEngine:
     # -------------------------------------------------------------- rules
     def normalize(self, brand_text: str) -> dict | None:
         """Brand name -> canonical formulary row. Fuzzy on whitespace/case."""
-        key = " ".join((brand_text or "").strip().lower().split())
+        key = _norm_key(brand_text)
         if key in self.brands:
             return self.brands[key]
         # longest-brand-substring fallback: "tab dolo 650" -> "dolo 650"
@@ -199,7 +216,7 @@ class SafetyEngine:
                 continue
             meds.append(NormalizedMedication(
                 brand=row["brand"], molecule=row["molecule"], form=row["form"],
-                atc=row["atc"], aware_class=row["aware_class"],
+                atc=row["atc"], aware_class=row.get("aware_class", row.get("aware", "")),
                 jas_price_inr=row["jas_price_inr"], fields=[fld],
             ))
             if decision.queued or decision.refused:
@@ -370,6 +387,16 @@ def _combination_rules(molecules: list[str]) -> list[InteractionFinding]:
             mechanism="Antithrombotic + SSRI + NSAID - compounded GI bleeding risk",
             source="BMJ"))
     return out
+
+
+def _norm_key(s: str | None) -> str:
+    """Normalized brand key: NBSP-safe, case- and whitespace-insensitive.
+
+    The expanded Jan Aushadhi catalog contains non-breaking spaces (U+00A0,
+    e.g. "15\\u00a0IU"); ``str.split()`` already splits those, but the stored
+    keys must be built the same way as query keys or exact lookup misses.
+    """
+    return " ".join((s or "").replace("\u00a0", " ").strip().lower().split())
 
 
 def _split_atc(s: str) -> list[str]:
