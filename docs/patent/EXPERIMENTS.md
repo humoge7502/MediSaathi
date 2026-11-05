@@ -132,16 +132,19 @@ never reads it as an instruction.
 
 ## E-E — cross-engine parity
 
-110 golden cases in one shared, versioned file (`eval/parity/golden.json`) run
-through both the TypeScript and Python planes; both agree 110/110. The expansion
-from 25 cases surfaced and closed three real drifts (a wrong molecule mapping
+164 golden cases in one shared, versioned file (`eval/parity/golden.json`) run
+through both the TypeScript and Python planes; both agree 164/164 at corpus law v12
+(`PARITY_VERSION = 12`, pinned by both runners). The expansion from 25 cases
+surfaced and closed three real drifts (a wrong molecule mapping
 for `Hydroquin 200`, three missing formulary rows, three missing
 contraindication rows on the TS side).
 
 ## E-F — latency and offline availability
 
-The deterministic plane runs at p50 ≈ 0.07 ms / p95 ≈ 0.11 ms over the whole
-corpus (in-process). Full HTTP pipeline p50 ≈ 13 ms. Offline verdict delta is
+The deterministic plane runs at **p50 0.451 ms / p95 2.978 ms** over the whole
+300-case corpus (in-process, `efa012dcfd17d32b` snapshot; measured 2026-10-26). The
+full HTTP pipeline is p50 56–59 ms — see `docs/PERFORMANCE.md`; the request path,
+not the rule law, is what costs. Offline verdict delta is
 zero: the plane makes no network calls, proven by
 `apps/api/tests/test_egress.py` under a poisoned socket, so degraded mode
 changes no verdict.

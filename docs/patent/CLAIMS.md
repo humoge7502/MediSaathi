@@ -71,7 +71,7 @@ A computer-implemented method for verifying a prescription, comprising:
 | D5 | First-action-wins dose ledger: single-transition dose rows, replay refusal, persisted guarded skips, no-double-dose catch-up law | implemented + adversarial tests |
 | D6 | Copilot gates: emergency-pattern triage and scope refusal preceding retrieval; retrieval-floor refusal; citation range validation; dosage post-check | implemented + eval |
 | D7 | Schema-constrained vision embodiment (temperature 0, one retry, model refusal-reason enum as sensor report; the refusal verdict is assembled deterministically) | implemented, unbenchmarked |
-| D8 | Cross-engine parity embodiment: the same rule law in two independent engines, gated in CI by a shared golden corpus | 110/110 measured |
+| D8 | Cross-engine parity embodiment: the same rule law in two independent engines, gated in CI by a shared golden corpus | 164/164 measured at corpus law v12 |
 | D9 | Provenance embodiment: per-verdict dataset snapshot SHA, rule source, engine version, threshold-set id and fused per-field scores | implemented |
 | D10 | Model-egress kill switch: configuration that disables all outbound model calls while preserving full deterministic verification | implemented + egress test |
 | D11 | Family-escalation embodiment: escalation when a plan originates with safety findings, and on adherence-decay thresholds | implemented |
@@ -93,7 +93,7 @@ A computer-implemented method for verifying a prescription, comprising:
 | D5 dose ledger | Medium | Medium | Medium | implemented + adversarial | Medium |
 | D6 copilot gates | Low-Medium | Low | Medium | implemented + eval | High |
 | D7 vision embodiment | Low | Low | Supporting | implemented, unbenchmarked | High |
-| D8 parity embodiment | Medium (packaging) | Medium | Supporting | 110/110 measured | High |
+| D8 parity embodiment | Medium (packaging) | Medium | Supporting | 164/164 measured (v12) | High |
 | D9 provenance | Medium | Medium | Supporting | implemented | Medium-High |
 | D10 kill switch | Low | Low | Supporting | implemented | High |
 | D11 escalation | Low | Low | Product | implemented | High |

@@ -108,7 +108,16 @@ plane(fields) -> findings
                                         bleeding stack)
     3. contraindications               molecule x declared patient context code
     4. duplicate detection             shared ATC class across lines
-    5. aggregate daily dose caps       sum per molecule; compare to the cap table
+    5. aggregate daily dose caps       sum per molecule; compare to the OPERATIVE
+                                       cap — one sourced table (305 molecules)
+                                       generated identically into both planes,
+                                       carrying the blocking ceiling, the lower
+                                       second figure the same label prints, and
+                                       the ceilings a declared patient context
+                                       lowers. Lowest applicable figure wins; the
+                                       escalation law runs on that figure, and a
+                                       cap the engine cannot verify for THIS
+                                       patient advises and never blocks
 ```
 
 The plane imports no model client and opens no socket. If every model vanished,
@@ -120,10 +129,22 @@ would still run; verdicts are unchanged (E-F offline proof).
 First match wins, in this order:
 
 ```
-contraindication  >  severe interaction | severe combination  >
-duplicate         >  moderate interaction  >
-severe dose breach >  confirm_queue  >  pass
+confirm_queue  >  contraindication  >  severe interaction | severe combination  >
+duplicate      >  moderate interaction  >  pass
 ```
+
+`confirm_queue` occupies the *first* slot, not a slot below the clinical
+findings: a queued line is an unresolved reading, and a clinical finding
+computed on an unconfirmed identity cannot be the last word about it. Only
+`confirm_queue` blocks plan creation (§8), so any lower placement would let a
+confident-looking-but-unresolved line produce a schedule. The queue therefore
+subsumes three distinct causes — a read below the refusal band, a frequency the
+interval law cannot read, and a never-event interval mandate violated — while
+the findings that were computed are still attached and shown.
+
+Both tiers implement this order, and it is pinned by the shared parity corpus
+rather than by each tier's own unit tests, because the two implementations
+disagreed on it silently once already.
 
 Every finding carries mechanism + source; every verdict carries the non-empty
 set of findings that produced it.
