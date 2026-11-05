@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <div className="mx-auto flex min-h-[70vh] max-w-2xl flex-col items-center justify-center px-6 py-20 text-center">
-      <p className="vy-numeral text-sm" style={{ color: "var(--vy-pine)" }}>
+      <p className="vy-numeral text-sm" style={{ color: "var(--vy-pine-ink)" }}>
         404
       </p>
       <h1 className="vy-serif mt-4 text-4xl">

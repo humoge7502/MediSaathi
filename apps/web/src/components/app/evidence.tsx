@@ -8,6 +8,8 @@
 
 import { useEffect, useState } from "react";
 import { api, post } from "@/lib/client";
+import { Skeleton, SkeletonCard, SkeletonRows } from "@/components/ui/skeleton";
+import { AlertLine, StatusLine } from "@/components/ui/status-line";
 
 interface EvidenceData {
   engine: {
@@ -91,6 +93,27 @@ interface EvalOutcome {
   means: { typeAccuracy: number | null; groundedness: number | null; safety: number | null; helpfulness: number | null; latencyMs: number | null };
   judgeAvailable: boolean;
   totalMs: number;
+  // The server coalesces this suite instead of re-billing it: an answer may be
+  // a run that is still in flight, or one that already finished. Say which.
+  run?: { source: "ran" | "joined" | "recent"; ageMs: number; reuseMs: number; launches: number };
+}
+
+/** What the run bought, in one sentence. The KPI cards below are the visual form
+ *  of the same numbers, so without this line a listener gets no version of them. */
+function evalSummary(o: EvalOutcome): string {
+  const head = o.judgeAvailable
+    ? `${o.rows.length} cases — type accuracy ${pct(o.means.typeAccuracy)}, ` +
+      `groundedness ${score(o.means.groundedness)}, safety ${score(o.means.safety)}`
+    : `${o.rows.length} cases, but the rubric judge is unavailable, so only the deterministic checks scored`;
+  // The server coalesces this suite, so an answer may not be a new run. That is a
+  // policy answer, not an outage, and it used to be routed to the error channel.
+  const whence =
+    !o.run || o.run.source === "ran"
+      ? ""
+      : o.run.source === "recent"
+        ? ` Answered from the run that finished ${Math.round(o.run.ageMs / 1000)}s ago.`
+        : " Joined a run that was already in flight.";
+  return `Evaluation finished: ${head}.${whence}`;
 }
 
 export function EvidencePanel() {
@@ -103,12 +126,13 @@ export function EvidencePanel() {
     api<EvidenceData>("/api/evidence").then(setData).catch(() => setData(null));
   }, []);
 
-  async function runEvals() {
+  async function runEvals(force = false) {
     setEvalBusy(true);
     setEvalErr(null);
-    setEvalOutcome(null);
+    if (!force) setEvalOutcome(null);
     try {
-      setEvalOutcome(await post<EvalOutcome>("/api/evals", {}));
+      const outcome = await post<EvalOutcome>("/api/evals", { force });
+      setEvalOutcome(outcome);
     } catch (e) {
       setEvalErr(e instanceof Error ? e.message : "Evaluation failed");
     } finally {
@@ -116,7 +140,25 @@ export function EvidencePanel() {
     }
   }
 
-  if (!data) return <div className="vy-hairline-card animate-pulse p-10 text-center text-sm text-muted-foreground">Running the engine suite…</div>;
+  // Two report cards, each a header and a run of table lines — the shape the
+  // panel arrives in, and no prose in it while it waits.
+  if (!data)
+    return (
+      <div className="space-y-6">
+        {Array.from({ length: 2 }, (_, i) => (
+          <SkeletonCard key={i}>
+            <div className="flex items-end justify-between gap-4">
+              <div className="space-y-2">
+                <Skeleton className="h-2.5 w-52" />
+                <Skeleton className="h-3 w-72 max-w-full" />
+              </div>
+              <Skeleton className="h-9 w-14 shrink-0" />
+            </div>
+            <SkeletonRows count={6} className="mt-5" />
+          </SkeletonCard>
+        ))}
+      </div>
+    );
 
   const failed = data.engine.cases.filter((c) => !c.pass);
 
@@ -133,7 +175,7 @@ export function EvidencePanel() {
             </p>
           </div>
           <div className="text-right">
-            <p className="vy-numeral vy-serif text-4xl" style={{ color: data.engine.passRate === 1 ? "var(--vy-safe)" : "var(--vy-warn)" }}>
+            <p className="vy-numeral vy-serif text-4xl" style={{ color: data.engine.passRate === 1 ? "var(--vy-safe-ink)" : "var(--vy-warn-ink)" }}>
               {Math.round(data.engine.passRate * 100)}%
             </p>
             <p className="vy-numeral text-xs text-muted-foreground">{data.engine.n} cases · {data.engine.suiteMs} ms total</p>
@@ -189,7 +231,7 @@ export function EvidencePanel() {
             </p>
           </div>
           <button
-            onClick={runEvals}
+            onClick={() => runEvals()}
             disabled={evalBusy}
             className="rounded-full px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-40"
             style={{ background: "var(--vy-clay)" }}
@@ -197,7 +239,25 @@ export function EvidencePanel() {
             {evalBusy ? "Running 10 cases…" : "Run evaluation"}
           </button>
         </div>
-        {evalErr && <p className="mt-3 text-sm vy-sev-severe">{evalErr}</p>}
+        <div className="mt-3 flex flex-col">
+          <StatusLine text={evalOutcome ? evalSummary(evalOutcome) : null} />
+          <AlertLine text={evalErr} />
+        </div>
+        {evalOutcome?.run && evalOutcome.run.source !== "ran" && (
+          <p className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+            <span>
+              {evalOutcome.run.source === "recent"
+                ? `Answered from the run that finished ${Math.round(evalOutcome.run.ageMs / 1000)}s ago — this suite costs ~20 model calls, so it is throttled to one per ${Math.round(evalOutcome.run.reuseMs / 1000)}s.`
+                : "Joined a run already in flight rather than starting a second one."}
+            </span>
+            <button
+              onClick={() => runEvals(true)}
+              className="rounded-full border px-3 py-1 font-semibold transition-colors hover:bg-secondary"
+            >
+              Run a fresh one
+            </button>
+          </p>
+        )}
         {evalOutcome && (
           <div className="vy-fade-up mt-4">
             <div className="grid gap-3 sm:grid-cols-4">
@@ -347,8 +407,12 @@ function ExperimentEvidencePanel({ x }: { x: ExperimentEvidence }) {
               <div key={`${b.lo}`} className="flex items-center gap-2 text-[11px]">
                 <span className="vy-numeral w-16 text-muted-foreground">{b.lo.toFixed(1)}–{b.hi.toFixed(1)}</span>
                 <div className="relative h-3 flex-1 overflow-hidden rounded bg-secondary" title={`n=${b.n} confidence=${b.mean_confidence} accuracy=${b.accuracy}`}>
-                  <div className="absolute inset-y-0 left-0 rounded" style={{ width: `${(b.mean_confidence ?? 0) * 100}%`, background: "var(--vy-pine)" }} />
-                  <div className="absolute inset-y-0 w-0.5 rounded" style={{ left: `${(b.accuracy ?? 0) * 100}%`, background: "var(--vy-clay)" }} />
+                  {/* chart tokens, not the brand fills: this bar sits on a
+                      `bg-secondary` track and has to clear 3:1 as a graphic in
+                      both schemes (deep pine is 1.8:1 on the dark track).
+                      `--chart-1`/`--chart-2` are already per-scheme. */}
+                  <div className="absolute inset-y-0 left-0 rounded" style={{ width: `${(b.mean_confidence ?? 0) * 100}%`, background: "var(--chart-1)" }} />
+                  <div className="absolute inset-y-0 w-0.5 rounded" style={{ left: `${(b.accuracy ?? 0) * 100}%`, background: "var(--chart-2)" }} />
                 </div>
                 <span className="vy-numeral w-20 text-right text-muted-foreground">n={b.n}</span>
               </div>
@@ -405,7 +469,7 @@ function Provenance({ label, value, sub }: { label: string; value: string; sub: 
   return (
     <div className="vy-hairline-card p-5">
       <p className="vy-eyebrow">{label}</p>
-      <p className="vy-numeral vy-serif mt-2 text-4xl" style={{ color: "var(--vy-pine)" }}>{value}</p>
+      <p className="vy-numeral vy-serif mt-2 text-4xl" style={{ color: "var(--vy-pine-ink)" }}>{value}</p>
       <p className="mt-1 text-xs text-muted-foreground">{sub}</p>
     </div>
   );

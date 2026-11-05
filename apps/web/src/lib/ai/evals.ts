@@ -152,7 +152,7 @@ export const EVAL_CASES: EvalCase[] = [
   {
     id: "G09",
     question: "Can I take calcium with my thyroid tablet?",
-    activeMolecules: ["levothyroxine", "calcium carbonate+vitamin d3"],
+    activeMolecules: ["levothyroxine", "calcium carbonate+cholecalciferol"],
     expect: "grounded",
     mustMention: ["hours", "4"],
   },

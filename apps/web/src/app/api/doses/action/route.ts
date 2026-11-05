@@ -1,6 +1,5 @@
-import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
-import { ok, fail, audit } from "@/lib/api-helpers";
+import { ok, fail, audit, readJson, bodyError, scopePatient } from "@/lib/api-helpers";
 import { catchUpGuidance } from "@/lib/safety/adherence";
 
 export const runtime = "nodejs";
@@ -12,21 +11,29 @@ export const dynamic = "force-dynamic";
  * Overdue doses get deterministic catch-up guidance before the action.
  * Taking a very overdue dose also notifies the family circle (escalation feed).
  */
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   let body: { doseId?: string; action?: string };
   try {
-    body = await req.json();
-  } catch {
-    return fail("Invalid JSON body");
+    body = await readJson<typeof body>(req);
+  } catch (e) {
+    return bodyError(e);
   }
 
-  const { doseId, action } = body;
+  const doseId = typeof body.doseId === "string" ? body.doseId : null;
+  const action = typeof body.action === "string" ? body.action : null;
   if (!doseId || !action || !["taken", "skipped"].includes(action)) {
     return fail("doseId and action (taken|skipped) are required");
   }
 
   const dose = await db.dose.findUnique({ where: { id: doseId }, include: { medication: { include: { plan: true } } } });
   if (!dose) return fail("Dose not found", 404);
+
+  // A dose id is a capability the client supplies, so it is checked against the
+  // identity this server actually serves before anything is written: acting on a
+  // dose that belongs to a different patient is answered exactly like a dose that
+  // does not exist, so the response cannot confirm whose rows are in the store.
+  const scope = await scopePatient();
+  if (!scope || dose.medication.plan.patientId !== scope.id) return fail("Dose not found", 404);
 
   // First action wins. A dose that was already taken/skipped/missed is never
   // re-mutated — this is the double-dose guardrail: replaying "taken" (a
@@ -42,6 +49,38 @@ export async function POST(req: NextRequest) {
 
   const now = new Date();
   const overdue = dose.scheduledAt < now;
+  const lateHours = Math.round(((now.getTime() - dose.scheduledAt.getTime()) / 3600000) * 10) / 10;
+  // Read once, here: the two guards above proved `dose` and `scope` non-null, and
+  // a closure over the narrowed originals would have to be re-proved by whoever
+  // reads this next.
+  const patientId = scope.id;
+  const firstName = scope.name.split(" ")[0];
+  const brand = dose.medication.brand;
+
+  /**
+   * Tell the family circle about an overdue intake or skip.
+   *
+   * `forced` marks the dose the engine skipped on the patient's behalf. The
+   * panel's own escalation law promises the circle is told when a dose is
+   * skipped — and a dose skipped to block a double intake is the one a relative
+   * most needs to read, so both write paths announce it rather than only the
+   * path the patient chose.
+   */
+  const notifyCircle = async (action: "taken" | "skipped", forced: boolean) => {
+    if (!overdue) return;
+    await db.escalationEvent.create({
+      data: {
+        patientId,
+        kind: "dose_checkin",
+        severity: lateHours >= 6 || forced ? "moderate" : "info",
+        message: forced
+          ? `${firstName} tried to take ${brand} ${lateHours}h late — the guardrail logged it skipped so two doses stay apart.`
+          : action === "taken"
+            ? `${firstName} took ${brand} about ${lateHours}h later than scheduled.`
+            : `${firstName} skipped ${brand} (${lateHours}h overdue).`,
+      },
+    });
+  };
 
   // Next pending dose for this medication after this one
   const nextDose = await db.dose.findFirst({
@@ -59,6 +98,7 @@ export async function POST(req: NextRequest) {
       data: { status: "skipped", actedAt: now, note: "Protected by catch-up guardrail (too close to next dose)" },
     });
     await audit("dose.guarded", { doseId, action, reason: "too close to next dose" });
+    await notifyCircle("skipped", true);
     return ok({
       status: "guarded",
       guidance,
@@ -73,24 +113,7 @@ export async function POST(req: NextRequest) {
     data: { status: action, actedAt: now, note: guidance ? guidance.text : null },
   });
 
-  // Family-circle escalation for notably late intakes or skips
-  if (overdue) {
-    const lateHours = Math.round(((now.getTime() - dose.scheduledAt.getTime()) / 3600000) * 10) / 10;
-    const patient = await db.patient.findFirst({ where: { id: dose.medication.plan.patientId } });
-    if (patient) {
-      await db.escalationEvent.create({
-        data: {
-          patientId: patient.id,
-          kind: "dose_checkin",
-          severity: lateHours >= 6 ? "moderate" : "info",
-          message:
-            action === "taken"
-              ? `${patient.name.split(" ")[0]} took ${dose.medication.brand} about ${lateHours}h later than scheduled.`
-              : `${patient.name.split(" ")[0]} skipped ${dose.medication.brand} (${lateHours}h overdue).`,
-        },
-      });
-    }
-  }
+  await notifyCircle(action as "taken" | "skipped", false);
 
   await audit("dose.action", { doseId, action, overdue });
 

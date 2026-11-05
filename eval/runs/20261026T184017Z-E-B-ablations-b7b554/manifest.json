@@ -1,0 +1,37 @@
+{
+  "config": {
+    "ablations": [
+      "A4_minus_gate",
+      "A4_minus_combination",
+      "A4_minus_formulary_fusion",
+      "A4_minus_queue_blocking",
+      "A4_minus_refusal_band"
+    ],
+    "split": "test"
+  },
+  "created_at": "2026-10-26T18:40:17+00:00",
+  "dataset": {
+    "files": {
+      "data/brands.csv": "9e641166c239b2a941f044205f2222d32de35f4af96326b371a39ef1e00b60d3",
+      "data/cases_manifest.json": "bffd63ed0f513e8df97156cf4119ee1d8be19a56a57624db5c936bab15261ead",
+      "data/contraindications.csv": "6c9fc6fd76a3f62ef47255833f05f53bcc145ec0d67d397c5d43ba99519739f4",
+      "data/corpus/adversarial.jsonl": "7f6627fbdecd74adece6ea99a3a68c97e81ffd339a97584a6a99401157775405",
+      "data/corpus/cases.jsonl": "b2fce125d72d85d07d3e595fae56f477d06b447dab6b1eadd7c5731a41a86dc7",
+      "data/corpus/codebook.json": "212da6de2ec8a41e9c56939e722ed675541af582cde963f07193098429ca1379",
+      "data/corpus/regimen.jsonl": "cc4d42556262904d8c26a0431f0962bfcd469b57ba408be52b734098028dbd91",
+      "data/corpus/splits.json": "91dbb0999eeb3bff6e216b692ac3bd23b0954b1385b8da2fd10f1ef8d54a5cf5",
+      "data/eval_labels.csv": "aa4248ad3d0fe3aa8630f1251719911642265a37f249e35bab2a269aa88f8bbd",
+      "data/interactions.csv": "59daf9d88088ed771a852cf056c4a8843857764558f37c24ac4cb719b7ad683b",
+      "data/sources.json": "b405d40713729cd2eaac50a68ac0f8f87b80b638cfcee3fb37adbc52e906818a"
+    },
+    "snapshot_id": "efa012dcfd17d32b"
+  },
+  "engine_git_sha": "e2ff7ef-dirty",
+  "environment": {
+    "machine": "AMD64",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "python": "3.13.6"
+  },
+  "experiment": "E-B-ablations",
+  "run_id": "20261026T184017Z-E-B-ablations-b7b554"
+}

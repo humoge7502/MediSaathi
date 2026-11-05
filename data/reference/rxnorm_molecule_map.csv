@@ -1,56 +1,56 @@
 molecule,rxcui,rxnorm_name,atc,status,rxnav_rest_lookup,source
-acarbose,,,A10BF01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-aceclofenac,,,M01AB16,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+acarbose,,,A10BF01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+aceclofenac,,,M01AB16,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 acenocoumarol,323,Acenocoumarol,B01AA07,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=323,RxNorm (UMLS license; free via RxNav REST)
-acitretin,,,D05BB02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+acitretin,,,D05BB02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 acyclovir,297,Acyclovir,J05AB01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=297,RxNorm (UMLS license; free via RxNav REST)
 albendazole,49602,Albendazole,P02CA03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=49602,RxNorm (UMLS license; free via RxNav REST)
 alendronate,167000,Alendronate,M05BA04,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=167000,RxNorm (UMLS license; free via RxNav REST)
-alfuzosin,,,G04CA01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+alfuzosin,,,G04CA01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 allopurinol,526,Allopurinol,M04AA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=526,RxNorm (UMLS license; free via RxNav REST)
 alprazolam,592,Alprazolam,N05BA12,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=592,RxNorm (UMLS license; free via RxNav REST)
 amantadine,685,Amantadine,N04BB01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=685,RxNorm (UMLS license; free via RxNav REST)
-ambroxol,,,R05CB06,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-amikacin,,,J01GB06,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+ambroxol,,,R05CB06,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+amikacin,,,J01GB06,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 amiodarone,3260,Amiodarone,C01BD01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=3260,RxNorm (UMLS license; free via RxNav REST)
-amisulpride,,,N05AL05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-amitriptyline,,,N06AA09,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+amisulpride,,,N05AL05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+amitriptyline,,,N06AA09,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 amlodipine,17767,Amlodipine,C08CA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=17767,RxNorm (UMLS license; free via RxNav REST)
 amoxicillin,723,Amoxicillin,J01CA04,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=723,RxNorm (UMLS license; free via RxNav REST)
 amoxicillin+clavulanic acid,82122,Amoxicillin-Clavulanate,J01CR02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=82122,RxNorm (UMLS license; free via RxNav REST)
-amphotericin b,,,J02AA01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+amphotericin b,,,J02AA01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 anastrozole,201166,Anastrozole,L02BG03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=201166,RxNorm (UMLS license; free via RxNav REST)
 apixaban,1011472,Apixaban,B01AF02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=1011472,RxNorm (UMLS license; free via RxNav REST)
-aprepitant,,,A04AD01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+aprepitant,,,A04AD01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 aripiprazole,65947,Aripiprazole,N05AX12,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=65947,RxNorm (UMLS license; free via RxNav REST)
-artemether+lumefantrine,,,P01BF05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-artesunate,,,P01BF03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+artemether+lumefantrine,,,P01BF05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+artesunate,,,P01BF03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 ascorbic acid,4073,Ascorbic Acid,A11GA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=4073,RxNorm (UMLS license; free via RxNav REST)
 aspirin,1191,Aspirin,B01AC06,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=1191,RxNorm (UMLS license; free via RxNav REST)
-atazanavir,,,J05AE08,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+atazanavir,,,J05AE08,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 atenolol,1235,Atenolol,C07AB03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=1235,RxNorm (UMLS license; free via RxNav REST)
 atorvastatin,83367,Atorvastatin,C10AA05,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=83367,RxNorm (UMLS license; free via RxNav REST)
 azathioprine,1218,Azathioprine,L04AX01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=1218,RxNorm (UMLS license; free via RxNav REST)
 azithromycin,18631,Azithromycin,J01FA10,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=18631,RxNorm (UMLS license; free via RxNav REST)
 baclofen,1174,Baclofen,M03BX01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=1174,RxNorm (UMLS license; free via RxNav REST)
 betahistine,19046,Betahistine,N07CA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=19046,RxNorm (UMLS license; free via RxNav REST)
-betamethasone,,,H02AC01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+betamethasone,,,H02AC01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 bicalutamide,30236,Bicalutamide,L02BB03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=30236,RxNorm (UMLS license; free via RxNav REST)
 bisacodyl,1520,Bisacodyl,A06AB02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=1520,RxNorm (UMLS license; free via RxNav REST)
 bisoprolol,19793,Bisoprolol,C07AB07,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=19793,RxNorm (UMLS license; free via RxNav REST)
-bromhexine,,,R05CB02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-buprenorphine,,,N02AE01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+bromhexine,,,R05CB02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+buprenorphine,,,N02AE01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 bupropion,2418,Bupropion,N07BA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2418,RxNorm (UMLS license; free via RxNav REST)
 buspirone,2024,Buspirone,N05BE01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2024,RxNorm (UMLS license; free via RxNav REST)
-calcium carbonate+vitamin d3,,,A12AX04,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-canagliflozin,,,A10BK02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+calcium carbonate+cholecalciferol,,,A12AX04,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+canagliflozin,,,A10BK02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 candesartan,183222,Candesartan,C09CA06,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=183222,RxNorm (UMLS license; free via RxNav REST)
 capecitabine,143043,Capecitabine,L01BC06,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=143043,RxNorm (UMLS license; free via RxNav REST)
 captopril,2067,Captopril,C09AA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2067,RxNorm (UMLS license; free via RxNav REST)
 carbamazepine,2028,Carbamazepine,N03AF01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2028,RxNorm (UMLS license; free via RxNav REST)
 carbimazole,4926,Carbimazole,H03BB01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=4926,RxNorm (UMLS license; free via RxNav REST)
 carvedilol,20351,Carvedilol,C07AG02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=20351,RxNorm (UMLS license; free via RxNav REST)
-cefadroxil,,,J01DC05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+cefadroxil,,,J01DC05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 cefixime,18362,Cefixime,J01DD08,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=18362,RxNorm (UMLS license; free via RxNav REST)
 cefotaxime,18802,Cefotaxime,J01DD01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=18802,RxNorm (UMLS license; free via RxNav REST)
 cefpodoxime,15428,Cefpodoxime,J01DD13,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=15428,RxNorm (UMLS license; free via RxNav REST)
@@ -60,43 +60,43 @@ cefuroxime,18842,Cefuroxime,J01DC02,verified_knowledge,https://rxnav.nlm.nih.gov
 celecoxib,83693,Celecoxib,M01AH01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=83693,RxNorm (UMLS license; free via RxNav REST)
 cephalexin,2029,Cephalexin,J01DB01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2029,RxNorm (UMLS license; free via RxNav REST)
 cetirizine,20611,Cetirizine,R06AE07,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=20611,RxNorm (UMLS license; free via RxNav REST)
-chloramphenicol,,,J01BA01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+chloramphenicol,,,J01BA01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 chloroquine,2622,Chloroquine,P01BA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2622,RxNorm (UMLS license; free via RxNav REST)
 chlorpheniramine,2121,Chlorpheniramine,R06AB04,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2121,RxNorm (UMLS license; free via RxNav REST)
 chlorthalidone,2120,Chlorthalidone,C03BA04,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2120,RxNorm (UMLS license; free via RxNav REST)
 chlorzoxazone,2115,Chlorzoxazone,M03BX03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2115,RxNorm (UMLS license; free via RxNav REST)
-cholecalciferol,,,A11CC05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-cilnidipine,,,C08CA99,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+cholecalciferol,,,A11CC05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+cilnidipine,,,C08CA99,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 cilostazol,27225,Cilostazol,B01AC23,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=27225,RxNorm (UMLS license; free via RxNav REST)
 ciprofloxacin,2794,Ciprofloxacin,J01MA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2794,RxNorm (UMLS license; free via RxNav REST)
 citalopram,2558,Citalopram,N06AB04,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2558,RxNorm (UMLS license; free via RxNav REST)
 clarithromycin,25200,Clarithromycin,J01FA09,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=25200,RxNorm (UMLS license; free via RxNav REST)
 clindamycin,2582,Clindamycin,J01FF01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2582,RxNorm (UMLS license; free via RxNav REST)
 clobazam,2579,Clobazam,N05BA09,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2579,RxNorm (UMLS license; free via RxNav REST)
-clofazimine,,,J04BA01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+clofazimine,,,J04BA01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 clomiphene,2700,Clomiphene,G03GB02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2700,RxNorm (UMLS license; free via RxNav REST)
 clonazepam,2620,Clonazepam,N03AE01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2620,RxNorm (UMLS license; free via RxNav REST)
 clonidine,2593,Clonidine,C02AC01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2593,RxNorm (UMLS license; free via RxNav REST)
 clopidogrel,31968,Clopidogrel,B01AC04,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=31968,RxNorm (UMLS license; free via RxNav REST)
-cloxacillin,,,J01CF02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+cloxacillin,,,J01CF02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 clozapine,2108,Clozapine,N05AH02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2108,RxNorm (UMLS license; free via RxNav REST)
 codeine,2670,Codeine,N02AA59,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2670,RxNorm (UMLS license; free via RxNav REST)
 colchicine,2880,Colchicine,M04AC01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2880,RxNorm (UMLS license; free via RxNav REST)
-colistin,,,J01XB01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-cotrimoxazole,,,J01EE01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-cyanocobalamin,,,B03BA01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+colistin,,,J01XB01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+cotrimoxazole,,,J01EE01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+cyanocobalamin,,,B03BA01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 cyclosporine,30011,Cyclosporine,L04AD01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=30011,RxNorm (UMLS license; free via RxNav REST)
 cyproheptadine,2881,Cyproheptadine,R06AX02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2881,RxNorm (UMLS license; free via RxNav REST)
 dabigatran,904798,Dabigatran,B01AE07,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=904798,RxNorm (UMLS license; free via RxNav REST)
 dantrolene,3128,Dantrolene,M03CA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=3128,RxNorm (UMLS license; free via RxNav REST)
 dapagliflozin,1246317,Dapagliflozin,A10BK01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=1246317,RxNorm (UMLS license; free via RxNav REST)
-dapsone,,,J04BA02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-darunavir,,,J05AE10,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-deflazacort,,,H02AB12,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+dapsone,,,J04BA02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+darunavir,,,J05AE10,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+deflazacort,,,H02AB12,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 desloratadine,215678,Desloratadine,R06AX27,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=215678,RxNorm (UMLS license; free via RxNav REST)
 desmopressin,3164,Desmopressin,H01BA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=3164,RxNorm (UMLS license; free via RxNav REST)
 dexamethasone,3264,Dexamethasone,H02AB02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=3264,RxNorm (UMLS license; free via RxNav REST)
-dextromethorphan,,,R05DA09,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+dextromethorphan,,,R05DA09,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 diazepam,2142,Diazepam,N05BA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2142,RxNorm (UMLS license; free via RxNav REST)
 diclofenac,3914,Diclofenac,M01AB01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=3914,RxNorm (UMLS license; free via RxNav REST)
 dicyclomine,3197,Dicyclomine,A03AB02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=3197,RxNorm (UMLS license; free via RxNav REST)
@@ -104,58 +104,58 @@ diethylcarbamazine,3194,Diethylcarbamazine,P02CB02,verified_knowledge,https://rx
 digoxin,3407,Digoxin,C01AA05,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=3407,RxNorm (UMLS license; free via RxNav REST)
 diltiazem,3362,Diltiazem,C08DB01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=3362,RxNorm (UMLS license; free via RxNav REST)
 dipyridamole,3293,Dipyridamole,B01AC07,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=3293,RxNorm (UMLS license; free via RxNav REST)
-dolutegravir,,,J05AJ12,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+dolutegravir,,,J05AJ12,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 domperidone,31934,Domperidone,A03FA03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=31934,RxNorm (UMLS license; free via RxNav REST)
 donepezil,59238,Donepezil,N06DA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=59238,RxNorm (UMLS license; free via RxNav REST)
 doxazosin,32129,Doxazosin,C02CA04,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=32129,RxNorm (UMLS license; free via RxNav REST)
-doxofylline,,,R03DA07,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+doxofylline,,,R03DA07,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 doxycycline,3640,Doxycycline,J01AA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=3640,RxNorm (UMLS license; free via RxNav REST)
-drotaverine,,,A03AD02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-dulaglutide,,,A10BJ04,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+drotaverine,,,A03AD02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+dulaglutide,,,A10BJ04,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 duloxetine,123526,Duloxetine,N06AX21,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=123526,RxNorm (UMLS license; free via RxNav REST)
 dutasteride,381576,Dutasteride,G04CB02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=381576,RxNorm (UMLS license; free via RxNav REST)
 edoxaban,1236399,Edoxaban,B01AF03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=1236399,RxNorm (UMLS license; free via RxNav REST)
-efavirenz,,,J05AG03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+efavirenz,,,J05AG03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 empagliflozin,1246745,Empagliflozin,A10BK03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=1246745,RxNorm (UMLS license; free via RxNav REST)
 enalapril,3921,Enalapril,C09AA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=3921,RxNorm (UMLS license; free via RxNav REST)
 enoxaparin,13814,Enoxaparin,B01AB05,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=13814,RxNorm (UMLS license; free via RxNav REST)
-entecavir,,,J05AF10,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+entecavir,,,J05AF10,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 eplerenone,123562,Eplerenone,C03DA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=123562,RxNorm (UMLS license; free via RxNav REST)
 erythromycin,4053,Erythromycin,J01FA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=4053,RxNorm (UMLS license; free via RxNav REST)
 escitalopram,592928,Escitalopram,N06AB10,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=592928,RxNorm (UMLS license; free via RxNav REST)
 esomeprazole,151517,Esomeprazole,A02BC05,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=151517,RxNorm (UMLS license; free via RxNav REST)
 estradiol,3734,Estradiol,G03CA03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=3734,RxNorm (UMLS license; free via RxNav REST)
 ethambutol,4113,Ethambutol,J04AK02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=4113,RxNorm (UMLS license; free via RxNav REST)
-ethinylestradiol+desogestrel,,,G03AA09,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-ethinylestradiol+levonorgestrel,,,G03AA07,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-etizolam,,,N05BA19,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+ethinylestradiol+desogestrel,,,G03AA09,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+ethinylestradiol+levonorgestrel,,,G03AA07,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+etizolam,,,N05BA19,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 etoricoxib,163959,Etoricoxib,M01AH05,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=163959,RxNorm (UMLS license; free via RxNav REST)
 exemestane,30010,Exemestane,L02BG06,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=30010,RxNorm (UMLS license; free via RxNav REST)
 ezetimibe,273397,Ezetimibe,C10AX09,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=273397,RxNorm (UMLS license; free via RxNav REST)
 famotidine,3268,Famotidine,A02BA03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=3268,RxNorm (UMLS license; free via RxNav REST)
 febuxostat,860024,Febuxostat,M04AA03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=860024,RxNorm (UMLS license; free via RxNav REST)
-fenofibrate,,,C10AB05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+fenofibrate,,,C10AB05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 fentanyl,4337,Fentanyl,N02AB03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=4337,RxNorm (UMLS license; free via RxNav REST)
-ferrous ascorbate+folate,,,B03AD03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-ferrous sulphate,,,B03AA07,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+ferrous ascorbate+folate,,,B03AD03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+ferrous sulfate,,,B03AA07,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 fexofenadine,9546,Fexofenadine,R06AX26,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=9546,RxNorm (UMLS license; free via RxNav REST)
 finasteride,16671,Finasteride,G04CB01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=16671,RxNorm (UMLS license; free via RxNav REST)
-flavoxate,,,G04BD02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-flucloxacillin,,,J01CF05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+flavoxate,,,G04BD02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+flucloxacillin,,,J01CF05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 fluconazole,4270,Fluconazole,J02AC01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=4270,RxNorm (UMLS license; free via RxNav REST)
-fludrocortisone,,,H02AA02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-flunarizine,,,N07CA03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+fludrocortisone,,,H02AA02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+flunarizine,,,N07CA03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 fluoxetine,4493,Fluoxetine,N06AB03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=4493,RxNorm (UMLS license; free via RxNav REST)
-flurbiprofen,,,M01AE04,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+flurbiprofen,,,M01AE04,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 fluvoxamine,39560,Fluvoxamine,N06AB08,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=39560,RxNorm (UMLS license; free via RxNav REST)
 folic acid,4490,Folic Acid,B03BB01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=4490,RxNorm (UMLS license; free via RxNav REST)
-fondaparinux,,,B01AX05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-formoterol+budesonide,,,R03AK07,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-fosfomycin,,,J01XX01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+fondaparinux,,,B01AX05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+formoterol+budesonide,,,R03AK07,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+fosfomycin,,,J01XX01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 furosemide,4603,Furosemide,C03CA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=4603,RxNorm (UMLS license; free via RxNav REST)
 gabapentin,25439,Gabapentin,N03AX12,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=25439,RxNorm (UMLS license; free via RxNav REST)
 gemfibrozil,4759,Gemfibrozil,C10AB04,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=4759,RxNorm (UMLS license; free via RxNav REST)
-gentamicin,,,J01GB03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+gentamicin,,,J01GB03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 glibenclamide,3481,Glyburide,A10BB01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=3481,RxNorm (UMLS license; free via RxNav REST)
 gliclazide,11362,Gliclazide,A10BB09,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=11362,RxNorm (UMLS license; free via RxNav REST)
 glimepiride,28176,Glimepiride,A10BB12,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=28176,RxNorm (UMLS license; free via RxNav REST)
@@ -166,23 +166,23 @@ haloperidol,5311,Haloperidol,N05AD01,verified_knowledge,https://rxnav.nlm.nih.go
 heparin,5397,Heparin,B01AB01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=5397,RxNorm (UMLS license; free via RxNav REST)
 hydralazine,5403,Hydralazine,C02DB02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=5403,RxNorm (UMLS license; free via RxNav REST)
 hydrochlorothiazide,5487,Hydrochlorothiazide,C03AA03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=5487,RxNorm (UMLS license; free via RxNav REST)
-hydrocortisone,,,H02AB09,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+hydrocortisone,,,H02AB09,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 hydroxychloroquine,5521,Hydroxychloroquine,P01BA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=5521,RxNorm (UMLS license; free via RxNav REST)
-hydroxyurea,,,L01XX05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+hydroxyurea,,,L01XX05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 hydroxyzine,5484,Hydroxyzine,N05BB01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=5484,RxNorm (UMLS license; free via RxNav REST)
 ibuprofen,5640,Ibuprofen,M01AE01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=5640,RxNorm (UMLS license; free via RxNav REST)
 imatinib,260748,Imatinib,L01EA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=260748,RxNorm (UMLS license; free via RxNav REST)
-imipenem+cilastatin,,,J01DH51,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-imipramine,,,N06AA02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+imipenem+cilastatin,,,J01DH51,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+imipramine,,,N06AA02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 indapamide,4290,Indapamide,C03BA11,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=4290,RxNorm (UMLS license; free via RxNav REST)
 indomethacin,5734,Indomethacin,M01AB02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=5734,RxNorm (UMLS license; free via RxNav REST)
-insulin aspart,,,A10AB05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+insulin aspart,,,A10AB05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 insulin glargine,274763,Insulin Glargine,A10AE04,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=274763,RxNorm (UMLS license; free via RxNav REST)
-insulin human 70/30,,,A10AD03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-insulin regular,,,A10AB01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+insulin human 70/30,,,A10AD03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+insulin regular,,,A10AB01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 ipratropium,5812,Ipratropium,R03BB01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=5812,RxNorm (UMLS license; free via RxNav REST)
 irbesartan,60132,Irbesartan,C09CA04,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=60132,RxNorm (UMLS license; free via RxNav REST)
-isabgol,,,A06AC01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+isabgol,,,A06AC01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 isoniazid,5959,Isoniazid,J04AC01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=5959,RxNorm (UMLS license; free via RxNav REST)
 isosorbide dinitrate,5816,Isosorbide Dinitrate,C01DA08,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=5816,RxNorm (UMLS license; free via RxNav REST)
 isosorbide mononitrate,5817,Isosorbide Mononitrate,C01DA14,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=5817,RxNorm (UMLS license; free via RxNav REST)
@@ -191,11 +191,11 @@ itraconazole,28246,Itraconazole,J02AC02,verified_knowledge,https://rxnav.nlm.nih
 ivabradine,606628,Ivabradine,C01EB17,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=606628,RxNorm (UMLS license; free via RxNav REST)
 ivermectin,56054,Ivermectin,P02CF01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=56054,RxNorm (UMLS license; free via RxNav REST)
 ketoconazole,3844,Ketoconazole,J02AB02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=3844,RxNorm (UMLS license; free via RxNav REST)
-ketoprofen,,,M01AE03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-labetalol,,,C07AG01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+ketoprofen,,,M01AE03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+labetalol,,,C07AG01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 lacosamide,834647,Lacosamide,N03AX18,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=834647,RxNorm (UMLS license; free via RxNav REST)
 lactulose,6141,Lactulose,A06AD11,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=6141,RxNorm (UMLS license; free via RxNav REST)
-lamivudine,,,J05AF05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+lamivudine,,,J05AF05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 lamotrigine,29786,Lamotrigine,N03AX09,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=29786,RxNorm (UMLS license; free via RxNav REST)
 lansoprazole,6459,Lansoprazole,A02BC03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=6459,RxNorm (UMLS license; free via RxNav REST)
 leflunomide,195019,Leflunomide,L04AA13,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=195019,RxNorm (UMLS license; free via RxNav REST)
@@ -204,11 +204,11 @@ levetiracetam,171235,Levetiracetam,N03AX14,verified_knowledge,https://rxnav.nlm.
 levocetirizine,358274,Levocetirizine,R06AE09,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=358274,RxNorm (UMLS license; free via RxNav REST)
 levodopa+carbidopa,3735,Levodopa-Carbidopa,N04BA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=3735,RxNorm (UMLS license; free via RxNav REST)
 levofloxacin,35826,Levofloxacin,J01MA12,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=35826,RxNorm (UMLS license; free via RxNav REST)
-levosalbutamol,,,R03AC05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+levosalbutamol,,,R03AC05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 levothyroxine,10582,Levothyroxine,H03AA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=10582,RxNorm (UMLS license; free via RxNav REST)
 linagliptin,1245320,Linagliptin,A10BH05,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=1245320,RxNorm (UMLS license; free via RxNav REST)
 linezolid,11248,Linezolid,J01XX08,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=11248,RxNorm (UMLS license; free via RxNav REST)
-liraglutide,,,A10BJ02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+liraglutide,,,A10BJ02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 lisinopril,29046,Lisinopril,C09AA03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=29046,RxNorm (UMLS license; free via RxNav REST)
 lithium,6448,Lithium Carbonate,N05AN01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=6448,RxNorm (UMLS license; free via RxNav REST)
 loperamide,6442,Loperamide,A07DA03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=6442,RxNorm (UMLS license; free via RxNav REST)
@@ -217,27 +217,27 @@ lorazepam,3926,Lorazepam,N05BA06,verified_knowledge,https://rxnav.nlm.nih.gov/RE
 losartan,2513,Losartan,C09CA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=2513,RxNorm (UMLS license; free via RxNav REST)
 lovastatin,52502,Lovastatin,C10AA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=52502,RxNorm (UMLS license; free via RxNav REST)
 mebendazole,6332,Mebendazole,P02CA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=6332,RxNorm (UMLS license; free via RxNav REST)
-mebeverine,,,A03AA04,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+mebeverine,,,A03AA04,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 medroxyprogesterone,6331,Medroxyprogesterone,G03DA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=6331,RxNorm (UMLS license; free via RxNav REST)
 mefenamic acid,7035,Mefenamic Acid,M01AG01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=7035,RxNorm (UMLS license; free via RxNav REST)
 meloxicam,13110,Meloxicam,M01AC06,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=13110,RxNorm (UMLS license; free via RxNav REST)
 memantine,40992,Memantine,N06DX01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=40992,RxNorm (UMLS license; free via RxNav REST)
-meropenem,,,J01DH02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-mesalamine,,,A07EC02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+meropenem,,,J01DH02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+mesalamine,,,A07EC02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 metaxalone,6354,Metaxalone,M03BX06,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=6354,RxNorm (UMLS license; free via RxNav REST)
 metformin,6809,Metformin,A10BA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=6809,RxNorm (UMLS license; free via RxNav REST)
-metformin_sr,,,A10BA02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+metformin_sr,,,A10BA02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 methocarbamol,6343,Methocarbamol,M03BA03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=6343,RxNorm (UMLS license; free via RxNav REST)
 methotrexate,6851,Methotrexate,L01BA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=6851,RxNorm (UMLS license; free via RxNav REST)
-methylcobalamin,,,B03BA05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+methylcobalamin,,,B03BA05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 methyldopa,6423,Methyldopa,C02AB01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=6423,RxNorm (UMLS license; free via RxNav REST)
-methylprednisolone,,,H02AB04,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+methylprednisolone,,,H02AB04,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 metoclopramide,6301,Metoclopramide,A03FA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=6301,RxNorm (UMLS license; free via RxNav REST)
 metoprolol,6918,Metoprolol,C07AB02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=6918,RxNorm (UMLS license; free via RxNav REST)
-metoprolol_sr,,,C07AB02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+metoprolol_sr,,,C07AB02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 metronidazole,6833,Metronidazole,J01XD01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=6833,RxNorm (UMLS license; free via RxNav REST)
 minocycline,6893,Minocycline,J01AA08,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=6893,RxNorm (UMLS license; free via RxNav REST)
-minoxidil,,,C02DC01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+minoxidil,,,C02DC01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 mirabegron,1245609,Mirabegron,G04BD12,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=1245609,RxNorm (UMLS license; free via RxNav REST)
 mirtazapine,21426,Mirtazapine,N06AX11,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=21426,RxNorm (UMLS license; free via RxNav REST)
 misoprostol,5987,Misoprostol,A02BB01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=5987,RxNorm (UMLS license; free via RxNav REST)
@@ -245,18 +245,18 @@ montelukast,44828,Montelukast,R03DC03,verified_knowledge,https://rxnav.nlm.nih.g
 morphine,7052,Morphine,N02AA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=7052,RxNorm (UMLS license; free via RxNav REST)
 moxifloxacin,169177,Moxifloxacin,J01MA14,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=169177,RxNorm (UMLS license; free via RxNav REST)
 mycophenolate mofetil,25162,Mycophenolate Mofetil,L04AA06,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=25162,RxNorm (UMLS license; free via RxNav REST)
-naltrexone,,,N07BB04,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+naltrexone,,,N07BB04,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 naproxen,36114,Naproxen,M01AE02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=36114,RxNorm (UMLS license; free via RxNav REST)
 nebivolol,55040,Nebivolol,C07AB12,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=55040,RxNorm (UMLS license; free via RxNav REST)
 neostigmine,7135,Neostigmine,N07AA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=7135,RxNorm (UMLS license; free via RxNav REST)
-nevirapine,,,J05AG02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+nevirapine,,,J05AG02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 nifedipine,7417,Nifedipine,C08CA05,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=7417,RxNorm (UMLS license; free via RxNav REST)
 nimesulide,35113,Nimesulide,M01AX17,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=35113,RxNorm (UMLS license; free via RxNav REST)
 nitrofurantoin,7484,Nitrofurantoin,J01XE01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=7484,RxNorm (UMLS license; free via RxNav REST)
 nitroglycerin,7055,Nitroglycerin,C01DA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=7055,RxNorm (UMLS license; free via RxNav REST)
 norethisterone,7141,Norethindrone,G03DC02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=7141,RxNorm (UMLS license; free via RxNav REST)
 norfloxacin,7549,Norfloxacin,J01MA06,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=7549,RxNorm (UMLS license; free via RxNav REST)
-nortriptyline,,,N06AA10,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+nortriptyline,,,N06AA10,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 ofloxacin,7604,Ofloxacin,J01MA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=7604,RxNorm (UMLS license; free via RxNav REST)
 olanzapine,24181,Olanzapine,N05AH03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=24181,RxNorm (UMLS license; free via RxNav REST)
 olmesartan,115851,Olmesartan,C09CA06,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=115851,RxNorm (UMLS license; free via RxNav REST)
@@ -267,16 +267,16 @@ oxcarbazepine,34246,Oxcarbazepine,N03AF02,verified_knowledge,https://rxnav.nlm.n
 oxybutynin,7902,Oxybutynin,G04BD04,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=7902,RxNorm (UMLS license; free via RxNav REST)
 pantoprazole,35221,Pantoprazole,A02BC02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=35221,RxNorm (UMLS license; free via RxNav REST)
 paracetamol,161,Acetaminophen,N02BE01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=161,RxNorm (UMLS license; free via RxNav REST)
-paracetamol_syrup,,,N02BE01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+paracetamol_syrup,,,N02BE01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 paroxetine,32937,Paroxetine,N06AB05,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=32937,RxNorm (UMLS license; free via RxNav REST)
 pentoxifylline,8120,Pentoxifylline,C04AD03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=8120,RxNorm (UMLS license; free via RxNav REST)
 perindopril,39393,Perindopril,C09AA04,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=39393,RxNorm (UMLS license; free via RxNav REST)
-pheniramine,,,R06AB02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+pheniramine,,,R06AB02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 phenobarbitone,8130,Phenobarbital,N03AA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=8130,RxNorm (UMLS license; free via RxNav REST)
-phenylephrine,,,R01AA04,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+phenylephrine,,,R01AA04,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 phenytoin,8134,Phenytoin,N03AB02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=8134,RxNorm (UMLS license; free via RxNav REST)
-pioglitazone,,,A10BG03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-piperacillin+tazobactam,,,J01CR05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+pioglitazone,,,A10BG03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+piperacillin+tazobactam,,,J01CR05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 piroxicam,33363,Piroxicam,M01AC01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=33363,RxNorm (UMLS license; free via RxNav REST)
 pitavastatin,857974,Pitavastatin,C10AA08,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=857974,RxNorm (UMLS license; free via RxNav REST)
 pramipexole,87104,Pramipexole,N04BC05,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=87104,RxNorm (UMLS license; free via RxNav REST)
@@ -291,8 +291,8 @@ primaquine,8722,Primaquine,P01BA03,verified_knowledge,https://rxnav.nlm.nih.gov/
 probenecid,8723,Probenecid,M04AB01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=8723,RxNorm (UMLS license; free via RxNav REST)
 promethazine,8712,Promethazine,R06AD02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=8712,RxNorm (UMLS license; free via RxNav REST)
 propranolol,8863,Propranolol,C07AA05,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=8863,RxNorm (UMLS license; free via RxNav REST)
-propylthiouracil,,,H03BA02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-pseudoephedrine,,,R01BA02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+propylthiouracil,,,H03BA02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+pseudoephedrine,,,R01BA02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 pyrantel,8721,Pyrantel,P02CC01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=8721,RxNorm (UMLS license; free via RxNav REST)
 pyrazinamide,8968,Pyrazinamide,J04AK01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=8968,RxNorm (UMLS license; free via RxNav REST)
 pyridostigmine,8726,Pyridostigmine,N07AA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=8726,RxNorm (UMLS license; free via RxNav REST)
@@ -301,15 +301,15 @@ quetiapine,39422,Quetiapine,N05AH04,verified_knowledge,https://rxnav.nlm.nih.gov
 quinine,9091,Quinine,P01BC01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=9091,RxNorm (UMLS license; free via RxNav REST)
 rabeprazole,123639,Rabeprazole,A02BC04,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=123639,RxNorm (UMLS license; free via RxNav REST)
 raloxifene,21367,Raloxifene,G03XC01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=21367,RxNorm (UMLS license; free via RxNav REST)
-raltegravir,,,J05AJ04,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+raltegravir,,,J05AJ04,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 ramipril,4513,Ramipril,C09AA05,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=4513,RxNorm (UMLS license; free via RxNav REST)
 ranitidine,9303,Ranitidine,A02BA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=9303,RxNorm (UMLS license; free via RxNav REST)
-ranolazine,,,C01EB18,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+ranolazine,,,C01EB18,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 rasagiline,854876,Rasagiline,N04BD02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=854876,RxNorm (UMLS license; free via RxNav REST)
-ribavirin,,,J05AP01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+ribavirin,,,J05AP01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 rifampicin,9384,Rifampin,J04AB02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=9384,RxNorm (UMLS license; free via RxNav REST)
-rifampicin+isoniazid,,,J04AM02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-rifaximin,,,A07AA11,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+rifampicin+isoniazid,,,J04AM02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+rifaximin,,,A07AA11,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 risedronate,167017,Risedronate,M05BA07,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=167017,RxNorm (UMLS license; free via RxNav REST)
 risperidone,35636,Risperidone,N05AX08,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=35636,RxNorm (UMLS license; free via RxNav REST)
 rivaroxaban,859642,Rivaroxaban,B01AF01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=859642,RxNorm (UMLS license; free via RxNav REST)
@@ -317,70 +317,70 @@ rivastigmine,59540,Rivastigmine,N06DA03,verified_knowledge,https://rxnav.nlm.nih
 rizatriptan,36899,Rizatriptan,N02CC04,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=36899,RxNorm (UMLS license; free via RxNav REST)
 ropinirole,87106,Ropinirole,N04BC04,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=87106,RxNorm (UMLS license; free via RxNav REST)
 rosuvastatin,301542,Rosuvastatin,C10AA07,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=301542,RxNorm (UMLS license; free via RxNav REST)
-roxithromycin,,,J01FA06,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-sacubitril+valsartan,,,C09DX01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+roxithromycin,,,J01FA06,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+sacubitril+valsartan,,,C09DX01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 salbutamol,35896,Albuterol,R03AC02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=35896,RxNorm (UMLS license; free via RxNav REST)
-salmeterol+fluticasone,,,R03AK06,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+salmeterol+fluticasone,,,R03AK06,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 selegiline,36447,Selegiline,N04BD01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=36447,RxNorm (UMLS license; free via RxNav REST)
-semaglutide,,,A10BJ06,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-senna,,,A06AB07,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+semaglutide,,,A10BJ06,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+senna,,,A06AB07,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 sertraline,36567,Sertraline,N06AB06,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=36567,RxNorm (UMLS license; free via RxNav REST)
 sildenafil,78339,Sildenafil,G04BE03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=78339,RxNorm (UMLS license; free via RxNav REST)
-silodosin,,,G04CA03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+silodosin,,,G04CA03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 simvastatin,36544,Simvastatin,C10AA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=36544,RxNorm (UMLS license; free via RxNav REST)
 sitagliptin,593411,Sitagliptin,A10BH01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=593411,RxNorm (UMLS license; free via RxNav REST)
 sodium valproate,11027,Valproic Acid,N03AG01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=11027,RxNorm (UMLS license; free via RxNav REST)
-sofosbuvir,,,J05AP08,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+sofosbuvir,,,J05AP08,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 solifenacin,285154,Solifenacin,G04BD08,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=285154,RxNorm (UMLS license; free via RxNav REST)
-sotalol,,,C07AA07,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+sotalol,,,C07AA07,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 spironolactone,9355,Spironolactone,C03DA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=9355,RxNorm (UMLS license; free via RxNav REST)
 sucralfate,9925,Sucralfate,A02BX02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=9925,RxNorm (UMLS license; free via RxNav REST)
-sulfadoxine+pyrimethamine,,,P01BA51,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-sulfasalazine,,,A07EC01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+sulfadoxine+pyrimethamine,,,P01BA51,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+sulfasalazine,,,A07EC01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 sumatriptan,36686,Sumatriptan,N02CC01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=36686,RxNorm (UMLS license; free via RxNav REST)
 tacrolimus,4182,Tacrolimus,L04AD02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=4182,RxNorm (UMLS license; free via RxNav REST)
 tadalafil,149748,Tadalafil,G04BE08,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=149748,RxNorm (UMLS license; free via RxNav REST)
 tamoxifen,10321,Tamoxifen,L02BA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=10321,RxNorm (UMLS license; free via RxNav REST)
 tamsulosin,57287,Tamsulosin,G04CA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=57287,RxNorm (UMLS license; free via RxNav REST)
-tapentadol,,,N02AX06,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+tapentadol,,,N02AX06,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 telmisartan,216051,Telmisartan,C09CA07,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=216051,RxNorm (UMLS license; free via RxNav REST)
-tenofovir disoproxil,,,J05AF07,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-tenofovir+lamivudine+efavirenz,,,J05AR03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+tenofovir disoproxil,,,J05AF07,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+tenofovir+lamivudine+efavirenz,,,J05AR03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 terbinafine,44811,Terbinafine,D01BA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=44811,RxNorm (UMLS license; free via RxNav REST)
 terbutaline,10569,Terbutaline,R03AC03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=10569,RxNorm (UMLS license; free via RxNav REST)
-teriparatide,,,H05AA03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+teriparatide,,,H05AA03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 tetracycline,10393,Tetracycline,J01AA07,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=10393,RxNorm (UMLS license; free via RxNav REST)
 theophylline,10594,Theophylline,R03DA04,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=10594,RxNorm (UMLS license; free via RxNav REST)
 thiamine,10571,Thiamine,A11DA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=10571,RxNorm (UMLS license; free via RxNav REST)
-thiocolchicoside,,,M03BX05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+thiocolchicoside,,,M03BX05,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 ticagrelor,859637,Ticagrelor,B01AC24,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=859637,RxNorm (UMLS license; free via RxNav REST)
 tinidazole,10782,Tinidazole,J01XD02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=10782,RxNorm (UMLS license; free via RxNav REST)
 tiotropium,352336,Tiotropium,R03BB04,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=352336,RxNorm (UMLS license; free via RxNav REST)
 tizanidine,37579,Tizanidine,M03BX02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=37579,RxNorm (UMLS license; free via RxNav REST)
-tolfenamic acid,,,M01AB16,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+tolfenamic acid,,,M01AB16,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 topiramate,38071,Topiramate,N03AX11,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=38071,RxNorm (UMLS license; free via RxNav REST)
 torasemide,23818,Torsemide,C03CA04,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=23818,RxNorm (UMLS license; free via RxNav REST)
 tramadol,11035,Tramadol,N02AX02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=11035,RxNorm (UMLS license; free via RxNav REST)
-tramadol+paracetamol,,,N02AX62,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+tramadol+paracetamol,,,N02AX62,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 tranexamic acid,10825,Tranexamic Acid,B02AA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=10825,RxNorm (UMLS license; free via RxNav REST)
-tretinoin,,,L01XX01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+tretinoin,,,L01XX01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 trihexyphenidyl,10810,Trihexyphenidyl,N04AA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=10810,RxNorm (UMLS license; free via RxNav REST)
-trimetazidine,,,C01EB15,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-trimethoprim,,,J01EA01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+trimetazidine,,,C01EB15,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+trimethoprim,,,J01EA01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 ursodeoxycholic acid,29759,Ursodiol,A05AA02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=29759,RxNorm (UMLS license; free via RxNav REST)
 valacyclovir,241779,Valacyclovir,J05AB11,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=241779,RxNorm (UMLS license; free via RxNav REST)
 valsartan,43874,Valsartan,C09CA03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=43874,RxNorm (UMLS license; free via RxNav REST)
-vancomycin,,,J01XX09,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+vancomycin,,,J01XX09,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 venlafaxine,39210,Venlafaxine,N06AX16,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=39210,RxNorm (UMLS license; free via RxNav REST)
 verapamil,11170,Verapamil,C08DA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=11170,RxNorm (UMLS license; free via RxNav REST)
 vildagliptin,920862,Vildagliptin,A10BH02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=920862,RxNorm (UMLS license; free via RxNav REST)
-vitamin e,,,A11HA03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+vitamin e,,,A11HA03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 vitamin k1,4904,Phytonadione,B02BA01,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=4904,RxNorm (UMLS license; free via RxNav REST)
-voglibose,,,A10BF02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+voglibose,,,A10BF02,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 voriconazole,63875,Voriconazole,J02AC03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=63875,RxNorm (UMLS license; free via RxNav REST)
 warfarin,11124,Warfarin,B01AA03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=11124,RxNorm (UMLS license; free via RxNav REST)
-zidovudine,,,J05AF01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
-zinc,,,A12CB03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,"fill via tools/rxnorm_fill.py (RxNav REST, free)"
+zidovudine,,,J05AF01,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
+zinc,,,A12CB03,needs_rxnav_lookup,POST name to /REST/rxcui.json?name=<molecule>,needs an RxNav name lookup (recipe only; no fetcher is shipped in this repo)
 zoledronic acid,924812,Zoledronic Acid,M05BA08,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=924812,RxNorm (UMLS license; free via RxNav REST)
 zolmitriptan,31347,Zolmitriptan,N02CC03,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=31347,RxNorm (UMLS license; free via RxNav REST)
 zolpidem,39942,Zolpidem,N05CF02,verified_knowledge,https://rxnav.nlm.nih.gov/REST/rxcui.json?idtype=NDC&id=39942,RxNorm (UMLS license; free via RxNav REST)

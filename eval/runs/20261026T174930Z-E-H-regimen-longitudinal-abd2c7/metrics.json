@@ -1,0 +1,66 @@
+{
+  "arms": {
+    "regimen": {
+      "arm": "regimen",
+      "cross_prescription_catch_rate": 0.9048,
+      "harmful_caught_rate": 1.0,
+      "mean_fragility": 0.0,
+      "n": 119,
+      "n_cross_prescription": 84,
+      "queue_rate": 0.0,
+      "serious_caught_rate": 0.8315,
+      "unsafe_pass": 0,
+      "unsafe_pass_rate": 0.0,
+      "verdict_agreement": 0.8908
+    },
+    "regimen+propagation": {
+      "arm": "regimen+propagation",
+      "cross_prescription_catch_rate": 1.0,
+      "harmful_caught_rate": 1.0,
+      "mean_fragility": 0.0406,
+      "n": 119,
+      "n_cross_prescription": 84,
+      "queue_rate": 0.084,
+      "serious_caught_rate": 0.8315,
+      "unsafe_pass": 0,
+      "unsafe_pass_rate": 0.0,
+      "verdict_agreement": 0.9748
+    },
+    "single_rx": {
+      "arm": "single_rx",
+      "cross_prescription_catch_rate": 0.0119,
+      "harmful_caught_rate": 0.1798,
+      "mean_fragility": 0.0,
+      "n": 119,
+      "n_cross_prescription": 84,
+      "queue_rate": 0.0168,
+      "serious_caught_rate": 0.1798,
+      "unsafe_pass": 73,
+      "unsafe_pass_rate": 0.8202,
+      "verdict_agreement": 0.2857
+    }
+  },
+  "cross_prescription_cases": 84,
+  "marginal_effect": {
+    "cross_catch_regimen": 0.9048,
+    "cross_catch_regimen_propagation": 1.0,
+    "cross_catch_single_rx": 0.0119,
+    "fragile_cases": 10,
+    "queue_cost_of_mechanism_A": 0.0,
+    "queue_cost_of_mechanism_B": 0.084,
+    "unsafe_pass_regimen": 0.0,
+    "unsafe_pass_regimen_propagation": 0.0,
+    "unsafe_pass_single_rx": 0.8202
+  },
+  "n": 119,
+  "strata": {
+    "clean_continuation": 20,
+    "cross_bleeding": 12,
+    "cross_combination": 20,
+    "cross_duplicate": 15,
+    "cross_qt": 15,
+    "cross_serotonin": 12,
+    "fragile_confusable": 10,
+    "incoming_harm": 15
+  }
+}

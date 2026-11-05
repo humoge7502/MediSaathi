@@ -1,74 +1,93 @@
 {
-  "corpus": {
-    "cases": 300,
-    "generator": "tools/build_corpus.py",
-    "seed": 20260911,
-    "splits": {
-      "calibration": 44,
-      "test": 44,
-      "train": 212
-    },
-    "strata": {
-      "adversarial_confusable": 15,
-      "adversarial_corruption": 15,
-      "adversarial_injection": 10,
-      "adversarial_invented": 15,
-      "clean_pass": 55,
-      "combination": 20,
-      "confirm_queue": 30,
-      "contraindication": 25,
-      "duplicate": 20,
-      "moderate_pair": 25,
-      "refused": 15,
-      "script_mix": 15,
-      "severe_pair": 40
-    }
-  },
-  "created_at": "2026-09-19T19:50:02+00:00",
+  "created_at": "2026-11-02T03:19:55+00:00",
   "files": {
     "data/brands.csv": {
-      "bytes": 332010,
-      "sha256": "f80a7fffc3a0b45c11c04dfcd9bd738063c1aadf0bb1e110491d2f1847f5b558"
+      "bytes": 332236,
+      "sha256": "9e641166c239b2a941f044205f2222d32de35f4af96326b371a39ef1e00b60d3"
     },
     "data/cases_manifest.json": {
-      "bytes": 24856,
-      "sha256": "d586deeab127a2d8bdca5eac7a212a932ef678515722bfd21bb5ae4e7e7e7678"
+      "bytes": 25909,
+      "sha256": "bffd63ed0f513e8df97156cf4119ee1d8be19a56a57624db5c936bab15261ead"
     },
     "data/contraindications.csv": {
-      "bytes": 330332,
-      "sha256": "4fa47481c3ee2440f22685b4f2438ed147212b9143f89e6dac0af03317cfffe2"
+      "bytes": 328494,
+      "sha256": "6c9fc6fd76a3f62ef47255833f05f53bcc145ec0d67d397c5d43ba99519739f4"
     },
     "data/corpus/adversarial.jsonl": {
-      "bytes": 43042,
-      "sha256": "a2f5c110b99a52abd1185c81d8efbf5334c4776056f6b38d75bad42ab230f854"
+      "bytes": 43463,
+      "sha256": "7f6627fbdecd74adece6ea99a3a68c97e81ffd339a97584a6a99401157775405"
     },
     "data/corpus/cases.jsonl": {
-      "bytes": 267470,
-      "sha256": "f24dcaac92428f96a435fcf3fe5f0e4b21ae2591348d6a8e14721bab329022a7"
+      "bytes": 268414,
+      "sha256": "b2fce125d72d85d07d3e595fae56f477d06b447dab6b1eadd7c5731a41a86dc7"
     },
     "data/corpus/codebook.json": {
-      "bytes": 544,
-      "sha256": "51cb5806e907199c76d8aeeaa21a94b9dac62d26288064e0b2d7c9ad44a8ecea"
+      "bytes": 569,
+      "sha256": "212da6de2ec8a41e9c56939e722ed675541af582cde963f07193098429ca1379"
     },
     "data/corpus/regimen.jsonl": {
-      "bytes": 106728,
-      "sha256": "b95fa3af6f46688c712ff4233a7327f1ad91bd21063c0e0e7d30c5120176676e"
+      "bytes": 107016,
+      "sha256": "cc4d42556262904d8c26a0431f0962bfcd469b57ba408be52b734098028dbd91"
     },
     "data/corpus/splits.json": {
-      "bytes": 3764,
-      "sha256": "8ec31186e3ff81f82a28d7103391e519bc21d75c6444410b795c53ca47a415ab"
+      "bytes": 4074,
+      "sha256": "91dbb0999eeb3bff6e216b692ac3bd23b0954b1385b8da2fd10f1ef8d54a5cf5"
     },
     "data/eval_labels.csv": {
-      "bytes": 5209,
-      "sha256": "990578e855396f9eaf43d70d3e9ba2d4e9c8545e9cf97d25cb5684a8bdd75e4f"
+      "bytes": 5307,
+      "sha256": "aa4248ad3d0fe3aa8630f1251719911642265a37f249e35bab2a269aa88f8bbd"
     },
     "data/interactions.csv": {
-      "bytes": 2411583,
-      "sha256": "176711b638925e5fe5f73b71be4bd83da0d2891157f4ad38fdde2fcf57bd2a55"
+      "bytes": 2409253,
+      "sha256": "59daf9d88088ed771a852cf056c4a8843857764558f37c24ac4cb719b7ad683b"
+    },
+    "data/reference/adherence_studies.json": {
+      "bytes": 4501,
+      "sha256": "d17d56941c679f8ae0dc132c50fa83e9eb157aed18be4f2b49df17cd8fbbf339"
+    },
+    "data/reference/dose_caps.csv": {
+      "bytes": 35985,
+      "sha256": "4ca1976300bb37e508fe991457df411fbe82df450c8acb188073d48d490fcd2c"
+    },
+    "data/reference/faers_pvpi_signals.csv": {
+      "bytes": 45425,
+      "sha256": "cd53be066a9931c7f2031cffb02a0e77bfdd34f28a847abe66d4c5af068f5e97"
+    },
+    "data/reference/molecule_aliases.csv": {
+      "bytes": 2768,
+      "sha256": "a96d3278c4ca53147a3533db1502d3f05633c26e3f3a30b8fe4a7b5fb02af110"
+    },
+    "data/reference/molecule_identity_reach.json": {
+      "bytes": 1133,
+      "sha256": "6d8623e30797d382c410c1b6623414461a41adee5cbfdbea8a982e4617199c24"
+    },
+    "data/reference/molecule_merges.csv": {
+      "bytes": 14737,
+      "sha256": "e1c62afa942174a1734ebcd7c64017d594a6ae79a2b60384b003ec5e177667c5"
+    },
+    "data/reference/pmbjp_molecule_repairs.csv": {
+      "bytes": 34025,
+      "sha256": "5bf3117e63aad1d0c5d62fa9f75782fc7c04c5232d6becda34218ac83919fbc4"
+    },
+    "data/reference/pmbjp_repair_reach.json": {
+      "bytes": 1208,
+      "sha256": "044302dbf7c0d7c8d48a4185c994ae1ab62fce4c026bc47dea215fabbe80d9ab"
+    },
+    "data/reference/qt_prolonging.csv": {
+      "bytes": 8438,
+      "sha256": "08d714a2a1e022f8e52c0f2d858b69e4e5b5d56ea4c041b07e0bf0649876b0f9"
+    },
+    "data/reference/rxnorm_molecule_map.csv": {
+      "bytes": 63243,
+      "sha256": "4f11a7b328ffd88f4aa3acb053d5a190f2110a0160aded4d897fb3200b35eeff"
+    },
+    "data/reference/salad_confusables.csv": {
+      "bytes": 55015,
+      "sha256": "23293d17aff45aace760ca020fe900901fefd0791f2bc1dfd68f99d6b6b8b59f"
     },
     "data/sources.json": {
-      "bytes": 3968,
-      "sha256": "c6d4c3784409cb61187961b8340d48e82be3f05a5c94bb365f21f9a50196f4e4"
+      "bytes": 3987,
+      "sha256": "b405d40713729cd2eaac50a68ac0f8f87b80b638cfcee3fb37adbc52e906818a"
     }
   },
   "manifest_version": 1,
@@ -87,5 +106,5 @@
       "incoming_harm": 15
     }
   },
-  "snapshot_id": "38a7994f36e641b5"
+  "snapshot_id": "cbcbc470c439ffd9"
 }

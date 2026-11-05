@@ -21,6 +21,10 @@ interface GoldenCase {
   contexts: string[];
   expect: "pass" | "interaction" | "contraindication" | "duplicate_atc" | "confirm_queue" | "refused";
   expect_finding?: string;
+  /** Fails the case when this text IS found — for bugs that invent evidence. */
+  expect_not_finding?: string;
+  /** why the case exists, for the failure message and the binder */
+  interval_case?: string;
 }
 
 interface GoldenFile {
@@ -49,7 +53,23 @@ function mapVerdict(v: VerdictKind): GoldenCase["expect"] {
 
 const goldenUrl = new URL("./golden.json", import.meta.url);
 
+export const PARITY_VERSION = 12;
+
 export const GOLDEN: GoldenFile = JSON.parse(await Bun.file(goldenUrl).text());
+
+// Same pin as the Python runner (`PARITY_VERSION` in parity.py). Both sides must
+// refuse a corpus they were not written against: an unlabelled edit to
+// golden.json leaves every evidence binder quoting a stale version, and the
+// whole point of a shared corpus is that neither runner quietly re-labels it.
+if (GOLDEN.parity_version !== PARITY_VERSION) {
+  console.error(
+    `parity corpus version mismatch: golden.json says ` +
+    `${JSON.stringify(GOLDEN.parity_version)}, this runner says ` +
+    `${JSON.stringify(PARITY_VERSION)}. Bump PARITY_VERSION only after ` +
+    `re-checking that both planes agree on the new corpus.`
+  );
+  process.exit(1);
+}
 
 export const PARITY_CASES: GoldenCase[] = GOLDEN.cases;
 
@@ -72,12 +92,14 @@ export function runParityTs(): { rows: ParityRow[]; passRate: number } {
   const rows: ParityRow[] = [];
   for (const c of PARITY_CASES) {
     const report = runSafetyPlane({ rawLines: c.lines, contexts: c.contexts, lineConfidence: c.confidences });
-    const allText = report.findings
-      .map((f) => ["mechanism" in f ? f.mechanism : "", "note" in f ? f.note : "", "rule" in f ? f.rule : ""].join(" "))
-      .join(" ")
-      .toLowerCase();
+    const allText = [
+      ...report.findings.map((f) => ["mechanism" in f ? f.mechanism : "", "note" in f ? f.note : "", "rule" in f ? f.rule : ""]),
+      ...report.doseHazards.map((h) => [h.note, h.required]),
+      ...report.confirmQueue.map((c) => [c.reason, c.why ?? ""]),
+    ].map((parts) => parts.join(" ")).join(" ").toLowerCase();
     const actual = mapVerdict(report.verdict);
-    const findingHit = !c.expect_finding || allText.includes(c.expect_finding.toLowerCase());
+    const findingHit = (!c.expect_finding || allText.includes(c.expect_finding.toLowerCase()))
+      && (!c.expect_not_finding || !allText.includes(c.expect_not_finding.toLowerCase()));
     rows.push({ id: c.id, expect: c.expect, actual, findingHit, ok: actual === c.expect && findingHit });
   }
   const passRate = rows.filter((r) => r.ok).length / rows.length;

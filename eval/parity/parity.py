@@ -26,22 +26,32 @@ Corpus design:
 
 Known, documented non-cases (deliberately excluded, recorded here so the
 exclusion is auditable rather than silent):
-  * Aggregate dose-cap cases. The TS plane derives daily dose from the raw line
-    text; the Python plane derives it from structured strength/frequency fields
-    that the parity harness does not construct. Both are exercised by their own
-    tier suites (`dose-plausibility` in TS, `test_safety.py` in Python), but the
-    raw-text parity interface cannot compare them. Whenever the harness carries
-    structured fields, these move into the golden set.
+  * Interval mandates for brands neither formulary carries yet (alendronate,
+    risedronate, ibandronate, semaglutide). The rule itself is mirrored and
+    unit-tested in both planes — see `test_interval_law.py` and
+    `apps/web/tests/interval.test.ts` — only the brand rows are missing, which is
+    the 99-vs-2,836 formulary asymmetry tracked as TD-formulary-symmetry.
+  * A garbage frequency token ("QODS"): on a raw line it is never extracted, so
+    the line carries no frequency and passes. A *legible-shaped but unlegible*
+    code does reach the queue rule from raw text, and is a case (P133/P134:
+    "Q5H", "every 999 days").
   * Any case whose expected label was produced by a mutation that moved the
     perception confidence: the label is confidence-derived, so moving confidence
     invalidates it (see ml/adversarial.py, confidence_boundary_sensitivity).
+
+Aggregate dose-cap cases used to be on this list. They are not any more:
+`dosing.enrich_field` derives strength/frequency/duration from the raw line text,
+so the arithmetic the TS plane ran on text is now available to the Python plane
+too — P128 ("6 hourly" methotrexate) is an aggregate-cap case end to end.
 """
 from __future__ import annotations
 
 import json
 import os
 
-PARITY_VERSION = "3"
+#: The corpus version this runner was written against, as the corpus stores it:
+#: an integer. TS mirrors this constant (`PARITY_VERSION` in parity.ts).
+PARITY_VERSION = 12
 
 GOLDEN_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "golden.json")
 
@@ -56,7 +66,17 @@ PARITY_VERDICTS = (
 
 def load_golden() -> dict:
     with open(GOLDEN_PATH, encoding="utf-8") as f:
-        return json.load(f)
+        doc = json.load(f)
+    # The runner pins the corpus it was written against. Without this, editing
+    # golden.json without bumping PARITY_VERSION leaves a stale version label in
+    # every evidence binder that quotes it.
+    file_version = doc.get("parity_version")
+    if file_version != PARITY_VERSION:
+        raise SystemExit(
+            f"parity corpus version mismatch: golden.json says {file_version!r}, "
+            f"this runner says {PARITY_VERSION!r}. Bump PARITY_VERSION only after "
+            f"re-checking that both planes agree on the new corpus.")
+    return doc
 
 
 def load_parity_cases() -> list[dict]:
@@ -112,11 +132,32 @@ def run_parity_python() -> list[dict]:
             [f.mechanism for f in report.interactions]
             + [f.note for f in report.contraindications]
             + [f.note for f in report.duplicates]
+            # A dose hazard and the reason a line queued are both part of what the
+            # verdict is claiming, so `expect_finding` has to be able to assert on
+            # them. Without them a corpus case can demand confirm_queue and pass
+            # while explaining a completely different rule than the one it names.
+            + [h.note for h in report.dose_hazards]
+            + [c["why"] for c in _confirm_items if isinstance(c, dict) and c.get("why")]
+            + [c["reason"] for c in _confirm_items
+               if isinstance(c, dict) and c.get("reason")]
+            # An advisory breach lives in `warnings` here and in `findings` there.
+            # Same sentence, different container — and the v7 cases (a self-care
+            # limit the patient did not cross, a ceiling their own declaration
+            # lowered) are exactly the claims that text carries, so leaving it out
+            # would make those cases assert on a verdict alone.
+            + list(report.warnings)
         ).lower()
         expected = case["expect"]
         ok = map_verdict(verdict.kind.value) == expected
         if case.get("expect_finding"):
             ok = ok and case["expect_finding"].lower() in finding_text
+        if case.get("expect_not_finding"):
+            # Some bugs are invented *evidence*, not wrong verdicts: applying one
+            # stated strength to every molecule of a combination brand produced
+            # "380 mg/day atorvastatin" on a routine statin+aspirin regimen. The
+            # verdict was already wrong enough to catch, but only a negative
+            # assertion pins that the engine stopped making the number up.
+            ok = ok and case["expect_not_finding"].lower() not in finding_text
         rows.append({
             "id": case["id"], "py_verdict": verdict.kind.value,
             "expect": expected, "finding_text": finding_text, "ok": ok,

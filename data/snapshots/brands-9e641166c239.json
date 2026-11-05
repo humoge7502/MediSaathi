@@ -1,0 +1,698 @@
+{
+  "applied": true,
+  "applied_to": "data/brands.csv",
+  "checked_at": "2026-10-26T18:08:07+00:00",
+  "diff": {
+    "added": [],
+    "candidate_rows": 2836,
+    "changed": [
+      [
+        "jan aushadhi acenocoumarol tablets ip 2 mg"
+      ],
+      [
+        "jan aushadhi ambroxol hydrochloride 15 mg, guaifenesin 50 mg and levosalbutamol sulphate 1 mg syrup"
+      ],
+      [
+        "jan aushadhi apixaban tablets 2.5mg"
+      ],
+      [
+        "jan aushadhi apixaban tablets 5mg"
+      ],
+      [
+        "jan aushadhi artesunate injection ip 120mg"
+      ],
+      [
+        "jan aushadhi artesunate injection ip 60 mg"
+      ],
+      [
+        "jan aushadhi baclofen tablets ip 10 mg"
+      ],
+      [
+        "jan aushadhi budesonide 160 mcg and formoterol 4.5mcg inhalation powder"
+      ],
+      [
+        "jan aushadhi budesonide inhalation ip 100mcg"
+      ],
+      [
+        "jan aushadhi budesonide inhalation ip 200mcg"
+      ],
+      [
+        "jan aushadhi budesonide powder for inhalation ip 400mcg (rotacaps)"
+      ],
+      [
+        "jan aushadhi canagliflozin tablets 100 mg"
+      ],
+      [
+        "jan aushadhi carvedilol tablets ip 12.5 mg"
+      ],
+      [
+        "jan aushadhi carvedilol tablets ip 3.125 mg"
+      ],
+      [
+        "jan aushadhi carvedilol tablets ip 6.25mg"
+      ],
+      [
+        "jan aushadhi cefadroxil dispersible tablets 250mg"
+      ],
+      [
+        "jan aushadhi cefadroxil tablets ip 500 mg"
+      ],
+      [
+        "jan aushadhi cefotaxime sodium injection ip 1g"
+      ],
+      [
+        "jan aushadhi cefotaxime sodium injection ip 250 mg"
+      ],
+      [
+        "jan aushadhi cefotaxime sodium injection ip 500 mg"
+      ],
+      [
+        "jan aushadhi cefpodoxime oral suspension ip 100mg"
+      ],
+      [
+        "jan aushadhi cefpodoxime tablets ip 200 mg"
+      ],
+      [
+        "jan aushadhi ceftazidime injection ip 1g"
+      ],
+      [
+        "jan aushadhi ceftazidime injection ip 250mg"
+      ],
+      [
+        "jan aushadhi ceftazidime injection ip 500mg"
+      ],
+      [
+        "jan aushadhi cefuroxime axetil oral suspension 125mg per 5ml"
+      ],
+      [
+        "jan aushadhi cefuroxime axetil tablets ip 125mg"
+      ],
+      [
+        "jan aushadhi cefuroxime axetil tablets ip 250 mg"
+      ],
+      [
+        "jan aushadhi cefuroxime axetil tablets ip 500 mg"
+      ],
+      [
+        "jan aushadhi cefuroxime injection ip 1500mg"
+      ],
+      [
+        "jan aushadhi cephalexin capsules ip 250mg"
+      ],
+      [
+        "jan aushadhi cephalexin capsules ip 500mg"
+      ],
+      [
+        "jan aushadhi cephalexin extended release tablets 750mg"
+      ],
+      [
+        "jan aushadhi cephalexin tablets ip 125mg (dispersible)"
+      ],
+      [
+        "jan aushadhi chloroquine phosphate tablets ip 250 mg"
+      ],
+      [
+        "jan aushadhi cholecalciferol chewable tablets 60000 iu"
+      ],
+      [
+        "jan aushadhi cholecalciferol soft gelatin capsule 60000 iu"
+      ],
+      [
+        "jan aushadhi ciclesonide (200mcg) + formoterol (6mcg) + tiotropium (9mcg) inhaler"
+      ],
+      [
+        "jan aushadhi cilnidipine tablets ip 10 mg"
+      ],
+      [
+        "jan aushadhi cilnidipine tablets ip 20mg"
+      ],
+      [
+        "jan aushadhi cilnidipine tablets ip 5 mg"
+      ],
+      [
+        "jan aushadhi cilostazol tablets ip 50mg"
+      ],
+      [
+        "jan aushadhi clobazam tablet ip 5mg"
+      ],
+      [
+        "jan aushadhi clobazam tablets ip 10 mg"
+      ],
+      [
+        "jan aushadhi cyproheptadine hydrochloride syrup ip 2mg"
+      ],
+      [
+        "jan aushadhi cyproheptadine tablets ip 4 mg"
+      ],
+      [
+        "jan aushadhi dapagliflozin tablets 10 mg"
+      ],
+      [
+        "jan aushadhi dapagliflozin tablets 5mg"
+      ],
+      [
+        "jan aushadhi deflazacort oral suspension 6mg per 5ml"
+      ],
+      [
+        "jan aushadhi deflazacort tablets 6 mg"
+      ],
+      [
+        "jan aushadhi desloratadine tablets 10 mg"
+      ],
+      [
+        "jan aushadhi desloratadine tablets 5mg"
+      ],
+      [
+        "jan aushadhi dicyclomine tablets ip 10mg"
+      ],
+      [
+        "jan aushadhi diethylcarbamazine 150mg tablets"
+      ],
+      [
+        "jan aushadhi diethylcarbamazine citrate tablets ip 100mg"
+      ],
+      [
+        "jan aushadhi diethylcarbamazine tablets ip 50 mg"
+      ],
+      [
+        "jan aushadhi diltiazem hydrochloride extended release capsules 120 mg"
+      ],
+      [
+        "jan aushadhi diltiazem sustained release tablets 90 mg"
+      ],
+      [
+        "jan aushadhi diltiazem tablets ip 30 mg"
+      ],
+      [
+        "jan aushadhi diltiazem tablets ip 60 mg"
+      ],
+      [
+        "jan aushadhi domperidone suspension ip 5mg per 5ml"
+      ],
+      [
+        "jan aushadhi domperidone tablets ip 10 mg"
+      ],
+      [
+        "jan aushadhi doxofylline tablets ip 400 mg"
+      ],
+      [
+        "jan aushadhi drotaverine hydrochloride injection 40mg per 2ml"
+      ],
+      [
+        "jan aushadhi drotaverine hydrochloride tablets ip 40mg"
+      ],
+      [
+        "jan aushadhi drotaverine hydrochloride tablets ip 80 mg"
+      ],
+      [
+        "jan aushadhi dutasteride capsule ip 0.5 mg"
+      ],
+      [
+        "jan aushadhi empagliflozin tablets 10 mg"
+      ],
+      [
+        "jan aushadhi empagliflozin tablets 25 mg"
+      ],
+      [
+        "jan aushadhi enoxaparin injection ip 40 mg per 0.4 ml"
+      ],
+      [
+        "jan aushadhi enoxaparin injection ip 60 mg per 0.6 ml"
+      ],
+      [
+        "jan aushadhi eplerenone 50mg tablets"
+      ],
+      [
+        "jan aushadhi eplerenone tablets ip 25 mg"
+      ],
+      [
+        "jan aushadhi escitalopram tablets ip 10 mg"
+      ],
+      [
+        "jan aushadhi escitalopram tablets ip 20 mg"
+      ],
+      [
+        "jan aushadhi escitalopram tablets ip 5 mg"
+      ],
+      [
+        "jan aushadhi esomeprazole 40mg (enteric-coated) and domperidone 30mg (sustained release) capsules"
+      ],
+      [
+        "jan aushadhi esomeprazole 40mg (enteric-coated) and levosulpiride 75mg (sustained release) capsules"
+      ],
+      [
+        "jan aushadhi esomeprazole gastro-resistance tablets ip 20mg"
+      ],
+      [
+        "jan aushadhi esomeprazole magnessium 40mg (enteric coated ) and itopride hydrochloride 150mg (sustained release) capsules."
+      ],
+      [
+        "jan aushadhi esomeprazole tablets ip 40 mg"
+      ],
+      [
+        "jan aushadhi etizolam 0.5mg and escitalopram oxalate 10mg tablets"
+      ],
+      [
+        "jan aushadhi etizolam 0.5mg and escitalopram oxalate 5mg tablets"
+      ],
+      [
+        "jan aushadhi etoricoxib tablets ip 120 mg"
+      ],
+      [
+        "jan aushadhi etoricoxib tablets ip 90 mg"
+      ],
+      [
+        "jan aushadhi ezetimibe tablets ip 10mg"
+      ],
+      [
+        "jan aushadhi ezetimibe tablets ip 5mg"
+      ],
+      [
+        "jan aushadhi fexofenadine hydrochloride suspension (30mg/5ml)"
+      ],
+      [
+        "jan aushadhi fexofenadine tablets ip 180 mg"
+      ],
+      [
+        "jan aushadhi fexofenadine\u00a0hydrochloride\u00a0tablets ip 120mg"
+      ],
+      [
+        "jan aushadhi finasteride tablets ip 1mg"
+      ],
+      [
+        "jan aushadhi finasteride tablets ip 5mg"
+      ],
+      [
+        "jan aushadhi flunarizine tablets ip 10 mg"
+      ],
+      [
+        "jan aushadhi flunarizine tablets ip 5 mg"
+      ],
+      [
+        "jan aushadhi fluticasone propionate cream ip 0.05%"
+      ],
+      [
+        "jan aushadhi fluticasone propionate respules 0.5mg per 2ml"
+      ],
+      [
+        "jan aushadhi gabapentin capsules ip 300mg"
+      ],
+      [
+        "jan aushadhi gabapentin tablets ip 100 mg"
+      ],
+      [
+        "jan aushadhi heparin sodium injection ip 25000 iu"
+      ],
+      [
+        "jan aushadhi heparin sodium injection ip 5000 iu"
+      ],
+      [
+        "jan aushadhi hydrocortisone acetate cream ip 1% w/w"
+      ],
+      [
+        "jan aushadhi hydrocortisone sodium succinate injection ip 100mg"
+      ],
+      [
+        "jan aushadhi hydrocortisone tablets 10mg"
+      ],
+      [
+        "jan aushadhi hydrocortisone tablets 5mg"
+      ],
+      [
+        "jan aushadhi hydroxyzine hydrochloride drops 6mg per ml"
+      ],
+      [
+        "jan aushadhi hydroxyzine hydrochloride syrup 10mg per 5ml"
+      ],
+      [
+        "jan aushadhi hydroxyzine hydrochloride tablets ip 10mg"
+      ],
+      [
+        "jan aushadhi hydroxyzine tablets ip 25mg"
+      ],
+      [
+        "jan aushadhi indomethacin capsules ip 25 mg"
+      ],
+      [
+        "jan aushadhi insulin aspart injection ip 100iu per ml"
+      ],
+      [
+        "jan aushadhi ipratropium bromide inhaler 20mcg"
+      ],
+      [
+        "jan aushadhi isosorbide mononitrate sustained release tablets 30 mg"
+      ],
+      [
+        "jan aushadhi isosorbide mononitrate sustained release tablets 50mg"
+      ],
+      [
+        "jan aushadhi ivermectin cream 1% w/w"
+      ],
+      [
+        "jan aushadhi ivermectin dispersible tablets 12 mg"
+      ],
+      [
+        "jan aushadhi ketoconazole cream 2% w/w"
+      ],
+      [
+        "jan aushadhi ketoconazole lotion 2% w/v"
+      ],
+      [
+        "jan aushadhi ketoconazole shampoo 2% w/v"
+      ],
+      [
+        "jan aushadhi ketoconazole soap 2%"
+      ],
+      [
+        "jan aushadhi ketoconazole tablets ip 200 mg"
+      ],
+      [
+        "jan aushadhi ketoprofen 2.5% gel"
+      ],
+      [
+        "jan aushadhi ketorolac injection ip 30mg per ml"
+      ],
+      [
+        "jan aushadhi lacosamide tablets 100mg"
+      ],
+      [
+        "jan aushadhi lansoprazole capsules ip 15 mg"
+      ],
+      [
+        "jan aushadhi levosalbutamol 1.25mg and budesonide 0.5mg respules"
+      ],
+      [
+        "jan aushadhi levosalbutamol 1.25mg and budesonide 1mg respules"
+      ],
+      [
+        "jan aushadhi levosalbutamol 1.25mg and ipratropium 500mcg respules"
+      ],
+      [
+        "jan aushadhi levosalbutamol 100mcg and beclomethasone 100mcg rotacaps"
+      ],
+      [
+        "jan aushadhi levosalbutamol 100mcg and beclomethasone 200mcg rotacaps"
+      ],
+      [
+        "jan aushadhi levosalbutamol 100mcg and beclomethasone 50mcg rotacaps"
+      ],
+      [
+        "jan aushadhi levosalbutamol 100mcg and ipratropium 40mcg rotacap"
+      ],
+      [
+        "jan aushadhi levosalbutamol 50mcg and beclomethasone 50mcg inhaler"
+      ],
+      [
+        "jan aushadhi levosalbutamol inhaler 50mcg"
+      ],
+      [
+        "jan aushadhi levosalbutamol respules 0.63mg per 2.5ml"
+      ],
+      [
+        "jan aushadhi levosalbutamol syrup 1mg per 5ml"
+      ],
+      [
+        "jan aushadhi linagliptin tablets 5mg"
+      ],
+      [
+        "jan aushadhi loratadine tablets ip 10mg"
+      ],
+      [
+        "jan aushadhi mebendazole oral suspension 100mg per ml"
+      ],
+      [
+        "jan aushadhi mebendazole tablets ip 100 mg"
+      ],
+      [
+        "jan aushadhi mebeverine hydrochloride tablets ip 200mg"
+      ],
+      [
+        "jan aushadhi mefenamic acid suspension 100mg per 5ml"
+      ],
+      [
+        "jan aushadhi mefenamic acid tablets 250 mg"
+      ],
+      [
+        "jan aushadhi mefenamic acid tablets 500 mg"
+      ],
+      [
+        "jan aushadhi meropenem injection ip 1 g"
+      ],
+      [
+        "jan aushadhi meropenem injection ip 500 mg"
+      ],
+      [
+        "jan aushadhi methylprednisolone sodium succinate injection 1000mg"
+      ],
+      [
+        "jan aushadhi methylprednisolone tablets ip 16mg"
+      ],
+      [
+        "jan aushadhi methylprednisolone tablets ip 4mg"
+      ],
+      [
+        "jan aushadhi metoclopramide hydrochloride syrup ip 5mg per 5ml"
+      ],
+      [
+        "jan aushadhi metoclopramide injection ip 5mg per ml"
+      ],
+      [
+        "jan aushadhi metoclopramide tablets ip 10 mg"
+      ],
+      [
+        "jan aushadhi minocycline (45mg) extended release tablet"
+      ],
+      [
+        "jan aushadhi minocycline (50mg) tablet"
+      ],
+      [
+        "jan aushadhi minocycline (65mg) extended release tablet"
+      ],
+      [
+        "jan aushadhi mirtazapine tablets ip 15mg"
+      ],
+      [
+        "jan aushadhi mirtazapine tablets ip 30 mg"
+      ],
+      [
+        "jan aushadhi mirtazapine tablets ip 7.5mg"
+      ],
+      [
+        "jan aushadhi naproxen 500 mg delayed release and esomeprazole 20mg tablet"
+      ],
+      [
+        "jan aushadhi nebivolol hydrochloride tablets ip 10 mg"
+      ],
+      [
+        "jan aushadhi nebivolol tablets ip 2.5mg"
+      ],
+      [
+        "jan aushadhi nebivolol tablets ip 5 mg"
+      ],
+      [
+        "jan aushadhi nifedipine 5mg capsule"
+      ],
+      [
+        "jan aushadhi nifedipine extended release tablets ip 30 mg"
+      ],
+      [
+        "jan aushadhi nifedipine extended release tablets ip 60 mg"
+      ],
+      [
+        "jan aushadhi nifedipine sustained release tablets ip 10mg"
+      ],
+      [
+        "jan aushadhi nimesulide gel 1% w/w"
+      ],
+      [
+        "jan aushadhi nimesulide tablets 100 mg"
+      ],
+      [
+        "jan aushadhi oxcarbazepine tablets ip 150mg"
+      ],
+      [
+        "jan aushadhi oxcarbazepine tablets ip 300mg"
+      ],
+      [
+        "jan aushadhi oxcarbazepine tablets ip 450mg"
+      ],
+      [
+        "jan aushadhi oxcarbazepine tablets ip 600 mg"
+      ],
+      [
+        "jan aushadhi pheniramine maleate injection ip 22.75 mg"
+      ],
+      [
+        "jan aushadhi pheniramine maleate tablets ip 25 mg"
+      ],
+      [
+        "jan aushadhi phenobarbitone 200mg/1ml injection"
+      ],
+      [
+        "jan aushadhi phenobarbitone sodium 20mg per 5ml syrup"
+      ],
+      [
+        "jan aushadhi phenobarbitone tablets ip 30mg"
+      ],
+      [
+        "jan aushadhi phenobarbitone tablets ip 60 mg"
+      ],
+      [
+        "jan aushadhi piroxicam capsules ip 20 mg"
+      ],
+      [
+        "jan aushadhi piroxicam dispersible tablets 10 mg"
+      ],
+      [
+        "jan aushadhi piroxicam dispersible tablets 20 mg"
+      ],
+      [
+        "jan aushadhi prasugrel tablets ip 10 mg"
+      ],
+      [
+        "jan aushadhi propranolol tablets ip 10mg"
+      ],
+      [
+        "jan aushadhi propranolol tablets ip 20mg"
+      ],
+      [
+        "jan aushadhi propranolol tablets ip 40 mg"
+      ],
+      [
+        "jan aushadhi pyridoxine hydrochloride sustained release tablets 100mg"
+      ],
+      [
+        "jan aushadhi pyridoxine tablets ip 50 mg"
+      ],
+      [
+        "jan aushadhi quinine sulphate tablets ip 300 mg"
+      ],
+      [
+        "jan aushadhi quinine sulphate tablets ip 600 mg"
+      ],
+      [
+        "jan aushadhi rabeprazole (20 mg) + mosapride (15mg) tablet"
+      ],
+      [
+        "jan aushadhi rifaximin tablets 200 mg"
+      ],
+      [
+        "jan aushadhi rifaximin tablets 400 mg"
+      ],
+      [
+        "jan aushadhi rifaximin tablets 550 mg"
+      ],
+      [
+        "jan aushadhi rivaroxaban tablet 15 mg"
+      ],
+      [
+        "jan aushadhi rivaroxaban tablet 2.5 mg"
+      ],
+      [
+        "jan aushadhi rivaroxaban tablets 10mg"
+      ],
+      [
+        "jan aushadhi rivaroxaban tablets 20mg"
+      ],
+      [
+        "jan aushadhi roxithromycin tablets ip 150 mg"
+      ],
+      [
+        "jan aushadhi roxithromycin tablets ip 300 mg"
+      ],
+      [
+        "jan aushadhi silodosin capsules 4 mg"
+      ],
+      [
+        "jan aushadhi silodosin capsules 8 mg"
+      ],
+      [
+        "jan aushadhi sodium valproate oral solution ip 200mg per 5ml"
+      ],
+      [
+        "jan aushadhi sucralfate suspension 500mg per 5ml"
+      ],
+      [
+        "jan aushadhi tadalafil tablets ip 10 mg"
+      ],
+      [
+        "jan aushadhi tadalafil tablets ip 2.5 mg"
+      ],
+      [
+        "jan aushadhi tadalafil tablets ip 20 mg"
+      ],
+      [
+        "jan aushadhi tadalafil tablets ip 5 mg"
+      ],
+      [
+        "jan aushadhi terbinafine hydrochloride cream ip 1% w/w"
+      ],
+      [
+        "jan aushadhi terbinafine tablets ip 250mg"
+      ],
+      [
+        "jan aushadhi thiocolchicoside capsules ip 4mg"
+      ],
+      [
+        "jan aushadhi ticagrelor tablets ip 60mg"
+      ],
+      [
+        "jan aushadhi ticagrelor tablets ip 90 mg"
+      ],
+      [
+        "jan aushadhi tinidazole tablets ip 300 mg"
+      ],
+      [
+        "jan aushadhi tinidazole tablets ip 500 mg"
+      ],
+      [
+        "jan aushadhi tiotropium powder for inhalation ip 18mcg rotacaps"
+      ],
+      [
+        "jan aushadhi tranexamic acid injection ip 500 mg (100mg per ml)"
+      ],
+      [
+        "jan aushadhi tranexamic acid tablets ip 500 mg"
+      ],
+      [
+        "jan aushadhi triamcinolone acetonide injection ip 40mg per ml"
+      ],
+      [
+        "jan aushadhi verapamil tablets ip 40mg"
+      ],
+      [
+        "jan aushadhi verapamil tablets ip 80 mg"
+      ],
+      [
+        "jan aushadhi vildagliptin 100mg and metformin hydrochloride (sustained release) 1000mg tablets"
+      ],
+      [
+        "jan aushadhi vildagliptin 100mg and metformin hydrochloride (sustained release) 500mg tablets"
+      ],
+      [
+        "jan aushadhi vildagliptin 50mg and metformin hydrochloride (sustained release) 1000mg tablets"
+      ],
+      [
+        "jan aushadhi vildagliptin 50mg and metformin hydrochloride (sustained release) 500mg tablets"
+      ],
+      [
+        "jan aushadhi vildagliptin 50mg and metformin hydrochloride 1000mg tablets ip"
+      ],
+      [
+        "jan aushadhi vildagliptin 50mg and metformin hydrochloride 500mg tablets ip"
+      ],
+      [
+        "jan aushadhi vildagliptin 50mg and metformin hydrochloride 850mg tablets ip"
+      ]
+    ],
+    "live_rows": 2836,
+    "removed": [],
+    "unchanged": 2610
+  },
+  "kind": "brands",
+  "previous_sha256": "78907ac3d31f842cdbaefce2c74042a5ec8bd1cd78c077295bd32fc410f48867",
+  "schema_ok": true,
+  "source": "data/snapshots/brands.repaired.csv",
+  "source_rows": 2836,
+  "source_sha256": "9e641166c239b2a941f044205f2222d32de35f4af96326b371a39ef1e00b60d3"
+}

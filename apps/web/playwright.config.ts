@@ -25,7 +25,20 @@ export default defineConfig({
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
   ],
   webServer: {
-    command: "PORT=3457 NODE_ENV=production node scripts/start-standalone.mjs",
+    // No `VAR=value cmd` prefix: that is POSIX-shell syntax and cmd.exe on
+    // Windows runs the command literally, so the whole E2E gate dies before a
+    // browser starts. Playwright passes `env` to the child process instead.
+    command: "node scripts/start-standalone.mjs",
+    env: {
+      ...process.env,
+      PORT: "3457",
+      NODE_ENV: "production",
+      // e2e/product.spec.ts force-seeds so each run starts from the same
+      // 14-day history. The seed route denies `force` unless an operator asked
+      // for it — this test server is that request, made explicitly here rather
+      // than assumed from an unset variable.
+      MEDISAATHI_ALLOW_DEMO_RESET: "1",
+    },
     url: "http://localhost:3457/api/evidence",
     reuseExistingServer: true,
     timeout: 120_000,

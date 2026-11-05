@@ -4,6 +4,8 @@
 
 import { useEffect, useState } from "react";
 import { api, type Analytics } from "@/lib/client";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Skeleton, SkeletonCard, SkeletonHeading } from "@/components/ui/skeleton";
 
 export function InsightsPanel({ refreshKey }: { refreshKey: number }) {
   const [data, setData] = useState<{ analytics: Analytics | null; hasPlan: boolean } | null>(null);
@@ -14,26 +16,53 @@ export function InsightsPanel({ refreshKey }: { refreshKey: number }) {
       .catch(() => setData(null));
   }, [refreshKey]);
 
-  if (!data) return <div className="vy-hairline-card animate-pulse p-10 text-center text-sm text-muted-foreground">Loading analytics…</div>;
+  // Four KPI tiles, then the heatmap's own 14-column grid: the numbers arrive in
+  // the row the reader was already looking at, and nothing on screen while this
+  // is up is a sentence.
+  if (!data)
+    return (
+      <div className="space-y-6">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {Array.from({ length: 4 }, (_, i) => (
+            <SkeletonCard key={i} className="space-y-2.5">
+              <Skeleton className="h-2.5 w-20" />
+              <Skeleton className="h-9 w-16" />
+              <Skeleton className="h-3 w-24" />
+            </SkeletonCard>
+          ))}
+        </div>
+        <SkeletonCard>
+          <SkeletonHeading />
+          <div aria-hidden="true" className="mt-4 grid grid-cols-7 gap-2 sm:grid-cols-14">
+            {Array.from({ length: 14 }, (_, i) => (
+              <Skeleton key={i} className="aspect-square" />
+            ))}
+          </div>
+        </SkeletonCard>
+      </div>
+    );
 
   const a = data.analytics;
   if (!a) {
     return (
-      <div className="vy-hairline-card flex min-h-64 flex-col items-center justify-center gap-2 p-10 text-center">
-        <p className="vy-serif text-2xl">No analytics yet</p>
-        <p className="max-w-sm text-sm text-muted-foreground">Start a plan and check in a few doses — adherence, MPR and the heatmap fill in here.</p>
-      </div>
+      <EmptyState title="No analytics yet">
+        Start a plan and check in a few doses — adherence, MPR and the heatmap fill in here.
+      </EmptyState>
     );
   }
 
   return (
     <div className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <KPI label="Adherence (14d)" value={a.adherencePct == null ? "—" : `${a.adherencePct}%`} sub="taken ÷ resolved doses" tone="main" />
-        <KPI label="MPR" value={a.mprPct == null ? "—" : `${a.mprPct}%`} sub="medication possession ratio" />
+        <KPI label="Adherence (14d)" value={a.adherencePct == null ? "—" : `${a.adherencePct}%`} sub="taken ÷ doses whose day closed" tone="main" />
+        <KPI label="MPR" value={a.mprPct == null ? "—" : `${a.mprPct}%`} sub="days fully covered ÷ days closed" />
         <KPI label="Current streak" value={`${a.currentStreak}d`} sub={`best ${a.bestStreak} days`} />
         <KPI label="Risk events" value={`${a.riskEvents}`} sub="missed doses in window" tone={a.riskEvents > 3 ? "risk" : "plain"} />
       </div>
+      <p className="text-xs leading-relaxed text-muted-foreground">
+        A dose slot whose day closed with no answer counts as missed. Today is never charged for a dose that
+        has not happened yet, so these two numbers can only ever move as the record itself does.
+      </p>
 
       <div className="vy-hairline-card p-5">
         <div className="flex items-center justify-between">
@@ -73,7 +102,7 @@ export function InsightsPanel({ refreshKey }: { refreshKey: number }) {
                   <span className="vy-numeral text-muted-foreground">{m.adherencePct == null ? "—" : `${m.adherencePct}%`}</span>
                 </div>
                 <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-secondary">
-                  <div className="h-full rounded-full" style={{ width: `${m.adherencePct ?? 0}%`, background: "var(--vy-pine)" }} />
+                  <div className="h-full rounded-full" style={{ width: `${m.adherencePct ?? 0}%`, background: "var(--chart-1)" }} />
                 </div>
               </div>
             ))}
@@ -96,7 +125,7 @@ function KPI({ label, value, sub, tone }: { label: string; value: string; sub: s
   return (
     <div className="vy-hairline-card p-5">
       <p className="vy-eyebrow">{label}</p>
-      <p className={`vy-numeral vy-serif mt-2 text-4xl ${tone === "risk" ? "vy-sev-severe" : ""}`} style={tone === "main" ? { color: "var(--vy-pine)" } : {}}>{value}</p>
+      <p className={`vy-numeral vy-serif mt-2 text-4xl ${tone === "risk" ? "vy-sev-severe" : ""}`} style={tone === "main" ? { color: "var(--vy-pine-ink)" } : {}}>{value}</p>
       <p className="mt-1 text-xs text-muted-foreground">{sub}</p>
     </div>
   );

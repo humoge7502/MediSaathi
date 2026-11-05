@@ -1,0 +1,17 @@
+{
+  "before": {
+    "rule_rows_addressed": 17082,
+    "contraindication_rows_addressed": 875,
+    "ceilings_addressed": 214,
+    "brands_addressing_nothing": 0
+  },
+  "after": {
+    "rule_rows_addressed": 4238,
+    "contraindication_rows_addressed": 431,
+    "ceilings_addressed": 189,
+    "brands_addressing_nothing": 28
+  },
+  "measured_on": "2026-10-26",
+  "definition": "Per affected brand row: rows in interactions.csv / contraindication.csv / dose_caps.csv that mention any molecule in the row's molecule cell, summed over the affected rows. 'before' uses the class-representative cell the import wrote, 'after' the ingredient the brand string states. Read the direction, not the magnitude: these brands addressed 17 082 interaction rows that describe a DIFFERENT DRUG, and 4 238 that describe the one the patient swallows. A fall here is the false-positive load being removed. The rise in brands_addressing_nothing is the honest cost, and it is the remaining provenance gap (task: close real data-provenance gaps), not a regression in the identity law — the catalog simply holds no rule row for cefotaxime, budesonide inhalation or levosalbutamol yet.",
+  "repairs_measured": 226
+}

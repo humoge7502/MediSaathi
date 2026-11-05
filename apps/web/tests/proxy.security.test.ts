@@ -1,24 +1,25 @@
 /**
- * Web middleware security contract tests (audit TD-A / MS-02).
+ * Web proxy security contract tests (audit TD-A / MS-02).
  *
  * The API tier's red-team suite (43 cases in apps/api/tests/test_redteam.py)
- * pins the FastAPI middleware; this suite pins the edge middleware to the
+ * pins the FastAPI middleware; this suite pins the web Proxy to the
  * SAME contract so the two implementations cannot drift apart silently —
  * the exact bug class already found and fixed once on the API side
  * (XFF rotation minting fresh buckets).
  *
- * The middleware module exports its internals (`allow`, `clientKey`,
- * `originAllowed`) so the contract can be exercised directly, deterministically,
- * without booting the edge runtime.
+ * The proxy module exports its internals (`allow`, `clientKey`, `originAllowed`,
+ * `envPositiveNumber`) so the contract can be exercised directly, deterministically,
+ * without booting the server runtime.
  *
- * Run: bun test tests/middleware.security.test.ts
+ * Run: bun test tests/proxy.security.test.ts
  */
 import { describe, expect, test } from "bun:test";
+import { readFileSync } from "node:fs";
 
 process.env.MEDISAATHI_TRUST_PROXY = "0"; // pin the unproxied law for this suite
 
-const { allow, clientKey, originAllowed } = await import("../src/middleware");
-const middlewareFn = (await import("../src/middleware")).middleware;
+const { allow, clientKey, originAllowed, envPositiveNumber } = await import("../src/proxy");
+const proxyFn = (await import("../src/proxy")).proxy;
 
 const MINUTE = 60_000;
 
@@ -52,8 +53,8 @@ describe("clientKey (MS-02: no client-settable key without a trusted proxy)", ()
     process.env.MEDISAATHI_TRUST_PROXY = "1";
     try {
       // fresh import so the flag is read at module scope
-      const mod = await import(`${"../src/middleware"}?proxy=1`);
-      const key = (mod as typeof import("../src/middleware")).clientKey;
+      const mod = await import(`${"../src/proxy"}?trust=1`);
+      const key = (mod as typeof import("../src/proxy")).clientKey;
       expect(key(new Headers({ "x-forwarded-for": "203.0.113.9, 10.0.0.1" }))).toBe("203.0.113.9");
     } finally {
       process.env.MEDISAATHI_TRUST_PROXY = "0";
@@ -110,6 +111,48 @@ describe("allow (sliding-window + approx-LRU eviction)", () => {
   });
 });
 
+// ---------------------------------------------------- limiter budget from env
+
+describe("envPositiveNumber (a deploy typo must not become a total outage)", () => {
+  test("unset takes the documented default, a real value is honoured", () => {
+    expect(envPositiveNumber(undefined, 60)).toBe(60);
+    expect(envPositiveNumber("20", 60)).toBe(20);
+    expect(envPositiveNumber("0.5", 1)).toBe(0.5);
+  });
+
+  test("empty, blank and non-numeric all fall back — never 0, never NaN", () => {
+    // `MEDISAATHI_RATE_WRITE=` in a systemd unit or `docker run -e VAR` is a set-but-
+    // empty variable: `??` passes "" through and `Number("")` is 0, so the naive read
+    // gives a write limit of zero — every POST answered 429 on a healthy install.
+    for (const junk of ["", " ", "60x", "NaN", "Infinity", "-1", "0", "two", "1e"]) {
+      expect(envPositiveNumber(junk, 60), `read of ${JSON.stringify(junk)} escaped the fallback`).toBe(60);
+    }
+    expect(Number.isFinite(envPositiveNumber("", 60))).toBe(true);
+  });
+
+  test("a zero budget really does deny the first request, so the fallback is the difference", () => {
+    // Not a hypothetical about `allow`: this is what the misread value would do.
+    const key = `t3:zero:${Math.random()}`;
+    expect(allow(key, 0, MINUTE, 1_000)).toBe(false);
+    const ok = `t3:default:${Math.random()}`;
+    expect(allow(ok, envPositiveNumber("", 60), MINUTE, 1_000)).toBe(true);
+  });
+
+  test("proxy.ts reads its four budgets through the guard", () => {
+    // The guard only helps if the constants use it. Structural assertion, because
+    // the module froze its budgets at import and a test cannot re-read them.
+    const src = readFileSync(new URL("../src/proxy.ts", import.meta.url), "utf8");
+    // A bare `Number(process.env.MEDISAATHI_RATE_…)` is the regression; the lookbehind
+    // keeps `envPositiveNumber(process.env.MEDISAATHI_RATE_…` from matching itself.
+    expect(src).not.toMatch(/(?<![\w$])Number\(process\.env\.MEDISAATHI_RATE/);
+    const guarded = src.match(/envPositiveNumber\(process\.env\.MEDISAATHI_RATE\w+/g) ?? [];
+    expect(guarded).toHaveLength(4);
+    for (const name of ["MEDISAATHI_RATE_WRITE", "MEDISAATHI_RATE_WRITE_WINDOW", "MEDISAATHI_RATE_READ", "MEDISAATHI_RATE_READ_WINDOW"]) {
+      expect(src, `${name} no longer goes through envPositiveNumber`).toContain(`envPositiveNumber(process.env.${name}`);
+    }
+  });
+});
+
 // ----------------------------------------------------------- origin gate (MS-10)
 
 describe("originAllowed (cross-origin mutation defense)", () => {
@@ -137,18 +180,18 @@ describe("originAllowed (cross-origin mutation defense)", () => {
 // ----------------------------------------------------------- nonce CSP (TD-2)
 
 describe("nonce CSP on document routes (TD-2)", () => {
-  // Minimal NextRequest stand-in: the middleware only reads nextUrl.pathname,
+  // Minimal NextRequest stand-in: the proxy only reads nextUrl.pathname,
   // method and headers on the paths exercised here.
   function fakeReq(path: string, method = "GET", headers: Record<string, string> = {}) {
     return {
       method,
       headers: new Headers(headers),
       nextUrl: new URL(`http://localhost:3000${path}`),
-    } as Parameters<typeof middlewareFn>[0];
+    } as Parameters<typeof proxyFn>[0];
   }
 
   test("document routes get a per-request nonce + strict-dynamic script CSP", () => {
-    const res = middlewareFn(fakeReq("/"));
+    const res = proxyFn(fakeReq("/"));
     const csp = res.headers.get("content-security-policy") ?? "";
     expect(csp).toContain("script-src 'self' 'nonce-");
     expect(csp).toContain("'strict-dynamic'");
@@ -162,8 +205,8 @@ describe("nonce CSP on document routes (TD-2)", () => {
   });
 
   test("the nonce is per-request, not a constant", () => {
-    const a = middlewareFn(fakeReq("/")).headers.get("content-security-policy") ?? "";
-    const b = middlewareFn(fakeReq("/")).headers.get("content-security-policy") ?? "";
+    const a = proxyFn(fakeReq("/")).headers.get("content-security-policy") ?? "";
+    const b = proxyFn(fakeReq("/")).headers.get("content-security-policy") ?? "";
     const nonceOf = (c: string) => /'nonce-([^']+)'/.exec(c)?.[1] ?? "";
     const na = nonceOf(a);
     expect(na).not.toBe("");
@@ -172,15 +215,15 @@ describe("nonce CSP on document routes (TD-2)", () => {
   });
 
   test("the nonce travels to the renderer via request headers", () => {
-    // Middleware is invoked with a mutable request-headers channel; assert
+    // Proxy is invoked with a mutable request-headers channel; assert
     // indirectly: two sequential calls produce different CSPs (already
     // pinned above), and the CSP header is present on the response.
-    const res = middlewareFn(fakeReq("/workspace"));
+    const res = proxyFn(fakeReq("/workspace"));
     expect(res.headers.get("content-security-policy")).toBeTruthy();
   });
 
   test("API routes keep the limiter contract and do NOT get the page CSP", () => {
-    const res = middlewareFn(fakeReq("/api/evidence"));
+    const res = proxyFn(fakeReq("/api/evidence"));
     expect(res.headers.get("x-request-id")).toBeTruthy();
     expect(res.headers.get("content-security-policy")).toBeNull();
   });

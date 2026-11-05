@@ -1,0 +1,17 @@
+{
+  "applied": false,
+  "checked_at": "2026-10-25T21:57:22+00:00",
+  "diff": {
+    "added": [],
+    "candidate_rows": 2836,
+    "changed": [],
+    "live_rows": 2836,
+    "removed": [],
+    "unchanged": 2836
+  },
+  "kind": "brands",
+  "schema_ok": true,
+  "source": "data/brands.csv",
+  "source_rows": 2836,
+  "source_sha256": "78907ac3d31f842cdbaefce2c74042a5ec8bd1cd78c077295bd32fc410f48867"
+}

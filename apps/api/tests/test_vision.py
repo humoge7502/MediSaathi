@@ -12,6 +12,7 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import pytest  # noqa: E402
+from app.safety.dosing import daily_dose_mg, enrich_field  # noqa: E402
 from app.vision import (  # noqa: E402
     RefusalCandidate,
     _parse_line,
@@ -39,9 +40,42 @@ def test_parser_reads_shorthand_frequency():
     assert f.duration == "30 days"
 
 
-def test_strength_defaults_from_brand_number():
-    f = _parse_line("1. Tab Dolo 650 - 1-0-1 x 5 days", 0.97, FieldSource.seed_fixture)
-    assert "650" in f.strength
+def test_perception_never_invents_a_strength_unit():
+    """A brand's trailing number is read as a number, not as milligrams.
+
+    Stamping " mg" onto every trailing digit made "Thyronorm 50" a 50 mg
+    levothyroxine course against a 0.3 mg/day cap — a thousandfold over-read of
+    a 50 mcg tablet — and "Calcirol 60K" a 60 mg sachet, dropping both the kilo
+    multiplier and the unit the preparation is sold in. An explicit unit on the
+    line is still read verbatim.
+    """
+    bare = _parse_line("1. Tab Dolo 650 - 1-0-1 x 5 days", 0.97, FieldSource.seed_fixture)
+    assert bare.strength == "", "a bare brand number must not arrive pre-unitised"
+    stated = _parse_line("1. Tab Thyronorm 50 mcg - 1-0-0 x 30 days",
+                         0.97, FieldSource.seed_fixture)
+    assert stated.strength == "50 mcg"
+
+
+@pytest.mark.parametrize("line,brand,molecule,expected", [
+    ("1. Tab Thyronorm 50 - 1-0-0 x 30 days", "Thyronorm 50", "levothyroxine", "50 mcg"),
+    ("1. Tab Calcirol 60K - 0-0-1 weekly x 8 weeks", "Calcirol 60K", "cholecalciferol", "60000 iu"),
+    ("1. Cap Folitrax 10 HS", "Folitrax 10", "methotrexate", "10 mg"),
+    ("1. Tab Dolo 650 - 1-0-1 x 5 days", "Dolo 650", "paracetamol", "650 mg"),
+])
+def test_the_unit_comes_from_the_formulary_row(line, brand, molecule, expected):
+    """The deciding plane resolves the unit, because it knows the molecule.
+
+    This is the half of the law that has to survive: the 50 mcg tablet screens
+    as 0.05 mg/day, and the 60 000 IU sachet declines mg arithmetic rather than
+    asserting a 60 000 mg/day dose.
+    """
+    src = _parse_line(line, 0.97, FieldSource.seed_fixture)
+    got = enrich_field(src, brand=brand, molecule=molecule)
+    assert got.strength == expected, (brand, got.strength)
+    if molecule == "cholecalciferol":
+        assert daily_dose_mg(got) is None       # IU is not mg-convertible
+    else:
+        assert daily_dose_mg(got) is not None
 
 
 @pytest.mark.parametrize("freq,expected", [

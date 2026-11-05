@@ -1,302 +1,306 @@
-molecule,max_daily_mg,note,source
-paracetamol,4000,"OTC/routine cap; 2000 mg in liver disease, alcohol use, or weight <50 kg","Adult oral label cap (DailyMed/BNF-level, curated)"
-ibuprofen,2400,OTC self-care cap 1200 mg/day; prescription max 2400,"Adult oral label cap (DailyMed/BNF-level, curated)"
-diclofenac,150,including combination products,"Adult oral label cap (DailyMed/BNF-level, curated)"
-aceclofenac,200,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-naproxen,1000,OTC 660 mg/day; 1000-1500 mg under prescription,"Adult oral label cap (DailyMed/BNF-level, curated)"
-etoricoxib,120,60 mg for most indications,"Adult oral label cap (DailyMed/BNF-level, curated)"
-celecoxib,400,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-piroxicam,20,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-meloxicam,15,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-indomethacin,150,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ketoprofen,200,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-flurbiprofen,300,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-mefenamic acid,1500,short courses only (max 7 days),"Adult oral label cap (DailyMed/BNF-level, curated)"
-tolfenamic acid,400,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-nimesulide,200,not recommended >10 days; banned in some jurisdictions for children,"Adult oral label cap (DailyMed/BNF-level, curated)"
-aspirin,4000,antiplatelet dose 75-150 mg/day; 4000 cap is for pain/dose context only,"Adult oral label cap (DailyMed/BNF-level, curated)"
-tramadol,400,300 mg in elderly/renal impairment; 400 only for immediate-release,"Adult oral label cap (DailyMed/BNF-level, curated)"
-tramadol+paracetamol,800,of tramadol component (8 tablets); paracetamol component 325 mg/tab counts toward paracetamol cap,"Adult oral label cap (DailyMed/BNF-level, curated)"
-codeine,240,codeine is contraindicated under 12 and in breastfeeding,"Adult oral label cap (DailyMed/BNF-level, curated)"
-morphine,200,titrated individually; no absolute ceiling in tolerant palliative use,"Adult oral label cap (DailyMed/BNF-level, curated)"
-tapentadol,600,500 mg in moderate renal impairment,"Adult oral label cap (DailyMed/BNF-level, curated)"
-gabapentin,3600,renal-adjusted,"Adult oral label cap (DailyMed/BNF-level, curated)"
-pregabalin,600,150-300 mg in renal impairment,"Adult oral label cap (DailyMed/BNF-level, curated)"
-amitriptyline,150,100 mg in outpatient self-administration,"Adult oral label cap (DailyMed/BNF-level, curated)"
-nortriptyline,150,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-imipramine,200,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-metformin,3000,"2550 mg US labeling; stop at eGFR<30, halve 30-44","Adult oral label cap (DailyMed/BNF-level, curated)"
-metformin_sr,2000,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-glimepiride,8,start 1-2 mg; hypoglycemia risk,"Adult oral label cap (DailyMed/BNF-level, curated)"
-gliclazide,320,MR formulation cap 120 mg,"Adult oral label cap (DailyMed/BNF-level, curated)"
-glibenclamide,15,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-glipizide,40,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-sitagliptin,100,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-vildagliptin,100,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-linagliptin,5,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-dapagliflozin,10,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-empagliflozin,25,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-canagliflozin,300,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-pioglitazone,45,heart failure warning,"Adult oral label cap (DailyMed/BNF-level, curated)"
-acarbose,300,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-voglibose,0.9,0.9 mg/day (0.3 TDS),"Adult oral label cap (DailyMed/BNF-level, curated)"
-levothyroxine,0.3,mg; individualized by TSH - cap is a safety backstop only,"Adult oral label cap (DailyMed/BNF-level, curated)"
-carbimazole,60,titrated to TSH/FT4,"Adult oral label cap (DailyMed/BNF-level, curated)"
-propylthiouracil,450,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-prednisolone,100,acute high-dose is specialist-managed; long-term aim lowest possible,"Adult oral label cap (DailyMed/BNF-level, curated)"
-prednisone,100,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-dexamethasone,16,protocol-based (e.g. brain mets) may exceed - specialist only,"Adult oral label cap (DailyMed/BNF-level, curated)"
-deflazacort,72,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-methylprednisolone,64,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-hydrocortisone,200,replacement ~20-30 mg/day; stress dosing differs,"Adult oral label cap (DailyMed/BNF-level, curated)"
-betamethasone,8,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-omeprazole,40,80 (divided) for Zollinger-Ellison only,"Adult oral label cap (DailyMed/BNF-level, curated)"
-pantoprazole,80,IV loading differs,"Adult oral label cap (DailyMed/BNF-level, curated)"
-esomeprazole,40,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-rabeprazole,40,20 for GERD maintenance,"Adult oral label cap (DailyMed/BNF-level, curated)"
-lansoprazole,60,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ranitidine,300,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-famotidine,80,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-sucralfate,8000,8 g/day (1 g QID),"Adult oral label cap (DailyMed/BNF-level, curated)"
-misoprostol,800,obstetric uses are protocol-based,"Adult oral label cap (DailyMed/BNF-level, curated)"
-domperidone,30,QT/EU restrictions; 10 mg TDS max,"Adult oral label cap (DailyMed/BNF-level, curated)"
-metoclopramide,30,max 5 days; extrapyramidal risk,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ondansetron,24,oral; 32 mg IV historic cap (QT concern),"Adult oral label cap (DailyMed/BNF-level, curated)"
-granisetron,4,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-drotaverine,240,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-mebeverine,405,135 mg TDS,"Adult oral label cap (DailyMed/BNF-level, curated)"
-dicyclomine,160,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-rifaximin,1650,550 mg TDS for IBS-D/HE,"Adult oral label cap (DailyMed/BNF-level, curated)"
-mesalamine,4800,per formulation,"Adult oral label cap (DailyMed/BNF-level, curated)"
-sulfasalazine,3000,titrated; 2 g/day maintenance,"Adult oral label cap (DailyMed/BNF-level, curated)"
-loperamide,16,8 mg self-care; QT risk above label use,"Adult oral label cap (DailyMed/BNF-level, curated)"
-lactulose,60,ml/day usual; hepatic encephalopathy protocols differ,"Adult oral label cap (DailyMed/BNF-level, curated)"
-bisacodyl,15,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-senna,30,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-aprepitant,375,single-cycle protocols differ,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ursodeoxycholic acid,1050,14 mg/kg/day,"Adult oral label cap (DailyMed/BNF-level, curated)"
-amlodipine,10,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-nifedipine,120,SR/ER forms; immediate-release not for chronic HTN,"Adult oral label cap (DailyMed/BNF-level, curated)"
-cilnidipine,20,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-diltiazem,360,SR forms,"Adult oral label cap (DailyMed/BNF-level, curated)"
-verapamil,480,SR forms,"Adult oral label cap (DailyMed/BNF-level, curated)"
-atenolol,100,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-metoprolol,450,tartrate,"Adult oral label cap (DailyMed/BNF-level, curated)"
-metoprolol_sr,400,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-bisoprolol,20,10 mg typical,"Adult oral label cap (DailyMed/BNF-level, curated)"
-propranolol,320,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-carvedilol,100,50 mg in moderate-severe HF,"Adult oral label cap (DailyMed/BNF-level, curated)"
-nebivolol,40,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-labetalol,2400,oral; titrated,"Adult oral label cap (DailyMed/BNF-level, curated)"
-sotalol,160,for AF rhythm control after QT screening; 640 under supervision,"Adult oral label cap (DailyMed/BNF-level, curated)"
-losartan,100,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-telmisartan,80,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-valsartan,320,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-olmesartan,40,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-irbesartan,300,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-candesartan,32,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ramipril,10,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-enalapril,40,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-lisinopril,40,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-perindopril,10,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-captopril,450,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-hydrochlorothiazide,50,25 mg preferred,"Adult oral label cap (DailyMed/BNF-level, curated)"
-chlorthalidone,25,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-indapamide,2.5,SR 1.5 mg,"Adult oral label cap (DailyMed/BNF-level, curated)"
-furosemide,600,HF protocols individualize far higher under supervision,"Adult oral label cap (DailyMed/BNF-level, curated)"
-torasemide,40,HF up to 100-200 under supervision,"Adult oral label cap (DailyMed/BNF-level, curated)"
-spironolactone,100,25-50 mg for HF/resistant HTN,"Adult oral label cap (DailyMed/BNF-level, curated)"
-eplerenone,100,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-clonidine,1.2,taper slowly - rebound hypertension,"Adult oral label cap (DailyMed/BNF-level, curated)"
-methyldopa,3000,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-hydralazine,300,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-minoxidil,100,oral under specialist care,"Adult oral label cap (DailyMed/BNF-level, curated)"
-doxazosin,16,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-prazosin,20,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-isosorbide dinitrate,120,nitrate-free interval 10-12 h,"Adult oral label cap (DailyMed/BNF-level, curated)"
-isosorbide mononitrate,120,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-nitroglycerin,13,SR capsules; sublingual PRN,"Adult oral label cap (DailyMed/BNF-level, curated)"
-atorvastatin,80,80 only for ACS/ASCVD; interaction caps with CYP3A4 inhibitors,"Adult oral label cap (DailyMed/BNF-level, curated)"
-rosuvastatin,40,20 with Asian ancestry per labeling,"Adult oral label cap (DailyMed/BNF-level, curated)"
-simvastatin,40,20 with amlodipine/diltiazem/verapamil,"Adult oral label cap (DailyMed/BNF-level, curated)"
-pravastatin,80,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-pitavastatin,4,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-lovastatin,80,40 with CYP3A4-active drugs,"Adult oral label cap (DailyMed/BNF-level, curated)"
-fenofibrate,200,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-gemfibrozil,1200,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ezetimibe,10,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-digoxin,0.5,mg; level-guided (0.5-0.9 ng/mL in AF),"Adult oral label cap (DailyMed/BNF-level, curated)"
-amiodarone,400,maintenance; loading protocols differ,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ivabradine,15,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-trimetazidine,70,MR 35 mg BD,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ranolazine,2000,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-sacubitril+valsartan,400,of sacubitril/valsartan complex (200/200),"Adult oral label cap (DailyMed/BNF-level, curated)"
-alprazolam,4,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-clonazepam,4,epilepsy up to 20 under supervision,"Adult oral label cap (DailyMed/BNF-level, curated)"
-diazepam,30,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-lorazepam,10,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-clobazam,30,epilepsy 80 under supervision,"Adult oral label cap (DailyMed/BNF-level, curated)"
-etizolam,2,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-zolpidem,10,5 mg elderly/female,"Adult oral label cap (DailyMed/BNF-level, curated)"
-zopiclone,7.5,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-escitalopram,20,10 in elderly,"Adult oral label cap (DailyMed/BNF-level, curated)"
-sertraline,200,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-fluoxetine,80,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-paroxetine,50,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-citalopram,40,"20 in >65 y, hepatic impairment, CYP2C19 poor metabolizers","Adult oral label cap (DailyMed/BNF-level, curated)"
-fluvoxamine,200,300 under supervision,"Adult oral label cap (DailyMed/BNF-level, curated)"
-venlafaxine,375,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-duloxetine,120,60 typical,"Adult oral label cap (DailyMed/BNF-level, curated)"
-mirtazapine,45,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-bupropion,450,SR 400 formulation-dependent,"Adult oral label cap (DailyMed/BNF-level, curated)"
-buspirone,60,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-risperidone,16,6 mg typical; 8 for schizoaffective,"Adult oral label cap (DailyMed/BNF-level, curated)"
-olanzapine,20,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-quetiapine,800,300 for MDD adjunct,"Adult oral label cap (DailyMed/BNF-level, curated)"
-aripiprazole,30,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-haloperidol,20,5-10 typical outpatient,"Adult oral label cap (DailyMed/BNF-level, curated)"
-clozapine,900,level-guided; myocarditis/bone-marrow monitoring,"Adult oral label cap (DailyMed/BNF-level, curated)"
-amisulpride,1200,50-300 for dysthymia,"Adult oral label cap (DailyMed/BNF-level, curated)"
-lithium,2400,serum-level guided (0.6-1.0 mmol/L); toxicity close to therapy,"Adult oral label cap (DailyMed/BNF-level, curated)"
-sodium valproate,2500,60 mg/kg/day cap; teratogenic - avoid in women of childbearing potential,"Adult oral label cap (DailyMed/BNF-level, curated)"
-levetiracetam,3000,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-lamotrigine,400,500 with enzyme inducers without valproate,"Adult oral label cap (DailyMed/BNF-level, curated)"
-topiramate,400,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-oxcarbazepine,2400,1200 typical,"Adult oral label cap (DailyMed/BNF-level, curated)"
-lacosamide,400,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-phenytoin,600,level-guided (10-20 mcg/mL free ~1-2),"Adult oral label cap (DailyMed/BNF-level, curated)"
-phenobarbitone,180,level-guided,"Adult oral label cap (DailyMed/BNF-level, curated)"
-carbamazepine,1600,2000 under supervision,"Adult oral label cap (DailyMed/BNF-level, curated)"
-sumatriptan,200,oral; 12 mg SC/40 mg nasal across forms,"Adult oral label cap (DailyMed/BNF-level, curated)"
-rizatriptan,30,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-zolmitriptan,10,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-flunarizine,10,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-betahistine,48,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-allopurinol,900,start 50-100 mg/day in CKD; HLA-B*5801 screen where feasible,"Adult oral label cap (DailyMed/BNF-level, curated)"
-febuxostat,120,80 typical; cardiovascular-safety caution,"Adult oral label cap (DailyMed/BNF-level, curated)"
-colchicine,1.5,mg/day for flare prophylaxis; 1.8 mg day-1 for acute,"Adult oral label cap (DailyMed/BNF-level, curated)"
-probenecid,2000,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-tamsulosin,0.8,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-silodosin,8,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-alfuzosin,10,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-finasteride,5,1 mg for androgenic alopecia,"Adult oral label cap (DailyMed/BNF-level, curated)"
-dutasteride,0.5,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-sildenafil,100,once daily max,"Adult oral label cap (DailyMed/BNF-level, curated)"
-tadalafil,20,PRN; 5 mg daily form,"Adult oral label cap (DailyMed/BNF-level, curated)"
-solifenacin,10,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-oxybutynin,15,ER,"Adult oral label cap (DailyMed/BNF-level, curated)"
-mirabegron,50,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-flavoxate,1200,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-cetirizine,20,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-levocetirizine,10,5 typical,"Adult oral label cap (DailyMed/BNF-level, curated)"
-fexofenadine,180,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-loratadine,20,10 typical,"Adult oral label cap (DailyMed/BNF-level, curated)"
-desloratadine,10,5 typical,"Adult oral label cap (DailyMed/BNF-level, curated)"
-hydroxyzine,100,50 typical outpatient,"Adult oral label cap (DailyMed/BNF-level, curated)"
-chlorpheniramine,16,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-pheniramine,75,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-cyproheptadine,32,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-promethazine,50,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-pseudoephedrine,240,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-phenylephrine,60,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-montelukast,10,4-5 mg pediatric,"Adult oral label cap (DailyMed/BNF-level, curated)"
-theophylline,900,level-guided 5-15 mcg/mL; 400 initial,"Adult oral label cap (DailyMed/BNF-level, curated)"
-doxofylline,800,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ambroxol,90,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-bromhexine,48,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-dextromethorphan,120,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-terbutaline,15,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-azithromycin,500,500 mg x3d for most indications; 250 x5d alternative,"Adult oral label cap (DailyMed/BNF-level, curated)"
-clarithromycin,1000,500 BD; 1000 in severe infection,"Adult oral label cap (DailyMed/BNF-level, curated)"
-erythromycin,4000,base/stearate formulations differ,"Adult oral label cap (DailyMed/BNF-level, curated)"
-roxithromycin,300,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-amoxicillin,3000,500 TDS or 875 BD; higher under supervision,"Adult oral label cap (DailyMed/BNF-level, curated)"
-amoxicillin+clavulanic acid,3000,of amoxicillin component (625 mg TDS or 1 g BD),"Adult oral label cap (DailyMed/BNF-level, curated)"
-cloxacillin,4000,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-flucloxacillin,4000,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-cephalexin,4000,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-cefadroxil,2000,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-cefuroxime,1000,500 BD,"Adult oral label cap (DailyMed/BNF-level, curated)"
-cefixime,800,400 BD in severe,"Adult oral label cap (DailyMed/BNF-level, curated)"
-cefpodoxime,800,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ciprofloxacin,1500,750 BD,"Adult oral label cap (DailyMed/BNF-level, curated)"
-levofloxacin,750,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ofloxacin,800,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-moxifloxacin,400,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-norfloxacin,800,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-doxycycline,200,100 BD; 300 loading day 1 divided,"Adult oral label cap (DailyMed/BNF-level, curated)"
-minocycline,200,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-tetracycline,2000,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-cotrimoxazole,1920,of sulfamethoxazole (2 DS tablets = 1600 SMX + 320 TMP); 1920 for severe,"Adult oral label cap (DailyMed/BNF-level, curated)"
-trimethoprim,400,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-metronidazole,1500,400 TDS typical; 2 g single-dose protocols exist,"Adult oral label cap (DailyMed/BNF-level, curated)"
-tinidazole,2000,2 g daily or single dose per indication,"Adult oral label cap (DailyMed/BNF-level, curated)"
-clindamycin,1800,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-linezolid,1200,600 BD; CBC monitoring >10-14 days,"Adult oral label cap (DailyMed/BNF-level, curated)"
-nitrofurantoin,400,50-100 QID for 5-7 days,"Adult oral label cap (DailyMed/BNF-level, curated)"
-fosfomycin,3000,single-dose sachet,"Adult oral label cap (DailyMed/BNF-level, curated)"
-rifampicin,600,10 mg/kg; combination products count here,"Adult oral label cap (DailyMed/BNF-level, curated)"
-isoniazid,300,5 mg/kg; pyridoxine co-supplementation standard,"Adult oral label cap (DailyMed/BNF-level, curated)"
-pyrazinamide,2000,30 mg/kg,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ethambutol,1600,20-25 mg/kg loading; vision monitoring,"Adult oral label cap (DailyMed/BNF-level, curated)"
-dapsone,200,100 mg/day typical,"Adult oral label cap (DailyMed/BNF-level, curated)"
-clofazimine,300,loading protocols differ,"Adult oral label cap (DailyMed/BNF-level, curated)"
-fluconazole,800,"loading 400, then 200-400 per indication","Adult oral label cap (DailyMed/BNF-level, curated)"
-itraconazole,400,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ketoconazole,400,oral largely superseded; hepatotoxicity,"Adult oral label cap (DailyMed/BNF-level, curated)"
-voriconazole,800,"loading day 1 (400 BD), then 200 BD","Adult oral label cap (DailyMed/BNF-level, curated)"
-terbinafine,250,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-griseofulvin,1000,microsize,"Adult oral label cap (DailyMed/BNF-level, curated)"
-acyclovir,4000,800 mg 5x/day for zoster,"Adult oral label cap (DailyMed/BNF-level, curated)"
-valacyclovir,3000,1 g TDS zoster; renal-adjust,"Adult oral label cap (DailyMed/BNF-level, curated)"
-oseltamivir,150,75 BD treatment course 5 days,"Adult oral label cap (DailyMed/BNF-level, curated)"
-chloroquine,1000,500 CQ phosphate BD day 1 then daily x2-3d; visual monitoring,"Adult oral label cap (DailyMed/BNF-level, curated)"
-hydroxychloroquine,400,retinopathy risk rises >5 mg/kg/day and >5 years,"Adult oral label cap (DailyMed/BNF-level, curated)"
-quinine,1800,600 TDS 5-7 days,"Adult oral label cap (DailyMed/BNF-level, curated)"
-primaquine,30,G6PD screen mandatory,"Adult oral label cap (DailyMed/BNF-level, curated)"
-albendazole,800,hydatid protocols 15 mg/kg BD differ,"Adult oral label cap (DailyMed/BNF-level, curated)"
-mebendazole,500,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ivermectin,24,0.2-0.4 mg/kg; 12-18 mg typical,"Adult oral label cap (DailyMed/BNF-level, curated)"
-diethylcarbamazine,300,titrated from 25 mg,"Adult oral label cap (DailyMed/BNF-level, curated)"
-praziquantel,3000,5-10 mg/kg single dose schisto; 40-60 mg/kg neurocysticercosis supervised,"Adult oral label cap (DailyMed/BNF-level, curated)"
-pyrantel,1000,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-alendronate,70,weekly; 10 mg/day historical,"Adult oral label cap (DailyMed/BNF-level, curated)"
-risedronate,150,monthly DR; 35 weekly,"Adult oral label cap (DailyMed/BNF-level, curated)"
-raloxifene,60,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-tranexamic acid,3750,1-1.5 g TDS; max 18 mg/kg/dose in bleeding protocols,"Adult oral label cap (DailyMed/BNF-level, curated)"
-tamoxifen,40,20 typical,"Adult oral label cap (DailyMed/BNF-level, curated)"
-letrozole,7.5,2.5 typical,"Adult oral label cap (DailyMed/BNF-level, curated)"
-anastrozole,1,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-exemestane,25,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-bicalutamide,150,50 with LHRH agonist in most protocols,"Adult oral label cap (DailyMed/BNF-level, curated)"
-capecitabine,5000,cycle-based (2500 mg/m2 BD x14d); oncology-supervised,"Adult oral label cap (DailyMed/BNF-level, curated)"
-imatinib,800,400 typical CML-CP; 600-800 resistant/unresectable,"Adult oral label cap (DailyMed/BNF-level, curated)"
-methotrexate,30,WEEKLY low-dose (7.5-25 mg) - daily dosing is a fatal error; oncology differs,"Adult oral label cap (DailyMed/BNF-level, curated)"
-hydroxyurea,3000,weight-based,"Adult oral label cap (DailyMed/BNF-level, curated)"
-azathioprine,250,2-2.5 mg/kg,"Adult oral label cap (DailyMed/BNF-level, curated)"
-mycophenolate mofetil,4000,2 g typical; 3 g rejection protocols,"Adult oral label cap (DailyMed/BNF-level, curated)"
-tacrolimus,20,trough-guided 0.05-0.1 mg/kg,"Adult oral label cap (DailyMed/BNF-level, curated)"
-cyclosporine,600,trough-guided,"Adult oral label cap (DailyMed/BNF-level, curated)"
-leflunomide,100,"loading 100 mg x3d, then 20 mg","Adult oral label cap (DailyMed/BNF-level, curated)"
-isotretinoin,70,0.5-1 mg/kg/day; cumulative 120-150 mg/kg target,"Adult oral label cap (DailyMed/BNF-level, curated)"
-acitretin,75,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ferrous ascorbate+folate,300,of elemental iron,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ferrous sulphate,325,elemental iron ~60-65 mg per 325 mg salt,"Adult oral label cap (DailyMed/BNF-level, curated)"
-folic acid,5,mg,"Adult oral label cap (DailyMed/BNF-level, curated)"
-methylcobalamin,3000,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-cyanocobalamin,1000,mcg,"Adult oral label cap (DailyMed/BNF-level, curated)"
-cholecalciferol,60000,IU/week typical deficiency schedule; 2000 IU/day maintenance,"Adult oral label cap (DailyMed/BNF-level, curated)"
-calcium carbonate+vitamin d3,2000,of elemental calcium/day total from all sources,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ascorbic acid,2000,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-thiamine,300,alcohol dependence 100 mg TDS,"Adult oral label cap (DailyMed/BNF-level, curated)"
-pyridoxine,200,INH neuropathy prophylaxis 10-25 mg/day,"Adult oral label cap (DailyMed/BNF-level, curated)"
-vitamin e,1000,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-zinc,100,of elemental zinc; diarrhea protocols 20 mg/day x14d,"Adult oral label cap (DailyMed/BNF-level, curated)"
-vitamin k1,40,warfarin reversal protocols differ,"Adult oral label cap (DailyMed/BNF-level, curated)"
-clomiphene,150,cycle-based,"Adult oral label cap (DailyMed/BNF-level, curated)"
-norethisterone,15,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-medroxyprogesterone,20,10 mg x10-14d cycles typical,"Adult oral label cap (DailyMed/BNF-level, curated)"
-estradiol,4,,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ethinylestradiol+levonorgestrel,50,of EE component per label,"Adult oral label cap (DailyMed/BNF-level, curated)"
-ethinylestradiol+desogestrel,30,of EE component,"Adult oral label cap (DailyMed/BNF-level, curated)"
-pentoxifylline,1200,,"Adult oral label cap (DailyMed/BNF-level, curated)"
+molecule,max_daily_mg,advisory_mg,lowered_by,basis,escalate,note,source,review_status
+acarbose,300,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+aceclofenac,200,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+acitretin,75,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+acyclovir,4000,,,licensed,true,800 mg 5x/day for zoster,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+albendazole,800,,,non-ceiling,false,hydatid protocols 15 mg/kg BD differ,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+alendronate,70,,,licensed,true,weekly; 10 mg/day historical,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+alfuzosin,10,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+allopurinol,900,,,renal-adjusted,false,start 50-100 mg/day in CKD; HLA-B*5801 screen where feasible,"Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+alprazolam,4,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ambroxol,90,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+amiodarone,400,,,licensed,true,maintenance; loading protocols differ,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+amisulpride,1200,,,licensed,true,50-300 for dysthymia,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+amitriptyline,150,,,licensed,true,100 mg in outpatient self-administration,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+amlodipine,10,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+amoxicillin,3000,,,non-ceiling,false,500 TDS or 875 BD; higher under supervision,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+amoxicillin+clavulanic acid,3000,,,licensed,true,of amoxicillin component (625 mg TDS or 1 g BD),"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+anastrozole,1,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+aprepitant,375,,,licensed,true,single-cycle protocols differ,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+aripiprazole,30,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ascorbic acid,2000,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+aspirin,4000,,,licensed,true,antiplatelet dose 75-150 mg/day; 4000 cap is for pain/dose context only,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+atenolol,100,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+atorvastatin,80,,,licensed,true,80 only for ACS/ASCVD; interaction caps with CYP3A4 inhibitors,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+azathioprine,250,,,non-ceiling,false,2-2.5 mg/kg,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+azithromycin,500,,,licensed,true,500 mg x3d for most indications; 250 x5d alternative,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+betahistine,48,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+betamethasone,8,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+bicalutamide,150,,,licensed,true,50 with LHRH agonist in most protocols,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+bisacodyl,15,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+bisoprolol,20,,,licensed,true,10 mg typical,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+bromhexine,48,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+bupropion,450,,,licensed,true,SR 400 formulation-dependent,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+buspirone,60,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+calcium carbonate+cholecalciferol,2000,,,licensed,true,of elemental calcium/day total from all sources,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+canagliflozin,300,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+candesartan,32,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+capecitabine,5000,,,licensed,true,cycle-based (2500 mg/m2 BD x14d); oncology-supervised,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+captopril,450,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+carbamazepine,1600,,,supervised,false,2000 under supervision,"Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+carbimazole,60,,,non-ceiling,false,titrated to TSH/FT4,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+carvedilol,100,,,licensed,true,50 mg in moderate-severe HF,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+cefadroxil,2000,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+cefixime,800,,,licensed,true,400 BD in severe,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+cefpodoxime,800,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+cefuroxime,1000,,,licensed,true,500 BD,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+celecoxib,400,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+cephalexin,4000,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+cetirizine,10,,,licensed,true,"10 mg/day is the licensed adult figure; the curated table's 20 mg is specialist urticaria dosing. A prescription reading 20 mg/day is worth a human look, not a silent pass.","Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+chloroquine,1000,,,licensed,true,500 CQ phosphate BD day 1 then daily x2-3d; visual monitoring,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+chlorpheniramine,16,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+chlorthalidone,25,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+cholecalciferol,60000,,,licensed,true,IU/week typical deficiency schedule; 2000 IU/day maintenance,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+cilnidipine,20,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ciprofloxacin,1500,,,licensed,true,750 BD,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+citalopram,40,,age_over_65:20;hepatic_moderate:20;hepatic_severe:20,licensed,true,"20 in >65 y, hepatic impairment, CYP2C19 poor metabolizers","Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+clarithromycin,1000,,,licensed,true,500 BD; 1000 in severe infection,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+clindamycin,1800,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+clobazam,30,,,non-ceiling,false,epilepsy 80 under supervision,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+clofazimine,300,,,licensed,true,loading protocols differ,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+clomiphene,150,,,licensed,true,cycle-based,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+clonazepam,20,,,supervised,false,epilepsy up to 20 under supervision,"Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+clonidine,1.2,,,licensed,true,taper slowly - rebound hypertension,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+clopidogrel,75,300,,maintenance,false,"75 mg/day is the MAINTENANCE dose, not a maximum: 300-600 mg loading at PCI is intentional and correct. Treating 75 as a ceiling queued a legitimate loading regimen - measured: parity case P88.",Antiplatelet labelling (maintenance vs loading),adjudicated
+cloxacillin,4000,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+clozapine,900,,,non-ceiling,false,level-guided; myocarditis/bone-marrow monitoring,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+codeine,240,,,licensed,true,codeine is contraindicated under 12 and in breastfeeding,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+colchicine,1.8,,,indication-dependent,true,mg/day for flare prophylaxis; 1.8 mg day-1 for acute,"Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+cotrimoxazole,1920,,,licensed,true,of sulfamethoxazole (2 DS tablets = 1600 SMX + 320 TMP); 1920 for severe,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+cyanocobalamin,1000,,,licensed,true,mcg,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+cyclosporine,600,,,licensed,true,trough-guided,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+cyproheptadine,32,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+dapagliflozin,10,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+dapsone,200,,,licensed,true,100 mg/day typical,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+deflazacort,72,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+desloratadine,10,,,licensed,true,5 typical,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+dexamethasone,16,,,non-ceiling,false,protocol-based (e.g. brain mets) may exceed - specialist only,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+dextromethorphan,120,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+diazepam,30,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+diclofenac,150,,,licensed,true,including combination products,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+dicyclomine,160,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+diethylcarbamazine,300,,,non-ceiling,false,titrated from 25 mg,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+digoxin,0.5,,,non-ceiling,false,mg; level-guided (0.5-0.9 ng/mL in AF),"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+diltiazem,360,,,licensed,true,SR forms,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+domperidone,30,,,licensed,true,QT/EU restrictions; 10 mg TDS max,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+doxazosin,16,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+doxofylline,800,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+doxycycline,200,,,licensed,true,100 BD; 300 loading day 1 divided,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+drotaverine,240,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+duloxetine,120,,,licensed,true,60 typical,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+dutasteride,0.5,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+empagliflozin,25,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+enalapril,40,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+eplerenone,100,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+erythromycin,4000,,,licensed,true,base/stearate formulations differ,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+escitalopram,20,,,licensed,true,10 in elderly,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+esomeprazole,40,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+estradiol,4,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ethambutol,1600,,,non-ceiling,false,20-25 mg/kg loading; vision monitoring,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ethinylestradiol+desogestrel,30,,,licensed,true,of EE component,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ethinylestradiol+levonorgestrel,50,,,licensed,true,of EE component per label,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+etizolam,2,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+etoricoxib,120,,,licensed,true,60 mg for most indications,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+exemestane,25,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ezetimibe,10,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+famotidine,80,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+febuxostat,120,,,licensed,true,80 typical; cardiovascular-safety caution,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+fenofibrate,200,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ferrous ascorbate+folate,300,,,licensed,true,of elemental iron,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ferrous sulfate,325,,,licensed,true,elemental iron ~60-65 mg per 325 mg salt,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+fexofenadine,180,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+finasteride,5,,,licensed,true,1 mg for androgenic alopecia,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+flavoxate,1200,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+flucloxacillin,4000,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+fluconazole,800,,,indication-dependent,true,"loading 400, then 200-400 per indication","Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+flunarizine,10,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+fluoxetine,80,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+flurbiprofen,300,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+fluvoxamine,200,,,non-ceiling,false,300 under supervision,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+folic acid,5,,,licensed,true,mg,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+fosfomycin,3000,,,licensed,true,single-dose sachet,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+furosemide,600,,,non-ceiling,false,HF protocols individualize far higher under supervision,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+gabapentin,3600,,,licensed,true,renal-adjusted,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+gemfibrozil,1200,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+glibenclamide,20,,,licensed,true,BNF ceiling 20 mg/day; 15 is a conservative practice figure. Hypoglycaemia in an Indian outpatient is severe enough that the higher figure stays blocking.,"Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+gliclazide,320,,,licensed,true,MR formulation cap 120 mg,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+glimepiride,8,,,licensed,true,start 1-2 mg; hypoglycemia risk,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+glipizide,40,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+granisetron,4,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+griseofulvin,1000,,,licensed,true,microsize,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+haloperidol,20,,,licensed,true,5-10 typical outpatient,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+hydralazine,300,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+hydrochlorothiazide,50,,,licensed,true,25 mg preferred,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+hydrocortisone,200,,,licensed,true,replacement ~20-30 mg/day; stress dosing differs,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+hydroxychloroquine,400,,,non-ceiling,false,retinopathy risk rises >5 mg/kg/day and >5 years,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+hydroxyurea,3000,,,non-ceiling,false,weight-based,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+hydroxyzine,100,,,licensed,true,50 typical outpatient,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ibuprofen,2400,1200,,otc-vs-prescription,true,OTC self-care cap 1200 mg/day; prescription max 2400,"Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+imatinib,800,,,licensed,true,400 typical CML-CP; 600-800 resistant/unresectable,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+imipramine,200,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+indapamide,2.5,,,licensed,true,SR 1.5 mg,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+indomethacin,150,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+irbesartan,300,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+isoniazid,300,,,non-ceiling,false,5 mg/kg; pyridoxine co-supplementation standard,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+isosorbide dinitrate,120,,,licensed,true,nitrate-free interval 10-12 h,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+isosorbide mononitrate,120,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+isotretinoin,70,,,weight-based,false,0.5-1 mg/kg/day; cumulative 120-150 mg/kg target,"Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+itraconazole,400,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ivabradine,15,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ivermectin,18,,,weight-based,false,0.2-0.4 mg/kg; 12-18 mg typical,"Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+ketoconazole,400,,,licensed,true,oral largely superseded; hepatotoxicity,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ketoprofen,200,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+labetalol,2400,,,non-ceiling,false,oral; titrated,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+lacosamide,400,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+lactulose,60,,,licensed,true,ml/day usual; hepatic encephalopathy protocols differ,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+lamotrigine,400,,,licensed,true,500 with enzyme inducers without valproate,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+lansoprazole,60,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+leflunomide,100,,,licensed,true,"loading 100 mg x3d, then 20 mg","Adult oral label cap (DailyMed/BNF-level, curated)",curated
+letrozole,7.5,,,licensed,true,2.5 typical,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+levetiracetam,3000,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+levocetirizine,5,,,licensed,true,5 typical,"Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+levofloxacin,750,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+levothyroxine,0.3,,,licensed,true,mg; individualized by TSH - cap is a safety backstop only,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+linagliptin,5,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+linezolid,1200,,,licensed,true,600 BD; CBC monitoring >10-14 days,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+lisinopril,40,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+lithium,2400,,,level-guided,false,"Dose is serum-level driven (0.6-1.0 mmol/L); the mg figure is an output, not a limit.",Mood-stabiliser labelling (level-guided),adjudicated
+loperamide,16,8,,licensed,true,8 mg self-care; QT risk above label use,"Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+loratadine,20,,,licensed,true,10 typical,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+lorazepam,10,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+losartan,100,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+lovastatin,80,,,licensed,true,40 with CYP3A4-active drugs,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+mebendazole,500,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+mebeverine,405,,,licensed,true,135 mg TDS,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+medroxyprogesterone,20,,,licensed,true,10 mg x10-14d cycles typical,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+mefenamic acid,1500,,,licensed,true,short courses only (max 7 days),"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+meloxicam,15,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+mesalamine,4800,,,licensed,true,per formulation,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+metformin,3000,,,licensed,true,"2550 mg US labeling; stop at eGFR<30, halve 30-44","Adult oral label cap (DailyMed/BNF-level, curated)",curated
+metformin_sr,2000,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+methotrexate,30,,,licensed,true,WEEKLY low-dose (7.5-25 mg) - daily dosing is a fatal error; oncology differs,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+methylcobalamin,3000,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+methyldopa,3000,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+methylprednisolone,64,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+metoclopramide,30,,,licensed,true,max 5 days; extrapyramidal risk,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+metoprolol,450,,,salt-specific,true,tartrate,"Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+metoprolol_sr,400,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+metronidazole,1500,,,licensed,true,400 TDS typical; 2 g single-dose protocols exist,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+minocycline,200,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+minoxidil,100,,,non-ceiling,false,oral under specialist care,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+mirabegron,50,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+mirtazapine,45,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+misoprostol,800,,,licensed,true,obstetric uses are protocol-based,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+montelukast,10,,,licensed,true,4-5 mg pediatric,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+morphine,200,,,non-ceiling,false,titrated individually; no absolute ceiling in tolerant palliative use,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+moxifloxacin,400,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+mycophenolate mofetil,4000,,,licensed,true,2 g typical; 3 g rejection protocols,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+naproxen,1500,660,,salt-specific,true,OTC 660 mg/day; 1000-1500 mg under prescription,"Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+nebivolol,40,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+nifedipine,120,,,licensed,true,SR/ER forms; immediate-release not for chronic HTN,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+nimesulide,200,,,licensed,true,not recommended >10 days; banned in some jurisdictions for children,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+nitrofurantoin,400,,,licensed,true,50-100 QID for 5-7 days,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+nitroglycerin,13,,,licensed,true,SR capsules; sublingual PRN,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+norethisterone,15,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+norfloxacin,800,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+nortriptyline,150,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ofloxacin,800,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+olanzapine,20,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+olmesartan,40,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+omeprazole,40,,,licensed,true,80 (divided) for Zollinger-Ellison only,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ondansetron,24,,,qt-risk,true,oral; 32 mg IV historic cap (QT concern),"Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+oseltamivir,150,,,licensed,true,75 BD treatment course 5 days,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+oxcarbazepine,2400,,,licensed,true,1200 typical,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+oxybutynin,15,,,licensed,true,ER,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+pantoprazole,80,,,licensed,true,IV loading differs,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+paracetamol,4000,,alcohol:2000;hepatic_moderate:2000;hepatic_severe:2000,licensed,true,"OTC/routine cap; 2000 mg in liver disease, alcohol use, or weight <50 kg","Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+paroxetine,50,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+pentoxifylline,1200,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+perindopril,10,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+pheniramine,75,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+phenobarbitone,180,,,non-ceiling,false,level-guided,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+phenylephrine,60,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+phenytoin,600,,,non-ceiling,false,level-guided (10-20 mcg/mL free ~1-2),"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+pioglitazone,45,,,licensed,true,heart failure warning,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+piroxicam,20,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+pitavastatin,4,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+pravastatin,80,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+praziquantel,3000,,,non-ceiling,false,5-10 mg/kg single dose schisto; 40-60 mg/kg neurocysticercosis supervised,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+prazosin,20,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+prednisolone,100,,,supervised,false,acute high-dose is specialist-managed; long-term aim lowest possible,"Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+prednisone,100,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+pregabalin,600,,,licensed,true,150-300 mg in renal impairment,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+primaquine,30,,,licensed,true,G6PD screen mandatory,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+probenecid,2000,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+promethazine,50,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+propranolol,320,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+propylthiouracil,450,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+pseudoephedrine,240,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+pyrantel,1000,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+pyrazinamide,2000,,,non-ceiling,false,30 mg/kg,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+pyridoxine,200,,,licensed,true,INH neuropathy prophylaxis 10-25 mg/day,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+quetiapine,800,,,licensed,true,300 for MDD adjunct,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+quinine,1800,,,licensed,true,600 TDS 5-7 days,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+rabeprazole,40,,,licensed,true,20 for GERD maintenance,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+raloxifene,60,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ramipril,10,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ranitidine,300,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ranolazine,2000,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+rifampicin,600,,,non-ceiling,false,10 mg/kg; combination products count here,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+rifaximin,1650,,,licensed,true,550 mg TDS for IBS-D/HE,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+risedronate,150,,,licensed,true,monthly DR; 35 weekly,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+risperidone,16,,,licensed,true,6 mg typical; 8 for schizoaffective,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+rizatriptan,30,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+rosuvastatin,40,,,licensed,true,20 with Asian ancestry per labeling,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+roxithromycin,300,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+sacubitril+valsartan,400,,,licensed,true,of sacubitril/valsartan complex (200/200),"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+salbutamol,800,,,supervised,false,"Oral salbutamol is titrated to response; the ceiling is set by tolerance, not by a fixed maximum.",Bronchodilator labelling (titrated),adjudicated
+senna,30,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+sertraline,200,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+sildenafil,100,,,licensed,true,once daily max,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+silodosin,8,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+simvastatin,40,,,licensed,true,20 with amlodipine/diltiazem/verapamil,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+sitagliptin,100,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+sodium valproate,2500,,,non-ceiling,false,60 mg/kg/day cap; teratogenic - avoid in women of childbearing potential,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+solifenacin,10,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+sotalol,160,,,non-ceiling,false,for AF rhythm control after QT screening; 640 under supervision,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+spironolactone,100,,,licensed,true,25-50 mg for HF/resistant HTN,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+sucralfate,8000,,,licensed,true,8 g/day (1 g QID),"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+sulfasalazine,3000,,,non-ceiling,false,titrated; 2 g/day maintenance,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+sumatriptan,200,,,licensed,true,oral; 12 mg SC/40 mg nasal across forms,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+tacrolimus,20,,,non-ceiling,false,trough-guided 0.05-0.1 mg/kg,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+tadalafil,20,,,licensed,true,PRN; 5 mg daily form,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+tamoxifen,40,,,licensed,true,20 typical,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+tamsulosin,0.8,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+tapentadol,600,,renal_moderate:500;renal_severe:500,licensed,true,500 mg in moderate renal impairment,"Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+telmisartan,80,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+terbinafine,250,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+terbutaline,15,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+tetracycline,2000,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+theophylline,900,,,level-guided,false,level-guided 5-15 mcg/mL; 400 initial,"Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+thiamine,300,,,licensed,true,alcohol dependence 100 mg TDS,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+tinidazole,2000,,,licensed,true,2 g daily or single dose per indication,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+tolfenamic acid,400,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+topiramate,400,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+torasemide,200,,,supervised,false,HF up to 100-200 under supervision,"Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+tramadol,400,,age_over_65:300;renal_moderate:300;renal_severe:300,licensed,true,300 mg in elderly/renal impairment; 400 only for immediate-release,"Adult oral label cap (DailyMed/BNF-level, curated)",adjudicated
+tramadol+paracetamol,800,,,licensed,true,of tramadol component (8 tablets); paracetamol component 325 mg/tab counts toward paracetamol cap,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+tranexamic acid,3750,,,non-ceiling,false,1-1.5 g TDS; max 18 mg/kg/dose in bleeding protocols,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+trimetazidine,70,,,licensed,true,MR 35 mg BD,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+trimethoprim,400,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+ursodeoxycholic acid,1050,,,non-ceiling,false,14 mg/kg/day,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+valacyclovir,3000,,,licensed,true,1 g TDS zoster; renal-adjust,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+valproate,2500,,,level-guided,false,Weight-based start (10-15 mg/kg) then plasma-level guided; no single daily ceiling applies.,Anticonvulsant labelling (level-guided),adjudicated
+valsartan,320,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+venlafaxine,375,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+verapamil,480,,,licensed,true,SR forms,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+vildagliptin,100,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+vitamin e,1000,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+vitamin k1,40,,,licensed,true,warfarin reversal protocols differ,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+voglibose,0.9,,,licensed,true,0.9 mg/day (0.3 TDS),"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+voriconazole,800,,,licensed,true,"loading day 1 (400 BD), then 200 BD","Adult oral label cap (DailyMed/BNF-level, curated)",curated
+warfarin,10,,,level-guided,false,"Warfarin dose is set by INR. 10 mg/day is a common upper practice figure, NOT a maximum - some patients need far more. Blocking on it would be a false never-event on the most dangerous drug in the list.",Anticoagulant labelling (INR-guided),adjudicated
+zinc,100,,,licensed,true,of elemental zinc; diarrhea protocols 20 mg/day x14d,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+zolmitriptan,10,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+zolpidem,10,,,licensed,true,5 mg elderly/female,"Adult oral label cap (DailyMed/BNF-level, curated)",curated
+zopiclone,7.5,,,licensed,true,,"Adult oral label cap (DailyMed/BNF-level, curated)",curated

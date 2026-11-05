@@ -50,3 +50,9 @@ apps/web/blob-report/
 # dev logs
 apps/web/dev.log
 apps/web/server.log
+
+# benchmark scratch from `tools/bench.py --out` — the durable evidence lives in eval/runs/
+# and the numbers are transcribed into docs/PERFORMANCE.md; these are re-runnable.
+/bench-*.json
+/probe-*.json
+/bench-*.err

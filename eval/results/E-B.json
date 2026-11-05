@@ -4,8 +4,8 @@
       "arm": "A4",
       "calibration": {
         "bins": 10,
-        "brier": 0.0564,
-        "ece": 0.1452,
+        "brier": 0.0558,
+        "ece": 0.1457,
         "n": 44,
         "reliability": [
           {
@@ -47,7 +47,7 @@
             "accuracy": 1.0,
             "hi": 0.6,
             "lo": 0.5,
-            "mean_confidence": 0.5654,
+            "mean_confidence": 0.5677,
             "n": 13
           },
           {
@@ -75,15 +75,15 @@
             "accuracy": 1.0,
             "hi": 1.0,
             "lo": 0.9,
-            "mean_confidence": 0.9761,
+            "mean_confidence": 0.9745,
             "n": 31
           }
         ]
       },
       "calibration_safety": {
         "bins": 10,
-        "brier": 0.0564,
-        "ece": 0.1452,
+        "brier": 0.0558,
+        "ece": 0.1457,
         "n": 44,
         "reliability": [
           {
@@ -125,7 +125,7 @@
             "accuracy": 1.0,
             "hi": 0.6,
             "lo": 0.5,
-            "mean_confidence": 0.5654,
+            "mean_confidence": 0.5677,
             "n": 13
           },
           {
@@ -153,15 +153,15 @@
             "accuracy": 1.0,
             "hi": 1.0,
             "lo": 0.9,
-            "mean_confidence": 0.9761,
+            "mean_confidence": 0.9745,
             "n": 31
           }
         ]
       },
       "calibration_selective": {
         "bins": 10,
-        "brier": 0.0006,
-        "ece": 0.0239,
+        "brier": 0.0007,
+        "ece": 0.0255,
         "n": 31,
         "reliability": [
           {
@@ -231,14 +231,14 @@
             "accuracy": 1.0,
             "hi": 1.0,
             "lo": 0.9,
-            "mean_confidence": 0.9761,
+            "mean_confidence": 0.9745,
             "n": 31
           }
         ]
       },
       "finding_recall": 0.5667,
-      "latency_ms_p50": 0.087,
-      "latency_ms_p95": 0.68,
+      "latency_ms_p50": 0.333,
+      "latency_ms_p95": 0.933,
       "missed_serious": 0,
       "missed_serious_rate": 0.0,
       "n": 44,
@@ -263,8 +263,8 @@
         "arm": "A4_minus_combination",
         "calibration": {
           "bins": 10,
-          "brier": 0.121,
-          "ece": 0.1798,
+          "brier": 0.0772,
+          "ece": 0.1325,
           "n": 44,
           "reliability": [
             {
@@ -306,7 +306,7 @@
               "accuracy": 1.0,
               "hi": 0.6,
               "lo": 0.5,
-              "mean_confidence": 0.5654,
+              "mean_confidence": 0.5677,
               "n": 13
             },
             {
@@ -331,18 +331,18 @@
               "n": 0
             },
             {
-              "accuracy": 0.9032,
+              "accuracy": 0.9677,
               "hi": 1.0,
               "lo": 0.9,
-              "mean_confidence": 0.9761,
+              "mean_confidence": 0.9745,
               "n": 31
             }
           ]
         },
         "calibration_safety": {
           "bins": 10,
-          "brier": 0.0564,
-          "ece": 0.1452,
+          "brier": 0.0558,
+          "ece": 0.1457,
           "n": 44,
           "reliability": [
             {
@@ -384,7 +384,7 @@
               "accuracy": 1.0,
               "hi": 0.6,
               "lo": 0.5,
-              "mean_confidence": 0.5654,
+              "mean_confidence": 0.5677,
               "n": 13
             },
             {
@@ -412,15 +412,15 @@
               "accuracy": 1.0,
               "hi": 1.0,
               "lo": 0.9,
-              "mean_confidence": 0.9761,
+              "mean_confidence": 0.9745,
               "n": 31
             }
           ]
         },
         "calibration_selective": {
           "bins": 10,
-          "brier": 0.0922,
-          "ece": 0.0729,
+          "brier": 0.031,
+          "ece": 0.0068,
           "n": 31,
           "reliability": [
             {
@@ -487,17 +487,17 @@
               "n": 0
             },
             {
-              "accuracy": 0.9032,
+              "accuracy": 0.9677,
               "hi": 1.0,
               "lo": 0.9,
-              "mean_confidence": 0.9761,
+              "mean_confidence": 0.9745,
               "n": 31
             }
           ]
         },
         "finding_recall": 0.5667,
-        "latency_ms_p50": 0.081,
-        "latency_ms_p95": 0.67,
+        "latency_ms_p50": 0.298,
+        "latency_ms_p95": 1.12,
         "missed_serious": 0,
         "missed_serious_rate": 0.0,
         "n": 44,
@@ -506,7 +506,7 @@
         "refusal_rate": 0.0455,
         "refusal_recall": 1.0,
         "selective_coverage": 0.7045,
-        "selective_risk": 0.0968,
+        "selective_risk": 0.0323,
         "threshold_set_id": "v1-2026-09",
         "unsafe_auto_confirm_rate": 0.0,
         "unsafe_auto_confirms": 0,
@@ -514,15 +514,15 @@
           0.0,
           0.0803
         ],
-        "verdict_agreement": 0.9318,
-        "verdict_macro_f1": 0.9244
+        "verdict_agreement": 0.9773,
+        "verdict_macro_f1": 0.97
       },
       "A4_minus_formulary_fusion": {
         "arm": "A4_minus_formulary_fusion",
         "calibration": {
           "bins": 10,
-          "brier": 0.2409,
-          "ece": 0.2325,
+          "brier": 0.2385,
+          "ece": 0.2287,
           "n": 44,
           "reliability": [
             {
@@ -564,7 +564,7 @@
               "accuracy": 1.0,
               "hi": 0.6,
               "lo": 0.5,
-              "mean_confidence": 0.52,
+              "mean_confidence": 0.55,
               "n": 2
             },
             {
@@ -592,15 +592,15 @@
               "accuracy": 0.7381,
               "hi": 1.0,
               "lo": 0.9,
-              "mean_confidence": 0.9588,
+              "mean_confidence": 0.9563,
               "n": 42
             }
           ]
         },
         "calibration_safety": {
           "bins": 10,
-          "brier": 0.2409,
-          "ece": 0.2325,
+          "brier": 0.2385,
+          "ece": 0.2287,
           "n": 44,
           "reliability": [
             {
@@ -642,7 +642,7 @@
               "accuracy": 1.0,
               "hi": 0.6,
               "lo": 0.5,
-              "mean_confidence": 0.52,
+              "mean_confidence": 0.55,
               "n": 2
             },
             {
@@ -670,15 +670,15 @@
               "accuracy": 0.7381,
               "hi": 1.0,
               "lo": 0.9,
-              "mean_confidence": 0.9588,
+              "mean_confidence": 0.9563,
               "n": 42
             }
           ]
         },
         "calibration_selective": {
           "bins": 10,
-          "brier": 0.2414,
-          "ece": 0.2207,
+          "brier": 0.2402,
+          "ece": 0.2182,
           "n": 42,
           "reliability": [
             {
@@ -748,14 +748,14 @@
               "accuracy": 0.7381,
               "hi": 1.0,
               "lo": 0.9,
-              "mean_confidence": 0.9588,
+              "mean_confidence": 0.9563,
               "n": 42
             }
           ]
         },
         "finding_recall": 0.5667,
-        "latency_ms_p50": 0.087,
-        "latency_ms_p95": 0.674,
+        "latency_ms_p50": 0.432,
+        "latency_ms_p95": 1.503,
         "missed_serious": 0,
         "missed_serious_rate": 0.0,
         "n": 44,
@@ -1012,8 +1012,8 @@
           ]
         },
         "finding_recall": 0.5667,
-        "latency_ms_p50": 0.084,
-        "latency_ms_p95": 0.672,
+        "latency_ms_p50": 0.32,
+        "latency_ms_p95": 1.096,
         "missed_serious": 0,
         "missed_serious_rate": 0.0,
         "n": 44,
@@ -1037,8 +1037,8 @@
         "arm": "A4_minus_queue_blocking",
         "calibration": {
           "bins": 10,
-          "brier": 0.2409,
-          "ece": 0.2325,
+          "brier": 0.2385,
+          "ece": 0.2287,
           "n": 44,
           "reliability": [
             {
@@ -1080,7 +1080,7 @@
               "accuracy": 1.0,
               "hi": 0.6,
               "lo": 0.5,
-              "mean_confidence": 0.52,
+              "mean_confidence": 0.55,
               "n": 2
             },
             {
@@ -1108,15 +1108,15 @@
               "accuracy": 0.7381,
               "hi": 1.0,
               "lo": 0.9,
-              "mean_confidence": 0.9588,
+              "mean_confidence": 0.9563,
               "n": 42
             }
           ]
         },
         "calibration_safety": {
           "bins": 10,
-          "brier": 0.2409,
-          "ece": 0.2325,
+          "brier": 0.2385,
+          "ece": 0.2287,
           "n": 44,
           "reliability": [
             {
@@ -1158,7 +1158,7 @@
               "accuracy": 1.0,
               "hi": 0.6,
               "lo": 0.5,
-              "mean_confidence": 0.52,
+              "mean_confidence": 0.55,
               "n": 2
             },
             {
@@ -1186,15 +1186,15 @@
               "accuracy": 0.7381,
               "hi": 1.0,
               "lo": 0.9,
-              "mean_confidence": 0.9588,
+              "mean_confidence": 0.9563,
               "n": 42
             }
           ]
         },
         "calibration_selective": {
           "bins": 10,
-          "brier": 0.2414,
-          "ece": 0.2207,
+          "brier": 0.2402,
+          "ece": 0.2182,
           "n": 42,
           "reliability": [
             {
@@ -1264,14 +1264,14 @@
               "accuracy": 0.7381,
               "hi": 1.0,
               "lo": 0.9,
-              "mean_confidence": 0.9588,
+              "mean_confidence": 0.9563,
               "n": 42
             }
           ]
         },
         "finding_recall": 0.5667,
-        "latency_ms_p50": 0.086,
-        "latency_ms_p95": 0.676,
+        "latency_ms_p50": 0.369,
+        "latency_ms_p95": 1.158,
         "missed_serious": 0,
         "missed_serious_rate": 0.0,
         "n": 44,
@@ -1295,8 +1295,8 @@
         "arm": "A4_minus_refusal_band",
         "calibration": {
           "bins": 10,
-          "brier": 0.0574,
-          "ece": 0.0998,
+          "brier": 0.0585,
+          "ece": 0.1002,
           "n": 44,
           "reliability": [
             {
@@ -1338,7 +1338,7 @@
               "accuracy": 0.8462,
               "hi": 0.6,
               "lo": 0.5,
-              "mean_confidence": 0.5654,
+              "mean_confidence": 0.5677,
               "n": 13
             },
             {
@@ -1366,15 +1366,15 @@
               "accuracy": 1.0,
               "hi": 1.0,
               "lo": 0.9,
-              "mean_confidence": 0.9761,
+              "mean_confidence": 0.9745,
               "n": 31
             }
           ]
         },
         "calibration_safety": {
           "bins": 10,
-          "brier": 0.0564,
-          "ece": 0.1452,
+          "brier": 0.0558,
+          "ece": 0.1457,
           "n": 44,
           "reliability": [
             {
@@ -1416,7 +1416,7 @@
               "accuracy": 1.0,
               "hi": 0.6,
               "lo": 0.5,
-              "mean_confidence": 0.5654,
+              "mean_confidence": 0.5677,
               "n": 13
             },
             {
@@ -1444,15 +1444,15 @@
               "accuracy": 1.0,
               "hi": 1.0,
               "lo": 0.9,
-              "mean_confidence": 0.9761,
+              "mean_confidence": 0.9745,
               "n": 31
             }
           ]
         },
         "calibration_selective": {
           "bins": 10,
-          "brier": 0.0006,
-          "ece": 0.0239,
+          "brier": 0.0007,
+          "ece": 0.0255,
           "n": 31,
           "reliability": [
             {
@@ -1522,14 +1522,14 @@
               "accuracy": 1.0,
               "hi": 1.0,
               "lo": 0.9,
-              "mean_confidence": 0.9761,
+              "mean_confidence": 0.9745,
               "n": 31
             }
           ]
         },
         "finding_recall": 0.5667,
-        "latency_ms_p50": 0.083,
-        "latency_ms_p95": 0.683,
+        "latency_ms_p50": 0.34,
+        "latency_ms_p95": 2.248,
         "missed_serious": 0,
         "missed_serious_rate": 0.0,
         "n": 44,
@@ -1561,10 +1561,10 @@
       "A4_minus_combination": {
         "delta_queue_rate": 0.0,
         "delta_unsafe_rate": 0.0,
-        "delta_verdict_agreement": -0.0682,
+        "delta_verdict_agreement": -0.0227,
         "queue_rate": 0.25,
         "unsafe_auto_confirm_rate": 0.0,
-        "verdict_agreement": 0.9318
+        "verdict_agreement": 0.9773
       },
       "A4_minus_formulary_fusion": {
         "delta_queue_rate": -0.25,
@@ -1602,5 +1602,5 @@
     "n": 44,
     "split": "test"
   },
-  "run": "eval/runs/20260919T194657Z-E-B-ablations-236f87"
+  "run": "eval\\runs\\20261026T185134Z-E-B-ablations-140ae4"
 }

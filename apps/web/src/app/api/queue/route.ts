@@ -1,5 +1,8 @@
 import { db } from "@/lib/db";
-import { ok, fail, audit, bumpMetric } from "@/lib/api-helpers";
+import {
+  ok, fail, audit, bumpMetric, parseStored, UnreadableRecordError, readJson, bodyError,
+  scopePatient, prescriptionInScope,
+} from "@/lib/api-helpers";
 import { normalizeLine, runSafetyPlane, overallConfidence } from "@/lib/safety/engine";
 import { DEFAULT_THRESHOLD_SET_ID } from "@/lib/safety/gate";
 import { applyRegimenEscalation } from "@/lib/regimen-state";
@@ -18,6 +21,14 @@ export const dynamic = "force-dynamic";
  * Without a prescriptionId, returns every open (pending) item: the pharmacist
  * console's work list.
  *
+ * Both branches are scoped to the patient this build serves (TD-1 progress):
+ * a queued field is a fragment of someone's clinical record — the raw reading
+ * of their prescription — and there is no authentication in front of it, so the
+ * only boundary left is that a row is shown when it belongs to the served
+ * identity (or is not yet claimed by anyone). A foreign or invented
+ * `prescriptionId` answers as an EMPTY queue rather than a fresh status code,
+ * because a 404 here is a oracle that confirms which ids exist.
+ *
  * Handlers are typed `Request` (not `NextRequest`): they only read the URL and
  * the JSON body, and the narrower signature keeps them drivable from the
  * integration suite with a plain `Request`.
@@ -25,13 +36,22 @@ export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
   // `new URL(req.url)` rather than `req.nextUrl` so the handler is testable with
   // a plain Request (the integration suite drives it directly).
+  const scope = await scopePatient();
+  const scopeId = scope?.id ?? null;
   const id = new URL(req.url).searchParams.get("prescriptionId");
   if (id) {
+    const prescription = await db.prescription.findUnique({ where: { id }, select: { patientId: true } });
+    if (!prescription || !prescriptionInScope(prescription, scopeId)) {
+      return ok({ prescriptionId: id, pending: 0, confirmed: 0, rejected: 0, blocked: false, items: [], blockedReason: null });
+    }
     const status = await queueStatus(id);
     return ok({ ...status, blockedReason: await blockedReason(id) });
   }
   const open = await db.confirmQueueItem.findMany({
-    where: { state: "pending" },
+    where: {
+      state: "pending",
+      prescription: scopeId ? { OR: [{ patientId: scopeId }, { patientId: null }] } : { patientId: null },
+    },
     orderBy: { createdAt: "asc" },
     take: 100,
     include: { prescription: { select: { id: true, verdict: true, confidence: true, rawText: true, createdAt: true } } },
@@ -76,17 +96,36 @@ export async function POST(req: Request) {
     note?: string;
   };
   try {
-    body = await req.json();
-  } catch {
-    return fail("Invalid JSON body");
+    body = await readJson<typeof body>(req);
+  } catch (e) {
+    return bodyError(e);
   }
-  const { prescriptionId, fieldIndex, accepted } = body;
+  const { prescriptionId: rawId, fieldIndex, accepted } = body;
+  // The declared shape is a wish, not a guarantee: JSON arrives with whatever
+  // types the client chose, and the first thing that actually breaks on a wrong
+  // one is a Prisma `where` clause. Narrow here so the handler below only ever
+  // sees the types its name claims.
+  const prescriptionId = typeof rawId === "string" ? rawId : null;
+  const brandText = typeof body.brandText === "string" ? body.brandText : null;
+  const note = typeof body.note === "string" ? body.note.slice(0, 500) : null;
+  const actor = typeof body.actor === "string" ? body.actor.slice(0, 60) : "pharmacist";
   if (!prescriptionId || typeof fieldIndex !== "number" || typeof accepted !== "boolean") {
     return fail("prescriptionId, fieldIndex and accepted are required");
   }
+  // A brand correction is REFUSED past the cap rather than sliced: half a brand
+  // name still resolves to a molecule, and a reviewer's decision must not be
+  // re-decided by a length rule. Note and actor are prose, so they may clamp.
+  if (brandText && brandText.length > 200) return fail("brandText is too long (max 200 chars)");
 
   const prescription = await db.prescription.findUnique({ where: { id: prescriptionId } });
   if (!prescription) return fail("Prescription not found", 404);
+
+  // Ownership (TD-1 progress): a queue row is a fragment of someone's clinical
+  // record, so a foreign (prescriptionId, fieldIndex) pair is answered with the
+  // SAME text a missing row gets — a reviewer resolving the wrong patient's
+  // uncertain reading would be worse than the bug this route started as.
+  const scope = await scopePatient();
+  if (!prescriptionInScope(prescription, scope?.id ?? null)) return fail("No queue row for that field", 404);
 
   const row = await db.confirmQueueItem.findUnique({
     where: { prescriptionId_fieldIndex: { prescriptionId, fieldIndex } },
@@ -103,16 +142,26 @@ export async function POST(req: Request) {
     });
   }
 
-  const extraction = JSON.parse(prescription.extractionJson) as {
+  // A human resolution re-screens with the contexts the patient DECLARED. The
+  // column is NOT NULL with a default, so there is no "old row that declared
+  // nothing" to honour — a value that will not parse is corruption, and reading
+  // it as `[]` is the exact bug RES-1 records: it would drop contraindication
+  // findings at the moment of review.
+  let extraction: {
     lines?: { raw: string; confidence: number }[];
     engine?: string;
     note?: string | null;
   };
-  let contexts: string[] = [];
+  let contexts: string[];
   try {
-    contexts = JSON.parse(prescription.contextsJson ?? "[]") as string[];
-  } catch {
-    contexts = [];
+    extraction = parseStored(prescription.extractionJson, "verified lines");
+    contexts = parseStored<string[]>(prescription.contextsJson, "declared patient contexts");
+  } catch (e) {
+    if (e instanceof UnreadableRecordError) {
+      await audit("queue.unreadable_record", { prescriptionId });
+      return fail(e.message, 409);
+    }
+    throw e;
   }
 
   const lines = (extraction.lines ?? []).map((l) => ({ ...l }));
@@ -124,7 +173,18 @@ export async function POST(req: Request) {
       // The human is the authority; their read is the highest confidence there is.
       // But an invented brand is never confirmed: the correction must resolve
       // against the formulary index before it can leave the queue.
-      target.raw = (body.brandText ?? target.raw).trim();
+      const before = target.raw;
+      const corrected = (brandText ?? before).trim();
+      // A brand correction replaces the whole line, so carry the regimen the
+      // reviewer did NOT dispute onto it. Without this, "Fakezol 500 mg OD 5
+      // days" -> "Pan 40" loses its frequency, and a scheduler that refuses to
+      // invent one (see lib/safety/adherence.ts) can no longer plan the patient.
+      const prev = normalizeLine(before, fieldIndex);
+      const next = normalizeLine(corrected, fieldIndex);
+      let raw = corrected;
+      if (!next.frequency && prev.frequency) raw += ` ${prev.frequency}`;
+      if (!next.durationDays && prev.durationDays) raw += ` ${prev.durationDays} days`;
+      target.raw = raw.trim();
       if (!normalizeLine(target.raw, fieldIndex).brand) {
         return fail("Brand not in the formulary map — supply the corrected brand name", 422);
       }
@@ -137,15 +197,17 @@ export async function POST(req: Request) {
   // correct; acceptance records the reviewed-arm decision (E-G).
 
   const resolved = await resolveQueueField(prescriptionId, fieldIndex, accepted, {
+    // Provenance records the line the plane actually re-screened — the
+    // corrected brand plus the regimen carried over from the original read.
     resolvedBrand:
-      accepted && fieldIndex !== 0 ? (body.brandText ?? lines[fieldIndex - 1]?.raw ?? null) : null,
-    actor: body.actor ?? "pharmacist",
+      accepted && fieldIndex !== 0 ? (lines[fieldIndex - 1]?.raw ?? null) : null,
+    actor,
     note:
       fieldIndex === 0
         ? accepted
           ? "regimen escalation accepted (E-G reviewed arm)"
           : "regimen escalation rejected"
-        : body.note ?? "resolved in the review console",
+        : note ?? "resolved in the review console",
   });
   if (resolved.error) return fail(resolved.error, 404);
 

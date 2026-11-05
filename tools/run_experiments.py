@@ -33,6 +33,7 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 from datetime import datetime, timezone
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -312,38 +313,29 @@ def shutil_which(cmd: str) -> str | None:
     return which(cmd)
 
 
-def _extract_json_object(text: str, marker: str) -> dict | None:
-    """First JSON object in ``text`` carrying ``marker`` as a key."""
-    decoder = json.JSONDecoder()
-    start = 0
-    while True:
-        idx = text.find("{", start)
-        if idx < 0:
-            return None
-        try:
-            obj, _ = decoder.raw_decode(text, idx)
-        except ValueError:
-            start = idx + 1
-            continue
-        if isinstance(obj, dict) and marker in obj:
-            return obj
-        start = idx + 1
-
-
 # ------------------------------------------------------------------ E-F
 def run_e_f(engine: SafetyEngine, *, quick: bool = False) -> dict:
     """Latency, resource and offline invariance."""
     requests = 60 if quick else 200
     bench_script = os.path.join(ROOT, "tools", "bench.py")
-    proc = subprocess.run(
-        [sys.executable, bench_script, "--json", "--requests", str(requests)],
-        cwd=ROOT, capture_output=True, text=True, check=False)
     bench: dict = {}
-    if proc.returncode == 0 and proc.stdout.strip():
-        # The observability middleware writes one JSON log line per request to
-        # stdout, so the benchmark's own payload has to be found by shape: scan
-        # for every '{' and keep the first object that carries a "benchmark" key.
-        bench = _extract_json_object(proc.stdout, "benchmark") or {}
+    with tempfile.TemporaryDirectory(prefix="medisaathi-ef-") as workdir:
+        bench_out = os.path.join(workdir, "bench.json")
+        # `--out` rather than stdout: the observability middleware logs one JSON
+        # line per timed request to the same stream the payload arrived on, so the
+        # caller had to shape-scan ~2 MB of log noise for the object carrying a
+        # "benchmark" key. `--fresh-db` because the store is a measurement
+        # variable — /metrics aggregates it and every timed pipeline request
+        # appends to it — so a latency table taken against whatever rows previous
+        # runs left behind is not reproducible (docs/PERFORMANCE.md, TD-29).
+        proc = subprocess.run(
+            [sys.executable, bench_script, "--requests", str(requests),
+             "--fresh-db", "--out", bench_out],
+            cwd=ROOT, capture_output=True, text=True, check=False)
+        if proc.returncode == 0 and os.path.exists(bench_out):
+            with open(bench_out, encoding="utf-8") as fh:
+                payload = json.load(fh)
+            bench = payload if "benchmark" in payload else {}
 
     # Deterministic-plane timing over the whole corpus (A4, in-process).
     full = ladder_module.evaluate(engine, corpus_module.load_cases(), "A4")["metrics"]

@@ -38,12 +38,17 @@ rule plane rather than re-implementing it.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 from medisaathi_contracts import ExtractionField
 
 from ..gate import CONFIRM, REFUSED, band_of, get_threshold_set
-from .engine import SafetyEngine, _combination_rules, _split_atc, _split_molecules
+from .engine import (
+    SafetyEngine,
+    _combination_rules,
+    _split_atc,
+    _split_molecules,
+)
 
 #: verdict severity used to compare dispositions (harm order, not prevalence).
 VERDICT_HARM = {"pass": 0, "duplicate_atc": 1, "interaction": 2, "contraindication": 3}
@@ -300,6 +305,20 @@ class RegimenFinding:
                 "source": self.source, "crossing": self.crossing, "mass": self.mass}
 
 
+def _identities_of(molecules: tuple[str, ...]) -> list[str]:
+    """Every name one regimen med can be matched under: components, then the whole.
+
+    Same law as ``_molecule_identities`` in the nominal plane, applied to the
+    already-split tuple this module carries on ``ActiveMed`` /
+    ``IdentityCandidate``. Pinned against the engine helper by
+    ``test_regimen_combination_identity`` so the two screens cannot drift.
+    """
+    parts = [m for m in molecules if m]
+    if len(parts) > 1:
+        return [*parts, "+".join(parts)]
+    return parts
+
+
 def _screen_union(engine: SafetyEngine, active: list[ActiveMed],
                   incoming: list[IdentityCandidate], context: dict,
                   ) -> tuple[list[RegimenFinding], set[str]]:
@@ -323,17 +342,45 @@ def _screen_union(engine: SafetyEngine, active: list[ActiveMed],
     def crossing(mols: list[str]) -> bool:
         return any(m in active_mols for m in mols) and any(m in incoming_mols for m in mols)
 
-    # 1. pairwise interactions over the union
-    mol_list = sorted(union)
-    for i in range(len(mol_list)):
-        for j in range(i + 1, len(mol_list)):
-            hit = engine.screen_pair(mol_list[i], mol_list[j])
-            if hit:
-                pair = [hit["molecule_a"].lower(), hit["molecule_b"].lower()]
-                findings.append(RegimenFinding(
-                    kind="interaction", molecules=tuple(pair),
-                    severity=hit["severity"], mechanism=hit["mechanism"],
-                    source=hit["source"], crossing=crossing(pair), mass=1.0))
+    # 1. pairwise interactions, walked over *medication pairs* with each side
+    # expanded through the same identity law the nominal plane uses. The pooled
+    # component walk this replaces could only ever name a component, so the 176
+    # interaction rows keyed on a whole combination — "amiodarone x
+    # artemether+lumefantrine", "allopurinol x sacubitril+valsartan" — stayed
+    # dead code here even after the single-prescription plane learned to reach
+    # them: two visits, two drugs, and the harm crossing them was never screened.
+    by_side: list[tuple[tuple[str, ...], bool]] = (
+        [(m.molecules, True) for m in active]
+        + [(c.molecules, False) for c in incoming]
+    )
+    seen_pairs: dict[tuple[str, str], int] = {}
+    for i in range(len(by_side)):
+        for j in range(i + 1, len(by_side)):
+            (mols_i, active_i), (mols_j, active_j) = by_side[i], by_side[j]
+            for mol_a in _identities_of(mols_i):
+                for mol_b in _identities_of(mols_j):
+                    hit = engine.screen_pair(mol_a, mol_b)
+                    if not hit:
+                        continue
+                    # One finding per documented row: a combination brand crosses
+                    # several identities against one partner (component + whole
+                    # string) and the same row can arrive from another pair of
+                    # lines. The reviewer card is not served twice for one
+                    # mechanism — and the crossing flag is OR-ed, because a row
+                    # reached across the visit boundary is the visit-boundary
+                    # finding even if an identical pair also sits inside one side.
+                    pair = [hit["molecule_a"].lower(), hit["molecule_b"].lower()]
+                    key = (min(pair), max(pair))
+                    flags = (active_i and not active_j) or (active_j and not active_i)
+                    pos = seen_pairs.get(key)
+                    if pos is None:
+                        seen_pairs[key] = len(findings)
+                        findings.append(RegimenFinding(
+                            kind="interaction", molecules=tuple(pair),
+                            severity=hit["severity"], mechanism=hit["mechanism"],
+                            source=hit["source"], crossing=flags, mass=1.0))
+                    elif flags and not findings[pos].crossing:
+                        findings[pos] = replace(findings[pos], crossing=True)
 
     # 2. combination-class rules (pairwise-invisible)
     for f in _combination_rules(ordered):
@@ -343,9 +390,12 @@ def _screen_union(engine: SafetyEngine, active: list[ActiveMed],
             mechanism=f.mechanism, source=f.source, crossing=crossing(list(mols)),
             mass=1.0))
 
-    # 3. contraindications for the incoming identities against declared context
+    # 3. contraindications for the incoming identities against declared context.
+    # Identities, not components: the 17 combination-keyed rows — artemether+
+    # lumefantrine in pregnancy, ethinylestradiol+levonorgestrel in pregnancy —
+    # are absolute, and naming only their components could never address them.
     for c in incoming:
-        for mol in c.molecules:
+        for mol in _identities_of(c.molecules):
             for rule in engine.contraindications_for(mol, context):
                 findings.append(RegimenFinding(
                     kind="contraindication", molecules=(mol,),

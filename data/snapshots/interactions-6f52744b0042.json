@@ -1,0 +1,678 @@
+{
+  "applied": true,
+  "applied_to": "data/interactions.csv",
+  "checked_at": "2026-10-25T21:36:17+00:00",
+  "diff": {
+    "added": [
+      [
+        "abiraterone",
+        "lithium"
+      ],
+      [
+        "acarbose",
+        "lithium"
+      ],
+      [
+        "acyclovir",
+        "lithium"
+      ],
+      [
+        "bicalutamide",
+        "lithium"
+      ],
+      [
+        "cabozantinib",
+        "lithium"
+      ],
+      [
+        "caffeine",
+        "lithium"
+      ],
+      [
+        "calcium carbonate",
+        "lithium"
+      ],
+      [
+        "calcium carbonate+cholecalciferol",
+        "ciprofloxacin"
+      ],
+      [
+        "calcium carbonate+cholecalciferol",
+        "doxycycline"
+      ],
+      [
+        "calcium carbonate+cholecalciferol",
+        "levofloxacin"
+      ],
+      [
+        "calcium carbonate+cholecalciferol",
+        "levothyroxine"
+      ],
+      [
+        "calcium carbonate+cholecalciferol",
+        "minocycline"
+      ],
+      [
+        "calcium carbonate+cholecalciferol",
+        "moxifloxacin"
+      ],
+      [
+        "calcium carbonate+cholecalciferol",
+        "norfloxacin"
+      ],
+      [
+        "calcium carbonate+cholecalciferol",
+        "ofloxacin"
+      ],
+      [
+        "calcium carbonate+cholecalciferol",
+        "tetracycline"
+      ],
+      [
+        "cetirizine",
+        "lithium"
+      ],
+      [
+        "cisplatin",
+        "lithium"
+      ],
+      [
+        "clarithromycin",
+        "lithium"
+      ],
+      [
+        "codeine",
+        "lithium"
+      ],
+      [
+        "crizotinib",
+        "lithium"
+      ],
+      [
+        "dapagliflozin",
+        "lithium"
+      ],
+      [
+        "dasatinib",
+        "lithium"
+      ],
+      [
+        "daunorubicin",
+        "lithium"
+      ],
+      [
+        "deferasirox",
+        "lithium"
+      ],
+      [
+        "dextromethorphan",
+        "lithium"
+      ],
+      [
+        "diphenhydramine",
+        "lithium"
+      ],
+      [
+        "doxepin",
+        "lithium"
+      ],
+      [
+        "doxorubicin",
+        "lithium"
+      ],
+      [
+        "doxycycline",
+        "lithium"
+      ],
+      [
+        "enzalutamide",
+        "lithium"
+      ],
+      [
+        "erythromycin",
+        "lithium"
+      ],
+      [
+        "everolimus",
+        "lithium"
+      ],
+      [
+        "famotidine",
+        "lithium"
+      ],
+      [
+        "ferrous sulfate",
+        "levodopa+carbidopa"
+      ],
+      [
+        "ferrous sulfate",
+        "minocycline"
+      ],
+      [
+        "ferrous sulfate",
+        "pramipexole"
+      ],
+      [
+        "ferrous sulfate",
+        "ropinirole"
+      ],
+      [
+        "ferrous sulfate",
+        "tetracycline"
+      ],
+      [
+        "filgrastim",
+        "lithium"
+      ],
+      [
+        "fluconazole",
+        "lithium"
+      ],
+      [
+        "glimepiride",
+        "lithium"
+      ],
+      [
+        "glipizide",
+        "lithium"
+      ],
+      [
+        "hydroxychloroquine",
+        "lithium"
+      ],
+      [
+        "insulin glargine",
+        "lithium"
+      ],
+      [
+        "lapatinib",
+        "lithium"
+      ],
+      [
+        "lenvatinib",
+        "lithium"
+      ],
+      [
+        "leuprolide",
+        "lithium"
+      ],
+      [
+        "levocetirizine",
+        "lithium"
+      ],
+      [
+        "levofloxacin",
+        "lithium"
+      ],
+      [
+        "linagliptin",
+        "lithium"
+      ],
+      [
+        "lithium",
+        "loperamide"
+      ],
+      [
+        "lithium",
+        "metformin"
+      ],
+      [
+        "lithium",
+        "minoxidil"
+      ],
+      [
+        "lithium",
+        "ondansetron"
+      ],
+      [
+        "lithium",
+        "oxaliplatin"
+      ],
+      [
+        "lithium",
+        "pazopanib"
+      ],
+      [
+        "lithium",
+        "pemetrexed"
+      ],
+      [
+        "lithium",
+        "pioglitazone"
+      ],
+      [
+        "lithium",
+        "promethazine"
+      ],
+      [
+        "lithium",
+        "repaglinide"
+      ],
+      [
+        "lithium",
+        "salbutamol"
+      ],
+      [
+        "lithium",
+        "sirolimus"
+      ],
+      [
+        "lithium",
+        "sitagliptin"
+      ],
+      [
+        "lithium",
+        "sodium chloride"
+      ],
+      [
+        "lithium",
+        "sorafenib"
+      ],
+      [
+        "lithium",
+        "sunitinib"
+      ],
+      [
+        "lithium",
+        "tacrolimus"
+      ],
+      [
+        "lithium",
+        "tamoxifen"
+      ],
+      [
+        "lithium",
+        "thalidomide"
+      ],
+      [
+        "lithium",
+        "theophylline"
+      ]
+    ],
+    "candidate_rows": 9669,
+    "changed": [
+      [
+        "ciprofloxacin",
+        "ferrous sulfate"
+      ],
+      [
+        "doxycycline",
+        "ferrous sulfate"
+      ],
+      [
+        "ferrous sulfate",
+        "levofloxacin"
+      ],
+      [
+        "ferrous sulfate",
+        "moxifloxacin"
+      ],
+      [
+        "ferrous sulfate",
+        "mycophenolate mofetil"
+      ],
+      [
+        "ferrous sulfate",
+        "norfloxacin"
+      ],
+      [
+        "ferrous sulfate",
+        "ofloxacin"
+      ],
+      [
+        "hydrochlorothiazide",
+        "lithium"
+      ],
+      [
+        "lisinopril",
+        "lithium"
+      ]
+    ],
+    "live_rows": 9673,
+    "removed": [
+      [
+        "abiraterone",
+        "lithium carbonate"
+      ],
+      [
+        "acarbose",
+        "lithium carbonate"
+      ],
+      [
+        "acyclovir",
+        "lithium carbonate"
+      ],
+      [
+        "bicalutamide",
+        "lithium carbonate"
+      ],
+      [
+        "cabozantinib",
+        "lithium carbonate"
+      ],
+      [
+        "caffeine",
+        "lithium carbonate"
+      ],
+      [
+        "calcium carbonate",
+        "lithium carbonate"
+      ],
+      [
+        "calcium carbonate+vitamin d3",
+        "ciprofloxacin"
+      ],
+      [
+        "calcium carbonate+vitamin d3",
+        "doxycycline"
+      ],
+      [
+        "calcium carbonate+vitamin d3",
+        "levofloxacin"
+      ],
+      [
+        "calcium carbonate+vitamin d3",
+        "levothyroxine"
+      ],
+      [
+        "calcium carbonate+vitamin d3",
+        "minocycline"
+      ],
+      [
+        "calcium carbonate+vitamin d3",
+        "moxifloxacin"
+      ],
+      [
+        "calcium carbonate+vitamin d3",
+        "norfloxacin"
+      ],
+      [
+        "calcium carbonate+vitamin d3",
+        "ofloxacin"
+      ],
+      [
+        "calcium carbonate+vitamin d3",
+        "tetracycline"
+      ],
+      [
+        "cetirizine",
+        "lithium carbonate"
+      ],
+      [
+        "ciprofloxacin",
+        "ferrous sulphate"
+      ],
+      [
+        "cisplatin",
+        "lithium carbonate"
+      ],
+      [
+        "clarithromycin",
+        "lithium carbonate"
+      ],
+      [
+        "codeine",
+        "lithium carbonate"
+      ],
+      [
+        "crizotinib",
+        "lithium carbonate"
+      ],
+      [
+        "dapagliflozin",
+        "lithium carbonate"
+      ],
+      [
+        "dasatinib",
+        "lithium carbonate"
+      ],
+      [
+        "daunorubicin",
+        "lithium carbonate"
+      ],
+      [
+        "deferasirox",
+        "lithium carbonate"
+      ],
+      [
+        "dextromethorphan",
+        "lithium carbonate"
+      ],
+      [
+        "diclofenac",
+        "lithium carbonate"
+      ],
+      [
+        "diphenhydramine",
+        "lithium carbonate"
+      ],
+      [
+        "doxepin",
+        "lithium carbonate"
+      ],
+      [
+        "doxorubicin",
+        "lithium carbonate"
+      ],
+      [
+        "doxycycline",
+        "ferrous sulphate"
+      ],
+      [
+        "doxycycline",
+        "lithium carbonate"
+      ],
+      [
+        "enzalutamide",
+        "lithium carbonate"
+      ],
+      [
+        "erythromycin",
+        "lithium carbonate"
+      ],
+      [
+        "everolimus",
+        "lithium carbonate"
+      ],
+      [
+        "famotidine",
+        "lithium carbonate"
+      ],
+      [
+        "ferrous sulphate",
+        "levodopa+carbidopa"
+      ],
+      [
+        "ferrous sulphate",
+        "levofloxacin"
+      ],
+      [
+        "ferrous sulphate",
+        "levothyroxine"
+      ],
+      [
+        "ferrous sulphate",
+        "minocycline"
+      ],
+      [
+        "ferrous sulphate",
+        "moxifloxacin"
+      ],
+      [
+        "ferrous sulphate",
+        "mycophenolate mofetil"
+      ],
+      [
+        "ferrous sulphate",
+        "norfloxacin"
+      ],
+      [
+        "ferrous sulphate",
+        "ofloxacin"
+      ],
+      [
+        "ferrous sulphate",
+        "pramipexole"
+      ],
+      [
+        "ferrous sulphate",
+        "ropinirole"
+      ],
+      [
+        "ferrous sulphate",
+        "tetracycline"
+      ],
+      [
+        "filgrastim",
+        "lithium carbonate"
+      ],
+      [
+        "fluconazole",
+        "lithium carbonate"
+      ],
+      [
+        "glimepiride",
+        "lithium carbonate"
+      ],
+      [
+        "glipizide",
+        "lithium carbonate"
+      ],
+      [
+        "hydrochlorothiazide",
+        "lithium carbonate"
+      ],
+      [
+        "hydroxychloroquine",
+        "lithium carbonate"
+      ],
+      [
+        "ibuprofen",
+        "lithium carbonate"
+      ],
+      [
+        "insulin glargine",
+        "lithium carbonate"
+      ],
+      [
+        "lapatinib",
+        "lithium carbonate"
+      ],
+      [
+        "lenvatinib",
+        "lithium carbonate"
+      ],
+      [
+        "leuprolide",
+        "lithium carbonate"
+      ],
+      [
+        "levocetirizine",
+        "lithium carbonate"
+      ],
+      [
+        "levofloxacin",
+        "lithium carbonate"
+      ],
+      [
+        "linagliptin",
+        "lithium carbonate"
+      ],
+      [
+        "lisinopril",
+        "lithium carbonate"
+      ],
+      [
+        "lithium carbonate",
+        "loperamide"
+      ],
+      [
+        "lithium carbonate",
+        "metformin"
+      ],
+      [
+        "lithium carbonate",
+        "metronidazole"
+      ],
+      [
+        "lithium carbonate",
+        "minoxidil"
+      ],
+      [
+        "lithium carbonate",
+        "ondansetron"
+      ],
+      [
+        "lithium carbonate",
+        "oxaliplatin"
+      ],
+      [
+        "lithium carbonate",
+        "pazopanib"
+      ],
+      [
+        "lithium carbonate",
+        "pemetrexed"
+      ],
+      [
+        "lithium carbonate",
+        "pioglitazone"
+      ],
+      [
+        "lithium carbonate",
+        "promethazine"
+      ],
+      [
+        "lithium carbonate",
+        "repaglinide"
+      ],
+      [
+        "lithium carbonate",
+        "salbutamol"
+      ],
+      [
+        "lithium carbonate",
+        "sirolimus"
+      ],
+      [
+        "lithium carbonate",
+        "sitagliptin"
+      ],
+      [
+        "lithium carbonate",
+        "sodium chloride"
+      ],
+      [
+        "lithium carbonate",
+        "sorafenib"
+      ],
+      [
+        "lithium carbonate",
+        "sunitinib"
+      ],
+      [
+        "lithium carbonate",
+        "tacrolimus"
+      ],
+      [
+        "lithium carbonate",
+        "tamoxifen"
+      ],
+      [
+        "lithium carbonate",
+        "thalidomide"
+      ],
+      [
+        "lithium carbonate",
+        "theophylline"
+      ]
+    ],
+    "unchanged": 9664
+  },
+  "kind": "interactions",
+  "previous_sha256": "176711b638925e5fe5f73b71be4bd83da0d2891157f4ad38fdde2fcf57bd2a55",
+  "schema_ok": true,
+  "source": "data/.staging/interactions.candidate.csv",
+  "source_rows": 9669,
+  "source_sha256": "6f52744b0042abaa19d300cdcdf7334a5180c55b832e05df9eb4474471a2088a"
+}

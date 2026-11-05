@@ -4,10 +4,10 @@
       "A4_minus_combination": {
         "delta_queue_rate": 0.0,
         "delta_unsafe_rate": 0.0,
-        "delta_verdict_agreement": -0.0682,
+        "delta_verdict_agreement": -0.0227,
         "queue_rate": 0.25,
         "unsafe_auto_confirm_rate": 0.0,
-        "verdict_agreement": 0.9318
+        "verdict_agreement": 0.9773
       },
       "A4_minus_formulary_fusion": {
         "delta_queue_rate": -0.25,
@@ -55,7 +55,7 @@
         "verdict_macro_f1": 0.0617
       },
       "A1": {
-        "ece_safety": 0.2343,
+        "ece_safety": 0.2333,
         "queue_rate": 0.0,
         "refusal_rate": 0.0,
         "unsafe_auto_confirm_rate": 0.2955,
@@ -63,7 +63,7 @@
         "verdict_macro_f1": 0.601
       },
       "A2": {
-        "ece_safety": 0.5888,
+        "ece_safety": 0.587,
         "queue_rate": 0.2955,
         "refusal_rate": 0.0,
         "unsafe_auto_confirm_rate": 0.4773,
@@ -79,7 +79,7 @@
         "verdict_macro_f1": 0.601
       },
       "A4": {
-        "ece_safety": 0.1452,
+        "ece_safety": 0.1457,
         "queue_rate": 0.25,
         "refusal_rate": 0.0455,
         "unsafe_auto_confirm_rate": 0.0,
@@ -95,8 +95,8 @@
     "default_id": "v1-2026-09",
     "finding": "no fitted point beat the shipped default on burden without weakening safety; v1-2026-09 remains frozen",
     "frozen_on_test": {
-      "brier_safety": 0.0564,
-      "ece_safety": 0.1452,
+      "brier_safety": 0.0558,
+      "ece_safety": 0.1457,
       "queue_rate": 0.25,
       "refusal_rate": 0.0455,
       "reliability": [
@@ -139,7 +139,7 @@
           "accuracy": 1.0,
           "hi": 0.6,
           "lo": 0.5,
-          "mean_confidence": 0.5654,
+          "mean_confidence": 0.5677,
           "n": 13
         },
         {
@@ -167,7 +167,7 @@
           "accuracy": 1.0,
           "hi": 1.0,
           "lo": 0.9,
-          "mean_confidence": 0.9761,
+          "mean_confidence": 0.9745,
           "n": 31
         }
       ],
@@ -180,9 +180,9 @@
     "test_split_n": 44,
     "within_review_target_15pct": []
   },
-  "dataset_snapshot": "fbbbec6c010476a3",
-  "engine_git_sha": "14226de-dirty",
-  "generated_at": "2026-09-19T19:47:55+00:00",
+  "dataset_snapshot": "cbcbc470c439ffd9",
+  "engine_git_sha": "e2ff7ef-dirty",
+  "generated_at": "2026-11-02T03:22:57+00:00",
   "hitl": {
     "acceptance": {
       "queue_automates_at_least_as_much_as_refusal": true,
@@ -234,60 +234,60 @@
     "bench": [
       {
         "endpoint": "GET /healthz",
-        "p50_ms": 2.332,
-        "p95_ms": 2.722
+        "p50_ms": 14.975,
+        "p95_ms": 25.922
       },
       {
         "endpoint": "GET /metrics (O(1) GROUP BY)",
-        "p50_ms": 4.058,
-        "p95_ms": 5.18
+        "p50_ms": 20.551,
+        "p95_ms": 46.579
       },
       {
         "endpoint": "GET /formulary/search?q=par",
-        "p50_ms": 3.522,
-        "p95_ms": 4.118
+        "p50_ms": 15.436,
+        "p95_ms": 23.349
       },
       {
         "endpoint": "POST /prescriptions RX-001 (full pipeline)",
-        "p50_ms": 14.372,
-        "p95_ms": 16.823
+        "p50_ms": 60.048,
+        "p95_ms": 82.109
       },
       {
         "endpoint": "POST /prescriptions RX-002 (full pipeline)",
-        "p50_ms": 14.105,
-        "p95_ms": 17.536
+        "p50_ms": 60.188,
+        "p95_ms": 73.73
       },
       {
         "endpoint": "POST /prescriptions RX-004 (full pipeline)",
-        "p50_ms": 14.441,
-        "p95_ms": 17.663
+        "p50_ms": 57.674,
+        "p95_ms": 68.473
       },
       {
         "endpoint": "POST /prescriptions RX-008 (full pipeline)",
-        "p50_ms": 14.394,
-        "p95_ms": 17.097
+        "p50_ms": 58.695,
+        "p95_ms": 73.101
       },
       {
         "endpoint": "POST /prescriptions RX-009 (full pipeline)",
-        "p50_ms": 13.799,
-        "p95_ms": 17.409
+        "p50_ms": 56.332,
+        "p95_ms": 68.313
       },
       {
         "endpoint": "POST /prescriptions RX-012 (full pipeline)",
-        "p50_ms": 12.144,
-        "p95_ms": 15.02
+        "p50_ms": 37.238,
+        "p95_ms": 45.549
       }
     ],
     "plane_n": 300,
-    "plane_p50_ms": 0.086,
-    "plane_p95_ms": 0.685,
+    "plane_p50_ms": 0.451,
+    "plane_p95_ms": 2.978,
     "within_budget": true
   },
   "missing_runs": [],
   "parity": {
     "both_engines_agree": true,
-    "corpus": "n=110 confirm_queue=15 contraindication=15 duplicate_atc=16 interaction=38 pass=17 refused=9",
-    "n": 110,
+    "corpus": "n=164 confirm_queue=50 contraindication=18 duplicate_atc=16 interaction=35 pass=36 refused=9",
+    "n": 164,
     "python_ok": true,
     "typescript_ok": true
   },
@@ -301,15 +301,15 @@
       },
       "regimen+propagation": {
         "cross_prescription_catch_rate": 1.0,
-        "queue_rate": 0.084,
+        "queue_rate": 0.0924,
         "unsafe_pass_rate": 0.0,
         "verdict_agreement": 0.9748
       },
       "single_rx": {
         "cross_prescription_catch_rate": 0.0,
-        "queue_rate": 0.0,
+        "queue_rate": 0.0084,
         "unsafe_pass_rate": 0.8315,
-        "verdict_agreement": 0.2941
+        "verdict_agreement": 0.2857
       }
     },
     "cross_prescription_cases": 84,
@@ -319,7 +319,7 @@
       "cross_catch_single_rx": 0.0,
       "fragile_cases": 10,
       "queue_cost_of_mechanism_A": 0.0,
-      "queue_cost_of_mechanism_B": 0.084,
+      "queue_cost_of_mechanism_B": 0.0924,
       "unsafe_pass_regimen": 0.0,
       "unsafe_pass_regimen_propagation": 0.0,
       "unsafe_pass_single_rx": 0.8315
@@ -370,11 +370,11 @@
       "L2_ocr_numeric": {
         "level": "L2_ocr_numeric",
         "n": 256,
-        "queue_rate": 0.25,
+        "queue_rate": 0.3828,
         "refusal_rate": 0.0508,
         "unsafe_auto_confirm_rate": 0.0,
         "unsafe_auto_confirms": 0,
-        "verdict_changed_rate": 0.0
+        "verdict_changed_rate": 0.1328
       },
       "L3_ocr_brand": {
         "level": "L3_ocr_brand",
@@ -409,14 +409,14 @@
     "replay_refusal_rate": 0.75
   },
   "runs": {
-    "E-A": "eval/runs/20260919T194749Z-E-A-baseline-ladder-94801a",
-    "E-B": "eval/runs/20260919T194657Z-E-B-ablations-236f87",
-    "E-C": "eval/runs/20260919T194658Z-E-C-robustness-b35ba0",
-    "E-D": "eval/runs/20260919T194658Z-E-D-calibration-operating-point-1ff25b",
-    "E-E": "eval/runs/20260919T194659Z-E-E-cross-engine-parity-36f4b3",
-    "E-F": "eval/runs/20260919T194720Z-E-F-latency-availability-cd82ce",
-    "E-G": "eval/runs/20260919T194720Z-E-G-human-in-the-loop-d4a23d",
-    "E-H": "eval/runs/20260919T194741Z-E-H-regimen-longitudinal-a9b056"
+    "E-A": "eval\\runs\\20261026T185133Z-E-A-baseline-ladder-148c85",
+    "E-B": "eval\\runs\\20261026T185134Z-E-B-ablations-140ae4",
+    "E-C": "eval\\runs\\20261026T185137Z-E-C-robustness-586c0c",
+    "E-D": "eval\\runs\\20261026T185140Z-E-D-calibration-operating-point-ad5c22",
+    "E-E": "eval\\runs\\20261026T185143Z-E-E-cross-engine-parity-e1f10e",
+    "E-F": "eval\\runs\\20261026T185305Z-E-F-latency-availability-c984fe",
+    "E-G": "eval\\runs\\20261026T185305Z-E-G-human-in-the-loop-d12a25",
+    "E-H": "eval\\runs\\20261026T185353Z-E-H-regimen-longitudinal-daec17"
   },
   "schema_version": 1
 }

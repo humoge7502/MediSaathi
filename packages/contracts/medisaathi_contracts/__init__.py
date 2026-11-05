@@ -4,6 +4,7 @@ from medisaathi_contracts.models import (  # noqa: F401
     AudioSegmentKind,
     ConfirmItem,
     ContraindicationFinding,
+    DoseRuleFinding,
     DuplicateFinding,
     Envelope,
     ExtractionField,

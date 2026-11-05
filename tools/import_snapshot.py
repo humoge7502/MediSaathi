@@ -15,6 +15,21 @@ Schema (must match data/*.csv exactly):
     interactions.csv      molecule_a,molecule_b,severity,mechanism,source
     contraindications.csv molecule,condition_code,severity,note
 
+Beyond the schema, two properties of the *engine's* indexing are enforced,
+because both fail silently — every row still loads, and the verdict just lands
+on the wrong rule set (ADR-0012 / MED-027, measured on the identity pass):
+
+  - **one drug, one name.** A candidate that names a retired alias identity
+    (``lithium carbonate``, ``ferrous sulphate``, ``carvedilol phosphate``, …)
+    is rejected: the rules filed under the canonical name would not have been
+    reachable from it. The retired list is read from
+    ``data/reference/molecule_aliases.csv``, written by
+    ``tools/normalize_molecules.py``.
+  - **one key, one row.** Two candidate rows that land on the same engine key
+    (the same brand, the same molecule pair, the same molecule+condition) are
+    rejected, because the loader keeps whichever it reads last: the loser is a
+    documented rule that disappears with no error anywhere.
+
 Exit codes: 0 = valid (and applied if asked), 2 = schema/validation failure.
 """
 from __future__ import annotations
@@ -42,6 +57,16 @@ SCHEMAS: dict[str, tuple[str, ...]] = {
 SEVERITIES = {"mild", "moderate", "severe", "absolute", "relative"}
 AWARE = {"Access", "Watch", "Reserve"}
 
+#: the columns of each table that carry a molecule identity, i.e. the strings
+#: the engine indexes its rules by.
+MOLECULE_COLS: dict[str, tuple[str, ...]] = {
+    "brands": ("molecule",),
+    "interactions": ("molecule_a", "molecule_b"),
+    "contraindications": ("molecule",),
+}
+
+ALIASES_PATH = os.path.join(DATA_DIR, "reference", "molecule_aliases.csv")
+
 
 def _sha256(path: str) -> str:
     h = hashlib.sha256()
@@ -57,6 +82,22 @@ def _read_csv(path: str) -> tuple[list[str], list[dict]]:
         return list(reader.fieldnames or []), [dict(r) for r in reader]
 
 
+def _retired_aliases() -> dict[str, str]:
+    """alias -> canonical, for the identities the molecule law has retired.
+
+    Read from the artifact ``tools/normalize_molecules.py`` writes rather than
+    imported from it, so the governed import path stays standalone. A missing
+    file means the law has not been applied yet (a fresh clone, or a first
+    snapshot before any rename), so nothing can be retired and the check is
+    skipped instead of blocking every import.
+    """
+    if not os.path.exists(ALIASES_PATH):
+        return {}
+    with open(ALIASES_PATH, newline="", encoding="utf-8") as f:
+        return {r["alias"].strip().lower(): r["canonical"].strip().lower()
+                for r in csv.DictReader(f) if r["merged"] == "yes"}
+
+
 def validate(kind: str, header: list[str], rows: list[dict]) -> list[str]:
     problems: list[str] = []
     expected = SCHEMAS[kind]
@@ -70,6 +111,8 @@ def validate(kind: str, header: list[str], rows: list[dict]) -> list[str]:
         for row in rows:
             if "aware_class" not in row or not (row.get("aware_class") or "").strip():
                 row["aware_class"] = row.get("aware", "")
+    aliases = _retired_aliases()
+    seen_key: dict[tuple, int] = {}
     for i, row in enumerate(rows, start=2):
         if not any((v or "").strip() for v in row.values()):
             problems.append(f"line {i}: empty row")
@@ -91,6 +134,28 @@ def validate(kind: str, header: list[str], rows: list[dict]) -> list[str]:
             sev = (row.get("severity") or "").strip().lower()
             if sev not in SEVERITIES:
                 problems.append(f"line {i}: severity {sev!r} not in {sorted(SEVERITIES)}")
+        for col in MOLECULE_COLS[kind]:
+            # "+" is a combination identity, not a separator to discard: each
+            # component is checked, and a row naming one retired component is
+            # as unreachable as a row naming only it.
+            for part in (row.get(col) or "").split("+"):
+                name = part.strip().lower()
+                if name in aliases:
+                    problems.append(
+                        f"line {i}: {col} names the retired identity {name!r}; "
+                        f"rules filed under {aliases[name]!r} would not reach it. "
+                        f"Rename it, or run tools/normalize_molecules.py")
+        try:
+            key = _key(kind, row)
+        except (KeyError, AttributeError):
+            continue                      # missing cells, already reported above
+        if key in seen_key:
+            problems.append(
+                f"line {i}: restates the engine key {list(key)} already held by "
+                f"line {seen_key[key]}; the loader keeps one, so the other is a "
+                f"documented rule that silently does not exist")
+        else:
+            seen_key[key] = i
     return problems
 
 
@@ -177,6 +242,17 @@ def main() -> int:
         json.dump(report, f, indent=2, sort_keys=True)
         f.write("\n")
 
+    snapshot_after = None
+    if report["applied"]:
+        # An applied update changes the bytes every experiment cites. The dataset
+        # manifest is written by the corpus builders, so without this refresh the
+        # evidence chain keeps pointing at the table the engine no longer reads —
+        # measured: 7 tracked files stale after the 2026-10-26 identity repair,
+        # and every run in that window stamped a brands.csv sha it had not read.
+        sys.path.insert(0, ROOT)
+        from ml import manifest as ds_manifest
+        snapshot_after = ds_manifest.refresh_manifest()["snapshot_id"]
+
     if args.as_json:
         print(json.dumps(report, indent=2, sort_keys=True))
     else:
@@ -185,6 +261,8 @@ def main() -> int:
         print(f"  added {len(d['added'])} · removed {len(d['removed'])} · "
               f"changed {len(d['changed'])} · unchanged {d['unchanged']}")
         print(f"  {'APPLIED' if report['applied'] else 'dry run (pass --apply to replace the live table)'}")
+        if snapshot_after:
+            print(f"  dataset manifest refreshed: snapshot {snapshot_after}")
         print(f"  report: {os.path.relpath(out, ROOT)}")
         if d["removed"]:
             print(f"  NOTE: {len(d['removed'])} row(s) would be REMOVED — a removed rule is a "

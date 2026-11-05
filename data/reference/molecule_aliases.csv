@@ -1,0 +1,22 @@
+alias,canonical,basis,source,merged
+betamethasone sodium phosphate,betamethasone,soluble phosphate ester of the same steroid,"FDA label: betamethasone sodium phosphate injectable, dosed as betamethasone",yes
+carvedilol phosphate,carvedilol,soluble salt form of the same base,FDA label: Coreg = carvedilol; phosphate is the oral solution salt,yes
+clindamycin phosphate,clindamycin,phosphate ester hydrolysed to the active base,FDA label: topical/oral phosphate is a pro-moiety of clindamycin,yes
+cyclosporin,cyclosporine,British name vs US adopted name of the same peptide,BAN 2023: cyclosporin renamed cyclosporine; one substance,yes
+ferrous sulphate,ferrous sulfate,British vs US spelling of the same salt,INN/USAN spelling variant,yes
+lithium carbonate,lithium,salt of the same active ion (Li+),RxNorm 6448 'Lithium Carbonate' -> preferred 'Lithium',yes
+oseltamivir phosphate,oseltamivir,phosphate salt of the active carboxylate,"FDA label: Tamiflu is oseltamivir phosphate, dosing stated as oseltamivir",yes
+oxybutynin chloride,oxybutynin,hydrochloride salt of the same base,FDA label: Ditropan = oxybutynin chloride,yes
+primaquine phosphate,primaquine,phosphate salt of the same base,"FDA label: primaquine phosphate, doses stated as primaquine base",yes
+torsemide,torasemide,USAN vs INN spelling of the same loop diuretic,the formulary and MOLECULE_GROUPS already use torasemide,yes
+vitamin d3,cholecalciferol,vitamin D3 IS cholecalciferol,British Pharmacopoeia / USP synonym list,yes
+citalopram,citalopram,"racemate vs its pure S-enantiomer: different drug, different QT liability",curated chemistry: kept separate,no
+escitalopram,escitalopram,"racemate vs its pure S-enantiomer: different drug, different QT liability",curated chemistry: kept separate,no
+omeprazole,omeprazole,racemate vs its S-enantiomer: different drug,curated chemistry: kept separate,no
+esomeprazole,esomeprazole,racemate vs its S-enantiomer: different drug,curated chemistry: kept separate,no
+prednisone,prednisone,prodrug vs active metabolite: not interchangeable in hepatic failure,curated chemistry: kept separate,no
+prednisolone,prednisolone,prodrug vs active metabolite: not interchangeable in hepatic failure,curated chemistry: kept separate,no
+sodium chloride,sodium chloride,suffix stripping would join two different electrolytes,curated chemistry: kept separate,no
+potassium chloride,potassium chloride,suffix stripping would join two different electrolytes,curated chemistry: kept separate,no
+calcium carbonate,calcium carbonate,suffix stripping would collapse three different salts onto '',curated chemistry: kept separate,no
+sodium chloride,sodium chloride,suffix stripping would collapse three different salts onto '',curated chemistry: kept separate,no

@@ -1,0 +1,14 @@
+{
+  "both_engines_agree": true,
+  "corpus": "n=155 confirm_queue=46 contraindication=18 duplicate_atc=16 interaction=35 pass=31 refused=9",
+  "n": 155,
+  "python_side": {
+    "ok": true,
+    "summary": "Python parity: 155/155 agree (n=155 confirm_queue=46 contraindication=18 duplicate_atc=16 interaction=35 pass=31 refused=9)"
+  },
+  "typescript_side": {
+    "ok": true,
+    "output": "TS parity: 155/155 agree (n=155 confirm_queue=46 contraindication=18 duplicate_atc=16 interaction=35 pass=31 refused=9)\nPARITY PASSED",
+    "ran": true
+  }
+}

@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { ok, fail, audit } from "@/lib/api-helpers";
+import { ok, fail, audit, readJson, bodyError, BodyTooLargeError } from "@/lib/api-helpers";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -10,40 +10,55 @@ export const maxDuration = 60;
  * Body: { force?: boolean }
  *  - no force: seed only when no active plan exists (idempotent, harmless).
  *  - force: archive any active plans, then create the demo plan with 14 days
- *    of realistic dose history. DESTRUCTIVE to the adherence timeline, so it
- *    is gated:
- *      · Default deployments (MEDISAATHI_ENV unset/"development"): allowed —
- *        the demo product relies on "Reset demo data".
- *      · Any non-development deployment (MEDISAATHI_ENV=production|staging):
- *        403 unless the caller presents MEDISAATHI_ADMIN_TOKEN in
- *        `x-admin-token`. An empty token value never unlocks the route.
- * The gate is deny-by-default on an unrecognized env value.
+ *    of realistic dose history. DESTRUCTIVE to the adherence timeline, and
+ *    there is no authentication in front of this route, so "the caller is the
+ *    demo operator" is not something the server can derive from a request.
+ *    It is therefore denied unless an operator turned it on, one of two ways:
+ *      · MEDISAATHI_ADMIN_TOKEN set + the same value in `x-admin-token`.
+ *        An empty token value never unlocks the route.
+ *      · MEDISAATHI_ALLOW_DEMO_RESET=1 — the deliberate local/demo opt-in,
+ *        set in `.env.local` or the e2e webServer environment, never implied.
+ *
+ *    The previous rule was "MEDISAATHI_ENV unset or 'development' ⇒ allowed",
+ *    which failed twice over: forgetting a variable silently produced an
+ *    open wipe-the-history route, and `docker-compose.yml` passed MEDISAATHI_ENV
+ *    only to the api container (which never reads it) — so even a compose
+ *    deployment labelled production left the web tier on the default-allow side.
  */
 function forceAllowed(req: Request): boolean {
-  const env = (process.env.MEDISAATHI_ENV ?? "development").toLowerCase();
-  if (env === "development") return true;
   const expected = process.env.MEDISAATHI_ADMIN_TOKEN ?? "";
-  if (!expected) return false; // misconfigured production: fail closed
-  const supplied = req.headers.get("x-admin-token") ?? "";
-  if (supplied.length !== expected.length) return false;
-  // Constant-time compare (timing-safe equal length walk).
-  let diff = 0;
-  for (let i = 0; i < expected.length; i++) diff |= expected.charCodeAt(i) ^ supplied.charCodeAt(i);
-  return diff === 0;
+  if (expected) {
+    const supplied = req.headers.get("x-admin-token") ?? "";
+    if (supplied.length !== expected.length) return false;
+    // Constant-time compare (timing-safe equal length walk).
+    let diff = 0;
+    for (let i = 0; i < expected.length; i++) diff |= expected.charCodeAt(i) ^ supplied.charCodeAt(i);
+    return diff === 0;
+  }
+  return process.env.MEDISAATHI_ALLOW_DEMO_RESET === "1";
 }
 
 export async function POST(req: Request) {
   let force = false;
   try {
-    const body = (await req.json()) as { force?: boolean };
+    const body = await readJson<{ force?: boolean }>(req);
     force = body?.force === true;
-  } catch {
+  } catch (e) {
+    if (e instanceof BodyTooLargeError) return bodyError(e);
     // empty body is fine
   }
 
   if (force && !forceAllowed(req)) {
-    await audit("seed.force_denied", { env: process.env.MEDISAATHI_ENV ?? "development" });
-    return fail("Force reset is not permitted in this deployment (admin token required)", 403);
+    // Which switch was missing, not what the token was: an audit row that
+    // recorded the supplied header would put a credential in the database.
+    await audit("seed.force_denied", {
+      adminTokenConfigured: Boolean(process.env.MEDISAATHI_ADMIN_TOKEN),
+      demoResetOptIn: process.env.MEDISAATHI_ALLOW_DEMO_RESET ?? "",
+    });
+    return fail(
+      "Force reset is disabled in this deployment — set MEDISAATHI_ALLOW_DEMO_RESET=1 for a local demo, or send x-admin-token",
+      403,
+    );
   }
 
   let patient = await db.patient.findFirst();
@@ -110,8 +125,15 @@ export async function POST(req: Request) {
         when.setHours(hh, mm, 0, 0);
         const past = when < now;
         const roll = rand();
-        // ~82% taken, ~8% missed, rest pending (future) — deterministic
-        const status = !past ? "pending" : roll < 0.82 ? "taken" : roll < 0.9 ? "missed" : "skipped";
+        // The seeded history ends today, so "today" is the only day whose clock
+        // position varies with when the seed runs. Pre-resolving it leaves an
+        // after-21:00 visitor with a Today panel that has nothing in it to act
+        // on — and makes the catch-up guardrail unreachable from the demo.
+        // Today stays pending at every hour: the panel then always shows the
+        // state it exists for, a dose overdue right now with live guidance.
+        const isToday = when.toDateString() === now.toDateString();
+        // ~82% taken, ~8% missed across the seeded days, today still open
+        const status = isToday || !past ? "pending" : roll < 0.82 ? "taken" : roll < 0.9 ? "missed" : "skipped";
         doses.push({
           medicationId: med.id,
           scheduledAt: when,

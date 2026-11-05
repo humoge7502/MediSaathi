@@ -10,26 +10,78 @@ services:
       - MEDISAATHI_VISION_BASE_URL=${MEDISAATHI_VISION_BASE_URL:-https://generativelanguage.googleapis.com/v1beta/openai}
       - MEDISAATHI_JUDGE_OPEN=${MEDISAATHI_JUDGE_OPEN:-0}
       - MEDISAATHI_DISABLE_MODEL_EGRESS=${MEDISAATHI_DISABLE_MODEL_EGRESS:-0}
-      - MEDISAATHI_ENV=${MEDISAATHI_ENV:-development}
       - MEDISAATHI_DB_PATH=/data/medisaathi.db
     volumes:
       - medisaathi-data:/data
     ports:
-      - "8000:8000"
+      # Loopback only. Verified: nothing under `apps/web/src` calls this tier — the
+      # web app is self-contained — so :8000 has no in-compose consumer, and the API
+      # has no authentication layer to put in front of it. `8000:8000` would bind the
+      # unauthenticated verification engine to every interface on the host, which on
+      # a laptop means the café LAN. A judge or tunnel reaches it through
+      # `localhost:8000`; a real deployment puts its own authenticated proxy in front.
+      - "127.0.0.1:8000:8000"
+    # A demo that has to be restarted by hand after a laptop reboot or an OOM is a
+    # demo that is not running. `unless-stopped` (not `always`) so an intentional
+    # `docker compose stop` stays stopped.
+    restart: unless-stopped
 
   web:
     build:
       context: apps/web
       dockerfile: Dockerfile
       target: runner
+      args:
+        # Read at BUILD time, not runtime: `/` is prerendered and `/robots.txt` +
+        # `/sitemap.xml` are metadata routes, so the origin is frozen into the image
+        # (see apps/web/Dockerfile). A hosted launch must set this before `--build`.
+        - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
     environment:
       # The web app is self-contained (route handlers + SQLite). The API
       # service above remains the deep-verification companion.
       - DATABASE_URL=file:/app/db/custom.db
+      # POST /api/seed {force:true} — the demo's "Reset demo data" — archives
+      # the active plans and rewrites the adherence timeline, and this tier has
+      # no authentication, so the route denies it unless an operator opts in.
+      # A hosted demo:  MEDISAATHI_ALLOW_DEMO_RESET=1 docker compose up
+      # Anything real:  leave 0; the button answers 403 instead of wiping data.
+      # (MEDISAATHI_ENV used to be the switch and was passed to `api`, which
+      # never reads it — the web tier therefore ran on its default-allow value
+      # whatever this file said. Recorded as MS-03 follow-up.)
+      - MEDISAATHI_ALLOW_DEMO_RESET=${MEDISAATHI_ALLOW_DEMO_RESET:-0}
+      - MEDISAATHI_ADMIN_TOKEN=${MEDISAATHI_ADMIN_TOKEN:-}
+      # The same privacy kill switch this file already passes to `api`, and the
+      # reason it is spelled out here is the MS-03 bug class itself: both tiers
+      # READ it (`apps/web/src/lib/ai/extraction.ts` throws before any request
+      # leaves the process when it is "1"), but only `api` received it. An
+      # operator who set MEDISAATHI_DISABLE_MODEL_EGRESS=1 for a privacy demo
+      # therefore silenced one egress path and kept the other open — the worse
+      # failure mode, because the switch appeared to work.
+      - MEDISAATHI_DISABLE_MODEL_EGRESS=${MEDISAATHI_DISABLE_MODEL_EGRESS:-0}
+      # X-Forwarded-For is honoured ONLY when this is 1 (src/proxy.ts). Behind a
+      # reverse proxy the rate limiter keys every request to the proxy's own
+      # address without it, so the limits below stop being per-client; on the bare
+      # port they are correct as shipped, so the default stays 0.
+      - MEDISAATHI_TRUST_PROXY=${MEDISAATHI_TRUST_PROXY:-0}
+      # Rate limits and the request-body ceiling, with the code's own defaults
+      # written down where an operator can see and change them. The defaults are
+      # spelled out rather than left empty because these values go through
+      # `Number(process.env.X ?? 60)`: a set-but-empty variable is `""`, not
+      # undefined, so `??` passes it straight through and `Number("")` is 0 — a zero
+      # request budget for every write. `${VAR:-default}` covers empty as well as
+      # unset, which is why the fallback lives here and not only in the code.
+      - MEDISAATHI_RATE_WRITE=${MEDISAATHI_RATE_WRITE:-60}
+      - MEDISAATHI_RATE_WRITE_WINDOW=${MEDISAATHI_RATE_WRITE_WINDOW:-60}
+      - MEDISAATHI_RATE_READ=${MEDISAATHI_RATE_READ:-300}
+      - MEDISAATHI_RATE_READ_WINDOW=${MEDISAATHI_RATE_READ_WINDOW:-60}
+      - MEDISAATHI_MAX_BODY_KB=${MEDISAATHI_MAX_BODY_KB:-64}
+      # Evidence-cache reuse window for POST /api/evals (src/app/api/evals/route.ts).
+      - MEDISAATHI_EVAL_REUSE_MS=${MEDISAATHI_EVAL_REUSE_MS:-120000}
     volumes:
       - medisaathi-web-db:/app/db
     ports:
       - "3000:3000"
+    restart: unless-stopped
     healthcheck:
       # node:22-slim runner: node probes the deterministic evidence route
       # (no model dependency, no extra tooling in the image).

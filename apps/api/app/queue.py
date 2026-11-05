@@ -14,7 +14,8 @@ transaction at plan-creation time, so two concurrent plan starts cannot both
 observe an empty queue and race past each other.
 
 Storage is the same SQLite file as the prescription store (one boring file to
-back up); the swap point to Postgres touches this module and ``store.py`` only.
+back up); the swap point to Postgres touches this module, ``store.py`` and the
+connection-opening rules in ``db.py``.
 """
 from __future__ import annotations
 
@@ -25,6 +26,8 @@ import uuid
 from datetime import datetime, timezone
 
 from medisaathi_contracts import QueueItem, QueueItemState, QueueTransition
+
+from .db import apply_pragmas
 
 _DB_PATH = os.environ.get(
     "MEDISAATHI_DB_PATH",
@@ -92,8 +95,10 @@ def _connect() -> sqlite3.Connection:
     if conn is None:
         conn = sqlite3.connect(_DB_PATH)
         conn.row_factory = sqlite3.Row
-        conn.execute("PRAGMA journal_mode=WAL")
-        conn.execute("PRAGMA busy_timeout=5000")
+        # Same file as the prescription store, so the same first-open law:
+        # busy_timeout before the WAL switch, and the switch retried. See
+        # `db.apply_pragmas` for why the order is load-bearing.
+        apply_pragmas(conn)
         _local.conn = conn
         with _write_lock:
             conn.executescript(_INIT_QUEUE)

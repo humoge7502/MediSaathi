@@ -54,10 +54,23 @@ export function CopilotPanel() {
   return (
     <div className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
       <div className="vy-hairline-card flex min-h-[32rem] flex-col">
-        <div className="vy-scroll flex-1 space-y-4 overflow-y-auto p-5">
+        {/* role="log": an append-only transcript, where only the new node is
+            read. Without it the answer lands below the fold of the aural cursor
+            and a listener never knows anything arrived — the `busy` line is the
+            last thing they hear. tabIndex=0 for the same reason the evidence
+            table has it: axe wants a scrollable region to be keyboard-reachable
+            (scrollable-region-focusable, TD-4). */}
+        <div
+          className="vy-scroll flex-1 space-y-4 overflow-y-auto p-5"
+          role="log"
+          aria-live="polite"
+          aria-atomic="false"
+          aria-label="Conversation with the copilot"
+          tabIndex={0}
+        >
           {messages.length === 0 && (
             <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
-              <div className="vy-serif text-4xl italic" style={{ color: "var(--vy-pine)" }}>Vaidya</div>
+              <div className="vy-serif text-4xl italic" style={{ color: "var(--vy-pine-ink)" }}>Vaidya</div>
               <p className="max-w-sm text-sm text-muted-foreground">
                 Ask about your medicines. Every answer comes from a curated, source-attributed knowledge base —
                 and the copilot <em>refuses</em> what it cannot verify. Try a trap question on the right.
@@ -105,7 +118,7 @@ export function CopilotPanel() {
               onKeyDown={(e) => e.key === "Enter" && ask(input)}
               placeholder="Ask about a medicine, food, alcohol, missed doses…"
               aria-label="Ask the copilot"
-              className="flex-1 rounded-full border bg-background px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[color:var(--vy-pine)]"
+              className="flex-1 rounded-full border bg-background px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-[color:var(--ring)]"
             />
             <button
               onClick={() => ask(input)}

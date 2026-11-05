@@ -32,7 +32,7 @@ interactions, cannot price, and cannot hear in their own language.
 | Approach | What it does | Why it does not verify |
 |---|---|---|
 | Pharmacy commerce apps (PharmEasy-class) | sell medicines, order tracking | no independent safety screen; incentive to fulfill, not question |
-| Reminder apps | notification schedules | presuppose a correctly understood prescription |
+| Reminder apps | notification schedules | presuppose a correctly understood prescription. The reminder itself is table stakes, so Vaidya ships it too — the difference is that the nudge fires from a plan that passed a verification gate, and stops the moment a dose is answered or a guardrail blocks it |
 | Generic LLM chat | free-text answers | fluent hallucination of doses/brands; no data provenance; no refusal discipline |
 | Hospital pharmacist | the real safety net | scarce; queue times; not portable to the home |
 

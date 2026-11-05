@@ -24,12 +24,15 @@ process.env.DATABASE_URL = dbUrl;
 beforeAll(() => {
   // Test-isolation bootstrapping only: a throwaway tmpdir DB. Production
   // schema changes go through `prisma migrate` (audit MS-05).
+  // 120s hook budget: `bunx` binary resolution plus a cold Prisma start can
+  // exceed bun's 5s default on Windows, which failed the whole suite for a
+  // reason that had nothing to do with the code under test.
   execSync("bunx prisma db push --skip-generate", {
     cwd: join(__dirname, ".."),
     env: { ...process.env, DATABASE_URL: dbUrl },
     stdio: "pipe",
   });
-});
+}, 120_000);
 
 // ---- sealed perception layer (the LLM never runs in tests) ----------------
 const sealedLines = (pairs: { raw: string; confidence: number }[], engine: "llm" | "deterministic-fallback" = "llm") => ({

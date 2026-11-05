@@ -1,0 +1,57 @@
+# Build-context hygiene for the API image.
+#
+# `docker-compose.yml` gives the API build the repo root as its context
+# (dockerfile apps/api/Dockerfile). The web app builds from its own context
+# (apps/web) and is governed by apps/web/.dockerignore.
+#
+# This file exists because of what was measured without it: the host tree carries
+# a 224,952,320-byte working SQLite database, a 264 MB CPython virtualenv, two
+# old-pin virtualenvs, and 67 Windows-compiled *.pyc files. BuildKit only
+# transfers what a COPY line reaches (10.23 MB for this image today), but it walks
+# everything it is not told to ignore, and `COPY apps/api apps/api` does reach
+# those *.pyc — so the shipped image ran host-built bytecode for a different OS.
+# Python recompiles all of it on first import inside the container; nothing here
+# is a source file.
+#
+# Never excluded: the three paths the Dockerfile COPYs — packages/contracts,
+# apps/api, data/ — except for the build artefacts listed above inside them.
+
+# --- host-only state, never in any image ---
+.git
+.github
+.env
+.env.*
+!.env.example
+.venv
+.venv-*
+.hypothesis
+.ruff_cache
+**/*.log
+
+# --- installed or generated artefacts; the build recreates these in-container ---
+node_modules
+**/node_modules
+.next
+**/.next
+**/__pycache__
+**/*.py[cod]
+**/*.egg-info
+**/*.tsbuildinfo
+**/test-results
+**/playwright-report
+
+# --- runtime-written data stores ---
+# The API writes MEDISAATHI_DB_PATH=/data/medisaathi.db on a named volume; the web
+# app writes DATABASE_URL=file:/app/db/custom.db on another. A .db found in the
+# tree is developer state from a previous run, not an asset — and demo plans are
+# not something to bake into a published image.
+**/*.db
+**/*.db-journal
+**/*.sqlite
+**/*.sqlite3
+
+# --- superseded corpus duplicates ---
+# data/*.csv.bak are backups of the four engine CSVs. No engine or test path reads
+# them (grep for `.bak` across apps/api and packages/contracts: no matches), and a
+# stale copy in the image is only a way to verify the wrong data.
+data/**/*.bak

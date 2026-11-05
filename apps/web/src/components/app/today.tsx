@@ -2,8 +2,13 @@
 
 /** Today panel — the daily dose timeline with catch-up guardrails. */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api, post, type TodayPayload } from "@/lib/client";
+import { RemindersCard } from "@/components/app/reminders";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Skeleton, SkeletonCard, SkeletonHeading, SkeletonRows } from "@/components/ui/skeleton";
+import { AlertLine, StatusLine } from "@/components/ui/status-line";
+import { toReminderDose, useReminders } from "@/lib/use-reminders";
 
 interface ActionFeedback {
   doseId: string;
@@ -17,10 +22,12 @@ function fmtTime(iso: string): string {
 }
 
 function statusChip(status: string): { label: string; style: React.CSSProperties } {
+  // The fill is the severity hue at a low alpha; the *text* is its ink variant,
+  // because 12px text in the raw hue over its own tint measures 2.5-3.7:1.
   switch (status) {
-    case "taken": return { label: "taken", style: { background: "color-mix(in oklch, var(--vy-safe) 18%, transparent)", color: "var(--vy-safe)" } };
-    case "missed": return { label: "missed", style: { background: "color-mix(in oklch, var(--vy-severe) 12%, transparent)", color: "var(--vy-severe)" } };
-    case "skipped": return { label: "skipped", style: { background: "color-mix(in oklch, var(--vy-warn) 16%, transparent)", color: "var(--vy-warn)" } };
+    case "taken": return { label: "taken", style: { background: "color-mix(in oklch, var(--vy-safe) 18%, transparent)", color: "var(--vy-safe-ink)" } };
+    case "missed": return { label: "missed", style: { background: "color-mix(in oklch, var(--vy-severe) 12%, transparent)", color: "var(--vy-severe-ink)" } };
+    case "skipped": return { label: "skipped", style: { background: "color-mix(in oklch, var(--vy-warn) 16%, transparent)", color: "var(--vy-warn-ink)" } };
     default: return { label: "pending", style: { background: "var(--secondary)", color: "var(--muted-foreground)" } };
   }
 }
@@ -71,6 +78,18 @@ export function TodayPanel({ refreshKey }: { refreshKey: number }) {
         setFeedback({ doseId, message: r.message ?? "Guardrail refused this action.", guarded: true });
       } else if (r.guidance) {
         setFeedback({ doseId, message: `${r.guidance.action === "take_now" ? "Catch-up note" : "Guidance"}: ${r.guidance.text}`, guarded: false });
+      } else {
+        // The row's own chip is the only thing that changes on a clean tap, and a
+        // chip moving between two lists is not a status message a screen reader
+        // will find. Say what happened, in the same breath as the guardrail does.
+        const row = (data?.doses ?? []).find((d) => d.id === doseId);
+        setFeedback({
+          doseId,
+          message: row
+            ? `Marked ${action}: ${row.brand} at ${fmtTime(row.time)}.`
+            : `Marked ${action}.`,
+          guarded: false,
+        });
       }
       await load();
     } catch (e) {
@@ -80,16 +99,61 @@ export function TodayPanel({ refreshKey }: { refreshKey: number }) {
     }
   }
 
-  if (loading) return <div className="vy-hairline-card animate-pulse p-10 text-center text-sm text-muted-foreground">Loading today…</div>;
+  // The reminder clock runs from the same dose rows this panel lists, so a tap
+  // on *Taken* both updates the timeline and removes the dose from the alert plan
+  // in the same render. `useReminders` is called before the early returns below —
+  // a hook behind a `loading` branch would remount the interval every load.
+  const reminderDoses = useMemo(() => (data?.doses ?? []).map(toReminderDose), [data]);
+  const reminders = useReminders(reminderDoses, refreshKey);
+
+  // The placeholder is this panel's own two-column grid, three cards a side, so
+  // each column begins where the loaded column begins. It is not a layout-shift
+  // fix — `main` is `min-h-screen`, so any placeholder holds the page a viewport
+  // tall — it is the reason nothing here is a sentence anymore.
+  if (loading)
+    return (
+      <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+        <div className="space-y-4">
+          <SkeletonCard className="space-y-2">
+            <SkeletonHeading />
+            <Skeleton className="h-3 w-2/3" />
+          </SkeletonCard>
+          <SkeletonCard>
+            <SkeletonHeading />
+            <SkeletonRows count={3} />
+          </SkeletonCard>
+          <SkeletonCard>
+            <SkeletonHeading />
+            <SkeletonRows count={2} />
+          </SkeletonCard>
+        </div>
+        <div className="space-y-4">
+          {/* Three cards, because the loaded column is three cards: reminders,
+              the medication list, the missed-dose law. Reserving one of the
+              three was the difference between a placeholder that steadies the
+              page and one that merely looks modern. */}
+          <SkeletonCard>
+            <SkeletonHeading />
+            <SkeletonRows count={2} />
+          </SkeletonCard>
+          <SkeletonCard>
+            <SkeletonHeading />
+            <SkeletonRows count={4} />
+          </SkeletonCard>
+          <SkeletonCard className="space-y-2">
+            <Skeleton className="h-2.5 w-28" />
+            <Skeleton className="h-3 w-full" />
+            <Skeleton className="h-3 w-11/12" />
+          </SkeletonCard>
+        </div>
+      </div>
+    );
 
   if (!data?.plan) {
     return (
-      <div className="vy-hairline-card flex min-h-64 flex-col items-center justify-center gap-2 p-10 text-center">
-        <p className="vy-serif text-2xl">No active plan yet</p>
-        <p className="max-w-sm text-sm text-muted-foreground">
-          Verify a prescription in the Verify tab and press <em>Start therapy plan</em> — the dose schedule appears here.
-        </p>
-      </div>
+      <EmptyState title="No active plan yet">
+        Verify a prescription in the Verify tab and press <em>Start therapy plan</em> — the dose schedule appears here.
+      </EmptyState>
     );
   }
 
@@ -138,7 +202,12 @@ export function TodayPanel({ refreshKey }: { refreshKey: number }) {
         {resolved.length > 0 && (
           <div className="space-y-2">
             <p className="vy-eyebrow">Earlier today</p>
-            <div className="vy-scroll max-h-56 space-y-2 overflow-y-auto pr-1 opacity-80">
+            {/* No `opacity` here on purpose: 80% on the container lightens the
+                text it holds, which put the dose line at 4.18:1 and the status
+                chip at 2.69:1 — both under the AA floor, and invisible to a
+                reviewer. Quietness comes from the pale chip fills, not from
+                transparency over real text. */}
+            <div className="vy-scroll max-h-56 space-y-2 overflow-y-auto pr-1">
               {resolved.map((d) => <DoseCard key={d.id} d={d} busy={false} onAct={act} />)}
             </div>
           </div>
@@ -146,12 +215,14 @@ export function TodayPanel({ refreshKey }: { refreshKey: number }) {
       </div>
 
       <div className="space-y-4">
-        {feedback && (
-          <div className={`vy-hairline-card p-5 ${feedback.guarded ? "vy-banner-moderate" : "vy-banner-neutral"}`}>
-            <p className="vy-eyebrow">{feedback.guarded ? "Guardrail" : "Note"}</p>
-            <p className="mt-2 text-sm leading-relaxed">{feedback.message}</p>
-          </div>
-        )}
+        {/* One region per tone, both permanently mounted. A card that appeared
+            with the message was the old shape, and a screen reader never heard
+            it: the region and its first sentence arrived in the same commit. */}
+        <div className="flex flex-col">
+          <StatusLine text={feedback && !feedback.guarded ? feedback.message : null} />
+          <AlertLine text={feedback?.guarded ? feedback.message : null} />
+        </div>
+        <RemindersCard view={reminders} medications={data.medications.map((m) => ({ id: m.id, brand: m.brand }))} />
         <div className="vy-hairline-card p-5">
           <p className="vy-eyebrow">Medications</p>
           <ul className="mt-3 space-y-3">
@@ -181,7 +252,7 @@ export function TodayPanel({ refreshKey }: { refreshKey: number }) {
 function DoseCard({ d, busy, onAct, highlight }: { d: TodayPayload["doses"][number]; busy: boolean; onAct: (id: string, a: "taken" | "skipped") => void; highlight?: boolean }) {
   const chip = statusChip(d.status);
   return (
-    <div className={`vy-hairline-card flex items-center justify-between gap-3 p-4 ${highlight && d.status === "pending" ? "vy-banner-neutral" : ""}`}>
+    <div className={`vy-hairline-card flex flex-wrap items-center justify-between gap-3 p-4 ${highlight && d.status === "pending" ? "vy-banner-neutral" : ""}`}>
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <span className="vy-numeral text-sm font-semibold">{fmtTime(d.time)}</span>
@@ -191,11 +262,11 @@ function DoseCard({ d, busy, onAct, highlight }: { d: TodayPayload["doses"][numb
         <p className="truncate text-xs text-muted-foreground">{d.molecule} · {d.doseMg} mg{d.note ? ` · ${d.note}` : ""}</p>
       </div>
       {d.status === "pending" && (
-        <div className="flex shrink-0 gap-2">
+        <div className="ml-auto flex shrink-0 gap-2">
           <button
             onClick={() => onAct(d.id, "taken")}
             disabled={busy}
-            className="rounded-full px-4 py-2 text-xs font-semibold text-white transition-transform hover:scale-105 disabled:opacity-40"
+            className="rounded-full px-4 py-2 text-xs font-semibold text-vy-safe-on transition-transform hover:scale-105 disabled:opacity-40"
             style={{ background: "var(--vy-safe)" }}
           >
             Taken

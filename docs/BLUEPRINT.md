@@ -96,7 +96,7 @@ Projected (not yet measured in this environment): Lighthouse/Core Web Vitals gre
 
 **Question**: can a deterministic-rule-gated, longitudinal medication platform measurably improve adherence behavior and unsafe-plan interception in a student/cohort pilot?
 
-**Method (post-event)**: baseline vs Vaidya-assisted adherence over 8 weeks (MPR via dose-level events), plus interception rate on a labeled bad-plan corpus; ablation A1 (no safety plane) vs A4 (full) — the counterfactual MediSaathi already established (agreement collapse 1.00 → 0.17 without the plane).
+**Method (post-event)**: baseline vs Vaidya-assisted adherence over 8 weeks (MPR via dose-level events), plus interception rate on a labeled bad-plan corpus; ablation A1 (no safety plane) vs A4 (full) — the counterfactual MediSaathi already established (sealed-fixture verdict agreement 0.973 with the plane → 0.072 without it).
 
 **Publication shape**: short paper (CHI/AMIA posters, or a CS conference): system + evaluation harness + ablation. **No clinical claims**: the prototype is an information layer; the paper studies engineering and behavior, not treatment efficacy.
 

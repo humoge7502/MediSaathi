@@ -1,0 +1,135 @@
+{
+  "bench": {
+    "bare_app": {
+      "asgi": {
+        "endpoint": "GET /noop (bare ASGI app - no framework)",
+        "max_ms": 2.142,
+        "mean_ms": 0.994,
+        "n": 60,
+        "p50_ms": 0.915,
+        "p95_ms": 1.453,
+        "p99_ms": 1.708
+      }
+    },
+    "benchmark": "medisaathi-api-bench-v1",
+    "framework_overhead": [
+      {
+        "bare_p50_ms": 0.915,
+        "framework_overhead_ms": 1.751,
+        "healthz_p50_ms": 2.666,
+        "transport": "asgi"
+      }
+    ],
+    "requests_per_endpoint": 60,
+    "results": [
+      {
+        "endpoint": "GET /healthz",
+        "max_ms": 4.5,
+        "mean_ms": 2.712,
+        "n": 60,
+        "p50_ms": 2.666,
+        "p95_ms": 3.529,
+        "p99_ms": 3.987
+      },
+      {
+        "endpoint": "GET /metrics (verdict tally, O(kinds))",
+        "max_ms": 7.469,
+        "mean_ms": 2.707,
+        "n": 60,
+        "p50_ms": 2.582,
+        "p95_ms": 3.393,
+        "p99_ms": 4.08
+      },
+      {
+        "endpoint": "GET /formulary/search?q=par",
+        "max_ms": 5.515,
+        "mean_ms": 3.957,
+        "n": 60,
+        "p50_ms": 3.903,
+        "p95_ms": 5.215,
+        "p99_ms": 5.486
+      },
+      {
+        "endpoint": "POST /prescriptions RX-001 (full pipeline)",
+        "max_ms": 21.783,
+        "mean_ms": 14.984,
+        "n": 60,
+        "p50_ms": 14.783,
+        "p95_ms": 17.393,
+        "p99_ms": 21.521
+      },
+      {
+        "endpoint": "POST /prescriptions RX-002 (full pipeline)",
+        "max_ms": 76.038,
+        "mean_ms": 17.582,
+        "n": 60,
+        "p50_ms": 16.441,
+        "p95_ms": 20.595,
+        "p99_ms": 26.545
+      },
+      {
+        "endpoint": "POST /prescriptions RX-004 (full pipeline)",
+        "max_ms": 23.67,
+        "mean_ms": 15.89,
+        "n": 60,
+        "p50_ms": 15.751,
+        "p95_ms": 19.436,
+        "p99_ms": 19.955
+      },
+      {
+        "endpoint": "POST /prescriptions RX-008 (full pipeline)",
+        "max_ms": 26.849,
+        "mean_ms": 15.767,
+        "n": 60,
+        "p50_ms": 15.795,
+        "p95_ms": 19.449,
+        "p99_ms": 21.233
+      },
+      {
+        "endpoint": "POST /prescriptions RX-009 (full pipeline)",
+        "max_ms": 24.774,
+        "mean_ms": 14.072,
+        "n": 60,
+        "p50_ms": 13.957,
+        "p95_ms": 15.869,
+        "p99_ms": 17.131
+      },
+      {
+        "endpoint": "POST /prescriptions RX-012 (full pipeline)",
+        "max_ms": 15.708,
+        "mean_ms": 11.261,
+        "n": 60,
+        "p50_ms": 10.96,
+        "p95_ms": 13.58,
+        "p99_ms": 13.993
+      }
+    ],
+    "store": {
+      "bytes_at_end": 1462272,
+      "db_path_env": "C:\\Users\\DEVESH~1\\AppData\\Local\\Temp\\medisaathi-bench-0haoktwh\\bench.db",
+      "fresh_db": true,
+      "path": "C:\\Users\\DEVESH~1\\AppData\\Local\\Temp\\medisaathi-bench-0haoktwh\\bench.db",
+      "rows_at_end": 420,
+      "rows_at_start": 0,
+      "versions": {
+        "fastapi": "0.162.0",
+        "httpx": "0.28.1",
+        "python": "3.13.6",
+        "starlette": "1.10.0",
+        "uvicorn": "0.54.0"
+      }
+    },
+    "transport": "asgi-in-process",
+    "warmup_per_endpoint": 10
+  },
+  "budget_p50_ms": 10,
+  "budget_p95_ms": 25,
+  "offline_proof": "apps/api/tests/test_egress.py asserts zero outbound calls with a poisoned socket and invariant verdicts",
+  "offline_verdict_delta": 0,
+  "plane_full_corpus": {
+    "n": 300,
+    "p50_ms": 0.537,
+    "p95_ms": 1.714
+  },
+  "within_budget": true
+}

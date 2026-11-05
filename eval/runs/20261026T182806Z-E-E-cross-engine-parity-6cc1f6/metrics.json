@@ -1,0 +1,14 @@
+{
+  "both_engines_agree": true,
+  "corpus": "n=164 confirm_queue=50 contraindication=18 duplicate_atc=16 interaction=35 pass=36 refused=9",
+  "n": 164,
+  "python_side": {
+    "ok": true,
+    "summary": "Python parity: 164/164 agree (n=164 confirm_queue=50 contraindication=18 duplicate_atc=16 interaction=35 pass=36 refused=9)"
+  },
+  "typescript_side": {
+    "ok": true,
+    "output": "TS parity: 164/164 agree (n=164 confirm_queue=50 contraindication=18 duplicate_atc=16 interaction=35 pass=36 refused=9)\nPARITY PASSED",
+    "ran": true
+  }
+}

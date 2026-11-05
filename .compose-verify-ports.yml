@@ -1,0 +1,11 @@
+# Throwaway local override: this shared Docker host already has qtrust-planner on
+# 127.0.0.1:8000 and volthub-web on 127.0.0.1:3000, so the stack is verified on free
+# loopback ports. Host port numbers are not what the launch-critical claims assert —
+# the loopback-only *binding* and the build-time origin are, and both survive this file.
+services:
+  api:
+    ports: !override
+      - "127.0.0.1:8010:8000"
+  web:
+    ports: !override
+      - "127.0.0.1:3100:3000"

@@ -7,12 +7,32 @@
 #
 # Bump deliberately: change a pin here, run `make test && make demo-check`,
 # and commit the result. pip-audit in CI still scans for advisories.
-# Versions recorded 2026-09-10 from the verified environment (107/107 tests).
-fastapi==0.136.3
-uvicorn==0.51.0
-pydantic==2.13.4
-pydantic-settings==2.14.2
+#
+# Versions recorded 2026-10-29 from the verified environment: 466 pytest
+# passed, 5/5 data gates, 111 sealed demo cases, parity 164/164. The previous
+# record (2026-09-10, 107/107 tests) was three months and 26 FastAPI minor
+# versions behind, which is the reason this file exists — a floating install
+# in CI silently disagreed with the machine the gates were run on.
+#
+# Two entries are load-bearing beyond the obvious:
+#  - starlette is transitive (via fastapi) but pinned because the rate limiter,
+#    body-size guard and security headers are `BaseHTTPMiddleware` subclasses,
+#    whose contract has changed across starlette majors before.
+#  - httpx2 is the TestClient path. Starlette 1.10 deprecated `httpx` for it and
+#    declares httpx2 in its own `full` extra; with only `httpx` installed, every
+#    pytest run opens with a StarletteDeprecationWarning. `httpx` itself stays
+#    pinned: the live-vision client and `tools/bench.py` use it directly, and
+#    0.28.1 is current for that line.
+#
+# Removed: `pydantic-settings==2.14.2`. Nothing in the repository imports it —
+# a pin for a package no extra declares and no code reads.
+fastapi==0.162.0
+starlette==1.10.0
+uvicorn==0.54.0
+pydantic==2.14.2
 python-multipart==0.0.32
 httpx==0.28.1
-pytest==9.1.1
-hypothesis==6.165.10
+httpx2==2.16.0
+pytest==9.2.0
+hypothesis==6.170.13
+ruff==0.17.3

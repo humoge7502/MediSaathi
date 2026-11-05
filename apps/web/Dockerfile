@@ -1,5 +1,10 @@
 # --- deps (bun for installs; the lockfile is bun.lock) ---
-FROM oven/bun:1.2 AS deps
+# 1.4, not the 1.2 this stage used to pin: `bun install --frozen-lockfile` reads the
+# lockfile the host toolchain (bun 1.4.3) writes, and an older reader is the one thing
+# that can fail on a format bump rather than on a dependency. This stage installs and
+# nothing else — the build stage runs Node, because bun's worker_threads and CommonJS
+# loader break the Next 16 production build inside a container.
+FROM oven/bun:1.4 AS deps
 WORKDIR /app
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
@@ -17,6 +22,18 @@ COPY --from=deps /app/package.json /app/bun.lock ./
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
+# The public origin, and it has to be a build argument rather than a runtime one.
+# `/robots.txt` and `/sitemap.xml` are Next metadata routes and `/` is prerendered:
+# with `output: "standalone"` their HTML/XML bodies are produced by `next build` and
+# then served from disk, so `process.env.NEXT_PUBLIC_SITE_URL` inside
+# `src/app/robots.ts`, `src/app/sitemap.ts` and `src/app/layout.tsx` is resolved at
+# BUILD time and frozen into the image. Setting it only in the container environment
+# would change nothing for those routes, and a deployed app whose sitemap announces
+# `http://localhost:3000/` is an SEO canonical failure nobody notices until the
+# crawler already trusted the wrong origin. The default is the value the code falls
+# back to, so an unparameterised build still gets a coherent localhost.
+ARG NEXT_PUBLIC_SITE_URL=http://localhost:3000
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 RUN node_modules/.bin/prisma generate \
   && node_modules/.bin/next build
 

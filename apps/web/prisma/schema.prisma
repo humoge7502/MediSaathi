@@ -22,6 +22,8 @@ model Patient {
   plans     TherapyPlan[]
   alerts    EscalationEvent[]
   links     CaregiverLink[]
+  prescriptions Prescription[]
+  reminders ReminderSetting?
 }
 
 // A verified prescription record — provenance is never discarded.
@@ -49,6 +51,17 @@ model Prescription {
   createdAt      DateTime @default(now())
   plans          TherapyPlan[]
   queueItems     ConfirmQueueItem[]
+  // Ownership (TD-1 progress): the patient whose visit produced this row —
+  // stamped at verify time when a patient already exists, and claimed by the
+  // plan that adopts the prescription otherwise. Nullable for exactly that
+  // first-run order (verify on a fresh install precedes the first Patient row),
+  // so NULL means "not claimed yet" and the plan write resolves it. A NON-NULL
+  // value naming someone else is a foreign row, and every route that takes a
+  // prescription id refuses it before it reads or writes anything.
+  patientId String?
+  patient   Patient? @relation(fields: [patientId], references: [id])
+
+  @@index([patientId])
 }
 
 // Persisted confirmation queue — the human-resolution half of the gate law.
@@ -147,6 +160,31 @@ model CaregiverLink {
   relation      String   @default("")
   code          String @unique
   createdAt     DateTime @default(now())
+}
+
+// Reminder preferences — the settings half of the notification law in
+// src/lib/safety/reminders.ts. One row per patient, keyed by the unique
+// patientId, so there is no id for a client to present and therefore no
+// cross-patient write path: POST /api/reminders always targets the patient this
+// build serves. Columns rather than a JSON blob because every one of them is a
+// number with a stated bound (lead 0-180, late 0-720, clock minutes 0-1439) and
+// `sanitizeSettings` is the only writer — a boundary that cannot be expressed as
+// a type is a boundary that will eventually be bypassed by one.
+model ReminderSetting {
+  id            String   @id @default(cuid())
+  patientId     String   @unique
+  patient       Patient  @relation(fields: [patientId], references: [id])
+  enabled       Boolean  @default(true)
+  leadMinutes   Int      @default(10)
+  lateMinutes   Int      @default(30)
+  // A quiet window is a PAIR: both null means "no quiet hours", and the route
+  // writes them together so a half-set window (start without an end) cannot
+  // exist in the table. Values are local clock minutes from midnight.
+  quietStartMinutes Int?
+  quietEndMinutes   Int?
+  mutedJson     String   @default("[]")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model AuditLog {

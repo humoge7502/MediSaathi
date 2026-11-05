@@ -1,0 +1,31 @@
+{
+  "affected_brand_rows": 23,
+  "aliases_retired": 11,
+  "brands_reaching_a_daily_cap": {
+    "after": 23,
+    "before": 0,
+    "of": 23
+  },
+  "cells_renamed": {
+    "data/brands.csv": 23,
+    "data/contraindications.csv": 17,
+    "data/interactions.csv": 84,
+    "data/reference/rxnorm_molecule_map.csv": 2
+  },
+  "definition": "For each brand row whose molecule cell the rename changed: the rules it can reach are those whose molecule key is one of the row's identities (each component, and the whole string for a combination). Summed over those rows; 'before' reads the pre-migration tables kept by the governed importer as <table>.bak, 'after' reads the live ones. Ceilings are counted as brands reaching at least one daily-dose cap, against the live cap table, under the old spelling versus the canonical one.",
+  "measured_at": "2026-10-25T22:12:21+00:00",
+  "rules_reachable": {
+    "contraindications": {
+      "after": 72,
+      "before": 38,
+      "live_rows": 1267,
+      "pre_rows": 1272
+    },
+    "interactions": {
+      "after": 1475,
+      "before": 561,
+      "live_rows": 9660,
+      "pre_rows": 9673
+    }
+  }
+}

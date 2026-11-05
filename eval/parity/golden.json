@@ -1,5 +1,5 @@
 {
- "parity_version": 3,
+ "parity_version": 12,
  "vocabulary": [
   "pass",
   "interaction",
@@ -8,7 +8,7 @@
   "confirm_queue",
   "refused"
  ],
- "note": "Shared, versioned cross-engine conformance corpus (ADR-0012 / MED-015). Both the Python and TypeScript planes read THIS file, so there is exactly one golden set and neither tier can drift against a private copy. Cases are curated human prescription lines (not RX-* fixtures); sources for every rule they exercise are recorded per row in data/interactions.csv and data/contraindications.csv.",
+ "note": "v12 (2026-10-26): a slot code and an interval word are one instruction (P162-P164). '0-0-1 weekly' names the hours AND the interval; capturing the code alone made a correct weekly methotrexate or vitamin-D course read as a daily never-event, which is the false positive that trains a reviewer to wave the queue through. Both planes now compose the pair, and P164 pins that composing it does not excuse an interval shorter than the label allows. v11 (2026-10-26): one unit law for strengths, and the never-event that table could not state (P156-P161). Perception was stamping ' mg' on every trailing brand number, which turned Thyronorm 50 into 50 mg of levothyroxine and Calcirol 60K into 60 mg of cholecalciferol; the unit of a bare number now comes from the formulary row's molecule in the deciding plane, a label that prints its own unit always wins, and 25 ratio brand labels match against either component. Two verdict-affecting rules were unreachable through that invented unit: the look-alike/different-strength guard (a tenfold mis-read that lives inside the brand name never reached the strength field, so 'Thyronorm 500' verified cleanly against a row the prescription never named), and the interval mandate table, which is keyed on mg and so could not describe the 60,000 IU weekly sachet at all — a month of daily 60,000 IU passed in both planes. Relabels in this version move toward the stricter verdict; P156/P158/P159 are the negative controls that prove the fix is not a blanket block. v10 (2026-10-26): the harm a combination brand carries is documented on the combination (P150-P155). Shared, versioned cross-engine conformance corpus (ADR-0012 / MED-015). Both the Python and TypeScript planes read THIS file, so there is exactly one golden set and neither tier can drift against a private copy. Cases are curated human prescription lines (not RX-* fixtures); sources for every rule they exercise are recorded per row in data/interactions.csv and data/contraindications.csv. v9 (2026-10-26): an ingredient-name guess is not a formulary match (P149). v4 (2026-10-25): the interval law. v3 labelled eight oral-methotrexate lines (P44, P45, P55, P56, P62, P63, P64, P65) merely 'interaction'. They dose a weekly-only drug daily or worse, which is an ISMP high-alert never-event, and 'interaction' is a verdict a plan can be built from. They are confirm_queue now; the interaction findings they were labelled for are still asserted via expect_finding and still fire, so the relabelling is an escalation, not a replacement. v3 held no interval-frequency cases at all; P111-P118 pin the law on both sides (weekly MTX passes, daily MTX queues) so a future scheduler that collapses 1/7 into one-slot-per-day fails the corpus instead of shipping.\n\nv5 (interval-law reach): the interval *rules* were mirrored across the two planes but the raw-line *vocabulary* that feeds them was not, and neither list carried the plain English prescriptions are written in. Three lines were measured divergent or blind before this version: \"every other day\" queued a methotrexate never-event in the TS plane while the Python plane read no frequency and passed it; \"every 3 days\" did the reverse; and \"daily\" — the single most common way an oral-methotrexate fatal schedule is written — carried no frequency in either plane, so no interval rule could fire. Both planes now read one ordered token list (LINE_FREQ_TOKENS, mirrored verbatim) plus prose day/week/month and hourly forms, and this version pins one case per token class. The negative controls (once weekly, q 3 weeks, Q2W) and the plain-English daily lines for paracetamol and levothyroxine are in the corpus so the fix cannot silently become a blanket block. P133/P134 also retire the last entry on the runner's documented non-case list: a frequency the law cannot read IS reachable from a raw line (\"Q5H\" — five hours does not divide a day; \"every 999 days\" — a legible shape carrying a nonsense value), so the queue rule for a stated-but-unreadable code is now a cross-engine case rather than a per-tier unit test.\n\nv6 (dose-cap law and its ceiling's provenance): the aggregate daily-cap rule was the last verdict-affecting rule that existed in only one plane. 'Tab Cetzine 10 BD x 5 days' (20 mg against a 10 mg licensed maximum) verdicted interaction in the TypeScript tier and pass in the Python tier. The three caps tables also disagreed: two engine literals and one sourced CSV that no code read, conflicting on 17 molecules including theophylline (450 vs a level-guided 900, which made a routine 800 mg/day modified-release course read as a fatal overdose in P42) and ondansetron (32 = a withdrawn IV figure, vs 24 oral). One table of record now, generated to both tiers, with a `basis` and an `escalate` flag: a cap the engine cannot verify for THIS patient — level-guided, weight-based, specialist-supervised — advises and never blocks. P41/P89 relabel because the bug they were masking is a different-strength misread: the guard's magnitude test threw away every bare decimal under 2 mg, blinding it to Alprax 0.5 and Digoxin 0.25, the sub-2 mg class where a tenfold error is fatal. P81 gains expect_not_finding: applying one stated strength to every molecule of a combination brand invented 380 mg/day of atorvastatin on a statin+aspirin line, and only a negative assertion pins that the number stopped being made up.\n\nv7 (the second cap figure and the ceiling the patient lowers): labels carry two numbers for several molecules — a self-care figure under a prescription maximum — and the rule executed only the top one, so an ibuprofen course at 1600 mg/day stopped saying anything at all once the blocking ceiling moved to 2400. `advisory_mg` keeps the lower figure as a warn-only threshold. `lowered_by` does the same for the ceiling a declared condition lowers: paracetamol 2000 mg/day under liver disease, citalopram 20 under 65 or hepatic impairment, tramadol and tapentadol in renal impairment — all figures already sitting in the curated notes, none of them executed. The engine's excuse for level-guided drugs is that it has no serum level; it does not apply to a number the patient declares, so those lines are measured against the lower ceiling and the escalation law runs on it. v8 (one identity per drug): a drug has exactly one name in every table the engine indexes by, so a documented rule cannot be unreachable because of a spelling. The corpus gained P148 (lithium/pregnancy, ABSOLUTE, filed under the identity the strip does not print) and P31 was relabelled on measurement — the 325 mg iron ceiling became reachable from every ferrous sulfate brand, so a 500 mg/day course now queues in both planes where it passed in both. Relabels move toward the stricter verdict, never away, and every one carries the measurement that forced it.",
  "cases": [
   {
    "id": "P01",
@@ -421,8 +421,9 @@
     0.94
    ],
    "contexts": [],
-   "expect": "interaction",
-   "expect_finding": "chelation"
+   "expect": "confirm_queue",
+   "expect_finding": "chelate",
+   "why": "T. Fefol is ferrous SULFATE on the formulary, and the 325 mg/day iron ceiling was filed under the 'ferrous sulphate' spelling, so no iron brand could reach it: 500 mg/day queued nothing. Under one identity per drug the cap is found, and the chelation interaction this case was pinned for is still reported. expect_finding moved from 'chelation' to 'chelate': the merged row for doxycycline + ferrous sulfate states the mechanism as a verb, and the pin is that the interaction is still reported under a stricter verdict, not one row's inflection."
   },
   {
    "id": "P32",
@@ -548,8 +549,9 @@
     0.97
    ],
    "contexts": [],
-   "expect": "interaction",
-   "expect_finding": "respira"
+   "expect": "confirm_queue",
+   "expect_finding": "a 20x difference",
+   "why": ". Alprax 0.5 states 10 mg on the line; 0.5 mg in the label. The old label (interaction) was computed from an invented 10 mg/day alprazolam course."
   },
   {
    "id": "P42",
@@ -590,8 +592,9 @@
     0.95
    ],
    "contexts": [],
-   "expect": "interaction",
-   "expect_finding": "reduces renal m"
+   "expect": "confirm_queue",
+   "expect_finding": "reduces renal m",
+   "interval_case": "Folitrax (oral methotrexate) OD, plus an NSAID. Weekly-only drug dosed daily."
   },
   {
    "id": "P45",
@@ -604,8 +607,9 @@
     0.93
    ],
    "contexts": [],
-   "expect": "interaction",
-   "expect_finding": "toxic"
+   "expect": "confirm_queue",
+   "expect_finding": "toxic",
+   "interval_case": "Folitrax QID plus aspirin. Four oral MTX doses a day is the classic fatal error."
   },
   {
    "id": "P46",
@@ -744,8 +748,9 @@
     0.93
    ],
    "contexts": [],
-   "expect": "interaction",
-   "expect_finding": "toxic"
+   "expect": "confirm_queue",
+   "expect_finding": "toxic",
+   "interval_case": "Folitrax 1-0-0 (one tablet each morning) plus aspirin."
   },
   {
    "id": "P56",
@@ -758,8 +763,9 @@
     0.94
    ],
    "contexts": [],
-   "expect": "interaction",
-   "expect_finding": "toxic"
+   "expect": "confirm_queue",
+   "expect_finding": "toxic",
+   "interval_case": "Folitrax HS plus aspirin — a correct *time of day* on a wrong *interval*."
   },
   {
    "id": "P57",
@@ -772,8 +778,9 @@
     0.93
    ],
    "contexts": [],
-   "expect": "interaction",
-   "expect_finding": "myopathy"
+   "expect": "confirm_queue",
+   "expect_finding": "exceeds the 40 mg/day simvastatin cap",
+   "why": ". Simvotin 20 QID = 80 mg/day, double the maximum, beside gemfibrozil. A true overdose now reaches a human instead of printing an interaction card."
   },
   {
    "id": "P58",
@@ -842,8 +849,9 @@
     0.94
    ],
    "contexts": [],
-   "expect": "interaction",
-   "expect_finding": "reduces renal m"
+   "expect": "confirm_queue",
+   "expect_finding": "reduces renal m",
+   "interval_case": "Folitrax BD plus Combiflam BD."
   },
   {
    "id": "P63",
@@ -856,8 +864,9 @@
     0.96
    ],
    "contexts": [],
-   "expect": "interaction",
-   "expect_finding": "toxic"
+   "expect": "confirm_queue",
+   "expect_finding": "toxic",
+   "interval_case": "Folitrax BD plus aspirin at night."
   },
   {
    "id": "P64",
@@ -870,8 +879,9 @@
     0.98
    ],
    "contexts": [],
-   "expect": "interaction",
-   "expect_finding": "toxic"
+   "expect": "confirm_queue",
+   "expect_finding": "toxic",
+   "interval_case": "Folitrax OD plus an Ecospirin AV TAC line."
   },
   {
    "id": "P65",
@@ -884,8 +894,9 @@
     0.98
    ],
    "contexts": [],
-   "expect": "interaction",
-   "expect_finding": "toxic"
+   "expect": "confirm_queue",
+   "expect_finding": "toxic",
+   "interval_case": "Folitrax at night plus Ecosprin 75."
   },
   {
    "id": "P66",
@@ -1105,7 +1116,8 @@
     0.96
    ],
    "contexts": [],
-   "expect": "duplicate_atc"
+   "expect": "duplicate_atc",
+   "expect_not_finding": "exceeds the 80 mg/day atorvastatin cap"
   },
   {
    "id": "P82",
@@ -1209,7 +1221,9 @@
     0.99
    ],
    "contexts": [],
-   "expect": "duplicate_atc"
+   "expect": "confirm_queue",
+   "expect_finding": "a 2000x difference",
+   "why": ". Digoxin 0.25 states 500 mg on the line. The invented 1000 mg/day aggregate is gone; the contradiction is what queues it."
   },
   {
    "id": "P90",
@@ -1441,6 +1455,714 @@
    ],
    "contexts": [],
    "expect": "refused"
+  },
+  {
+   "id": "P111",
+   "lines": [
+    "T. Folitrax 10 10 mg QWK x 28d"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "interval_case": "Oral methotrexate ONCE WEEKLY is the label-correct regimen; the hazard must not become a blanket block on the molecule."
+  },
+  {
+   "id": "P112",
+   "lines": [
+    "T. Folitrax 10 10 mg QWK x 28d",
+    "Cap. Combiflam OD X 7 DAYS"
+   ],
+   "confidences": [
+    0.97,
+    0.97
+   ],
+   "contexts": [],
+   "expect": "interaction",
+   "expect_finding": "reduces renal m",
+   "interval_case": "Weekly methotrexate + NSAID: the renal-clearance interaction still fires on a legal interval, so P111/P112 bracket the hazard."
+  },
+  {
+   "id": "P113",
+   "lines": [
+    "Tab Thyronorm 50 mcg OD 30 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "interval_case": "mcg-unit strength must canonicalise, not mismatch its own formulary row (Thyronorm 50 is a 50 mcg tablet)."
+  },
+  {
+   "id": "P114",
+   "lines": [
+    "Tab Thyronorm 500 mcg OD 30 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "interval_case": "A look-alike/different-strength read: the resolver matches the 50 mcg row from a line reading 500 mcg. Identity unconfirmed outranks the aggregate dose-cap finding computed on top of it."
+  },
+  {
+   "id": "P115",
+   "lines": [
+    "Tab Folitrax 10 10 mg 1-0-0 x5d",
+    "1. T. Ecosprin 75 75 mg 1-0-0 x3d"
+   ],
+   "confidences": [
+    0.97,
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "expect_finding": "toxic",
+   "interval_case": "The never-event arrives through a TAC slot code, not a word code — proves the hazard reads both notations."
+  },
+  {
+   "id": "P116",
+   "lines": [
+    "T. Folitrax 10 10 mg QW x 28d"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "interval_case": "QW is an accepted synonym of QWK; an alias that failed to canonicalise would pass nothing and would have queued the drug."
+  },
+  {
+   "id": "P117",
+   "lines": [
+    "T. Folitrax 10 10 mg QWK x 28d",
+    "Tab Aspirin 75 75 mg 1-0-1 x 7d"
+   ],
+   "confidences": [
+    0.97,
+    0.97
+   ],
+   "contexts": [],
+   "expect": "interaction",
+   "expect_finding": "toxic",
+   "interval_case": "Weekly MTX + aspirin written as a TAC code: interaction, not hazard."
+  },
+  {
+   "id": "P118",
+   "lines": [
+    "Tab Dolo 650 QOD 30 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "interval_case": "Alternate-day dosing is a real interval the scheduler must space by two days rather than collapse to daily."
+  },
+  {
+   "id": "P119",
+   "lines": [
+    "T. Folitrax 10 10 mg daily x 28d"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "interval_case": "Bare 'daily' on oral methotrexate: the ISMP never-event as it is actually written on paper. Before v5 neither plane saw a frequency here."
+  },
+  {
+   "id": "P120",
+   "lines": [
+    "T. Folitrax 10 10 mg ONCE DAILY x 28d"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "interval_case": "The same line with the two-word code. Ordering matters: 'ONCE DAILY' must win over the bare 'DAILY' inside it, and both must reach the same verdict."
+  },
+  {
+   "id": "P121",
+   "lines": [
+    "Cap. Folitrax 10 daily x 28d"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "interval_case": "'daily' with the strength stated only by the brand label — the brand-label fallback and the interval law have to compose for the hazard to fire."
+  },
+  {
+   "id": "P122",
+   "lines": [
+    "T. Folitrax 10 10 mg once weekly x 28d"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "interval_case": "Negative control in plain English: weekly is the labeled schedule, so this must pass rather than queue."
+  },
+  {
+   "id": "P123",
+   "lines": [
+    "T. Folitrax 10 10 mg every other day x 28d"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "interval_case": "Prose alternate-day methotrexate. Measured divergence: the TS plane blocked this while the Python plane read no frequency and passed it."
+  },
+  {
+   "id": "P124",
+   "lines": [
+    "T. Folitrax 10 10 mg alternate days x 28d"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "interval_case": "The Indian-English spelling of the same schedule; must not be a synonym the law cannot see."
+  },
+  {
+   "id": "P125",
+   "lines": [
+    "T. Folitrax 10 10 mg every 3 days x 28d"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "interval_case": "Prose numeric interval shorter than the 7-day mandate. The other half of the measured divergence (Python blocked, TS passed)."
+  },
+  {
+   "id": "P126",
+   "lines": [
+    "T. Folitrax 10 10 mg q 3 weeks x 28d"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "interval_case": "Prose interval in WEEKS, not days: 21 >= 7, so this is a legal schedule."
+  },
+  {
+   "id": "P127",
+   "lines": [
+    "T. Folitrax 10 10 mg Q2W x 28d"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "interval_case": "Abbreviated two-week code, present in the TS vocabulary and absent from the old Python one; both planes now read it and both pass it."
+  },
+  {
+   "id": "P128",
+   "lines": [
+    "T. Folitrax 10 10 mg 6 hourly x 2d"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "interval_case": "Hourly prose on a weekly-only molecule: four administrations a day, the classic fatal regimen, reached through the hourly vocabulary."
+  },
+  {
+   "id": "P129",
+   "lines": [
+    "T. Folitrax 10 10 mg bedtime x 28d"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "interval_case": "Bedtime prose canonicalizes to HS, which is a once-daily schedule, so the mandate bites — the bedtime read must not become 'no frequency'."
+  },
+  {
+   "id": "P130",
+   "lines": [
+    "T. Folitrax 10 10 mg once weekly x 28d",
+    "1. T. Ecosprin 75 75 mg daily x 28d"
+   ],
+   "confidences": [
+    0.97,
+    0.97
+   ],
+   "contexts": [],
+   "expect": "interaction",
+   "interval_case": "Weekly MTX with daily aspirin: the interaction is still found and still reported, and the aspirin line's plain 'daily' is not a hazard.",
+   "expect_finding": "clearance"
+  },
+  {
+   "id": "P131",
+   "lines": [
+    "Tab Dolo 650 daily x 5 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "interval_case": "Precision control: paracetamol once daily is correct dosing. Adding 'daily' to the vocabulary must not turn a legal plain-English line into a block."
+  },
+  {
+   "id": "P132",
+   "lines": [
+    "Tab Thyronorm 50 mcg daily 30 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "interval_case": "Precision control on a narrow-therapeutic-index drug that is genuinely taken once daily, in mcg."
+  },
+  {
+   "id": "P133",
+   "lines": [
+    "Tab Dolo 650 Q5H x 5 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "interval_case": "A code the line parser offers and the interval law refuses: five hours does not divide a day, so no generator can lay this out. Stated + unreadable is the queue's case, not a default to 09:00."
+  },
+  {
+   "id": "P134",
+   "lines": [
+    "Tab Dolo 650 every 999 days x 5 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "interval_case": "The same rule from the prose side: legible shape, nonsense value. This is the case previously documented as a parity NON-CASE on the theory that a garbage code is never extracted from a raw line — true of 'QODS', false of a code that parses as a shape and fails as a schedule."
+  },
+  {
+   "id": "P135",
+   "lines": [
+    "Tab Cetzine 10 BD x 5 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "why": "20 mg/day cetirizine against a 10 mg licensed maximum: the line that verdicted pass in one plane and interaction in the other.",
+   "expect_finding": "exceeds the 10 mg/day cetirizine cap"
+  },
+  {
+   "id": "P136",
+   "lines": [
+    "Tab Cetzine 10 OD x 5 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "why": "Exactly at the cap, same brand same day: proves the rule is a ceiling and not a blanket block on the molecule."
+  },
+  {
+   "id": "P137",
+   "lines": [
+    "Tab Pan 40 TDS x 5 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "why": "120 mg/day pantoprazole against an 80 mg cap = 1.5x, below the escalation line. Advisory in both planes, verdict unchanged."
+  },
+  {
+   "id": "P138",
+   "lines": [
+    "Tab Storvas 20 QID x 5 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "why": "One line at exactly the atorvastatin maximum: no breach, no queue."
+  },
+  {
+   "id": "P139",
+   "lines": [
+    "Tab Storvas 20 QID x 5 days",
+    "Tab Storvas 20 QID x 5 days"
+   ],
+   "confidences": [
+    0.97,
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "why": "Two lines that are each AT the cap and therefore individually clean; only the aggregate breaches it. The rule exists for this, so it is pinned at the verdict level in both engines.",
+   "expect_finding": "exceeds the 80 mg/day atorvastatin cap"
+  },
+  {
+   "id": "P140",
+   "lines": [
+    "1. T. Alprax 0.5 10 mg once daily x30d"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "why": "The decimal brand strength the different-strength guard used to discard: 0.5 mg in the label, 10 mg on the line, a 20x contradiction to resolve.",
+   "expect_finding": "a 20x difference"
+  },
+  {
+   "id": "P141",
+   "lines": [
+    "Cap. Digoxin 0.25 500 mg BD x 5 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "why": "Same class, narrower index: digoxin is titrated to a serum level, so its 0.5 mg/day figure may only advise — what queues this line is the 2000x strength contradiction, not an invented microgram overdose.",
+   "expect_finding": "a 2000x difference"
+  },
+  {
+   "id": "P142",
+   "lines": [
+    "Tab Dolo 650 650 mg QID x 3 days",
+    "Tab Crocin Advance 500 mg QID x 3 days"
+   ],
+   "confidences": [
+    0.97,
+    0.97
+   ],
+   "contexts": [
+    "hepatic_severe"
+   ],
+   "expect": "confirm_queue",
+   "why": "Two paracetamol brands, 4600 mg/day between them. Against the standing 4000 ceiling this is a warning (P143); the patient's declared severe liver disease lowers the operative maximum to 2000, so the same read is now past 1.5x a real ceiling and must reach a human.",
+   "expect_finding": "the declared conditions on this patient lower it from 4000 mg/day"
+  },
+  {
+   "id": "P143",
+   "lines": [
+    "Tab Dolo 650 650 mg QID x 3 days",
+    "Tab Crocin Advance 500 mg QID x 3 days"
+   ],
+   "confidences": [
+    0.97,
+    0.97
+   ],
+   "contexts": [],
+   "expect": "duplicate_atc",
+   "why": "The same prescription, no declaration: 4600 mg/day is over the 4000 ceiling but under the 6000 escalation line, so the dose rule advises, the duplicate rule decides, and nothing queues.",
+   "expect_finding": "exceeds the 4000 mg/day"
+  },
+  {
+   "id": "P144",
+   "lines": [
+    "Tab Dolo 650 650 mg QID x 3 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [
+    "hepatic_severe"
+   ],
+   "expect": "contraindication",
+   "why": "One line, 2600 mg/day. Liver disease makes it a contraindication and lowers the ceiling to 2000, but 2600 is still under 1.5x of 2000 — the escalation law does not move just because the ceiling did.",
+   "expect_finding": "lower it from 4000 mg/day",
+   "expect_not_finding": "daily dose exceeds the label maximum"
+  },
+  {
+   "id": "P145",
+   "lines": [
+    "Tab Brufen 400 400 mg QID x 3 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "why": "1600 mg/day ibuprofen: legal prescription strength, above the 1200 the same label gives for unprescribed use. Said out loud, verdict unchanged — the figure that used to be the only one the table had.",
+   "expect_finding": "is above the 1200 mg/day ibuprofen self-care limit"
+  },
+  {
+   "id": "P146",
+   "lines": [
+    "Tab Citalopram 20 20 mg TID x 14 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [
+    "age_over_65"
+   ],
+   "expect": "confirm_queue",
+   "why": "60 mg/day of citalopram in a patient who declared being over 65, for whom the label's own figure is 20 — three times the ceiling that applies to them, and the QT dose that the maximum exists to police.",
+   "expect_finding": "lower it from 40 mg/day"
+  },
+  {
+   "id": "P147",
+   "lines": [
+    "Tab Citalopram 20 20 mg TID x 14 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "why": "The identical line with nothing declared: 60 is over the 40 ceiling and exactly at the 1.5x escalation boundary, so it advises and passes. The pair with P146 is what pins that the difference is the declaration.",
+   "expect_finding": "exceeds the 40 mg/day"
+  },
+  {
+   "id": "P148",
+   "lines": [
+    "Tab Lithosun 300 1-0-0 x 30 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [
+    "pregnancy"
+   ],
+   "expect": "contraindication",
+   "expect_finding": "teratogenic",
+   "why": "Lithium/pregnancy is an ABSOLUTE rule, but it was filed under 'lithium' while the brand row said 'lithium carbonate' — the strip a pregnant patient actually brings. Same drug, two identities, and the Ebstein anomaly rule was unreachable for the brand that prints the salt name."
+  },
+  {
+   "id": "P149",
+   "lines": [
+    "ferrous sulfate 500 mg OD"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "why": "The line names an ingredient, not a brand, and no formulary brand key contains 'ferrous sulfate' — 7 of the 583 molecules in the catalog are in that position. The web tier guessed a brand from its molecule index at 0.85 and then counted the guess as a formulary match, so a 0.97 reading of this line auto-passed a drug identity that nothing confirms; the API tier's normalize() returns None for the same line and queues it. One engine, one answer."
+  },
+  {
+   "id": "P150",
+   "lines": [
+    "Cilanem 500 mg OD x7 days",
+    "Encorate Chrono 300 mg BD x30 days"
+   ],
+   "confidences": [
+    0.97,
+    0.97
+   ],
+   "contexts": [],
+   "expect": "interaction",
+   "expect_finding": "seizure breakthrough",
+   "why": "The row is 'sodium valproate x imipenem+cilastatin' (severe: carbapenems cut valproate levels 60-90% within 24-48h) and there is no valproate x imipenem or valproate x cilastatin row to fall back on. A patient on the antibiotic from one visit who is started on the anticonvulsant at the next was screened against components only, so the interaction that was on the table was not on the report."
+  },
+  {
+   "id": "P151",
+   "lines": [
+    "Duoluton-L OD x21 days",
+    "Carbamazepine 200 mg BD x30 days"
+   ],
+   "confidences": [
+    0.97,
+    0.97
+   ],
+   "contexts": [],
+   "expect": "interaction",
+   "expect_finding": "ethinylestradiol+levonorgestrel",
+   "why": "Contraceptive failure is documented against the combined pill as it is actually sold, not against either hormone alone: carbamazepine induces CYP3A4 and the severe row names 'ethinylestradiol+levonorgestrel'. documented at combination granularity, with no component-level counterpart for the same partner: 89 of the 176 rows keyed on a whole combination are in that position, and a screening walk that names only components cannot reach any of them from any brand pair in the catalog."
+  },
+  {
+   "id": "P152",
+   "lines": [
+    "Lumether 80/480 BD x3 days",
+    "Cordarone 200 mg OD x30 days"
+   ],
+   "confidences": [
+    0.97,
+    0.97
+   ],
+   "contexts": [],
+   "expect": "interaction",
+   "expect_finding": "artemether+lumefantrine",
+   "why": "Additive QTc prolongation. 46 of the rows are keyed on 'artemether+lumefantrine' and none of them has a component-level twin, so the antimalarial met a class-effect table it could never be found in. documented at combination granularity, with no component-level counterpart for the same partner: 89 of the 176 rows keyed on a whole combination are in that position, and a screening walk that names only components cannot reach any of them from any brand pair in the catalog."
+  },
+  {
+   "id": "P153",
+   "lines": [
+    "Syndopa 110 BD x30 days",
+    "Domperidone 10 mg TDS x14 days"
+   ],
+   "confidences": [
+    0.97,
+    0.97
+   ],
+   "contexts": [],
+   "expect": "interaction",
+   "expect_finding": "levodopa+carbidopa",
+   "why": "Dopamine-D2 blockade antagonises levodopa centrally — a severe row written on the combination the patient swallows, not on levodopa as an ingredient. documented at combination granularity, with no component-level counterpart for the same partner: 89 of the 176 rows keyed on a whole combination are in that position, and a screening walk that names only components cannot reach any of them from any brand pair in the catalog."
+  },
+  {
+   "id": "P154",
+   "lines": [
+    "Orofer XT OD x30 days",
+    "Ciplox 500 BD x7 days"
+   ],
+   "confidences": [
+    0.97,
+    0.97
+   ],
+   "contexts": [],
+   "expect": "interaction",
+   "expect_finding": "ferrous ascorbate+folate",
+   "why": "Chelation of ciprofloxacin by the iron in a haematinic is written against 'ferrous ascorbate+folate'; the iron-folate tablet is one of the most prescribed combinations in the catalog and was screened as two names that appear in no row. documented at combination granularity, with no component-level counterpart for the same partner: 89 of the 176 rows keyed on a whole combination are in that position, and a screening walk that names only components cannot reach any of them from any brand pair in the catalog."
+  },
+  {
+   "id": "P155",
+   "lines": [
+    "Lumether 80/480 BD x3 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [
+    "pregnancy"
+   ],
+   "expect": "contraindication",
+   "expect_finding": "artemether+lumefantrine",
+   "why": "A contraindication at combination granularity: 'artemether+lumefantrine' is absolute in pregnancy, and looking the rule up under 'artemether' or 'lumefantrine' finds nothing, so a first-trimester course was reported as a pass. 17 of the 1 267 contraindication rows are keyed this way."
+  },
+  {
+   "id": "P156",
+   "lines": [
+    "Tab Thyronorm 50 1-0-0 x 30 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "why": "A bare brand number takes its unit from the formulary row's molecule, not from a default. Perception used to stamp ' mg' on every trailing digit, which turned the catalog row 'Thyronorm 50' into 50 mg of levothyroxine against a 0.3 mg/day cap: a thousandfold over-read of a 50 mcg tablet, and a routine correct course that queued. This case pins the other direction — the clean read must pass."
+  },
+  {
+   "id": "P157",
+   "lines": [
+    "Tab Thyronorm 500 1-0-0 x 30 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "expect_finding": "10x difference in the brand name itself",
+   "why": "The tenfold mis-read hides inside the brand name. The line states no unit, the substring resolver answers with the row 'Thyronorm 50', and the strength is then read back from THAT row — so the line-vs-formulary comparison saw a perfect agreement with a label the prescription never wrote, and 500 mcg of levothyroxine passed. The line's number is now anchored to the resolved brand core, so the contradiction is the finding. Same guard as the stated-strength class, reached from a different field."
+  },
+  {
+   "id": "P158",
+   "lines": [
+    "Tab Amoxicillin+Clavulanic acid 500/125 BD x 5 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "why": "25 catalog rows state one strength per component. Reading only the trailing half as *the* brand strength made a correct 500 mg amoxicillin line look fourfold wrong; a ratio label now matches against either component."
+  },
+  {
+   "id": "P159",
+   "lines": [
+    "Cap Calcirol 60K once weekly x 8 weeks"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "why": "The kilo-suffix brand number is the 60,000 IU sachet, not 60 mg. Reading it as a mass dropped both the multiplier and the unit the preparation is sold in. The weekly course is the label's own schedule, so it must pass — the negative control for the IU interval mandate below."
+  },
+  {
+   "id": "P160",
+   "lines": [
+    "Cap Calcirol 60K 1-0-0 x 30 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "expect_finding": "never-event",
+   "why": "An interval mandate written in IU: 60,000 IU of cholecalciferol daily for a month is 1.8 million IU, and the vitamin-D toxicity that follows is the reason the label says once weekly. The mandate table could not express it — every row is keyed on mg, and an IU strength has no mg equivalent, so the caps and the interval rules both abstained and the schedule passed silently. The threshold is the dose size, so the 400-2,000 IU daily drops and syrups a patient legitimately takes are untouched."
+  },
+  {
+   "id": "P161",
+   "lines": [
+    "Cap Uprise-D3 60000 IU 1-0-0 x 30 days"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "expect_finding": "never-event",
+   "why": "The same mandate reached from the other two reading defects: the brand's 'D3' is a vitamin letter, not a 3 mg strength (the lookbehind keeps it out of the strength slot), and here the line states 60000 IU itself, so the unit comes from the label rather than from the molecule. Both planes must queue the daily schedule."
+  },
+  {
+   "id": "P162",
+   "lines": [
+    "Tab Calcirol 60K - 0-0-1 weekly x 8 weeks"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "why": "A slot code and an interval word on one line are ONE instruction — which hours, and how often that day comes around. The extractor kept only the code, so '0-0-1 weekly' arrived as a daily schedule and the IU mandate queued a correct eight-week course. The sealed fixture RX-038 is written this way, which is how the pair was measured."
+  },
+  {
+   "id": "P163",
+   "lines": [
+    "Tab Folitrax 10 mg 0-0-1 weekly x 8 weeks"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "pass",
+   "why": "The same composition on the drug where the error is fatal: oral methotrexate written '0-0-1 weekly' is the label's own schedule, and the never-event rule that exists to catch daily dosing must not fire on it. A false positive here is not neutral — it teaches the reviewer to wave the queue through."
+  },
+  {
+   "id": "P164",
+   "lines": [
+    "Cap Calcirol 60K 1-0-1 alternate day x 8 weeks"
+   ],
+   "confidences": [
+    0.97
+   ],
+   "contexts": [],
+   "expect": "confirm_queue",
+   "expect_finding": "never-event",
+   "why": "The qualifier composes, it does not excuse: 60,000 IU on alternate days is still three times the label's weekly maximum, so the mandate must bite at interval 2 as well as interval 1. The negative control for P162/P163."
   }
  ]
 }

@@ -122,7 +122,7 @@ export function Landing({ onLaunch, metrics }: Props) {
           {/* Asymmetric: 5/7 split, hairline tops, no clone cards. */}
           <div className="mt-12 grid gap-x-10 gap-y-12 md:grid-cols-12">
             <div className="border-t pt-6 md:col-span-5">
-              <div className="vy-numeral vy-serif text-6xl" style={{ color: "var(--vy-pine)" }}>
+              <div className="vy-numeral vy-serif text-6xl" style={{ color: "var(--vy-pine-ink)" }}>
                 {GAP_STATS[0].value}
               </div>
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{GAP_STATS[0].text}</p>
@@ -131,7 +131,7 @@ export function Landing({ onLaunch, metrics }: Props) {
               <div className="grid gap-10 sm:grid-cols-2">
                 {GAP_STATS.slice(1).map((s) => (
                   <div key={s.value} className="border-t pt-6">
-                    <div className="vy-numeral vy-serif text-4xl" style={{ color: "var(--vy-pine)" }}>{s.value}</div>
+                    <div className="vy-numeral vy-serif text-4xl" style={{ color: "var(--vy-pine-ink)" }}>{s.value}</div>
                     <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
                   </div>
                 ))}
@@ -162,7 +162,16 @@ export function Landing({ onLaunch, metrics }: Props) {
       </section>
 
       {/* ---------------- 03 · the law (dark band) ---------------- */}
-      <section id="law" className="border-y" style={{ background: "var(--vy-pine-ink)" }}>
+      {/* `--vy-band`, never `--vy-pine-ink`: the latter is the pine TEXT ink and
+          `.dark` redefines it to a light mint, which turned this whole band into
+          a mint wash behind mint text (1.05:1) in dark mode. Its hairline comes
+          from the band family too — `--border` darkens with the page and would
+          vanish against a surface that no longer moves. */}
+      <section
+        id="law"
+        className="border-y"
+        style={{ background: "var(--vy-band)", borderColor: "var(--vy-panel-border)" }}
+      >
         <div className="mx-auto max-w-6xl px-6 py-16 text-[var(--vy-dark-ink)]">
           <SectionHead num="03" eyebrow="The law" tone="dark">
             The model reads.<br />The rules decide.
@@ -207,13 +216,13 @@ export function Landing({ onLaunch, metrics }: Props) {
         </SectionHead>
         <div className="mt-10 grid gap-px overflow-hidden rounded-xl border md:grid-cols-4" style={{ borderColor: "var(--border)", background: "var(--border)" }}>
           {[
-            { k: "110/110", v: "cross-engine parity — TS and Python engines agree on every labeled case" },
+            { k: "164/164", v: "cross-engine parity — TS and Python engines agree on every labeled case" },
             { k: "18/18", v: "engine self-test at 100%, runnable live in the Evidence tab" },
-            { k: "94", v: "automated web tests, including an axe-core accessibility gate on every core journey" },
+            { k: "305", v: "sourced daily-dose ceilings in one table of record, generated identically into both engines" },
             { k: "<10ms", v: "deterministic safety plane latency, offline, zero network" },
           ].map((p) => (
             <div key={p.k} className="bg-card p-6">
-              <div className="vy-numeral vy-serif text-3xl" style={{ color: "var(--vy-pine)" }}>{p.k}</div>
+              <div className="vy-numeral vy-serif text-3xl" style={{ color: "var(--vy-pine-ink)" }}>{p.k}</div>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{p.v}</p>
             </div>
           ))}
@@ -244,7 +253,7 @@ export function Landing({ onLaunch, metrics }: Props) {
         <div className="mx-auto grid max-w-6xl gap-8 px-6 py-12 md:grid-cols-12">
           <div className="md:col-span-6">
             <div className="flex items-baseline gap-2">
-              <span className="vy-serif text-xl font-semibold" style={{ color: "var(--vy-pine)" }}>वैद्य</span>
+              <span className="vy-serif vy-devanagari text-xl font-semibold" style={{ color: "var(--vy-pine-ink)" }}>वैद्य</span>
               <span className="text-sm font-semibold tracking-wide">VAIDYA</span>
             </div>
             <p className="mt-3 max-w-sm text-xs leading-relaxed text-muted-foreground">
@@ -264,7 +273,7 @@ export function Landing({ onLaunch, metrics }: Props) {
           <div className="md:col-span-3">
             <p className="vy-eyebrow">Engine</p>
             <ul className="vy-numeral mt-3 space-y-2 text-xs text-muted-foreground">
-              <li>snapshot {metrics?.dataset?.snapshot ?? "2026-09-vm3"}</li>
+              <li>snapshot {metrics?.dataset?.snapshot ?? "2026-09"}</li>
               <li>{metrics?.dataset?.interactions ?? "—"} DDInter/Stockley/FDA-derived rules</li>
               <li>{metrics?.dataset?.brands ?? "—"}-brand formulary</li>
             </ul>

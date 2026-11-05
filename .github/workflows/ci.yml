@@ -33,7 +33,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          # 3.13, not 3.12: the gates in docs/TESTING.md were measured on a 3.13
+          # interpreter, and starlette's own metadata installs a different
+          # dependency set below 3.13 (`typing-extensions` only for
+          # python_version < '3.13'). A CI that resolves a different graph cannot
+          # confirm the environment the numbers came from.
+          python-version: "3.13"
       - name: Install (pinned via constraints.txt, MS-11)
         run: |
           python -m pip install --upgrade pip
@@ -41,7 +46,10 @@ jobs:
           pip install -c constraints.txt -e "apps/api[dev]"
       - name: Lint (ruff)
         run: |
-          pip install "ruff>=0.6"
+          # Pinned through constraints.txt. `ruff>=0.6` floated: 0.17.2 reported
+          # this tree clean and 0.17.3 reported two findings, so an unpinned
+          # linter turns CI red on a day nobody changed any code.
+          pip install -c constraints.txt ruff
           ruff check apps/api packages/contracts eval tools
       - name: Dependency audit (pip-audit)
         run: |
@@ -49,6 +57,19 @@ jobs:
           pip-audit --skip-editable --progress-spinner off
       - name: Test (safety plane + golden paths + perception + red-team + parity + properties + observability)
         run: pytest apps/api -q
+      - name: Documented API suite count is this run's count (TD-16)
+        # The step above prints pytest's own summary for a human to read; this one runs
+        # the suite again and goes red if README.md or docs/TESTING.md states a different
+        # number. The duplicated ~75 s is the honest price of a measurement claim that
+        # cannot rot — three stale counts were found by hand in one pass.
+        run: python tools/check_claims.py --tier api
+      - name: Verdict tally atomicity (3 processes x 1500 shared-row writes, RES-31)
+        # No --baseline here on purpose: that flag prints the single-process write
+        # ceiling, and CI should go red for tally drift, not for a noisy runner.
+        # `make prove-atomicity` runs the same command with it.
+        run: python tools/prove_tally_atomicity.py --workers 3 --rounds 1500
+      - name: Multi-process WAL boot order (30 trials x 4 fresh-file opens, RES-32)
+        run: python tools/prove_wal_boot_order.py --trials 30 --workers 4
       - name: Eval regression gate (floors + committed baseline, ADR-0013)
         run: python eval/regression_gate.py
       - name: Eval (fixture benchmark, A4)
@@ -83,12 +104,19 @@ jobs:
       - name: Deterministic selftest (engine 18-case suite + copilot gates)
         working-directory: apps/web
         run: bun run selftest
-      - name: Cross-engine parity gate (ADR-0012/MED-015, shared 110-case golden corpus, 100% required)
+      - name: Cross-engine parity gate (ADR-0012/MED-015, shared 164-case golden corpus, 100% required)
         working-directory: apps/web
         run: bun run parity
-      - name: Integration tests (route handlers + middleware security over isolated SQLite)
+      - name: Integration tests (route handlers + proxy security over isolated SQLite)
         working-directory: apps/web
         run: bun run test
+      - name: Documented web suite counts are this run's counts (TD-16)
+        # Stdlib-only Python, so the system interpreter on the runner is enough; the tool
+        # shells out to `bun test` and compares its summary against every document site
+        # that states the web figures in the present tense. `claims.test.ts` pins those
+        # same README numbers as *lower* bounds (it cannot re-derive a run count from
+        # inside a test); this is the exact-count half.
+        run: python3 tools/check_claims.py --tier web
       - name: bun audit (JS-tier advisory gate, MS-11)
         working-directory: apps/web
         # High-and-above must be clean. The single dev-only advisory
@@ -117,11 +145,104 @@ jobs:
       - name: Install Playwright browsers
         working-directory: apps/web
         run: bunx playwright install --with-deps chromium
+      - name: Add a window server
+        # `e2e/pwa-delivery.spec.ts` can only measure notification *delivery* headed:
+        # headless Chromium reports `Notification.permission === "denied"` for this
+        # origin even after `grantPermissions`, so nothing reaches `showNotification`.
+        # Playwright's `--with-deps` installs Chromium's shared libraries, not an X
+        # server — without this step a headed launch dies on "Missing X server or
+        # $DISPLAY" and the job goes red for a reason that is not a product defect.
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends xvfb
       - name: E2E (browser journeys on the deterministic tier)
         working-directory: apps/web
-        run: bun run e2e
+        # `xvfb-run -a` is what keeps that file's own `displayAvailable` skip from ever
+        # firing in CI: on a runner the whole tier is meant to run, not be reported as
+        # unmeasurable. The headless specs are unaffected by the extra env var.
+        run: xvfb-run -a bun run e2e
         env:
           NEXT_TELEMETRY_DISABLED: "1"
+
+  # The deployment tier, gated. Nothing else in this workflow touches Docker, and
+  # that is exactly how the tier collected its defects: no `.dockerignore` anywhere
+  # (so the web build copied a host `node_modules`, a 293 MB `.next` and the
+  # developer's SQLite database into the image), Windows-compiled `*.pyc` shipped
+  # inside the API image, and a `/sitemap.xml` frozen to `localhost:3000` because a
+  # build-time value was being set at runtime. A path that only ever gets exercised
+  # on one laptop is a path that has not been verified.
+  container:
+    name: container tier (compose build + smoke)
+    runs-on: ubuntu-latest
+    # Three images built from a cold cache (bun install + next build + pip install),
+    # a schema one-shot and a health-gated boot. Generous, but this job is the one
+    # that spends real time.
+    timeout-minutes: 20
+    env:
+      # Not the real origin — a value that is not the fallback, so a build that
+      # ignores the ARG cannot pass this job by accident.
+      NEXT_PUBLIC_SITE_URL: https://ci.example
+      # Pinned so the image tags below are nameable. Without it the project name is
+      # the checkout directory's basename, which is not a fact this file controls.
+      COMPOSE_PROJECT_NAME: medisaathi-container
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build both images
+        run: docker compose build
+      - name: The image runs the pinned dependency stack
+        # Until 2026-10-29 the API Dockerfile installed with no `-c constraints.txt`,
+        # so a rebuild of one commit could ship FastAPI / Starlette / pydantic
+        # versions no test in this repository had run — invisible to every other job,
+        # because no test runs in the image. The static half of this gate fails if any
+        # `pip install` line loses its `-c` (the way the hole would silently return);
+        # the measured half reads the versions back out of the image's own metadata.
+        run: python tools/check_container_pins.py
+      - name: Host artefacts did not reach the images
+        # Asserted against the *image*, not a compose service. The earlier form ran
+        # `docker compose run … sh web -c 'find /app -name "*.db"'`, and `web` mounts
+        # a named volume at `/app/db` — so the find saw a file the volume put there,
+        # not one the build copied. Proved by A/B: on 2026-10-30 the service form
+        # returned `/app/db/custom.db` (exit 1) on a machine that had held demo data
+        # and the image form returned nothing (exit 0); re-run on 2026-10-31, the
+        # service form still exits 1 here while these three exit 0. The gate is not
+        # vacuous — the same wrapper aimed at `/app/package.json` exits 1. Green
+        # through a mount is only green until somebody reorders this job, so do not
+        # "simplify" these back to `docker compose run` (docs/TECH_DEBT.md RES-42).
+        run: |
+          # Bytecode: the API stage COPYs apps/api, and a `__pycache__` in the tree
+          # is compiled for the host interpreter — a Linux container must not import
+          # a Windows .pyc. Databases and `.env` files: runtime state and local
+          # config, never image content.
+          docker run --rm --entrypoint sh medisaathi-container-api:latest -c \
+            'test -z "$(find /srv -name \*.pyc -print -quit)"'
+          docker run --rm --entrypoint sh medisaathi-container-web:latest -c \
+            'test -z "$(find /app -maxdepth 4 \( -name \*.db -o -name .env\* \) -print -quit)"'
+          # The defect this gate exists for, measured on this repo: without a
+          # .dockerignore the web build stage's `COPY . .` landed the host
+          # node_modules over the Linux one, and the runner image shipped
+          # `query_engine-windows.dll.node` and `schema-engine-windows.exe` — a
+          # Windows .exe inside a Linux production image, 176 MB of it, and a Prisma
+          # client that had two engines to choose from.
+          docker run --rm --entrypoint sh medisaathi-container-web:latest -c \
+            'test -z "$(find /app \( -iname \*windows\* -o -iname \*.exe -o -iname \*darwin\* \) -print -quit)"'
+      - name: One-shot schema apply on a fresh volume (MS-05)
+        run: docker compose --profile tools run --rm schema
+      - name: Boot and wait for health
+        run: docker compose up -d --wait --wait-timeout 180
+      - name: Both surfaces answer
+        run: |
+          curl -sf http://127.0.0.1:3000/api/evidence > /dev/null
+          curl -sf http://127.0.0.1:8000/healthz > /dev/null
+      - name: The build-time origin is the one that shipped
+        # Fails loudly if the ARG stops reaching `next build`: the sitemap is baked,
+        # so a regression here is a deployed app announcing the wrong canonical URL.
+        run: |
+          curl -sf http://127.0.0.1:3000/sitemap.xml | grep -q "https://ci.example/"
+          curl -sf http://127.0.0.1:3000/ | grep -q "https://ci.example"
+      - name: Compose logs (only when something failed)
+        if: failure()
+        run: docker compose logs --no-color | tail -n 200
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
 
   # Dependency review summarizes new vulnerable dependencies on PRs only.
   dependency-review:

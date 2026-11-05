@@ -20,12 +20,13 @@ judge-facing build; the API service is its deep-verification companion.
 flowchart TB
     subgraph WEB["apps/web — Next.js 16, single route"]
         UI["Landing story ⇄ Workspace<br/>(Verify · Today · Insights · Copilot · Family · Evidence)"]
-        API["Route handlers: verify · plans · doses/action · analytics · copilot<br/>evals · evidence · family · metrics · seed · formulary/search"]
+        API["Route handlers: verify · plans · doses/action · analytics · reminders · queue<br/>copilot · evals · evidence · family · metrics · seed · formulary/search"]
     end
     subgraph CORE["Deterministic core (pure TS, zero network, zero model)"]
         ENG["safety/engine.ts — normalize → interactions → combination graph<br/>→ contraindications → duplicates → dose caps → verdict"]
-        ADH["safety/adherence.ts — schedules, MPR, streaks, catch-up law"]
-        DS["safety/dataset.ts — 94 brands · 79 interactions · 34 contraindications · caps"]
+        ADH["safety/adherence.ts — slot generation, the overdue sweep,<br/>day-coverage MPR, streaks, catch-up law"]
+        REM["safety/reminders.ts — planAlerts(): nudge · due · late re-nudge,<br/>quiet hours, dedup, ended by any answer<br/>(delivered by lib/use-reminders.ts)"]
+        DS["safety/dataset.ts + tables.generated.ts — 2 836 brands ·<br/>9 660 interaction pairs · 1 267 contraindications, compiled from<br/>data/*.csv, interned and hash-pinned"]
         ST["safety/selftest.ts — 18 expert-labeled cases"]
     end
     subgraph AI["AI layer (gated)"]
@@ -34,8 +35,9 @@ flowchart TB
         RET["ai/retrieval.ts — zero-dependency BM25 over 30 source-attributed chunks"]
         EV["ai/evals.ts — 10 labeled cases + automated rubric judge"]
     end
-    DB[("SQLite · Prisma<br/>Patient · Prescription · TherapyPlan · Medication<br/>Dose · EscalationEvent · CaregiverLink · AuditLog · Metric")]
+    DB[("SQLite · Prisma<br/>Patient · Prescription · TherapyPlan · Medication · Dose<br/>ConfirmQueueItem · QueueTransition · EscalationEvent<br/>CaregiverLink · ReminderSetting · AuditLog · Metric")]
     UI --> API
+    UI --> REM
     API --> ENG & ADH & DB
     ENG --> DS & ST
     API --> EXT --> ENG
@@ -44,7 +46,7 @@ flowchart TB
 ```
 
 **The model reads. The rules decide.** If every LLM vanished, the safety plane,
-scheduling, adherence analytics and family feed keep working — the demo
+scheduling, the reminder plan, adherence analytics and family feed keep working — the demo
 degrades honestly (deterministic line-splitter, honest refusals), never
 falsely.
 

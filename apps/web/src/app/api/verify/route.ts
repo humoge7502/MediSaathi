@@ -1,6 +1,5 @@
-import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
-import { ok, fail, bumpMetric, audit } from "@/lib/api-helpers";
+import { ok, fail, bumpMetric, audit, readJson, bodyError, scopePatient } from "@/lib/api-helpers";
 import { runSafetyPlane, overallConfidence } from "@/lib/safety/engine";
 import { DEFAULT_THRESHOLD_SET_ID } from "@/lib/safety/gate";
 import { applyRegimenEscalation } from "@/lib/regimen-state";
@@ -17,20 +16,32 @@ export const maxDuration = 60;
  * Pipeline: perception (LLM, gated) -> safety plane (deterministic) -> verdict.
  * Every run is persisted with full provenance and counted in metrics.
  */
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   let body: { text?: string; contexts?: string[] };
   try {
-    body = await req.json();
-  } catch {
-    return fail("Invalid JSON body");
+    body = await readJson<typeof body>(req);
+  } catch (e) {
+    return bodyError(e);
   }
 
-  const text = (body.text ?? "").trim();
+  const text = (typeof body.text === "string" ? body.text : "").trim();
+  // Deliberately no per-context length cap: a declared context is safety
+  // signal ("… and I take warfarin"), and truncating it could drop the very
+  // word that raises a contraindication. The count is capped and the whole
+  // body is now bounded at the edge instead.
   const contexts = Array.isArray(body.contexts) ? body.contexts.slice(0, 20).map(String) : [];
   if (text.length < 3) return fail("Prescription text is too short to verify");
   if (text.length > 4000) return fail("Prescription text is too long (max 4000 chars)");
 
   // 1. Perception plane (LLM proposes; never decides)
+  //
+  // Ownership (TD-1 progress) is resolved before the first write: the visit is
+  // stamped with the patient this build serves, so a later route can tell a
+  // foreign prescription id from a local one instead of trusting the caller. On
+  // a fresh install the very first verify runs before any Patient row exists —
+  // NULL there means "not claimed yet", and /api/plans claims the row when it
+  // adopts the prescription.
+  const scope = await scopePatient();
   let extraction;
   try {
     extraction = await extractPrescriptionLines(text);
@@ -50,6 +61,7 @@ export async function POST(req: NextRequest) {
           findingsJson: "[]",
           engineSnapshot: "n/a",
           contextsJson: JSON.stringify(contexts),
+          patientId: scope?.id ?? null,
         },
       }),
       bumpMetric("verifications"),
@@ -110,6 +122,7 @@ export async function POST(req: NextRequest) {
       findingsJson: JSON.stringify(report.findings),
       engineSnapshot: report.snapshot,
       contextsJson: JSON.stringify(contexts),
+      patientId: scope?.id ?? null,
       // Gate-law provenance (MED-003): threshold set + fused score per verdict.
       thresholdSetId: report.gate?.thresholdSetId ?? DEFAULT_THRESHOLD_SET_ID,
       prescriptionFused: report.gate?.prescriptionFused ?? confidence,

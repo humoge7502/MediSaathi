@@ -7,380 +7,817 @@ note for the human, never a verdict by itself.
 """
 from __future__ import annotations
 
+import csv
+import hashlib
+import json
+import os
 import re
+from dataclasses import dataclass
 
 from medisaathi_contracts import ExtractionField
 
-#: Daily maxima (mg/day) from FDA labels / SPC published maxima.
-#: Provenance per molecule lives in the dataset package
-#: (04_labels_dailymed_fda/dose_caps_extended.csv); snapshot 2026-09-18.
-#: NOTE: methotrexate is WEEKLY (7.5-30 mg once weekly) — daily use is a fatal
-#: error; the cap below is a backstop, the weekly schedule is enforced by the
-#: prescriber-facing warning in dose_warning().
-DAILY_CAPS_MG = {
-    "paracetamol": 4000.0,
-    "ibuprofen": 1200.0,      # OTC cap; prescription cap is higher
-    "diclofenac": 150.0,
-    "aspirin": 4000.0,
-    "tramadol": 400.0,
-    "pregabalin": 600.0,
-    "metformin": 3000.0,
-    "levothyroxine": 0.3,
-    "aceclofenac": 200.0,
-    "naproxen": 1250.0,
-    "atorvastatin": 80.0,
-    "rosuvastatin": 40.0,
-    "simvastatin": 40.0,
-    "glibenclamide": 20.0,
-    "glimepiride": 8.0,
-    "gliclazide": 320.0,
-    "sitagliptin": 100.0,
-    "ondansetron": 32.0,
-    "domperidone": 30.0,
-    "cetirizine": 10.0,
-    "levocetirizine": 5.0,
-    "montelukast": 10.0,
-    "fluconazole": 400.0,
-    "ciprofloxacin": 1500.0,
-    "levofloxacin": 750.0,
-    "ofloxacin": 800.0,
-    "azithromycin": 500.0,
-    "clarithromycin": 1000.0,
-    "doxycycline": 200.0,
-    "amoxicillin": 3000.0,
-    "prednisolone": 80.0,
-    "dexamethasone": 16.0,
-    "warfarin": 10.0,
-    "clopidogrel": 75.0,
-    "amitriptyline": 150.0,
-    "sertraline": 200.0,
-    "citalopram": 40.0,
-    "fluoxetine": 80.0,
-    "alprazolam": 4.0,
-    "clonazepam": 20.0,
-    "zolpidem": 10.0,
-    "codeine": 240.0,
-    "theophylline": 450.0,
-    "salbutamol": 800.0,
-    "metoprolol": 400.0,
-    "atenolol": 100.0,
-    "amlodipine": 10.0,
-    "losartan": 100.0,
-    "telmisartan": 80.0,
-    "ramipril": 10.0,
-    "enalapril": 40.0,
-    "lisinopril": 40.0,
-    "furosemide": 600.0,
-    "torasemide": 200.0,
-    "spironolactone": 100.0,
-    "digoxin": 0.5,
-    "amiodarone": 400.0,
-    "lithium carbonate": 2400.0,
-    "methotrexate": 30.0,
-    "hydroxychloroquine": 400.0,
-    "allopurinol": 800.0,
-    "febuxostat": 120.0,
-    "colchicine": 1.2,
-    "albendazole": 800.0,
-    "ivermectin": 12.0,
-    "isotretinoin": 60.0,
-    "carbamazepine": 1200.0,
-    "phenytoin": 600.0,
-    "levetiracetam": 3000.0,
-    "gabapentin": 3600.0,
-    "valproate": 2500.0,
-    "lamotrigine": 400.0,
-    "risperidone": 16.0,
-    "olanzapine": 20.0,
-    "quetiapine": 800.0,
-    "aripiprazole": 30.0,
-    "haloperidol": 20.0,
-    "clozapine": 900.0,
-    "amisulpride": 1200.0,
-    # --- DataPack 2026-09-20: +227 pack-only caps (repo values kept on conflict; ibuprofen stays 1200 OTC) ---
-    "acarbose": 300,
-    "acitretin": 75,
-    "acyclovir": 4000,
-    "alendronate": 70,
-    "alfuzosin": 10,
-    "ambroxol": 90,
-    "amoxicillin+clavulanic acid": 3000,
-    "anastrozole": 1,
-    "aprepitant": 375,
-    "ascorbic acid": 2000,
-    "azathioprine": 250,
-    "betahistine": 48,
-    "betamethasone": 8,
-    "bicalutamide": 150,
-    "bisacodyl": 15,
-    "bisoprolol": 20,
-    "bromhexine": 48,
-    "bupropion": 450,
-    "buspirone": 60,
-    "calcium carbonate+vitamin d3": 2000,
-    "canagliflozin": 300,
-    "candesartan": 32,
-    "capecitabine": 5000,
-    "captopril": 450,
-    "carbimazole": 60,
-    "carvedilol": 100,
-    "cefadroxil": 2000,
-    "cefixime": 800,
-    "cefpodoxime": 800,
-    "cefuroxime": 1000,
-    "celecoxib": 400,
-    "cephalexin": 4000,
-    "chloroquine": 1000,
-    "chlorpheniramine": 16,
-    "chlorthalidone": 25,
-    "cholecalciferol": 60000,
-    "cilnidipine": 20,
-    "clindamycin": 1800,
-    "clobazam": 30,
-    "clofazimine": 300,
-    "clomiphene": 150,
-    "clonidine": 1.2,
-    "cloxacillin": 4000,
-    "cotrimoxazole": 1920,
-    "cyanocobalamin": 1000,
-    "cyclosporine": 600,
-    "cyproheptadine": 32,
-    "dapagliflozin": 10,
-    "dapsone": 200,
-    "deflazacort": 72,
-    "desloratadine": 10,
-    "dextromethorphan": 120,
-    "diazepam": 30,
-    "dicyclomine": 160,
-    "diethylcarbamazine": 300,
-    "diltiazem": 360,
-    "doxazosin": 16,
-    "doxofylline": 800,
-    "drotaverine": 240,
-    "duloxetine": 120,
-    "dutasteride": 0.5,
-    "empagliflozin": 25,
-    "eplerenone": 100,
-    "erythromycin": 4000,
-    "escitalopram": 20,
-    "esomeprazole": 40,
-    "estradiol": 4,
-    "ethambutol": 1600,
-    "ethinylestradiol+desogestrel": 30,
-    "ethinylestradiol+levonorgestrel": 50,
-    "etizolam": 2,
-    "etoricoxib": 120,
-    "exemestane": 25,
-    "ezetimibe": 10,
-    "famotidine": 80,
-    "fenofibrate": 200,
-    "ferrous ascorbate+folate": 300,
-    "ferrous sulphate": 325,
-    "fexofenadine": 180,
-    "finasteride": 5,
-    "flavoxate": 1200,
-    "flucloxacillin": 4000,
-    "flunarizine": 10,
-    "flurbiprofen": 300,
-    "fluvoxamine": 200,
-    "folic acid": 5,
-    "fosfomycin": 3000,
-    "gemfibrozil": 1200,
-    "glipizide": 40,
-    "granisetron": 4,
-    "griseofulvin": 1000,
-    "hydralazine": 300,
-    "hydrochlorothiazide": 50,
-    "hydrocortisone": 200,
-    "hydroxyurea": 3000,
-    "hydroxyzine": 100,
-    "imatinib": 800,
-    "imipramine": 200,
-    "indapamide": 2.5,
-    "indomethacin": 150,
-    "irbesartan": 300,
-    "isoniazid": 300,
-    "isosorbide dinitrate": 120,
-    "isosorbide mononitrate": 120,
-    "itraconazole": 400,
-    "ivabradine": 15,
-    "ketoconazole": 400,
-    "ketoprofen": 200,
-    "labetalol": 2400,
-    "lacosamide": 400,
-    "lactulose": 60,
-    "lansoprazole": 60,
-    "leflunomide": 100,
-    "letrozole": 7.5,
-    "linagliptin": 5,
-    "linezolid": 1200,
-    "lithium": 2400,
-    "loperamide": 16,
-    "loratadine": 20,
-    "lorazepam": 10,
-    "lovastatin": 80,
-    "mebendazole": 500,
-    "mebeverine": 405,
-    "medroxyprogesterone": 20,
-    "mefenamic acid": 1500,
-    "meloxicam": 15,
-    "mesalamine": 4800,
-    "metformin_sr": 2000,
-    "methylcobalamin": 3000,
-    "methyldopa": 3000,
-    "methylprednisolone": 64,
-    "metoclopramide": 30,
-    "metoprolol_sr": 400,
-    "metronidazole": 1500,
-    "minocycline": 200,
-    "minoxidil": 100,
-    "mirabegron": 50,
-    "mirtazapine": 45,
-    "misoprostol": 800,
-    "morphine": 200,
-    "moxifloxacin": 400,
-    "mycophenolate mofetil": 4000,
-    "nebivolol": 40,
-    "nifedipine": 120,
-    "nimesulide": 200,
-    "nitrofurantoin": 400,
-    "nitroglycerin": 13,
-    "norethisterone": 15,
-    "norfloxacin": 800,
-    "nortriptyline": 150,
-    "olmesartan": 40,
-    "omeprazole": 40,
-    "oseltamivir": 150,
-    "oxcarbazepine": 2400,
-    "oxybutynin": 15,
-    "pantoprazole": 80,
-    "paroxetine": 50,
-    "pentoxifylline": 1200,
-    "perindopril": 10,
-    "pheniramine": 75,
-    "phenobarbitone": 180,
-    "phenylephrine": 60,
-    "pioglitazone": 45,
-    "piroxicam": 20,
-    "pitavastatin": 4,
-    "pravastatin": 80,
-    "praziquantel": 3000,
-    "prazosin": 20,
-    "prednisone": 100,
-    "primaquine": 30,
-    "probenecid": 2000,
-    "promethazine": 50,
-    "propranolol": 320,
-    "propylthiouracil": 450,
-    "pseudoephedrine": 240,
-    "pyrantel": 1000,
-    "pyrazinamide": 2000,
-    "pyridoxine": 200,
-    "quinine": 1800,
-    "rabeprazole": 40,
-    "raloxifene": 60,
-    "ranitidine": 300,
-    "ranolazine": 2000,
-    "rifampicin": 600,
-    "rifaximin": 1650,
-    "risedronate": 150,
-    "rizatriptan": 30,
-    "roxithromycin": 300,
-    "sacubitril+valsartan": 400,
-    "senna": 30,
-    "sildenafil": 100,
-    "silodosin": 8,
-    "sodium valproate": 2500,
-    "solifenacin": 10,
-    "sotalol": 160,
-    "sucralfate": 8000,
-    "sulfasalazine": 3000,
-    "sumatriptan": 200,
-    "tacrolimus": 20,
-    "tadalafil": 20,
-    "tamoxifen": 40,
-    "tamsulosin": 0.8,
-    "tapentadol": 600,
-    "terbinafine": 250,
-    "terbutaline": 15,
-    "tetracycline": 2000,
-    "thiamine": 300,
-    "tinidazole": 2000,
-    "tolfenamic acid": 400,
-    "topiramate": 400,
-    "tramadol+paracetamol": 800,
-    "tranexamic acid": 3750,
-    "trimetazidine": 70,
-    "trimethoprim": 400,
-    "ursodeoxycholic acid": 1050,
-    "valacyclovir": 3000,
-    "valsartan": 320,
-    "venlafaxine": 375,
-    "verapamil": 480,
-    "vildagliptin": 100,
-    "vitamin e": 1000,
-    "vitamin k1": 40,
-    "voglibose": 0.9,
-    "voriconazole": 800,
-    "zinc": 100,
-    "zolmitriptan": 10,
-    "zopiclone": 7.5,
-}
+from .frequency import Frequency, parse_frequency
+
+# ---------------------------------------------------------------- caps source
+#: Daily maxima (mg/day) are not a literal any more. They were, twice, and the
+#: two copies disagreed with the sourced table (data/reference/dose_caps.csv) on
+#: 17 molecules. The disagreements were clinically real: theophylline 450 against
+#: a level-guided 900 made a routine modified-release 800 mg/day course verdict as
+#: a fatal overdose (parity case P42), and ondansetron 32 mg was the historic IV
+#: single dose that was withdrawn over QT prolongation, applied to oral tablets.
+#:
+#: The CSV is now the table of record, generated by tools/build_dose_caps.py, and
+#: a drift test compares it with the TypeScript tier's generated copy. `basis`
+#: says what kind of limit a number is; HARD_CAP_MG says whether crossing 1.5x of
+#: it may block a plan. Level-guided, weight-based and specialist-supervised drugs
+#: are advisory-only on purpose: this engine has no serum level and no body
+#: weight, so a number it cannot verify is not a ceiling it may enforce.
+#:
+#: NOTE: methotrexate is WEEKLY (7.5-30 mg once weekly) - daily use is a fatal
+#: error; the cap is a backstop, the schedule is enforced by interval_hazard().
+_DATA_DIR = os.environ.get(
+    "MEDISAATHI_DATA_DIR",
+    os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                 "..", "..", "..", "..", "data")))
+
+DAILY_CAPS_MG: dict[str, float] = {}
+CAP_BASIS: dict[str, str] = {}
+HARD_CAP_MG: frozenset[str] = frozenset()
+#: The warn-only figure the same label carries under a blocking ceiling — the OTC
+#: self-care cap (ibuprofen 1200 under the 2400 prescription maximum). Losing it
+#: is how an over-the-counter-strength course started passing in silence.
+ADVISORY_MG: dict[str, float] = {}
+#: molecule -> declared context code -> the ceiling that context makes operative
+#: (paracetamol 2000 mg/day under declared liver disease). A number the patient
+#: supplies is not a number the engine has to guess.
+CAP_LOWERED_BY: dict[str, dict[str, float]] = {}
+CAP_TABLE_HASH = ""
+
+
+def load_dose_caps(data_dir: str | None = None) -> str:
+    """(Re)read the table of record into this module. Returns its hash.
+
+    Idempotent and cheap (~300 rows), so tests can point MEDISAATHI_DATA_DIR
+    somewhere else and reload without restarting the process.
+    """
+    global DAILY_CAPS_MG, CAP_BASIS, HARD_CAP_MG, ADVISORY_MG, CAP_LOWERED_BY
+    global CAP_TABLE_HASH
+    path = os.path.join(data_dir or _DATA_DIR, "reference", "dose_caps.csv")
+    with open(path, newline="", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+    caps: dict[str, float] = {}
+    basis: dict[str, str] = {}
+    advisory: dict[str, float] = {}
+    lowered: dict[str, dict[str, float]] = {}
+    hard: set[str] = set()
+    payload: list[list[str]] = []
+    for r in rows:
+        mol = r["molecule"].strip().lower()
+        caps[mol] = float(r["max_daily_mg"])
+        basis[mol] = (r.get("basis") or "licensed").strip()
+        if (r.get("escalate") or "true").strip().lower() == "true":
+            hard.add(mol)
+        adv = (r.get("advisory_mg") or "").strip()
+        if adv:
+            advisory[mol] = float(adv)
+        low = (r.get("lowered_by") or "").strip()
+        if low:
+            lowered[mol] = {p.split(":")[0].strip(): float(p.split(":")[1])
+                            for p in low.split(";") if ":" in p}
+        payload.append([mol, r["max_daily_mg"].strip(), adv, low,
+                        (r.get("basis") or "").strip(),
+                        (r.get("escalate") or "").strip()])
+    DAILY_CAPS_MG = caps
+    CAP_BASIS = basis
+    HARD_CAP_MG = frozenset(hard)
+    ADVISORY_MG = advisory
+    CAP_LOWERED_BY = lowered
+    CAP_TABLE_HASH = hashlib.sha256(
+        json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()[:16]
+    return CAP_TABLE_HASH
+
+
+load_dose_caps()
+
+
+def effective_cap(molecule: str,
+                  contexts: dict | None = None) -> tuple[float, str | None]:
+    """The mg/day ceiling this line is actually measured against.
+
+    Returns (ceiling, context_code) — `context_code` names the declared patient
+    factor that lowered it, or None when the table's standing maximum applies.
+    The lowest figure wins, because a patient who has declared severe liver
+    disease is dosed against the liver-disease ceiling, not the healthy-adult one.
+    """
+    mol = (molecule or "").lower().strip()
+    cap = DAILY_CAPS_MG.get(mol)
+    if cap is None:
+        return (float("inf"), None)
+    active = None
+    for code, limit in CAP_LOWERED_BY.get(mol, {}).items():
+        if not (contexts or {}).get(code):
+            continue
+        if active is None or limit < active[0]:
+            active = (limit, code)
+    if active is not None and active[0] < cap:
+        return active
+    return (cap, None)
+
+
+def cap_check(mol: str, total_mg: float,
+              contexts: dict | None = None) -> tuple[str, float | None, str | None]:
+    """Classify one molecule's mg/day against the limits the table gives it.
+
+    (outcome, limit, lowering_context):
+      "breach"   - a ceiling this engine may enforce is crossed; the caller
+                   decides whether it is a hazard or an advisory by size.
+      "advise"   - something was exceeded that must be said out loud but may not
+                   block: either the drug is not dosed against a ceiling the
+                   engine can verify (level-guided, weight-based, supervised), or
+                   only the label's lower self-care figure was passed.
+      "clean"    - inside every limit, with (None, None).
+
+    Both rules — the per-line warning above and the multi-line aggregate in the
+    engine — and both planes go through this one classifier, so a regimen cannot
+    warn in one tier and block in the other.
+    """
+    mol = (mol or "").lower().strip()
+    standing = DAILY_CAPS_MG.get(mol)
+    if standing is None:
+        return ("clean", None, None)
+    cap, lowering = effective_cap(mol, contexts)
+    if total_mg > cap:
+        if mol not in HARD_CAP_MG:
+            return ("advise", cap, lowering)
+        return ("breach", cap, lowering)
+    adv = ADVISORY_MG.get(mol)
+    if adv is not None and adv < cap and total_mg > adv:
+        return ("advise", adv, None)
+    return ("clean", None, None)
 
 _DUR_RE = re.compile(r"(\d+)\s*day", re.I)
 
-_DOSE_PER_DAY = {
-    "OD": 1, "HS": 1, "QHS": 1, "BD": 2, "TDS": 3, "QID": 4, "SOS": 1,
-}
+# ---------------------------------------------------------------- units
+#: strength token -> mg. `mcg` and `g` are the two that were silently dropped
+#: before: `daily_dose_mg` matched only the literal "mg", so a levothyroxine
+#: "50 mcg" line — against a 0.3 mg/day cap — parsed to None and went unscreened.
+_UNIT_TO_MG = {"mg": 1.0, "mcg": 0.001, "µg": 0.001, "ug": 0.001, "g": 1000.0}
+
+#: IU strengths are not mg-convertible without a preparation-specific potency.
+#: They are reported in `unit="iu"` so callers can screen them separately
+#: instead of silently reading "60000 IU" as 60,000 mg.
+_STRENGTH_RE = re.compile(
+    r"(\d+(?:\.\d+)?)\s*(mg|mcg|µg|ug|iu|g)\b", re.I)
 
 
-def parse_frequency_per_day(freq: str) -> int | None:
-    """TAC code 1-0-1 -> 2; BD -> 2; unknown -> None. Deterministic."""
-    freq = (freq or "").strip()
-    m = re.fullmatch(r"(\d+)\s*-\s*(\d+)\s*-\s*(\d+)", freq)
-    if m:
-        return sum(int(g) for g in m.groups())
-    word = _DOSE_PER_DAY.get(freq.upper())
-    if word:
-        return word
-    total = sum(int(x) for x in re.findall(r"\d+", freq))
-    return total or None
+@dataclass(frozen=True)
+class Strength:
+    """One parsed strength, normalized to mg when the unit allows it."""
+
+    value: float
+    unit: str                 # "mg" | "iu" | "unknown"
+    mg: float | None          # None for IU / unparseable
+
+    def __str__(self) -> str:  # pragma: no cover - display helper
+        return f"{self.value:g} {self.unit}"
+
+
+def parse_strength(text: str | None) -> Strength | None:
+    """Read the first strength token out of a free-text field."""
+    m = _STRENGTH_RE.search((text or "").lower())
+    if not m:
+        return None
+    value = float(m.group(1))
+    unit = m.group(2).lower()
+    if unit == "iu":
+        return Strength(value, "iu", None)
+    factor = _UNIT_TO_MG.get(unit)
+    if factor is None:
+        return Strength(value, "unknown", None)
+    return Strength(value, unit if unit in ("mg", "g") else "mcg", value * factor)
+
+
+# ------------------------------------------------------- never-event schedules
+#: Molecules whose approved formulation at (or above) `min_mg` is labeled for
+#: interval administration, where daily dosing is a recognized never-event.
+#:
+#: These are NOT expressible as a mg/day cap: oral methotrexate 15 mg once-daily
+#: is 15 mg/day, comfortably under the 30 mg/day cap, and is a known fatal
+#: prescribing error. The only rule that catches it is a minimum-interval rule.
+#:
+#: Sources: ISMP high-alert list (methotrexate, oral — "weekly only, never
+#: daily"); approved Indian labels for the bisphosphonate weekly strengths and
+#: for cholecalciferol 60,000 IU. `forms` restricts the rule to the formulations
+#: where the error actually occurs, so an IV/oncology regimen is not flagged.
+@dataclass(frozen=True)
+class IntervalMandate:
+    molecule: str
+    min_mg: float
+    min_interval_days: int
+    forms: tuple[str, ...] = ()      # empty = any form
+    source: str = ""
+    #: A rule written in IU instead of mg, for the preparations that are sold in
+    #: IU (the 60,000 IU vitamin-D sachet). IU is not mass-convertible, so a
+    #: table that can only state mg cannot describe them, and `min_mg` is then
+    #: ignored for that row.
+    min_iu: float | None = None
+
+
+INTERVAL_MANDATES: tuple[IntervalMandate, ...] = (
+    IntervalMandate("methotrexate", 0.001, 7, ("tablet", "syrup"),
+                    "ISMP high-alert (oral methotrexate: weekly, never daily)"),
+    IntervalMandate("alendronate", 35.0, 7, ("tablet",),
+                    "approved label: 35/70 mg weekly strengths"),
+    IntervalMandate("risedronate", 35.0, 7, ("tablet",),
+                    "approved label: 35 mg weekly"),
+    IntervalMandate("ibandronate", 100.0, 30, ("tablet", "injection"),
+                    "approved label: 150 mg monthly"),
+    IntervalMandate("semaglutide", 0.1, 7, ("injection",),
+                    "approved label: once-weekly injectable"),
+    # No form filter: what makes the schedule wrong is the size of the dose, not
+    # the packaging word. A daily cholecalciferol line states 400-2,000 IU and is
+    # untouched; at 60,000 IU the same molecule is the weekly sachet.
+    IntervalMandate("cholecalciferol", 0.0, 7, (),
+                    "approved label: 60,000 IU once weekly for 8-12 weeks",
+                    min_iu=60000.0),
+)
+
+
+def interval_mandate_for(molecule: str, form: str,
+                         mg: float | None,
+                         iu: float | None = None) -> IntervalMandate | None:
+    """The strictest interval rule that applies to this (molecule, form, dose).
+
+    Two units because the table names a preparation that is sold in IU: passing
+    only mg left the 60,000 IU sachet unscreenable, since an IU strength has no
+    mg equivalent and the cap rules abstain on purpose. A row reads one unit or
+    the other, never both.
+    """
+    if mg is None and iu is None:
+        return None
+    mol = (molecule or "").lower()
+    f = (form or "").lower()
+    for rule in INTERVAL_MANDATES:
+        if rule.molecule != mol:
+            continue
+        if rule.forms and not any(k in f for k in rule.forms):
+            continue
+        if rule.min_iu is not None:
+            if iu is not None and iu >= rule.min_iu:
+                return rule
+            continue
+        if mg is not None and mg >= rule.min_mg:
+            return rule
+    return None
+
+
+def parse_frequency_per_day(freq: str) -> float | None:
+    """Doses per calendar day for a frequency code, or None when illegible.
+
+    Delegates to the interval law in `app.safety.frequency` so the scheduler and
+    the dose arithmetic cannot disagree about what "QWK" means. Fractional for
+    interval codes (1/7 for weekly) — exact, not rounded to 0.14.
+    """
+    return frequency_to_per_day(parse_frequency(freq))
+
+
+def frequency_to_per_day(f: Frequency | None) -> float | None:
+    if f is None:
+        return None
+    return f.daily_factor
+
+
+def daily_dose(field: ExtractionField) -> tuple[float, str] | None:
+    """(amount, unit) per calendar day, when strength and frequency both parse.
+
+    Unit is "mg" or "iu". Interval codes divide by the interval, so a weekly
+    15 mg methotrexate reports 2.14 mg/day rather than 15 mg/day.
+    """
+    st = parse_strength(field.strength or field.dose)
+    if st is None:
+        return None
+    per_day = parse_frequency_per_day(field.frequency)
+    if per_day is None or (st.mg is None and st.unit != "iu"):
+        return None
+    amount = st.value if st.unit == "iu" else st.mg
+    unit = "iu" if st.unit == "iu" else "mg"
+    f = parse_frequency(field.frequency)
+    if f is not None and (f.as_needed or f.single):
+        # A PRN/stat line has no steady-state daily dose; report the single
+        # administration so the cap check still has something honest to test.
+        return (round(amount, 6), unit)
+    return (round(amount * per_day, 6), unit)
 
 
 def daily_dose_mg(field: ExtractionField) -> float | None:
-    """strength (or dose) mg x occurrences per day, when both parse."""
-    strength_txt = field.strength or field.dose
-    m = re.search(r"(\d+(?:\.\d+)?)\s*mg", (strength_txt or "").lower())
-    if not m:
+    """mg per calendar day, or None when the line is not mg-denominated."""
+    got = daily_dose(field)
+    if got is None or got[1] != "mg":
         return None
-    per_occurrence = float(m.group(1))
-    per_day = parse_frequency_per_day(field.frequency)
-    if per_day is None:
-        return None
-    return per_occurrence * per_day
+    return got[0]
 
 
-def dose_warning(field: ExtractionField, molecule: str | None = None) -> str | None:
+def dose_warning(field: ExtractionField, molecule: str | None = None,
+                 contexts: dict | None = None) -> str | None:
     """Return a human-readable warning, or None when the regimen parses clean.
     `molecule` (normalized, e.g. "paracetamol") sharpens cap matching; without
-    it the rule falls back to brand-name heuristics."""
+    it the rule falls back to brand-name heuristics. `contexts` is the declared
+    patient context, which can lower the ceiling a dose is measured against.
+
+    Warnings never change a verdict. Never-event *schedule* violations are not
+    warnings — see `interval_hazard()`; they block.
+    """
     mol_txt = ((molecule or "") + " " + (field.brand_text or "")).lower()
     # 1) TAC code sanity: any position > 2 occurrences at once is odd.
     m = re.fullmatch(r"(\d+)\s*-\s*(\d+)\s*-\s*(\d+)", (field.frequency or "").strip())
     if m and any(int(g) > 2 for g in m.groups()):
         return f"unusual frequency {field.frequency} - verify with the prescriber"
 
-    # 2) Daily-dose cap check (needs mg + frequency).
-    daily = daily_dose_mg(field)
-    if daily is not None:
-        for mol, cap in DAILY_CAPS_MG.items():
-            if mol in mol_txt and daily > cap:
-                return (f"computed daily dose {daily:g} mg exceeds the "
-                        f"{mol} cap of {cap:g} mg/day")
+    # 2) Frequency the plane cannot read is itself a finding: no schedule exists
+    #    for "TDS??", and inventing once-daily would be a silent fabrication.
+    f = parse_frequency(field.frequency)
+    if (field.frequency or "").strip() and f is None:
+        return f"frequency {field.frequency!r} is not a recognized dosing code"
 
-    # 3) Long paracetamol courses without review.
+    # 3) Daily-dose cap check (needs a parseable amount + frequency).
+    daily = daily_dose(field)
+    if daily is not None and daily[1] == "mg":
+        # The resolved molecule is looked up directly. Only when a line has no
+        # resolved molecule does this fall back to scanning the table for a name
+        # inside the brand text — and that scan is longest-first, because
+        # "cetirizine" is a substring of "levocetirizine": file order checked the
+        # looser 10 mg cap against a 5 mg drug.
+        mols = [m.strip() for m in (molecule or "").lower().split("+") if m.strip()]
+        if not mols:
+            mols = sorted((m for m in DAILY_CAPS_MG if m in mol_txt),
+                          key=len, reverse=True)
+        for mol in mols:
+            outcome, limit, lowering = cap_check(mol, daily[0], contexts)
+            if outcome == "clean":
+                continue
+            if outcome == "advise" and mol not in HARD_CAP_MG:
+                return (f"computed daily dose {daily[0]:g} mg is above the usual "
+                        f"{limit:g} mg/day for {mol} - {CAP_BASIS[mol]}-dosed, so "
+                        "this is advisory, not a maximum")
+            if outcome == "advise":
+                return (f"computed daily dose {daily[0]:g} mg is above the "
+                        f"{limit:g} mg/day self-care limit for {mol}; the label "
+                        f"maximum is {DAILY_CAPS_MG[mol]:g} mg/day, so this is "
+                        "advisory, not a maximum")
+            return (f"computed daily dose {daily[0]:g} mg exceeds the "
+                    f"{mol} cap of {limit:g} mg/day"
+                    + (f" - the declared conditions on this patient lower it from "
+                       f"{DAILY_CAPS_MG[mol]:g} mg/day" if lowering else ""))
+
+    # 4) Long paracetamol courses without review.
     if "paracetamol" in mol_txt:
         dm = _DUR_RE.search(field.duration or "")
         if dm and int(dm.group(1)) > 10:
             return f"paracetamol for {dm.group(1)} days - pharmacist review advised"
     return None
+
+
+def interval_hazard(field: ExtractionField, molecule: str | None,
+                    form: str | None) -> tuple[IntervalMandate, Frequency] | None:
+    """Detect a never-event schedule: an interval-mandated molecule on a
+    shorter interval than its label allows.
+
+    Returns (rule, frequency) when the line is a hazard, else None. Fires only
+    when BOTH the strength and the frequency are legible — an unreadable line is
+    the confirm queue's job, not this rule's.
+    """
+    f = parse_frequency(field.frequency)
+    if f is None or f.as_needed or f.single:
+        return None
+    st = parse_strength(field.strength or field.dose)
+    rule = interval_mandate_for(
+        molecule or "", form or "",
+        st.mg if st else None,
+        st.value if st and st.unit == "iu" else None)
+    if rule is None:
+        return None
+    if f.interval_days < rule.min_interval_days:
+        return (rule, f)
+    return None
+
+
+#: the trailing strength token of a brand name ("Thyronorm 50", "Dolo 650",
+#: "Calcirol 60K"). Grouping is ordered: number, optional kilo multiplier,
+#: optional explicit unit.
+#:
+#: The lookbehind is what keeps a vitamin letter-suffix out of the strength
+#: slot: "Uprise-D3" is a brand named after cholecalciferol, not a 3 mg dose.
+#: A strength digit is separated from the name by whitespace or punctuation,
+#: never glued straight onto a letter.
+_BRAND_STRENGTH_RE = re.compile(
+    r"(?<![A-Za-z])(\d+(?:\.\d+)?)\s*([kK])?\s*(mg|mcg|µg|ug|iu|g)?\s*$", re.I)
+
+#: a combination brand that states one strength per component:
+#: "Levodopa+carbidopa 100/10", "Amoxicillin+clavulanic acid 500/125".
+_BRAND_RATIO_STRENGTH_RE = re.compile(
+    r"(?<![A-Za-z])(\d+(?:\.\d+)?)\s*/\s*(\d+(?:\.\d+)?)\s*(mg|mcg|µg|ug|iu|g)?\s*$", re.I)
+
+
+def _norm_unit(raw: str) -> str:
+    unit = (raw or "").lower().replace("µg", "mcg").replace("ug", "mcg")
+    return "iu" if unit in ("units", "unit") else unit
+
+
+def brand_strengths(brand: str) -> list[tuple[float, str]]:
+    """Every strength a brand label states, in label order.
+
+    A combination label carries one number per component, so "500/125" is two
+    strengths rather than one. Reading only the trailing half as *the* brand
+    strength made a correct "100 mg" levodopa line look tenfold wrong and
+    queued a clean prescription; 25 rows in the catalog are written this way.
+    """
+    b = (brand or "").strip()
+    m = _BRAND_RATIO_STRENGTH_RE.search(b)
+    if m:
+        unit = _norm_unit(m.group(3))
+        return [(float(m.group(1)), unit), (float(m.group(2)), unit)]
+    m = _BRAND_STRENGTH_RE.search(b)
+    if not m:
+        return []
+    value = float(m.group(1))
+    if m.group(2):                      # "60K" -> 60,000
+        value *= 1000.0
+    unit = _norm_unit(m.group(3))
+    if value <= 2 and not unit and float(value).is_integer():
+        # A bare trailing INTEGER of 1-2 is a strip count or a serial ("Ecosprin 1",
+        # "Pan 1"), not a strength. A DECIMAL is never a count: "Alprax 0.5" and
+        # "Digoxin 0.25" are doses, and rejecting them by magnitude alone blinded
+        # the different-strength guard for the whole sub-2 mg class — the
+        # narrow-therapeutic-index drugs where a tenfold mis-read is fatal.
+        # Measured: "1. T. Alprax 0.5 10 mg once daily" was read as a confident
+        # 10 mg alprazolam course (parity case P41).
+        return []
+    return [(value, unit)]
+
+
+def brand_strength(brand: str) -> tuple[float, str] | None:
+    """(value, unit) encoded in a brand label, or None when it carries none.
+
+    None covers both "states no strength" and "states a ratio": no single
+    number stands for "500/125", so a caller that needs one must abstain
+    rather than promote one component and call it the brand.
+
+    A bare number inherits no unit — the caller compares it in the unit the
+    prescription line used, which is how "Thyronorm 50" is understood as 50 mcg
+    on a line that says "500 mcg" and as 650 mg on "Dolo 650 mg".
+    """
+    items = brand_strengths(brand)
+    return items[0] if len(items) == 1 else None
+
+
+#: Molecules whose Indian brand labels state a bare trailing number in MCG.
+#: This is a closed list, not a guess: reading "Thyronorm 50" as 50 mg is a
+#: 1000x error on a narrow therapeutic index drug, and no generic default can
+#: be trusted for it. Everything else takes the bare number as mg.
+_MCG_BRAND_MOLECULES = frozenset({"levothyroxine", "desmopressin", "calcitriol",
+                                  "thyroxine sodium"})
+
+#: Molecules whose Indian brand labels state a bare trailing number in IU, not
+#: mg. Also closed, and for the same reason: the vitamin-D sachet and softgel
+#: class is sold as "60K" meaning 60 000 IU (Calcirol 60K, D-Rise 60K), and
+#: inheriting the mg default asserted a 60 000 mg cholecalciferol daily dose
+#: against a formulary entry that does not exist in those units. IU is not
+#: mg-convertible, so the honest reading abstains from the mg/day cap instead
+#: of inventing a thousandfold over-dose.
+#: Source: approved Indian labels for cholecalciferol 60 000 IU / 200 000 IU.
+_IU_BRAND_MOLECULES = frozenset({"cholecalciferol", "colecalciferol",
+                                 "ergocalciferol", "calcifediol"})
+
+
+def _fold(text: str) -> str:
+    """Case- and whitespace-folded name, NBSP included (the catalog has both)."""
+    return " ".join((text or "").lower().replace("\u00a0", " ").split())
+
+
+#: a drug name that ends in a bare number: "Thyronorm 500", "Digoxin 0.25".
+#: A name ending in a unit ("Dolo 650 mg") has no core number — that strength is
+#: already unit-bearing and takes the field-level comparison instead.
+_CORE_NUMBER_RE = re.compile(r"^(?P<core>.*?[a-z])\s*(?P<num>\d+(?:\.\d+)?)\s*$", re.I)
+
+
+def _core_and_number(text: str) -> tuple[str, float] | None:
+    """(letter core, trailing number) of a drug name, or None."""
+    m = _CORE_NUMBER_RE.match((text or "").strip())
+    if not m:
+        return None
+    return (m.group("core").strip().lower(), float(m.group("num")))
+
+
+def _decade_apart(a: float, b: float) -> float | None:
+    """The decade ratio between two numbers, or None if they are not a decade apart.
+
+    Ten and a hundred are the two mis-read distances that matter: they are what a
+    dropped or invented decimal point does to a strength. A 2x or 5x difference is
+    a different error class and this rule deliberately does not claim it.
+    """
+    if a <= 0 or b <= 0:
+        return None
+    ratio = a / b
+    for decade in (10.0, 100.0):
+        if abs(ratio - decade) < 1e-9 or abs(ratio - 1 / decade) < 1e-9:
+            return decade
+    return None
+
+
+def brand_label_strength(brand: str, molecule: str | None = None) -> str | None:
+    """The strength a brand label itself states, as a unit-bearing string.
+
+    Prescriptions routinely name the strength only through the brand
+    ("Cap. Folitrax 10 HS"). Without this fallback the line carries no strength,
+    so neither the interval mandates nor the daily caps can screen it — which is
+    how a 10 mg methotrexate course walked past the weekly-dosing rule.
+    """
+    bs = brand_strength(brand)
+    if bs is None:
+        return None
+    value, unit = bs
+    if not unit:
+        mol = (molecule or "").lower()
+        unit = ("iu" if mol in _IU_BRAND_MOLECULES
+                else "mcg" if mol in _MCG_BRAND_MOLECULES
+                else "mg")
+    return f"{value:g} {unit}"
+
+
+def brand_core_mismatch(line_text: str, brand: str | None) -> str | None:
+    """Flag a line whose *own brand name* is a decade away from the row it matched.
+
+    The 10x that never reaches the field comparison: a line reading "Tab Thyronorm
+    500" states no unit, the substring resolver answers with the catalog row
+    "Thyronorm 50", and enrichment then reads the strength from THAT row. The
+    mis-read is therefore invisible to `strength_mismatch` — the line agrees
+    perfectly with a label the prescription did not write — and a thousandfold
+    dose passed as a clean 50 mcg. Comparing the two brand cores catches it.
+
+    The line's number is anchored to the resolved brand core, not taken from the
+    end of the line: "tab thyronorm 500 - 1-0-0 x 30 days" ends in a duration, and
+    a trailing-digit rule would read nothing there. The anchor is also what keeps
+    a strip count out of the rule — "Tab Dolo 10" against "Dolo 650" reads 650
+    after the core, not 10, because 10 does not follow "dolo 650".
+    """
+    if not brand:
+        return None
+    row = _core_and_number(_fold(brand))
+    if row is None:
+        return None
+    row_core, row_num = row
+    m = re.search(re.escape(row_core) + r"\s*(\d+(?:\.\d+)?)", _fold(line_text))
+    if not m:
+        return None
+    line_num = float(m.group(1))
+    decade = _decade_apart(line_num, row_num)
+    if decade is None:
+        return None
+    return (
+        f"names {line_num:g}, but the formulary entry for {brand} is {row_num:g}"
+        f" — a {decade:g}x difference in the brand name itself"
+        ". Same brand core, different strength: confirm which was prescribed."
+    )
+
+
+def strength_mismatch(field: ExtractionField, brand: str | None) -> str | None:
+    """Flag a line whose stated strength contradicts the formulary brand it
+    resolved to.
+
+    This is the look-alike/different-strength error class: "Thyronorm 50" and
+    "Thyronorm 500" are the same brand core tenfold apart, and the substring
+    resolver matches either one. Before this rule a 10x mis-read passed as a
+    clean verification with only an advisory warning attached; the mismatch
+    itself is the uncertainty, so it belongs in the confirm queue.
+
+    Returns a sentence when they disagree, None when either side is unstated or
+    the units are not comparable.
+    """
+    if not brand:
+        return None
+    core = brand_core_mismatch(field.brand_text or field.raw_text or "", brand)
+    if core is None:
+        core = brand_core_mismatch(field.raw_text or "", brand)
+    if core:
+        return core
+    read = parse_strength(field.strength or field.dose)
+    if read is None or read.unit == "unknown":
+        return None
+    items = brand_strengths(brand)
+    if not items:
+        return None
+
+    line_unit = read.unit                      # "mg" | "mcg" | "g" | "iu"
+    line_canon = read.value if line_unit == "iu" or read.mg is None else read.mg
+    canon_unit = "iu" if line_unit == "iu" else "mg"
+
+    candidates: list[float] = []
+    for b_value, b_unit in items:
+        if b_value <= 0:
+            continue
+        if not b_unit:
+            # Unit-less brand number ("Dolo 650", "Thyronorm 50") inherits the
+            # line's unit — which is how the label is actually read in practice.
+            candidates.append(b_value if canon_unit == "iu"
+                              else b_value * _UNIT_TO_MG.get(line_unit, 1.0))
+        elif (b_unit == "iu") != (canon_unit == "iu"):
+            continue                           # IU vs mass: not comparable
+        elif b_unit == "iu":
+            candidates.append(b_value)
+        else:
+            factor = _UNIT_TO_MG.get(b_unit)
+            if factor is not None:
+                candidates.append(b_value * factor)
+    if not candidates:
+        return None
+
+    # Any component matching the line means the prescription is legible: for a
+    # "500/125" label, a "500 mg" line names the amoxicillin half and is right.
+    if any(abs(line_canon - c) < 1e-9 for c in candidates):
+        return None
+    closest = min(candidates, key=lambda c: abs(c - line_canon))
+    ratio = (max(line_canon, closest) / min(line_canon, closest)
+             if min(line_canon, closest) else 0.0)
+    # One unit governs a ratio label by construction, so it prints once after
+    # the numbers rather than after each half.
+    stated = "/".join(f"{v:g}" for v, _ in items) + (
+        f" {items[0][1]}" if items[0][1] else "")
+    return (
+        f"states {read.value:g} {line_unit}, but the formulary entry for "
+        f"{brand} is {stated}"
+        + (f" — a {ratio:g}x difference" if ratio else "")
+        + ". Same brand core, different strength: confirm which was prescribed."
+    )
+
+
+# ---------------------------------------------------------------- raw-line derivation
+# The parity corpus and the TS plane both hand the engine ONE raw prescription
+# line; only the vision/fixture path supplies structured strength/frequency.
+# That asymmetry is why "aggregate dose-cap" was recorded as a documented parity
+# NON-CASE (eval/parity/parity.py module docstring): the Python plane had the
+# arithmetic but nothing to feed it. Deriving the fields from the line text
+# closes the gap, so dose and interval rules become cross-engine testable.
+#
+# The token list is the raw-text *reach* of the interval law: a code that sits in
+# `frequency._INTERVAL` but not here is invisible to a line written in plain
+# English, which is how most Indian prescriptions are actually written. "Tab
+# Folitrax daily" was the case that proved it — bare "daily" is the single most
+# common way an oral-methotrexate never-event is written, and the line carried no
+# frequency at all, so no interval rule could fire. `apps/web/src/lib/safety/
+# frequency.ts` exports the identical ordered list, and the parity corpus carries
+# one case per token class, so the two lists cannot drift apart silently.
+#: The raw-text REACH of the interval law, as an ordered vocabulary. A code that
+#: sits in `frequency._INTERVAL` but not here is invisible to a line written in
+#: plain English, which is how Indian prescriptions are actually written; "Tab
+#: Folitrax daily" was that case, and bare "daily" is the most common way an
+#: oral-methotrexate never-event reaches paper (ISMP names the error as "daily
+#: instead of weekly"). `apps/web/src/lib/safety/frequency.ts` carries the
+#: identical list verbatim and test_interval_law.py compares the two, because a
+#: vocabulary either plane can read and the other cannot is a verdict divergence
+#: on the same law — measured before v5: "every other day" queued a methotrexate
+#: hazard in TS while this plane read no frequency and passed it.
+#: ORDER IS SIGNIFICANT: alternation is first-match-wins, so every multi-word
+#: form must precede the shorter form it contains ("ONCE DAILY" before "DAILY"),
+#: or the short token steals the match and the schedule is misread.
+LINE_FREQ_TOKENS: tuple[str, ...] = (
+    "ONCE DAILY", "ONCE A DAY", "1 TIME DAILY", "ONE TIME DAILY", "1X DAILY",
+    "TWICE DAILY", "TWICE A DAY", "TWICE EVERY DAY", "2 TIMES DAILY",
+    "TWO TIMES DAILY", "THREE TIMES DAILY", "3 TIMES DAILY", "THRICE DAILY",
+    "FOUR TIMES DAILY", "4 TIMES DAILY",
+    "DAILY", "EVERY DAY", "ONCE EVERY DAY",
+    "AT BEDTIME", "BEDTIME", "AT NIGHT", "NOCTE",
+    "EVERY OTHER DAY", "ON ALTERNATE DAYS", "ALTERNATE DAYS", "ALTERNATE DAY",
+    "ONCE WEEKLY", "ONCE A WEEK", "EVERY WEEK", "1X WEEKLY", "TWICE WEEKLY",
+    "BIWEEKLY", "EVERY 2 WEEKS", "EVERY 3 WEEKS", "WEEKLY", "MONTHLY",
+    "ONCE MONTHLY", "ONCE A MONTH", "EVERY MONTH",
+    "AS NEEDED", "NEED DOSE", "WHENEVER REQUIRED",
+    "IMMEDIATELY", "SINGLE DOSE", "ONE DOSE",
+    "OD", "QD", "BD", "BID", "TDS", "TID", "QID", "HS", "QHS",
+    "QWK", "QW", "QOD", "QM", "Q2W", "Q3W", "BIW", "ALT", "STAT", "SOS", "PRN",
+)
+
+#: prose/numeric frequency forms matched as a whole token and then handed to
+#: `parse_frequency`, which owns the arithmetic ("6 hourly" -> 4/day, "Q3D" ->
+#: every 3 days, "every 2 days" -> interval 2).
+_LINE_FREQ_PROSE = (
+    r"\d+\s*(?:HOURLY|HOURS?)|Q\d+[DHWM]|(?:EVERY|Q)\s+\d+\s+(?:DAYS?|WEEKS?|MONTHS?)"
+)
+
+_TAC_ALT = r"[0-6]\s*[-+]\s*[0-6]\s*[-+]\s*[0-6](?:\s*[-+]\s*[0-6])?"
+
+#: tokens with their internal spaces widened, so "AT BEDTIME" also matches
+#: "AT  BEDTIME" from a ragged OCR line.
+_TOKEN_ALT = "|".join(t.replace(" ", r"\s+") for t in LINE_FREQ_TOKENS)
+
+#: A slot code and an interval word are written together on the same line
+#: ("0-0-1 weekly"), and the pair is one instruction: which hours, how often that
+#: day comes around. Capturing the code alone fed a correct weekly course to the
+#: interval law as a daily one.
+#:
+#: The optional prefix is what keeps the strength out of the code. A prescription
+#: line is written "<brand> <dose> - <regimen>", and "Amlong 5 - 1-0-0" starts a
+#: legal slot code at the 5: read that way it is 1+5 = 6 administrations a day,
+#: which invented a 30 mg/day amlodipine course out of a 5 mg one. A DASH WITH
+#: SPACES BOTH SIDES is the line's separator, not a slot join — a real code is
+#: written tight ("1-0-0"), and a code whose own slots are spaced ("1 - 0 - 1")
+#: still matches, because the prefix needs a digit before the dash.
+#:
+#: Written as an escape, not as literals: the lint gate flags a hyphen-looking
+#: character sitting in source text, and here it is inside a character class where
+#: it is data, not prose.
+_LINE_SEP_DASHES = "-\u2013\u2014"
+_LINE_FREQ = re.compile(
+    rf"\b(?<![\d.-])(?:\d+\s+[{_LINE_SEP_DASHES}]\s+)?"
+    rf"({_TAC_ALT})(?![\d-])(?:[\s,]+((?:{_TOKEN_ALT}|{_LINE_FREQ_PROSE})))?"
+    rf"|\b((?:{_TOKEN_ALT}|{_LINE_FREQ_PROSE}))\b",
+    re.I)
+_LINE_STRENGTH = re.compile(r"\b(\d+(?:[.,]\d+)?)\s*(mg|mcg|µg|ug|iu|units?|g)\b", re.I)
+_LINE_DURATION = re.compile(r"\b(\d+)\s*(day|days|week|weeks|month|months|d)\b", re.I)
+
+
+def extract_line_frequency(raw: str) -> str:
+    """The frequency a prescription line states, in the table's own vocabulary,
+    or "" when it states none.
+
+    One function owns text-to-frequency for the deciding plane AND the fixture
+    reader in `app.vision`. The copy in vision was a six-token subset that kept
+    "0-0-1" and dropped the "weekly" after it, so the same line scheduled daily
+    on the eval path and weekly on the parity path. Mirror of
+    `extractLineFrequency` in `apps/web/src/lib/safety/frequency.ts`.
+    """
+    m = _LINE_FREQ.search(raw or "")
+    if not m:
+        return ""
+    # group 1 = a TAC code, group 2 = the word that qualifies it, group 3 = a
+    # word code on its own. The pair is kept together so the interval law sees
+    # "0-0-1 weekly", not a daily schedule.
+    if m.group(1):
+        # The code is collapsed to its canonical spelling ("1 - 0 - 1" ->
+        # "1-0-1"), which is also what the TS plane emits: two spellings for one
+        # schedule would make the field values diverge even where the verdicts
+        # agree.
+        code = re.sub(r"\s+", "", m.group(1))
+        token = f"{code} {m.group(2)}" if m.group(2) else code
+    else:
+        token = m.group(3)
+    return " ".join(token.upper().split())
+
+
+def enrich_field(field: ExtractionField, brand: str | None = None,
+                 molecule: str | None = None) -> ExtractionField:
+    """Fill missing strength/frequency/duration from the raw line text.
+
+    Never overwrites a value perception already supplied — the model's structured
+    output is authoritative over this regex fallback.
+
+    `brand`/`molecule` come from the formulary lookup, and are used only when the
+    line states no strength of its own (see `brand_label_strength`).
+    """
+    raw = field.raw_text or ""
+    if not raw:
+        return field
+    strength = field.strength
+    dose = field.dose
+    frequency = field.frequency
+    duration = field.duration
+
+    if not frequency:
+        frequency = extract_line_frequency(raw)
+
+    m = _LINE_STRENGTH.search(raw)
+    if m and not strength:
+        # `_norm_unit`, not a startswith("u") test: the old one folded "ug" and
+        # "µg" into "iu", so a 50 ug levothyroxine line became an unscreenable
+        # 50 iu and passed the cap rule entirely.
+        strength = f"{m.group(1)} {_norm_unit(m.group(2))}"
+    elif not strength and brand:
+        # A brand core with no number in it ("Crocin Advance") genuinely states
+        # no strength, and `brand_label_strength` says so with None. The rewrite
+        # below is a `model_copy`, which skips validation, so writing that None
+        # would put a non-string into a `str` contract field and every later
+        # re-read of the persisted prescription would raise instead of answering.
+        # An unlegible strength must stay empty: the line then abstains from the
+        # per-line cap rule, which is the documented behaviour for it.
+        strength = brand_label_strength(brand, molecule) or ""
+
+    if not duration:
+        m = _LINE_DURATION.search(raw)
+        if m:
+            n = int(m.group(1))
+            unit = m.group(2).lower()
+            days = (n * 7 if unit.startswith("w")
+                    else n * 30 if unit.startswith("mo")
+                    else n)
+            duration = f"{days} days"
+
+    if (strength, dose, frequency, duration) == (
+            field.strength, field.dose, field.frequency, field.duration):
+        return field
+    return field.model_copy(update={
+        "strength": strength,
+        "dose": dose or strength,
+        "frequency": frequency,
+        "duration": duration,
+    })
+
+

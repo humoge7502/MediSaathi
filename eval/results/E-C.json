@@ -45,11 +45,11 @@
       "L2_ocr_numeric": {
         "level": "L2_ocr_numeric",
         "n": 256,
-        "queue_rate": 0.25,
+        "queue_rate": 0.3828,
         "refusal_rate": 0.0508,
         "unsafe_auto_confirm_rate": 0.0,
         "unsafe_auto_confirms": 0,
-        "verdict_changed_rate": 0.0
+        "verdict_changed_rate": 0.1328
       },
       "L3_ocr_brand": {
         "level": "L3_ocr_brand",
@@ -119,5 +119,5 @@
       "replay_refusals": 3
     }
   },
-  "run": "eval/runs/20260919T194658Z-E-C-robustness-b35ba0"
+  "run": "eval\\runs\\20261026T185137Z-E-C-robustness-586c0c"
 }

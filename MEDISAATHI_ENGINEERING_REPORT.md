@@ -32,11 +32,11 @@ Above average: named constants for gates, docstrings citing regression history, 
 
 ## 7. Backend/API Audit
 
-FastAPI tier is disciplined: envelope contract, vocabulary-validated contexts, magic-byte upload sniffing, O(1) `/metrics` via indexed column. Fixed: traversal (SEC-011), XFF bypass (SEC-012), limiter DoS (SEC-013), error chaining, no-echo 404s. Remaining honest gaps (documented): no auth (demo scope), no request-body size cap on JSON endpoints (TD-9), process-local counters (TD-7/11).
+FastAPI tier is disciplined: envelope contract, vocabulary-validated contexts, magic-byte upload sniffing, `/metrics` answered from a write-maintained tally rather than a scan (RES-31). Fixed: traversal (SEC-011), XFF bypass (SEC-012), limiter DoS (SEC-013), error chaining, no-echo 404s. Remaining honest gaps (documented): no auth (demo scope), no request-body size cap on JSON endpoints (TD-9), process-local counters (TD-7/11).
 
 ## 8. Database Audit
 
-SQLite + WAL, parameterized statements, indexed `verdict_kind` for O(1) aggregates, in-place v2→v3 migration with backfill. Prisma schema is Postgres-portable; dose table has the right index (`scheduledAt`). Fixed: per-thread connections + `busy_timeout=5000`. Access patterns are demo-scale; the N+1-ish plan-creation loop is acceptable and bounded (≤15 lines).
+SQLite + WAL, parameterized statements, `verdict_kind` materialized as an indexed column, in-place v2→v3 migration with backfill. **Correction (2026-10-28):** this section claimed the index made the `/metrics` aggregate O(1). It did not — an indexed `GROUP BY` still visits every row (measured 5.8–12.9 ms p50 at 56k–60k rows vs 2.2–3.0 ms on an empty store). The counts now live in a `verdict_tally` table maintained transactionally on write, so the read costs 2.09–2.64 ms regardless of store size (RES-31, docs/PERFORMANCE.md). Prisma schema is Postgres-portable; dose table has the right index (`scheduledAt`). Fixed: per-thread connections + `busy_timeout=5000`. **Second correction (2026-10-28):** three modules opened that same file and each ran the WAL switch *before* the timeout, and SQLITE_BUSY from the journal-mode pragma does not consult the busy handler — so a multi-worker boot could fail on its first statement (3 of 360 connections measured). The connection-opening law now lives in one place, `apps/api/app/db.py`, and is gated by `tools/prove_wal_boot_order.py` (RES-32). The single-writer ceiling itself is not fixed and is recorded as TD-30. Access patterns are demo-scale; the N+1-ish plan-creation loop is acceptable and bounded (≤15 lines).
 
 ## 9. Red-Team Security Audit (confirmed findings, all fixed + pinned by tests)
 

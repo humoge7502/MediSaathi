@@ -51,6 +51,10 @@ import {
   type InteractionRow,
 } from "./dataset";
 import { DEFAULT_THRESHOLD_SET_ID, getThresholdSet } from "./gate";
+// The identity law is imported, not mirrored: the longitudinal screen and the
+// single-prescription screen must match a medication under the same names, or a
+// combination brand is adjudicated twice and answered differently (ADR-0012).
+import { moleculeIdentities } from "./engine";
 
 // ---------------------------------------------------------------- constants
 
@@ -338,22 +342,49 @@ function screenUnion(
   const crossing = (mols: string[]): boolean =>
     mols.some((m) => activeMols.has(m)) && mols.some((m) => incomingMols.has(m));
 
-  // 1. pairwise interactions over the union
-  const molList = [...union].sort();
-  for (let i = 0; i < molList.length; i++) {
-    for (let j = i + 1; j < molList.length; j++) {
-      const hit = pairIndex.get([molList[i], molList[j]].sort().join("|"));
-      if (hit) {
-        const pair = [hit.a.toLowerCase(), hit.b.toLowerCase()];
-        findings.push({
-          kind: "interaction",
-          molecules: pair,
-          severity: hit.severity,
-          mechanism: hit.mechanism,
-          source: hit.source,
-          crossing: crossing(pair),
-          mass: 1.0,
-        });
+  // 1. pairwise interactions, walked over *medication pairs* with each side
+  // expanded through the same identity law the single-Rx plane uses. The pooled
+  // component walk this replaces could only ever name a component, so the 176
+  // interaction rows keyed on a whole combination stayed dead code here even
+  // after the nominal plane learned to reach them — and a pooled walk also pairs
+  // a drug's own components with each other, which is not an interaction.
+  const bySide: { molecules: string[]; active: boolean }[] = [
+    ...active.map((m) => ({ molecules: m.molecules, active: true })),
+    ...incoming.map((c) => ({ molecules: c.molecules, active: false })),
+  ];
+  const pairPos = new Map<string, number>();
+  for (let i = 0; i < bySide.length; i++) {
+    for (let j = i + 1; j < bySide.length; j++) {
+      const a = moleculeIdentities(bySide[i].molecules);
+      const b = moleculeIdentities(bySide[j].molecules);
+      const crosses = bySide[i].active !== bySide[j].active;
+      for (const molA of a) {
+        for (const molB of b) {
+          const hit = pairIndex.get([molA, molB].sort().join("|"));
+          if (!hit) continue;
+          // One finding per documented row: a combination brand crosses several
+          // identities against one partner (component + whole string) and the
+          // same row can arrive from another pair of lines. The crossing flag is
+          // OR-ed, because a row reached across the visit boundary is the
+          // visit-boundary finding even if an identical pair sits inside one side.
+          const pair = [hit.a.toLowerCase(), hit.b.toLowerCase()];
+          const key = [...pair].sort().join("|");
+          const pos = pairPos.get(key);
+          if (pos === undefined) {
+            pairPos.set(key, findings.length);
+            findings.push({
+              kind: "interaction",
+              molecules: pair,
+              severity: hit.severity,
+              mechanism: hit.mechanism,
+              source: hit.source,
+              crossing: crosses,
+              mass: 1.0,
+            });
+          } else if (crosses && !findings[pos].crossing) {
+            findings[pos] = { ...findings[pos], crossing: true };
+          }
+        }
       }
     }
   }
@@ -361,9 +392,12 @@ function screenUnion(
   // 2. combination-class rules (pairwise-invisible) — same groups the single-Rx plane uses
   findings.push(...combinationRules(union, crossing));
 
-  // 3. contraindications for the incoming identities against declared context
+  // 3. contraindications for the incoming identities against declared context.
+  // Identities, not components: the 17 combination-keyed rows — artemether+
+  // lumefantrine in pregnancy, ethinylestradiol+levonorgestrel in pregnancy —
+  // are absolute, and naming only their components could never address them.
   for (const c of incoming) {
-    for (const mol of c.molecules) {
+    for (const mol of moleculeIdentities(c.molecules)) {
       const rules = contraByMolecule.get(mol) ?? [];
       for (const rule of rules) {
         if (contexts.includes(rule.condition)) {

@@ -45,12 +45,17 @@
   --color-vy-severe: var(--vy-severe);
   --color-vy-warn: var(--vy-warn);
   --color-vy-safe: var(--vy-safe);
+  --color-vy-safe-on: var(--vy-safe-on);
   --color-vy-pine: var(--vy-pine);
   --color-vy-clay: var(--vy-clay);
 }
 
 :root {
   --radius: 0.75rem;
+  /* Tells the UA which palette is active: native scrollbars, form controls,
+     the default canvas and `color(Scheme)`-aware pseudo-elements. Without it a
+     dark page still gets light scrollbars and a light autofill chip. */
+  color-scheme: light;
   /* Motion tokens — one language, defined once (design-system ADR). */
   --vy-duration-fast: 150ms;
   --vy-duration-normal: 300ms;
@@ -63,18 +68,48 @@
   --vy-severe: oklch(0.5 0.17 25);        /* rose — severe findings */
   --vy-warn: oklch(0.68 0.13 75);         /* amber — moderate findings */
   --vy-safe: oklch(0.55 0.11 155);        /* green — pass */
+  /* Ink variants for text sitting ON a pale tint of the same hue (status chips).
+     Against a 4.5:1 floor for 12px text, the raw hues fail on two of the three:
+     `--vy-safe` on an 18% safe tint measures 3.66:1 and `--vy-warn` on 16% amber
+     measures 2.52:1. These clear it — safe-ink 6.33, warn-ink 6.48, severe-ink
+     7.61 (severe's raw 5.40 already passed; it is deepened so the three read as
+     one family) — without changing the hue, so a chip still reads as its
+     severity. `bun scripts/contrast.ts` recomputes every number in this comment. */
+  --vy-severe-ink: oklch(0.42 0.17 25);
+  --vy-warn-ink: oklch(0.45 0.12 75);
+  --vy-safe-ink: oklch(0.42 0.11 155);
+  /* Label colour for text sitting ON a full-saturation `--vy-safe` fill (the
+     Taken button). The inverse pair of `--primary`/`--primary-foreground`:
+     white clears the 4.5:1 floor on the light green but only 2.35:1 on the
+     dark-scheme green, which `.dark` lifts to L 0.72 so the fill still reads as
+     its hue. So the ink, not the fill, is what flips. `bun scripts/contrast.ts`
+     prints both (light 4.60, dark 7.66) and the off-white that fails at 4.47. */
+  --vy-safe-on: oklch(1 0 0);
   --vy-paper: oklch(0.975 0.004 90);      /* warm paper background */
   --vy-ink: oklch(0.22 0.01 160);
   --vy-hairline: oklch(0.9 0.005 90);
   /* Dark-band tokens (the law section): named colors instead of inline oklch
      literals scattered through components (hallmark gate 48). Values match the
      audited dark-band palette; the axe contrast gate covers them. */
+  /* The band is a fixed dark *surface*, not a text colour, so it must not
+     follow `.dark`: `--vy-pine-ink` is the token the app redefines at line
+     `--vy-pine-ink` in `.dark` precisely because it is the pine TEXT ink, and
+     pointing a background at it made the whole law section invert to a mint
+     wash behind mint text — measured 1.05:1 / 1.51:1 / 1.08:1 in dark mode by
+     the axe scan (e2e/theme.spec.ts). Same L 0.32, own name, no override. */
+  --vy-band: oklch(0.32 0.06 175);
   --vy-mint: oklch(0.8 0.09 175);         /* mint — eyebrows/numbers on dark */
   --vy-dark-ink: oklch(0.96 0.005 90);    /* primary text on dark */
   --vy-dark-ink-soft: oklch(0.85 0.01 90); /* body text on dark */
   --vy-panel: oklch(0.27 0.02 170);       /* diagram panel surface */
   --vy-panel-border: oklch(0.4 0.03 175); /* panel hairline */
   --vy-clay-bright: oklch(0.78 0.13 75);  /* gate line on dark (>= 4.5:1) */
+  /* Decorative watermark in the Verify empty state (5xl serif, aria-hidden but
+     still read as text by the axe scan). Mixed toward the card, so it is a
+     per-scheme value: deep pine at 75% into a *dark* card is nearly invisible.
+     Measured with the OKLCH mixer in scripts/contrast.ts — light 4.03, dark
+     4.12 against the 3:1 large-text floor. */
+  --vy-watermark: color-mix(in oklch, var(--vy-pine) 75%, var(--card));
 
   --background: var(--vy-paper);
   --foreground: var(--vy-ink);
@@ -110,6 +145,40 @@
 }
 
 .dark {
+  color-scheme: dark;
+  /* Brand and severity colours are *text* colours in this app (eyebrows,
+     status hues, chip inks), so the light-theme values cannot survive a dark
+     surface — measured, not assumed: `--vy-pine-ink` at L 0.32 is 1.52:1 on
+     this background, and the three chip inks land at 1.56 / 1.62 / 1.67 on
+     their own tints. The values below are the light-theme family flipped in
+     luminance — same three hues, so a chip still reads as its severity — and
+     every pair is printed by `bun scripts/contrast.ts`:
+       eyebrow 10.17 · muted body 6.48 · taken chip 6.92 · missed chip 6.14
+       skipped chip 7.63 · sev-severe 4.95 · sev-moderate 8.47 · sev-pass 7.32
+     All against the 4.5:1 floor for 12–14 px text. `--vy-pine` itself stays
+     deep because it is a *fill* behind white labels (white on pine 7.12);
+     anything that paints pine as text uses `--vy-pine-ink` or `--ring`. */
+  --vy-pine-ink: oklch(0.82 0.07 175);
+  --vy-severe: oklch(0.65 0.16 25);
+  --vy-warn: oklch(0.78 0.13 75);
+  --vy-safe: oklch(0.72 0.12 155);
+  --vy-severe-ink: oklch(0.74 0.14 25);
+  --vy-warn-ink: oklch(0.84 0.11 75);
+  --vy-safe-ink: oklch(0.8 0.1 155);
+  --vy-safe-on: oklch(0.2 0.01 160);      /* white would be 2.35:1 on this green */
+  /* What is deliberately NOT overridden here: `--vy-band`, `--vy-mint`,
+     `--vy-dark-ink`, `--vy-dark-ink-soft`, `--vy-panel`, `--vy-panel-border`,
+     `--vy-clay-bright`. The law band is a fixed island — it carries its own
+     background, so its text tokens are already dark-on-light-surface values
+     and stay correct on any page scheme. Adding `.dark` overrides for them
+     would make the band follow the page and break its own contrast;
+     `tests/theme.test.ts` has an assertion that fails if one appears. */
+  /* Declared here, not inherited from `:root`: a custom property substitutes the
+     declaring element's own values, and `.dark` sits on the same `<html>`
+     element as `:root`, so the light formula would mix deep pine into the dark
+     card — measured 1.87:1 (invisible) against 4.12 for the ink formula. */
+  --vy-watermark: color-mix(in oklch, var(--vy-pine-ink) 60%, var(--card));
+
   --background: oklch(0.18 0.01 160);
   --foreground: oklch(0.96 0.005 90);
   --card: oklch(0.22 0.012 160);
@@ -154,10 +223,14 @@
   ::selection {
     background: color-mix(in oklch, var(--vy-pine) 22%, transparent);
   }
-  /* Keyboard focus must always be visible (WCAG 2.4.7): a 2px pine ring with
-     offset, applied only for keyboard focus so mouse users see no noise. */
+  /* Keyboard focus must always be visible (WCAG 2.4.7): a 2px ring with
+     offset, applied only for keyboard focus so mouse users see no noise.
+     --ring rather than --vy-pine because the ring is a non-text indicator and
+     needs 3:1 against the surface (WCAG 1.4.11): deep pine is 2.42:1 on the
+     dark card, while --ring is already scheme-aware (pine in light, bright
+     pine in dark). */
   :focus-visible {
-    outline: 2px solid var(--vy-pine);
+    outline: 2px solid var(--ring);
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -175,13 +248,35 @@
   .vy-skip-link:focus-visible {
     left: 0;
   }
+  /* The skip link focuses its target, so the target has to show it — a ring that
+     hugs the inside of the container rather than the 2px-outside offset used on
+     buttons, which would sit off-screen on a full-height box. */
+  #main:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: -2px;
+  }
 }
 
 /* ---------- Vaidya component classes ---------- */
 
 .vy-serif {
-  font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
-  letter-spacing: -0.01em;
+  /* One seam, ~25 surfaces: headings, the verdict label, the big numerals.
+     `font-optical-sizing: auto` lets the variable `opsz` axis set the face
+     rather than scale it — the display cut at hero size, the text cut at 18 px,
+     from the same file. Georgia stays in the chain so an offline build degrades
+     to a real serif instead of to the sans. */
+  font-family: var(--font-display), Georgia, "Iowan Old Style", "Times New Roman", serif;
+  font-optical-sizing: auto;
+  letter-spacing: -0.015em;
+}
+
+/* The wordmark is Devanagari. It gets its own class rather than another entry
+   in the `.vy-serif` chain, so a Latin heading never drags a Devanagari file
+   and वैद्य is never left to whatever the operating system substitutes. Negative
+   display tracking is wrong for Devanagari, so it is reset here. */
+.vy-devanagari {
+  font-family: var(--font-devanagari), Georgia, serif;
+  letter-spacing: 0;
 }
 
 .vy-hairline-card {
@@ -205,9 +300,15 @@
   letter-spacing: -0.02em;
 }
 
-.vy-sev-severe { color: var(--vy-severe); }
-.vy-sev-moderate { color: var(--vy-warn); }
-.vy-sev-pass { color: var(--vy-safe); }
+/* Severity *text* uses the ink variants, never the raw hue. Measured, light
+   scheme, against a white card: warn 2.94:1 and safe 4.60:1 — warn fails even the
+   3:1 large-text floor — while the inks read 9.25 / 7.56 / 7.96. On the tinted
+   banners they are 8.19 / 6.76 / 7.10 (light) and 6.50 / 8.62 / 8.45 (dark), all
+   above the 4.5:1 floor these labels need at 12–14 px. `tests/theme.test.ts`
+   recomputes every pair from this file, so a raw hue here fails the suite. */
+.vy-sev-severe { color: var(--vy-severe-ink); }
+.vy-sev-moderate { color: var(--vy-warn-ink); }
+.vy-sev-pass { color: var(--vy-safe-ink); }
 
 .vy-banner-severe {
   background: color-mix(in oklch, var(--vy-severe) 8%, var(--card));
@@ -234,14 +335,25 @@
   font-size: clamp(2.75rem, 6.5vw, 5.25rem);
   line-height: 1.02;
   letter-spacing: -0.02em;
+  /* Fraunces' own axes, on the hero alone: SOFT rounds the terminals slightly and
+     WONK switches on the alternate glyph forms. A face that is authored once reads
+     as chosen; the same quirks on every heading read as a default. `opsz` has to be
+     spelled out here because `font-variation-settings` resets every axis it does not
+     list to its default, which would silently undo the `auto` optical sizing this
+     line depends on. Inert on a build without the axes — it degrades to the plain
+     optical cut, not to a broken line. */
+  font-variation-settings: "opsz" 144, "SOFT" 40, "WONK" 1;
 }
 
 /* Section number: small monospace index (01, 02…) anchoring each editorial
-   band — metadata that reinforces the narrative order without decoration. */.vy-section-num {
+   band — metadata that reinforces the narrative order without decoration.
+   pine-ink, not pine: this is 11 px text, and deep pine on the dark card is
+   2.42:1 — under even the 3:1 large-text floor once `.dark` is reachable. */
+.vy-section-num {
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.6875rem;
   letter-spacing: 0.14em;
-  color: var(--vy-pine);
+  color: var(--vy-pine-ink);
 }
 
 /* Nav link underline: a hairline that grows from the left on hover —
@@ -291,6 +403,16 @@ html {
   border: 1px solid var(--border);
 }
 
+/* Loading placeholder fill. Mixed from --muted-foreground into --card rather
+   than taken from --muted: the two themes define --muted 18 lightness steps
+   apart, so a fixed --muted block is a near-invisible ghost in light and a
+   bright slab in dark. Muting the *foreground* hue into the card surface keeps
+   one perceived tint difference in both schemes, which is what a skeleton needs
+   to read as "shape, not content" without ever being content itself. */
+.vy-skeleton {
+  background: color-mix(in oklch, var(--muted-foreground) 16%, var(--card));
+}
+
 @keyframes vy-fade-up {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
@@ -305,6 +427,30 @@ html {
 .vy-fade-up-d1 { animation: vy-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both; }
 .vy-fade-up-d2 { animation: vy-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.16s both; }
 .vy-fade-up-d3 { animation: vy-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.24s both; }
+
+/* Panel entrance. A transition cannot normally run on a node's *first* style
+   resolution — there is no earlier value to move from — and `@starting-style` is
+   the mechanism that supplies one. Chosen over a keyframe animation for a reason
+   that is invisible until it bites: `animation: … both` keeps the `to` frame
+   applied after the last tick, so `transform: translateY(0)` remains computed on
+   the node forever. Any transform other than `none` makes the element a
+   containing block for `position: fixed` descendants and opens a stacking
+   context — residue nobody asked for and few would trace back to an entrance. A
+   transition ends at the element's own styles and leaves nothing behind.
+   Engines without `@starting-style` show the panel instantly: the content is
+   never gated on the motion. */
+.vy-enter {
+  transition:
+    opacity 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@starting-style {
+  .vy-enter {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
 
 /* WCAG 2.3.3 / prefers-reduced-motion: every entrance animation and hover
    transition collapses to ~zero; content simply appears and stays. The

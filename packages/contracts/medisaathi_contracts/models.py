@@ -122,6 +122,25 @@ class DuplicateFinding(BaseModel):
     note: str
 
 
+class DoseRuleFinding(BaseModel):
+    """A never-event dosing hazard: the line was read perfectly, but the
+    schedule it describes is one the label forbids.
+
+    Distinct from `warnings` (advisory notes that never change a verdict) and
+    from `ContraindicationFinding` (drug x patient-condition). This is drug x
+    *schedule* — the class of error a pairwise interaction table structurally
+    cannot see, e.g. oral methotrexate written or read as once-daily.
+    """
+
+    molecule: str
+    brand: str = ""
+    severity: Severity
+    observed: str
+    required: str
+    note: str
+    source: str
+
+
 class SafetyReport(BaseModel):
     medications: list[NormalizedMedication]
     interactions: list[InteractionFinding]
@@ -129,6 +148,10 @@ class SafetyReport(BaseModel):
     duplicates: list[DuplicateFinding]
     checks: dict[str, bool]  # rule_name -> executed_ok
     warnings: list[str] = []  # dose-plausibility notes (deterministic)
+    #: Never-event schedule violations. These BLOCK (route to the confirm
+    #: queue) rather than merely warn: a confidently-read lethal schedule is
+    #: precisely the failure the reading layer cannot catch and must not pass.
+    dose_hazards: list[DoseRuleFinding] = []
     #: Gate-law provenance for this run: which bands fired, with which fused
     #: scores, under which versioned threshold set. Never optional in spirit -
     #: a verdict without its threshold set is not reproducible.

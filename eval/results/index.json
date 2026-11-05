@@ -1,10 +1,38 @@
 {
-  "dataset_snapshot": "fbbbec6c010476a3",
+  "dataset_snapshot": "efa012dcfd17d32b",
   "experiments": {
     "E-A": {
       "metrics_file": "eval/results/E-A.json",
-      "run": "eval/runs/20260919T194749Z-E-A-baseline-ladder-94801a"
+      "run": "eval\\runs\\20261026T185133Z-E-A-baseline-ladder-148c85"
+    },
+    "E-B": {
+      "metrics_file": "eval/results/E-B.json",
+      "run": "eval\\runs\\20261026T185134Z-E-B-ablations-140ae4"
+    },
+    "E-C": {
+      "metrics_file": "eval/results/E-C.json",
+      "run": "eval\\runs\\20261026T185137Z-E-C-robustness-586c0c"
+    },
+    "E-D": {
+      "metrics_file": "eval/results/E-D.json",
+      "run": "eval\\runs\\20261026T185140Z-E-D-calibration-operating-point-ad5c22"
+    },
+    "E-E": {
+      "metrics_file": "eval/results/E-E.json",
+      "run": "eval\\runs\\20261026T185143Z-E-E-cross-engine-parity-e1f10e"
+    },
+    "E-F": {
+      "metrics_file": "eval/results/E-F.json",
+      "run": "eval\\runs\\20261026T185305Z-E-F-latency-availability-c984fe"
+    },
+    "E-G": {
+      "metrics_file": "eval/results/E-G.json",
+      "run": "eval\\runs\\20261026T185305Z-E-G-human-in-the-loop-d12a25"
+    },
+    "E-H": {
+      "metrics_file": "eval/results/E-H.json",
+      "run": "eval\\runs\\20261026T185353Z-E-H-regimen-longitudinal-daec17"
     }
   },
-  "generated_at": "2026-09-19T19:47:49+00:00"
+  "generated_at": "2026-10-26T18:53:53+00:00"
 }

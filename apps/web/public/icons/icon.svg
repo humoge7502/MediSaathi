@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Vaidya">
+  <!-- The install icon is painted from the design system's own tokens, not from
+       remembered hexes. Each rule below carries the hex Lightning CSS emits for
+       the token and the token's `oklch()` triple after it, so a UA that parses
+       CSS Color 4 gets the stylesheet colour and an older one gets the nearest
+       sRGB. `tests/pwa.test.ts` reads the triples out of `globals.css`, converts
+       them with `scripts/palette.ts` and fails this file if either literal moves
+       without the token moving — the same defect class RES-33 fixed for
+       `themeColor`, which claimed two hexes that were no token at all.
+
+       The geometry is a claim too, so it is written to be measured: every vertex
+       is absolute, and the same test computes the bounding box of the mark and
+       the circle and requires both inside the central 60% — the safe zone a
+       maskable launcher cannot crop into. A relative path would have made that
+       check a parser; `cy=392 r=26` made it false, by 8 px, which is exactly how
+       much of this file's honesty has historically been worth. -->
+  <style>
+    .band { fill: #003d31; fill: oklch(0.32 0.06 175); }
+    .mark { fill: #7bd1ba; fill: oklch(0.8 0.09 175); }
+    .moment { fill: #e8aa4e; fill: oklch(0.78 0.13 75); }
+  </style>
+  <rect class="band" x="0" y="0" width="512" height="512" />
+  <!-- The V of the wordmark, cut as one closed path so it scales without
+       depending on a font being present on the machine. -->
+  <path class="mark" d="M150 148L208 148L256 276L304 148L362 148L282 348L230 348Z" />
+  <!-- The dose moment: the one thing the product adds to a schedule. -->
+  <circle class="moment" cx="256" cy="372" r="24" />
+</svg>

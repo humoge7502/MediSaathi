@@ -48,10 +48,10 @@ def write_run(name: str, config: dict, metrics: dict, *,
         "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "dataset": {
             "snapshot_id": ds_manifest.snapshot_id(),
-            "files": {
-                rel: meta.get("sha256")
-                for rel, meta in ds_manifest.load_manifest().get("files", {}).items()
-            } if os.path.exists(ds_manifest.MANIFEST_PATH) else {},
+            # Hashes of the bytes this run actually read — not of whatever the
+            # last corpus build happened to record. See manifest.current_files().
+            "files": {rel: meta["sha256"]
+                      for rel, meta in ds_manifest.current_files().items()},
         },
         "engine_git_sha": ds_manifest.git_sha(),
         "environment": ds_manifest.environment(),

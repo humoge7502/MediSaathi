@@ -5,6 +5,7 @@
 import { useState } from "react";
 import { post, SAMPLE_RX, type VerifyResult, CONTEXT_LABELS } from "@/lib/client";
 import { Button } from "@/components/ui/button";
+import { AlertLine, StatusLine } from "@/components/ui/status-line";
 
 const SEV_STYLE: Record<string, { cls: string; label: string }> = {
   severe: { cls: "vy-banner-severe", label: "SEVERE" },
@@ -23,6 +24,26 @@ const VERDICT_STYLE: Record<string, { cls: string; label: string }> = {
   refused: { cls: "vy-banner-neutral", label: "Refused — by design" },
 };
 
+/**
+ * The one sentence a screen reader gets when the pipeline lands.
+ *
+ * It is a summary, not a transcript: the verdict, the confidence, how much is
+ * behind it and whether the plan is blocked. Everything below it stays ordinary
+ * sequential content, which is what makes the panel readable twice — as a human
+ * scanning the cards and as a listener hearing one line.
+ */
+function announce(r: VerifyResult): string {
+  const plural = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`;
+  const parts = [
+    `${VERDICT_STYLE[r.verdict]?.label ?? r.verdict} at ${Math.round(r.confidence * 100)}% confidence`,
+    `${plural(r.confirmed.length, "medicine")} confirmed`,
+    plural(r.findings.length, "finding"),
+  ];
+  if (r.confirmQueue.length > 0) parts.push(`${plural(r.confirmQueue.length, "read")} awaiting a human, plan blocked`);
+  if (r.regimen && r.regimen.activeCount > 0) parts.push(`regimen screen ${r.regimen.verdict}`);
+  return `Verification finished: ${parts.join("; ")}.`;
+}
+
 export function VerifyPanel({ onPlanStarted }: { onPlanStarted: () => void }) {
   const [text, setText] = useState("");
   const [contexts, setContexts] = useState<string[]>([]);
@@ -30,6 +51,7 @@ export function VerifyPanel({ onPlanStarted }: { onPlanStarted: () => void }) {
   const [result, setResult] = useState<VerifyResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [planMsg, setPlanMsg] = useState<string | null>(null);
+  const [planErr, setPlanErr] = useState<string | null>(null);
   const [planBusy, setPlanBusy] = useState(false);
 
   async function run() {
@@ -37,6 +59,7 @@ export function VerifyPanel({ onPlanStarted }: { onPlanStarted: () => void }) {
     setError(null);
     setResult(null);
     setPlanMsg(null);
+    setPlanErr(null);
     try {
       const r = await post<VerifyResult>("/api/verify", { text, contexts });
       setResult(r);
@@ -51,6 +74,7 @@ export function VerifyPanel({ onPlanStarted }: { onPlanStarted: () => void }) {
     if (!result?.prescriptionId) return;
     setPlanBusy(true);
     setPlanMsg(null);
+    setPlanErr(null);
     try {
       const r = await post<{ planId: string; medications: number; dosesScheduled: number }>("/api/plans", {
         prescriptionId: result.prescriptionId,
@@ -58,7 +82,7 @@ export function VerifyPanel({ onPlanStarted }: { onPlanStarted: () => void }) {
       setPlanMsg(`Plan started — ${r.medications} medicines, ${r.dosesScheduled} doses scheduled. See the Today tab.`);
       onPlanStarted();
     } catch (e) {
-      setPlanMsg(e instanceof Error ? e.message : "Could not start plan");
+      setPlanErr(e instanceof Error ? e.message : "Could not start plan");
     } finally {
       setPlanBusy(false);
     }
@@ -82,13 +106,13 @@ export function VerifyPanel({ onPlanStarted }: { onPlanStarted: () => void }) {
             onChange={(e) => setText(e.target.value)}
             rows={7}
             placeholder={"e.g.\nTelma 40 mg OD 30 days\nGlycomet 500 mg BD 30 days"}
-            className="vy-scroll mt-3 w-full resize-none rounded-lg border bg-background p-4 font-mono text-sm leading-relaxed outline-none focus:ring-2 focus:ring-[color:var(--vy-pine)]"
+            className="vy-scroll mt-3 w-full resize-none rounded-lg border bg-background p-4 font-mono text-sm leading-relaxed outline-none focus:ring-2 focus:ring-[color:var(--ring)]"
           />
           <div className="mt-3 flex flex-wrap gap-2">
             {SAMPLE_RX.map((s) => (
               <button
                 key={s.id}
-                onClick={() => { setText(s.text); setContexts(s.contexts); setResult(null); setPlanMsg(null); }}
+                onClick={() => { setText(s.text); setContexts(s.contexts); setResult(null); setPlanMsg(null); setPlanErr(null); }}
                 className="rounded-full border px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
               >
                 {s.label}
@@ -123,11 +147,16 @@ export function VerifyPanel({ onPlanStarted }: { onPlanStarted: () => void }) {
         >
           {busy ? "Running the pipeline…" : "Run verification"}
         </Button>
-        {error && <p className="text-sm vy-sev-severe">{error}</p>}
+        <StatusLine text={result ? announce(result) : null} />
+        <AlertLine text={error} />
       </div>
 
       {/* -------- result -------- */}
-      <div className="space-y-4" aria-live="polite">
+      {/* Not a live region on purpose. Pointing aria-live at this column made the
+          screen reader re-read the whole verdict — every medicine, finding and
+          queue row — on each mutation inside it, including the plan line
+          appended below. One sentence is announced, from the slot above. */}
+      <div className="space-y-4">
         {!result && !busy && (
           <div className="vy-hairline-card flex h-full min-h-72 flex-col items-center justify-center p-10 text-center">
             {/* Decorative watermark: aria-hidden (not content for screen
@@ -136,7 +165,7 @@ export function VerifyPanel({ onPlanStarted }: { onPlanStarted: () => void }) {
             <div
               aria-hidden="true"
               className="vy-serif text-5xl italic"
-              style={{ color: "color-mix(in oklch, var(--vy-pine) 75%, var(--card))" }}
+              style={{ color: "var(--vy-watermark)" }}
             >
               Rx
             </div>
@@ -290,7 +319,8 @@ export function VerifyPanel({ onPlanStarted }: { onPlanStarted: () => void }) {
                 >
                   {planBusy ? "Scheduling…" : "Start therapy plan from this prescription →"}
                 </button>
-                {planMsg && <p className="mt-3 text-sm text-muted-foreground">{planMsg}</p>}
+                <StatusLine text={planMsg} className="mt-3" />
+                <AlertLine text={planErr} className="mt-3" />
               </div>
             )}
           </div>

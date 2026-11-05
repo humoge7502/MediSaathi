@@ -36,7 +36,7 @@ RX-034,0-0-1,10 mg,clean prescription
 RX-035,1-0-0,50 mg,clean prescription
 RX-036,1-0-0,75 mg,clean prescription
 RX-037,1-0-1,,clean prescription
-RX-038,0-0-1,60 mg,clean prescription
+RX-038,0-0-1 WEEKLY,60000 iu,printed clean (v12 relabel: the line states the interval word too, and the sachet is 60,000 IU, not 60 mg)
 RX-039,1-0-0,30 mg,clean prescription
 RX-040,1-0-1,100 mg,clean prescription
 RX-041,1-0-1,10 mg,clean prescription

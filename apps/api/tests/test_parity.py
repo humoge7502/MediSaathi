@@ -23,9 +23,11 @@ from parity import corpus_summary, load_parity_cases, run_parity_python  # noqa:
 
 def test_corpus_exists_and_is_labeled() -> None:
     cases = load_parity_cases()
-    # MED-015: the golden corpus must stay above the 100-case floor the plan
-    # set; a shrinking corpus is a silent weakening of the drift gate.
-    assert len(cases) >= 100, f"parity corpus shrank to {len(cases)} cases"
+    # MED-015: the golden corpus must stay above the floor the plan set; a
+    # shrinking corpus is a silent weakening of the drift gate. The floor tracks
+    # the corpus (132 cases at v5), so deleting cases is a red test rather than
+    # an unremarked change to `corpus_summary()` output.
+    assert len(cases) >= 130, f"parity corpus shrank to {len(cases)} cases"
     ids = [c["id"] for c in cases]
     assert len(set(ids)) == len(ids), "duplicate parity case ids"
     for c in cases:

@@ -102,28 +102,41 @@ def load_fixture(sample_id: str) -> dict:
 # path replaces this parser with the schema-constrained model answer.
 
 _LIST_NO = re.compile(r"^\d+\.\s*")                      # strip "1. "
-_FREQ_TAC = re.compile(r"\b(\d+-\d+-\d+)\b")              # TAC code: morning-noon-night
-_FREQ_WORD = re.compile(r"\b(OD|BD|TDS|QID|HS|QHS|SOS)\b", re.I)
 _DURATION = re.compile(r"\bx\s*(\d+\s*(?:days?|weeks?|months?))", re.I)
 _DURATION_WORD = re.compile(r"\b(\d+\s*(?:days?|weeks?|months?))\b", re.I)
 _DOSE = re.compile(r"\b(\d+(?:\.\d+)?\s*(?:mg|g|ml|mcg|iu|units?))\b", re.I)
-_STRENGTH_NUM = re.compile(r"(\d+(?:\.\d+)?)")
 
 # Frequency parsing lives in ONE place: app.safety.dosing (audit code review:
 # this file used to carry an identical copy — deduped, re-exported for the
-# tests' public surface).
-from .safety.dosing import parse_frequency_per_day  # noqa: E402, F401
+# tests' public surface). The copy was not only duplicated, it was smaller: six
+# word codes, and a TAC match that kept "0-0-1" and dropped the "weekly" written
+# after it, so the eval path scheduled a weekly course daily.
+from .safety.dosing import (  # noqa: E402, F401
+    brand_strength,
+    extract_line_frequency,
+    parse_frequency_per_day,
+)
 
 
 def _strength_from(brand_text: str, dose: str) -> str:
-    """The brand-embedded number is the *strength* (Dolo 650 -> 650 mg), not
-    the per-occurrence dose. Kept distinct so the plausibility rule can use it."""
+    """The strength the line itself states, or "" when it states none.
+
+    The brand-embedded number is NOT given a unit here. Stamping " mg" onto
+    every trailing digit turned "Thyronorm 50" into a 50 mg levothyroxine
+    course — a thousandfold over-read of a 50 mcg tablet, against a 0.3 mg/day
+    cap — and read "Calcirol 60K" as "60 mg", dropping the kilo multiplier and
+    the IU unit the preparation is actually sold in. A bare number's unit comes
+    from the molecule, which perception does not know yet: `enrich_field`
+    resolves it against the formulary row in the deciding plane, where the
+    catalog lookup has happened.
+    """
     if dose:
         return dose
-    m = _STRENGTH_NUM.search(brand_text)
-    if m:
-        return f"{m.group(1)} mg"
-    return ""
+    bs = brand_strength(brand_text)
+    if bs is None:
+        return ""
+    value, unit = bs
+    return f"{value:g} {unit}" if unit else ""
 
 
 def _parse_line(text: str, conf: float, source: FieldSource) -> ExtractionField:
@@ -132,11 +145,7 @@ def _parse_line(text: str, conf: float, source: FieldSource) -> ExtractionField:
     cleaned = _LIST_NO.sub("", text.strip())
     brand_text = cleaned.split(" - ")[0].strip()
 
-    freq = ""
-    m = _FREQ_TAC.search(cleaned) or _FREQ_WORD.search(cleaned)
-    if m:
-        freq = m.group(1)
-        freq = f"{m.group(1)}-{m.group(2)}-{m.group(3)}" if m.lastindex and m.lastindex >= 3 else freq
+    freq = extract_line_frequency(cleaned)
 
     duration = ""
     m = _DURATION.search(cleaned) or _DURATION_WORD.search(cleaned)
@@ -147,8 +156,6 @@ def _parse_line(text: str, conf: float, source: FieldSource) -> ExtractionField:
     m = _DOSE.search(cleaned)
     if m:
         dose = m.group(1).lower().rstrip()
-        if re.fullmatch(r"\d+(?:\.\d+)?", dose):  # bare number -> mg
-            dose = f"{dose} mg"
 
     strength = _strength_from(brand_text, dose)
     return ExtractionField(

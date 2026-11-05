@@ -25,6 +25,8 @@ import threading
 import uuid
 from datetime import datetime, timedelta, timezone
 
+from .db import apply_pragmas
+
 #: Purpose codes drawn from ABDM's consent vocabulary (hiu/hiu purposes).
 PURPOSE_CODES = (
     "CAREMGT",     # care management
@@ -71,8 +73,10 @@ def _connect() -> sqlite3.Connection:
     if conn is None:
         conn = sqlite3.connect(_DB_PATH)
         conn.row_factory = sqlite3.Row
-        conn.execute("PRAGMA journal_mode=WAL")
-        conn.execute("PRAGMA busy_timeout=5000")
+        # Same file as the prescription store, so the same first-open law:
+        # busy_timeout before the WAL switch, and the switch retried. See
+        # `db.apply_pragmas` for why the order is load-bearing.
+        apply_pragmas(conn)
         _local.conn = conn
         with _write_lock:
             conn.executescript(_INIT)

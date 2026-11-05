@@ -8,5 +8,5 @@
   "latency_ms_p50": 0,
   "n": 111,
   "refusal_precision": 1.0,
-  "verdict_agreement": 1.0
+  "verdict_agreement": 0.973
 }

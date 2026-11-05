@@ -22,6 +22,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { api, post } from "@/lib/client";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Skeleton, SkeletonCard, SkeletonHeading, SkeletonRows } from "@/components/ui/skeleton";
+import { AlertLine, StatusLine } from "@/components/ui/status-line";
 
 interface OpenItem {
   id: string;
@@ -162,7 +165,28 @@ export function ReviewConsole() {
     return <div className="vy-hairline-card p-6 text-sm vy-sev-severe">{error}</div>;
   }
   if (!open) {
-    return <div className="vy-hairline-card animate-pulse p-10 text-center text-sm text-muted-foreground">Loading the review queue…</div>;
+    // Header card plus three queue cards: the count is a guess about the shape,
+    // not about the data, and a queue that lands shorter only shifts once.
+    return (
+      <div className="space-y-6">
+        <SkeletonCard className="flex items-end justify-between gap-4">
+          <div className="max-w-3xl space-y-2">
+            <Skeleton className="h-2.5 w-40" />
+            <Skeleton className="h-3 w-full" />
+            <Skeleton className="h-3 w-4/5" />
+          </div>
+          <Skeleton className="h-9 w-10 shrink-0" />
+        </SkeletonCard>
+        <div className="space-y-3">
+          {Array.from({ length: 3 }, (_, i) => (
+            <SkeletonCard key={i}>
+              <SkeletonHeading />
+              <SkeletonRows count={2} />
+            </SkeletonCard>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -182,18 +206,17 @@ export function ReviewConsole() {
             <p className="vy-numeral text-xs text-muted-foreground">open item{open.length === 1 ? "" : "s"}</p>
           </div>
         </div>
-        {notice && <p className="vy-fade-up mt-3 rounded-md border px-3 py-2 text-xs text-muted-foreground">{notice}</p>}
-        {error && <p className="mt-3 text-sm vy-sev-severe">{error}</p>}
+        <div className="mt-3 flex flex-col">
+          <StatusLine text={notice} />
+          <AlertLine text={error} />
+        </div>
       </div>
 
       {open.length === 0 ? (
-        <div className="vy-hairline-card p-10 text-center">
-          <p className="vy-serif text-2xl italic" style={{ color: "var(--vy-hairline)" }}>Queue clear</p>
-          <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
-            No readings are waiting for a human. Run a verification with an unknown or low-confidence line to see the
-            gate route a field here.
-          </p>
-        </div>
+        <EmptyState title="Queue clear">
+          No readings are waiting for a human. Run a verification with an unknown or low-confidence line to see the
+          gate route a field here.
+        </EmptyState>
       ) : (
         <div className="space-y-3">
           {open.map((item) => {
@@ -223,7 +246,7 @@ export function ReviewConsole() {
                     onFocus={() => { setActiveId(item.prescriptionId); }}
                     onChange={(e) => { setActiveId(item.prescriptionId); setBrand(e.target.value); }}
                     placeholder="corrected brand (optional)"
-                    className="rounded-full border bg-background px-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-[color:var(--vy-pine)]"
+                    className="rounded-full border bg-background px-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-[color:var(--ring)]"
                   />
                   )}
                   <input
@@ -231,7 +254,7 @@ export function ReviewConsole() {
                     value={isActive ? note : ""}
                     onChange={(e) => { setActiveId(item.prescriptionId); setNote(e.target.value); }}
                     placeholder="reason code / note"
-                    className="rounded-full border bg-background px-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-[color:var(--vy-pine)]"
+                    className="rounded-full border bg-background px-3 py-1.5 text-xs outline-none focus:ring-2 focus:ring-[color:var(--ring)]"
                   />
                   <button
                     disabled={busy}

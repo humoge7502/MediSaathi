@@ -44,7 +44,12 @@ const eslintConfig = [...nextCoreWebVitals, ...nextTypescript, {
     "no-useless-escape": "off",
   },
 }, {
-  ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "next-env.d.ts", "examples/**", "skills", "medisaathi-analysis/**", "research/**", "scripts/**", "download/**", "docs/**"]
+  // Generated tables are machine-emitted (tools/build_dose_caps.py,
+  // tools/build_web_dataset.py) and one of them is 1.7 MB of row literals:
+  // linting them reports on data nobody edits by hand and costs the gate a
+  // second or two. They are checked by drift tests instead, which compare the
+  // decoded rows against the source CSVs.
+  ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "next-env.d.ts", "examples/**", "skills", "medisaathi-analysis/**", "research/**", "scripts/**", "download/**", "docs/**", "**/*.generated.ts"]
 }];
 
 export default eslintConfig;

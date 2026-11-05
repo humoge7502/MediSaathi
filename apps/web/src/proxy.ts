@@ -1,21 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * Edge middleware for the /api/* surface: request-ID correlation + per-client
+ * Proxy for the /api/* surface: request-ID correlation + per-client
  * sliding-window rate limits, mirroring the FastAPI tier's middleware contract
  * (apps/api/app/middleware_security.py) so both tiers answer with the same
  * headers and the same 429 envelope shape.
+ *
+ * Next.js 16 renamed the `middleware` file convention to `proxy` and moved the
+ * default runtime from edge to Node. Both halves of this contract survive the
+ * move unchanged: the bucket table is still per-process (the same law it always
+ * documented), and `crypto.randomUUID` / `btoa` are global in Node 18+.
  *
  * Threat-model notes (mirrored from the API tier, see docs/security/SECURITY_AUDIT.md):
  *  - X-Forwarded-For is honored ONLY when MEDISAATHI_TRUST_PROXY=1. A client
  *    that can set its own XFF must not be able to mint a fresh bucket per
  *    request (limit bypass) or flood the key table (memory pressure).
- *  - KEY SOURCE LAW (audit finding MS-02): without a trusted proxy, Next.js
- *    edge middleware cannot see the socket address, and `x-real-ip` is a
- *    CLIENT-SUPPLIED header — trusting it would let any caller rotate a fresh
- *    rate-limit bucket per request. The fallback is therefore a SHARED bucket
- *    ("anon"): unauthenticated strangers share one budget, and only a proxy
- *    we explicitly trust can give a client its own key. Same law as the API
+ *  - KEY SOURCE LAW (audit finding MS-02): without a trusted proxy, this layer
+ *    cannot see the socket address, and `x-real-ip` is a CLIENT-SUPPLIED
+ *    header — trusting it would let any caller rotate a fresh rate-limit bucket
+ *    per request. The fallback is therefore a SHARED bucket ("anon"):
+ *    unauthenticated strangers share one budget, and only a proxy we explicitly
+ *    trust can give a client its own key. Same law as the API
  *    tier (XFF honored only behind MEDISAATHI_TRUST_PROXY=1).
  *  - The limiter is per process/instance, deliberately: this is a demo-scale
  *    monolith. Swap point for Redis = `limit()` (see docs/DECISIONS.md).
@@ -27,10 +32,30 @@ import { NextRequest, NextResponse } from "next/server";
  *    callers without an Origin header pass.
  */
 
-const WRITE_LIMIT = Number(process.env.MEDISAATHI_RATE_WRITE ?? 60);
-const WRITE_WINDOW_MS = Number(process.env.MEDISAATHI_RATE_WRITE_WINDOW ?? 60) * 1000;
-const READ_LIMIT = Number(process.env.MEDISAATHI_RATE_READ ?? 300);
-const READ_WINDOW_MS = Number(process.env.MEDISAATHI_RATE_READ_WINDOW ?? 60) * 1000;
+/**
+ * A limiter budget read from the environment. `Number(process.env.X ?? 60)` is
+ * not enough, because a variable that is SET-but-EMPTY is `""`, not `undefined`,
+ * and `??` deliberately passes `""` through: `Number("")` is `0`, so the write
+ * limiter would ship a zero request budget and answer every POST with 429 — the
+ * protection fails as a total outage rather than as a misconfiguration you would
+ * notice. A non-numeric value has the same shape (`Number("5x")` is `NaN`, and
+ * nothing ever passes `hits.length < NaN`). Both are a typo at deploy time, so the
+ * answer is the documented default, not a silent denial of service.
+ *
+ * Contrast `MEDISAATHI_EVAL_REUSE_MS` in src/app/api/evals/route.ts, which accepts
+ * an explicit `0`: there, `0` is a meaningful policy ("no cache window, run every
+ * time"), whereas here it means "refuse everything".
+ */
+export function envPositiveNumber(raw: string | undefined, fallback: number): number {
+  if (raw === undefined) return fallback;
+  const parsed = Number(raw);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+const WRITE_LIMIT = envPositiveNumber(process.env.MEDISAATHI_RATE_WRITE, 60);
+const WRITE_WINDOW_MS = envPositiveNumber(process.env.MEDISAATHI_RATE_WRITE_WINDOW, 60) * 1000;
+const READ_LIMIT = envPositiveNumber(process.env.MEDISAATHI_RATE_READ, 300);
+const READ_WINDOW_MS = envPositiveNumber(process.env.MEDISAATHI_RATE_READ_WINDOW, 60) * 1000;
 const TRUST_PROXY = process.env.MEDISAATHI_TRUST_PROXY === "1";
 const MAX_KEYS = 10_000;
 const EVICT_BATCH = 1_000;
@@ -95,7 +120,7 @@ export function originAllowed(origin: string | null, host: string): boolean {
   }
 }
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const requestId =
     req.headers.get("x-request-id") && REQUEST_ID_RE.test(req.headers.get("x-request-id")!)
       ? (req.headers.get("x-request-id") as string)
@@ -173,8 +198,17 @@ export function middleware(req: NextRequest) {
 export const config = {
   // Every document route (nonce + CSP) plus the full /api surface (limiter,
   // request IDs, origin checks). Static assets are served directly.
+  //
+  // `/sw.js` is on that second list on purpose, and it is not a static asset.
+  // The policy minted below is a *document* policy: `'strict-dynamic'` tells a
+  // conforming browser to ignore every source expression in `script-src`, so a
+  // script response carrying it has no allow-list left — the worker's own body
+  // has no nonce to be evaluated with, and registration dies as a generic
+  // SecurityError with nothing in the console naming the cause. The service
+  // worker gets its own, blunt `default-src 'self'` from `next.config.ts`
+  // instead, and `e2e/pwa.spec.ts` fails the build if that routing is undone.
   matcher: [
     "/api/:path*",
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt|xml|webmanifest)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|sw\\.js$|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt|xml|webmanifest)$).*)",
   ],
 };

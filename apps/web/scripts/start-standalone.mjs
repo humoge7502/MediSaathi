@@ -42,5 +42,9 @@ if (!existsSync(server)) {
   process.exit(1);
 }
 
+// Set in-process rather than as a shell prefix: `NODE_ENV=production node …`
+// is POSIX-only syntax and silently fails to apply under npm on Windows.
+process.env.NODE_ENV ||= "production";
+
 const child = spawn(process.execPath, [server], { stdio: "inherit", env: process.env });
 child.on("exit", (code) => process.exit(code ?? 0));

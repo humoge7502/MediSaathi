@@ -18,10 +18,10 @@
         "arm": "regimen+propagation",
         "cross_prescription_catch_rate": 1.0,
         "harmful_caught_rate": 1.0,
-        "mean_fragility": 0.0406,
+        "mean_fragility": 0.0387,
         "n": 119,
         "n_cross_prescription": 84,
-        "queue_rate": 0.084,
+        "queue_rate": 0.0924,
         "serious_caught_rate": 0.8315,
         "unsafe_pass": 0,
         "unsafe_pass_rate": 0.0,
@@ -34,11 +34,11 @@
         "mean_fragility": 0.0,
         "n": 119,
         "n_cross_prescription": 84,
-        "queue_rate": 0.0,
+        "queue_rate": 0.0084,
         "serious_caught_rate": 0.1685,
         "unsafe_pass": 74,
         "unsafe_pass_rate": 0.8315,
-        "verdict_agreement": 0.2941
+        "verdict_agreement": 0.2857
       }
     },
     "cross_prescription_cases": 84,
@@ -48,7 +48,7 @@
       "cross_catch_single_rx": 0.0,
       "fragile_cases": 10,
       "queue_cost_of_mechanism_A": 0.0,
-      "queue_cost_of_mechanism_B": 0.084,
+      "queue_cost_of_mechanism_B": 0.0924,
       "unsafe_pass_regimen": 0.0,
       "unsafe_pass_regimen_propagation": 0.0,
       "unsafe_pass_single_rx": 0.8315
@@ -65,5 +65,5 @@
       "incoming_harm": 15
     }
   },
-  "run": "eval/runs/20260919T194741Z-E-H-regimen-longitudinal-a9b056"
+  "run": "eval\\runs\\20261026T185353Z-E-H-regimen-longitudinal-daec17"
 }

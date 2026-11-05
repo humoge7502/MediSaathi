@@ -13,7 +13,7 @@
  *    the E-G reviewed arm;
  *  - a rejected escalation must leave the prescription unverifiable.
  */
-import { beforeAll, describe, expect, mock, test } from "bun:test";
+import { beforeAll, describe, expect, mock, setDefaultTimeout, test } from "bun:test";
 import { execSync } from "node:child_process";
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -23,13 +23,23 @@ const dbDir = mkdtempSync(join(tmpdir(), "medisaathi-regimen-test-"));
 const dbUrl = `file:${join(dbDir, "test.db")}`;
 process.env.DATABASE_URL = dbUrl;
 
+// 20 s per test rather than bun's 5 s default (docs/TESTING.md, "shared-database
+// timing"). `bun run test` raises the same ceiling for the whole suite from the
+// command line; the call here is what keeps this file honest when it is run on
+// its own. The slowest test in it measures 344 ms in isolation and crossed 5 s
+// once, in a full run, on a WAL checkpoint left by whichever file wrote last —
+// the same cold-start reason the `prisma db push` hook below gets 120 s.
+setDefaultTimeout(20_000);
+
 beforeAll(() => {
+  // 120s hook budget: `bunx` resolution plus a cold Prisma start can exceed
+  // bun's 5s default on Windows (see the same fix in api.test.ts).
   execSync("bunx prisma db push --skip-generate", {
     cwd: join(__dirname, ".."),
     env: { ...process.env, DATABASE_URL: dbUrl },
     stdio: "pipe",
   });
-});
+}, 120_000);
 
 // ---- sealed perception with per-line confidence markers --------------------
 // A raw line of the form "Brufen 400 mg OD 5 days @@0.95" is split at the
@@ -79,11 +89,19 @@ async function startPlan(prescriptionId: string) {
 }
 
 describe("regimen escalation (TD-12) — composed harms", () => {
-  test("triple whammy across two visits escalates to interaction; single-Rx law passed it", async () => {
-    // Visit 1: ARB + diuretic — the single-Rx law passes it, and the plan starts.
+  test("a harm only the composed regimen can see escalates the visit", async () => {
+    // Visit 1: one ARB, clean read on its own, and the plan starts.
+    //
+    // This fixture used to open with ARB + diuretic because the plane could not
+    // see that pair. With the whole interaction table loaded it can — 10 of the
+    // 10 ACEi/ARB x diuretic pairs the old copy missed are documented — so the
+    // first visit would be a real interaction and the plan would never start.
+    // The mechanism under test is not the number of legs: it is that a
+    // prescription which passes alone does not pass against the regimen the
+    // patient is already on.
     const v1 = await body(
       await verifyPOST(jsonReq("http://localhost/api/verify", {
-        text: "Losar 50 mg OD 30 days\nLasix 40 mg OD 30 days",
+        text: "Losar 50 mg OD 30 days",
         contexts: [],
       }))
     );
@@ -92,8 +110,9 @@ describe("regimen escalation (TD-12) — composed harms", () => {
     const p1 = await startPlan(v1.data!.prescriptionId as string);
     expect(p1.ok).toBe(true);
 
-    // Visit 2: the NSAID arrives. The single prescription is clean, but the
-    // regimen composition completes the triple whammy.
+    // Visit 2: the NSAID arrives. As a single prescription it is clean — one
+    // line, no pair to screen — but composed with the active ARB it is the
+    // documented interaction the plan was waiting for.
     const v2 = await body(
       await verifyPOST(jsonReq("http://localhost/api/verify", {
         text: "Brufen 400 mg TDS 5 days",
@@ -109,9 +128,9 @@ describe("regimen escalation (TD-12) — composed harms", () => {
   });
 
   test("same-brand refill keeps passing (not a composed harm)", async () => {
-    // The active plan from the previous test holds Telma? No — Losar/Lasix.
-    // Re-verify the same brand that is already active: the duplicate-ATC
-    // crossing signature is a refill and must not escalate.
+    // Re-verify the brand that is already active (losartan, from the test
+    // above): the duplicate-ATC crossing signature is a refill and must not
+    // escalate.
     const v = await body(
       await verifyPOST(jsonReq("http://localhost/api/verify", {
         text: "Losar 50 mg OD 30 days",

@@ -98,13 +98,20 @@ def test_warnings_attached_but_verdict_untouched(engine):
     from app.verdict import assemble
     from app.vision import extract
     result = extract("RX-001")  # clean pass
+    # Ibuprofen 400 mg QID = 1600 mg/day, over the 1200 mg OTC cap. Every
+    # field on this line is internally consistent, which matters: the earlier
+    # fixture put "2500 mg" on Dolo 650 to force the breach, but a 2500 mg
+    # paracetamol tablet does not exist, so the strength-vs-formulary guard
+    # correctly queues that read as an unconfirmed identity instead of warning
+    # about a dose. That tested the queue, not the warning law.
     weird = ExtractionField(
-        raw_text="Tab Dolo 650 - 1-1-1 x 30 days", brand_text="Dolo 650",
-        frequency="1-1-1", duration="30 days", strength="2500 mg",
+        raw_text="Tab Brufen 400 - 1-1-1-1 x 5 days", brand_text="Brufen 400",
+        frequency="1-1-1-1", duration="5 days", strength="400 mg",
         confidence=0.97, source=FieldSource.seed_fixture)
     result.fields.append(weird)
     report, items, _verified = api_engine.run(result.fields, {})
     assert report.warnings, "over-cap regimen must produce a warning"
+    assert not items, f"an internally consistent line must not be queued: {items}"
     v = assemble(api_engine, result, report, items)
     from medisaathi_contracts import VerdictKind
     # verdict machinery still runs its normal law (dup ATC here due to 2x dolo)

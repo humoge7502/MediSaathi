@@ -1,0 +1,17 @@
+{
+  "applied": false,
+  "checked_at": "2026-10-25T21:57:22+00:00",
+  "diff": {
+    "added": [],
+    "candidate_rows": 1267,
+    "changed": [],
+    "live_rows": 1267,
+    "removed": [],
+    "unchanged": 1267
+  },
+  "kind": "contraindications",
+  "schema_ok": true,
+  "source": "data/contraindications.csv",
+  "source_rows": 1267,
+  "source_sha256": "6c9fc6fd76a3f62ef47255833f05f53bcc145ec0d67d397c5d43ba99519739f4"
+}

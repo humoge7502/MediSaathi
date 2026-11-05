@@ -1,0 +1,59 @@
+# Build-context hygiene for the web image.
+#
+# `docker-compose.yml` builds this app with `context: apps/web`, so this file — not
+# the repo-root `.dockerignore` — is what governs it.
+#
+# This file exists because of what was measured without it: `load build context`
+# transferred 1.18 GB and took 214.3 s on its own, because the build stage's
+# `COPY . .` was being handed the host `node_modules` (the bulk of it — `du -sm` on
+# it does not finish inside 60 s on this machine, which is why the BuildKit transfer
+# total is the number quoted), the previous `.next` output at 293 MB, and
+# `db/custom.db` — a 929,792-byte SQLite file holding the developer's last demo run.
+# Every one of those is re-created inside the image: `deps` installs from
+# package.json + bun.lock, `build` runs `next build`, and the runner writes its own
+# database under `/app/db` on a named volume.
+#
+# Deliberately NOT ignored: `tests/` and `e2e/`. `tsconfig.json` includes
+# `**/*.ts`/`**/*.tsx` and `next.config.ts` sets `typescript.ignoreBuildErrors:
+# false`, so a container build reads the suite's type errors. Excluding them would
+# produce a faster image that silently stops being a check on the code it ships.
+
+# --- re-created by the build itself ---
+node_modules
+.next
+out
+build
+
+# --- runtime state: /app/db is a volume, seeded by the `schema` stage ---
+db
+**/*.db
+**/*.db-journal
+
+# --- host-only config and secrets ---
+# NEXT_PUBLIC_* and DATABASE_URL come from docker-compose.yml / the environment;
+# a `.env` file baked into a published image is how a development override ends up
+# in production (the compose file defaults MEDISAATHI_ALLOW_DEMO_RESET to 0 — the
+# local .env.development sets it to 1, and that belongs on this machine only).
+.env
+.env.*
+!.env.example
+
+# --- evidence from previous local runs ---
+test-results
+playwright-report
+coverage
+screenshots
+
+# --- build noise ---
+*.log
+tsconfig.tsbuildinfo
+**/*.tsbuildinfo
+.turbo
+.eslintcache
+.DS_Store
+Thumbs.db
+
+# --- Windows symlink stand-ins ---
+# `node_modules/.bin` entries are `.cmd` shims on this host; on the Linux side they
+# are real symlinks. Either way the deps stage regenerates them.
+**/*.cmd

@@ -113,8 +113,12 @@ export interface CopilotResult {
 
 export interface FamilyPayload {
   patient: { name: string; contexts: string } | null;
-  joinCode: string | null;
-  links: { id: string; caregiverName: string; relation: string; code: string }[];
+  // No read view carries a live code. There is no authentication in front of
+  // this route, so "the caller is the owner" cannot be established, and the code
+  // IS the caregiver capability — a caller that could list them could join them.
+  // A code is disclosed once, by the POST that mints it. `hint` is the audit form
+  // (first two characters), deliberately not usable.
+  links: { id: string; caregiverName: string; relation: string; hint: string; createdAt?: string }[];
   events: { id: string; kind: string; severity: string; message: string; acknowledged: boolean; createdAt: string }[];
 }
 
